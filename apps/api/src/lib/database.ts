@@ -1,31 +1,7 @@
-import { PrismaClient } from '@prisma/client';
+import { prisma } from './prisma';
 import { createLogger } from './logger';
 
 const log = createLogger('database');
-
-// ─────────────────────────────────────────────
-// Prisma Client Singleton
-// ─────────────────────────────────────────────
-// Prevents multiple instances in development due to hot-reloading.
-
-declare global {
-  var __prisma: PrismaClient | undefined;
-}
-
-const prisma: PrismaClient =
-  globalThis.__prisma ??
-  new PrismaClient({
-    log: [
-      { level: 'query', emit: 'event' },
-      { level: 'info', emit: 'stdout' },
-      { level: 'warn', emit: 'stdout' },
-      { level: 'error', emit: 'stdout' },
-    ],
-  });
-
-if (process.env.NODE_ENV !== 'production') {
-  globalThis.__prisma = prisma;
-}
 
 // Log slow queries in development
 if (process.env.NODE_ENV === 'development') {

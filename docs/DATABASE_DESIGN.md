@@ -668,4 +668,56 @@ Admin Adjustment → POST /api/v1/inventory/adjustments
 
 ---
 
+## 14. Prisma & Database Workflow (Phase B2 Updates)
+
+### Database Conventions & Rules
+
+- **Primary Keys**: Every database model must use a UUID identifier (`id String @id @default(uuid()) @db.Uuid`).
+- **Audit Fields**: Every model must have the base system properties:
+  - `createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz`
+  - `updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz`
+- **Naming Conventions**:
+  - Prisma Models: PascalCase (e.g. `SystemConfig`)
+  - Prisma Fields: camelCase (e.g. `updatedAt`)
+  - PostgreSQL Tables: snake_case (mapped via `@@map("system_configs")`)
+  - PostgreSQL Columns: snake_case (mapped via `@map("created_at")`)
+- **Statuses**: Status values should default to the `Status` enum (`ACTIVE`, `INACTIVE`, `PENDING`, `DELETED`).
+
+### Migration Workflow
+
+To apply schema modifications during development:
+
+1. Modify `apps/api/prisma/schema.prisma`.
+2. Generate local migration files and apply them to local database:
+   ```bash
+   pnpm --filter @enterprise-pos/api db:migrate
+   ```
+3. Generate the updated Prisma client files:
+   ```bash
+   pnpm --filter @enterprise-pos/api db:generate
+   ```
+
+### Seed Workflow
+
+To repopulate initial table records (e.g. configuration states, system defaults):
+
+```bash
+pnpm --filter @enterprise-pos/api db:seed
+```
+
+### Transaction Usage
+
+Always leverage the centralized transactional utility helper:
+
+```typescript
+import { runInTransaction } from '../lib/transaction';
+
+const result = await runInTransaction(async (tx) => {
+  const record = await tx.systemConfig.create({ ... });
+  return record;
+});
+```
+
+---
+
 _This document is part of the Enterprise POS System Phase 0 documentation suite._
