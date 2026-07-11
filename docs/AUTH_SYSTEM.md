@@ -56,15 +56,16 @@ The Enterprise POS System uses a **stateless JWT-based authentication** model wi
 
 ### Access Token
 
-| Property | Value |
-|----------|-------|
-| **Type** | JSON Web Token (JWT) |
-| **Algorithm** | `RS256` (RSA asymmetric signing) |
-| **Expiry** | 15 minutes |
-| **Storage** | JavaScript memory (not localStorage) |
+| Property      | Value                                  |
+| ------------- | -------------------------------------- |
+| **Type**      | JSON Web Token (JWT)                   |
+| **Algorithm** | `RS256` (RSA asymmetric signing)       |
+| **Expiry**    | 15 minutes                             |
+| **Storage**   | JavaScript memory (not localStorage)   |
 | **Transport** | `Authorization: Bearer <token>` header |
 
 **Access Token Payload:**
+
 ```json
 {
   "sub": "user-uuid",
@@ -80,6 +81,7 @@ The Enterprise POS System uses a **stateless JWT-based authentication** model wi
 ```
 
 **Design Decisions:**
+
 - `RS256` is used over `HS256` so the public key can be shared with services for verification without exposing the signing secret.
 - Permissions are embedded in the token payload to eliminate per-request database lookups.
 - `jti` (JWT ID) enables token revocation if needed before expiry.
@@ -88,15 +90,16 @@ The Enterprise POS System uses a **stateless JWT-based authentication** model wi
 
 ### Refresh Token
 
-| Property | Value |
-|----------|-------|
-| **Type** | Opaque random token (cryptographically secure) |
-| **Storage** | `HttpOnly; Secure; SameSite=Strict` cookie |
-| **Duration** | 7 days |
-| **Database** | Token hash stored in `refresh_tokens` table |
-| **Rotation** | Replaced on every successful refresh |
+| Property     | Value                                          |
+| ------------ | ---------------------------------------------- |
+| **Type**     | Opaque random token (cryptographically secure) |
+| **Storage**  | `HttpOnly; Secure; SameSite=Strict` cookie     |
+| **Duration** | 7 days                                         |
+| **Database** | Token hash stored in `refresh_tokens` table    |
+| **Rotation** | Replaced on every successful refresh           |
 
 **Refresh Token Security Model:**
+
 - The raw token is never logged or stored — only its SHA-256 hash is persisted.
 - Each refresh operation rotates the token, invalidating the previous one.
 - Reuse of an already-rotated refresh token triggers automatic revocation of the entire session (Refresh Token Rotation with Reuse Detection).
@@ -211,25 +214,25 @@ Logout
 
 Users are assigned one or more **Roles**. Roles define a job function within the system.
 
-| System Role | Description |
-|-------------|-------------|
-| `super_admin` | Full system access, cannot be restricted |
-| `admin` | Full business operations access |
-| `manager` | Branch-level management access |
-| `cashier` | POS and sales access only |
-| `accountant` | Accounting and financial reports |
-| `inventory_manager` | Inventory and purchase management |
+| System Role         | Description                              |
+| ------------------- | ---------------------------------------- |
+| `super_admin`       | Full system access, cannot be restricted |
+| `admin`             | Full business operations access          |
+| `manager`           | Branch-level management access           |
+| `cashier`           | POS and sales access only                |
+| `accountant`        | Accounting and financial reports         |
+| `inventory_manager` | Inventory and purchase management        |
 
 ### Permission-Based Access Control (PBAC)
 
 Each **Role** is assigned a granular set of **Permissions**. Permissions follow the pattern: `module.action`.
 
-| Permission Pattern | Example Permissions |
-|-------------------|---------------------|
-| `{module}.create` | `products.create`, `customers.create` |
-| `{module}.read` | `inventory.read`, `reports.read` |
-| `{module}.update` | `sales.update`, `users.update` |
-| `{module}.delete` | `products.delete`, `roles.delete` |
+| Permission Pattern | Example Permissions                   |
+| ------------------ | ------------------------------------- |
+| `{module}.create`  | `products.create`, `customers.create` |
+| `{module}.read`    | `inventory.read`, `reports.read`      |
+| `{module}.update`  | `sales.update`, `users.update`        |
+| `{module}.delete`  | `products.delete`, `roles.delete`     |
 
 ### Permission Check Flow
 
@@ -261,14 +264,14 @@ preHandler hooks (applied per route):
 
 ## 5. Password Security
 
-| Measure | Implementation |
-|---------|---------------|
-| **Hashing Algorithm** | bcrypt with cost factor 12 |
-| **Minimum Complexity** | 8+ characters, uppercase, lowercase, number, special character |
-| **Plain Text Storage** | Never — passwords are never stored or logged in plain text |
-| **Comparison** | Constant-time comparison via bcrypt.compare() |
-| **Reset Token Hashing** | SHA-256 hash of reset tokens before storage |
-| **Refresh Token Hashing** | SHA-256 hash of refresh tokens before storage |
+| Measure                   | Implementation                                                 |
+| ------------------------- | -------------------------------------------------------------- |
+| **Hashing Algorithm**     | bcrypt with cost factor 12                                     |
+| **Minimum Complexity**    | 8+ characters, uppercase, lowercase, number, special character |
+| **Plain Text Storage**    | Never — passwords are never stored or logged in plain text     |
+| **Comparison**            | Constant-time comparison via bcrypt.compare()                  |
+| **Reset Token Hashing**   | SHA-256 hash of reset tokens before storage                    |
+| **Refresh Token Hashing** | SHA-256 hash of refresh tokens before storage                  |
 
 ---
 
@@ -276,14 +279,15 @@ preHandler hooks (applied per route):
 
 All API requests are validated before reaching business logic.
 
-| Layer | Tool | Scope |
-|-------|------|-------|
-| **Route Schema** | Fastify JSON Schema | Request body, query params, path params |
-| **Business Validation** | Zod | Complex cross-field and business rule validation |
-| **SQL Injection** | Prisma ORM parameterized queries | Automatic — all queries are parameterized |
-| **XSS Prevention** | Input sanitization + Content-Security-Policy | Output encoding and CSP headers |
+| Layer                   | Tool                                         | Scope                                            |
+| ----------------------- | -------------------------------------------- | ------------------------------------------------ |
+| **Route Schema**        | Fastify JSON Schema                          | Request body, query params, path params          |
+| **Business Validation** | Zod                                          | Complex cross-field and business rule validation |
+| **SQL Injection**       | Prisma ORM parameterized queries             | Automatic — all queries are parameterized        |
+| **XSS Prevention**      | Input sanitization + Content-Security-Policy | Output encoding and CSP headers                  |
 
 **Validation Rules:**
+
 - All string inputs are trimmed
 - Email fields are normalized to lowercase
 - Numeric fields have min/max boundaries enforced
@@ -309,15 +313,16 @@ limit_req_zone $binary_remote_addr zone=auth:10m rate=10r/m;
 
 ### Application-Level Rate Limiting (Fastify + Redis)
 
-| Endpoint Group | Limit | Window |
-|----------------|-------|--------|
-| `/auth/login` | 10 requests | 15 minutes per IP |
-| `/auth/forgot-password` | 5 requests | 60 minutes per IP |
-| `/auth/refresh` | 30 requests | 15 minutes per user |
-| General API | 300 requests | 1 minute per user |
-| Report endpoints | 20 requests | 5 minutes per user |
+| Endpoint Group          | Limit        | Window              |
+| ----------------------- | ------------ | ------------------- |
+| `/auth/login`           | 10 requests  | 15 minutes per IP   |
+| `/auth/forgot-password` | 5 requests   | 60 minutes per IP   |
+| `/auth/refresh`         | 30 requests  | 15 minutes per user |
+| General API             | 300 requests | 1 minute per user   |
+| Report endpoints        | 20 requests  | 5 minutes per user  |
 
 **Rate Limit Response `429`:**
+
 ```json
 {
   "success": false,
@@ -335,14 +340,14 @@ limit_req_zone $binary_remote_addr zone=auth:10m rate=10r/m;
 
 CORS is configured at the Fastify level to control which origins can access the API.
 
-| Setting | Value |
-|---------|-------|
+| Setting             | Value                                                 |
+| ------------------- | ----------------------------------------------------- |
 | **Allowed Origins** | Configured via `ALLOWED_ORIGINS` environment variable |
-| **Allowed Methods** | `GET, POST, PUT, PATCH, DELETE, OPTIONS` |
-| **Allowed Headers** | `Authorization, Content-Type, X-Request-ID` |
-| **Credentials** | `true` — required for HttpOnly cookie exchange |
-| **Preflight Cache** | 86400 seconds (24 hours) |
-| **Exposed Headers** | `X-Total-Count, X-Request-ID` |
+| **Allowed Methods** | `GET, POST, PUT, PATCH, DELETE, OPTIONS`              |
+| **Allowed Headers** | `Authorization, Content-Type, X-Request-ID`           |
+| **Credentials**     | `true` — required for HttpOnly cookie exchange        |
+| **Preflight Cache** | 86400 seconds (24 hours)                              |
+| **Exposed Headers** | `X-Total-Count, X-Request-ID`                         |
 
 **Development:** `http://localhost:3000` is the only allowed origin.  
 **Production:** Only the registered frontend domain is allowed.
@@ -355,12 +360,12 @@ Because the refresh token is stored in an HttpOnly cookie, CSRF protection must 
 
 ### Defense Strategy
 
-| Mechanism | Description |
-|-----------|-------------|
-| **SameSite=Strict** | Cookie is only sent for same-site requests, blocking cross-origin form submissions |
+| Mechanism                 | Description                                                                                                                                                        |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **SameSite=Strict**       | Cookie is only sent for same-site requests, blocking cross-origin form submissions                                                                                 |
 | **Custom Request Header** | All state-changing requests from the frontend include `X-Requested-With: XMLHttpRequest` — a custom header browsers do not include in simple cross-origin requests |
-| **Origin Validation** | API verifies the `Origin` header matches the allowed domain on cookie-reading endpoints |
-| **Double Submit Cookie** | CSRF token pattern available as an additional layer for high-sensitivity operations |
+| **Origin Validation**     | API verifies the `Origin` header matches the allowed domain on cookie-reading endpoints                                                                            |
+| **Double Submit Cookie**  | CSRF token pattern available as an additional layer for high-sensitivity operations                                                                                |
 
 ---
 
@@ -374,17 +379,18 @@ Because the refresh token is stored in an HttpOnly cookie, CSRF protection must 
 
 ### Request Security
 
-| Control | Implementation |
-|---------|---------------|
-| **HTTPS Enforcement** | Nginx redirects all HTTP to HTTPS; HSTS header set |
-| **Request ID** | Every request assigned `X-Request-ID` UUID for traceability |
-| **Body Size Limit** | Maximum request body limited to 10MB by Fastify |
-| **SQL Injection** | Prevented by Prisma ORM parameterized queries |
-| **Mass Assignment** | Request schemas explicitly whitelist accepted fields |
+| Control               | Implementation                                              |
+| --------------------- | ----------------------------------------------------------- |
+| **HTTPS Enforcement** | Nginx redirects all HTTP to HTTPS; HSTS header set          |
+| **Request ID**        | Every request assigned `X-Request-ID` UUID for traceability |
+| **Body Size Limit**   | Maximum request body limited to 10MB by Fastify             |
+| **SQL Injection**     | Prevented by Prisma ORM parameterized queries               |
+| **Mass Assignment**   | Request schemas explicitly whitelist accepted fields        |
 
 ### Audit Trail
 
 Every write operation (create, update, delete) produces an audit log record containing:
+
 - User ID performing the action
 - Action type and module
 - Entity type and ID
@@ -398,16 +404,16 @@ Every write operation (create, update, delete) produces an audit log record cont
 
 All API and frontend responses include the following security headers, configured at Nginx:
 
-| Header | Value | Purpose |
-|--------|-------|---------|
-| `Strict-Transport-Security` | `max-age=31536000; includeSubDomains` | Enforce HTTPS for 1 year |
-| `X-Content-Type-Options` | `nosniff` | Prevent MIME type sniffing |
-| `X-Frame-Options` | `DENY` | Prevent clickjacking |
-| `Referrer-Policy` | `strict-origin-when-cross-origin` | Control referrer information |
-| `Permissions-Policy` | Restrictive policy | Disable unused browser features |
-| `Content-Security-Policy` | Configured per environment | Control allowed content sources |
-| `X-XSS-Protection` | `1; mode=block` | Legacy XSS filter |
+| Header                      | Value                                 | Purpose                         |
+| --------------------------- | ------------------------------------- | ------------------------------- |
+| `Strict-Transport-Security` | `max-age=31536000; includeSubDomains` | Enforce HTTPS for 1 year        |
+| `X-Content-Type-Options`    | `nosniff`                             | Prevent MIME type sniffing      |
+| `X-Frame-Options`           | `DENY`                                | Prevent clickjacking            |
+| `Referrer-Policy`           | `strict-origin-when-cross-origin`     | Control referrer information    |
+| `Permissions-Policy`        | Restrictive policy                    | Disable unused browser features |
+| `Content-Security-Policy`   | Configured per environment            | Control allowed content sources |
+| `X-XSS-Protection`          | `1; mode=block`                       | Legacy XSS filter               |
 
 ---
 
-*This document is part of the Enterprise POS System Phase 0 documentation suite.*
+_This document is part of the Enterprise POS System Phase 0 documentation suite._

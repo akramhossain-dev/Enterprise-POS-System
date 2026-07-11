@@ -26,16 +26,16 @@
 
 ## 1. Design Principles
 
-| Principle | Implementation |
-|-----------|---------------|
-| **Normalization** | Tables are normalized to 3NF to eliminate data redundancy |
-| **Referential Integrity** | All foreign keys are enforced at the database level |
-| **Soft Delete** | Business entities use `deleted_at` timestamp instead of hard deletion |
-| **Audit Timestamps** | Every table includes `created_at` and `updated_at` fields |
-| **Multi-Tenancy Ready** | Business entities include `company_id` for future tenant isolation |
-| **Immutability** | Financial records (invoices, payments) are never updated; corrections create new records |
-| **UUID Primary Keys** | All tables use UUID v4 as primary key for distributed-safe identifiers |
-| **Enum Types** | Status and type fields use PostgreSQL native enums for type safety |
+| Principle                 | Implementation                                                                           |
+| ------------------------- | ---------------------------------------------------------------------------------------- |
+| **Normalization**         | Tables are normalized to 3NF to eliminate data redundancy                                |
+| **Referential Integrity** | All foreign keys are enforced at the database level                                      |
+| **Soft Delete**           | Business entities use `deleted_at` timestamp instead of hard deletion                    |
+| **Audit Timestamps**      | Every table includes `created_at` and `updated_at` fields                                |
+| **Multi-Tenancy Ready**   | Business entities include `company_id` for future tenant isolation                       |
+| **Immutability**          | Financial records (invoices, payments) are never updated; corrections create new records |
+| **UUID Primary Keys**     | All tables use UUID v4 as primary key for distributed-safe identifiers                   |
+| **Enum Types**            | Status and type fields use PostgreSQL native enums for type safety                       |
 
 ---
 
@@ -43,53 +43,53 @@
 
 ### Table: `users`
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | UUID | PK, NOT NULL | Unique user identifier |
-| `email` | VARCHAR(255) | UNIQUE, NOT NULL | Login email address |
-| `password_hash` | VARCHAR(255) | NOT NULL | Bcrypt hashed password |
-| `first_name` | VARCHAR(100) | NOT NULL | User's first name |
-| `last_name` | VARCHAR(100) | NOT NULL | User's last name |
-| `avatar_url` | TEXT | NULL | Profile image URL |
-| `is_active` | BOOLEAN | DEFAULT true | Account active status |
-| `is_verified` | BOOLEAN | DEFAULT false | Email verification status |
-| `last_login_at` | TIMESTAMPTZ | NULL | Most recent successful login |
-| `created_at` | TIMESTAMPTZ | NOT NULL | Record creation timestamp |
-| `updated_at` | TIMESTAMPTZ | NOT NULL | Last modification timestamp |
-| `deleted_at` | TIMESTAMPTZ | NULL | Soft delete timestamp |
+| Column          | Type         | Constraints      | Description                  |
+| --------------- | ------------ | ---------------- | ---------------------------- |
+| `id`            | UUID         | PK, NOT NULL     | Unique user identifier       |
+| `email`         | VARCHAR(255) | UNIQUE, NOT NULL | Login email address          |
+| `password_hash` | VARCHAR(255) | NOT NULL         | Bcrypt hashed password       |
+| `first_name`    | VARCHAR(100) | NOT NULL         | User's first name            |
+| `last_name`     | VARCHAR(100) | NOT NULL         | User's last name             |
+| `avatar_url`    | TEXT         | NULL             | Profile image URL            |
+| `is_active`     | BOOLEAN      | DEFAULT true     | Account active status        |
+| `is_verified`   | BOOLEAN      | DEFAULT false    | Email verification status    |
+| `last_login_at` | TIMESTAMPTZ  | NULL             | Most recent successful login |
+| `created_at`    | TIMESTAMPTZ  | NOT NULL         | Record creation timestamp    |
+| `updated_at`    | TIMESTAMPTZ  | NOT NULL         | Last modification timestamp  |
+| `deleted_at`    | TIMESTAMPTZ  | NULL             | Soft delete timestamp        |
 
 ---
 
 ### Table: `roles`
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | UUID | PK, NOT NULL | Unique role identifier |
-| `name` | VARCHAR(100) | UNIQUE, NOT NULL | Role name (e.g., Manager, Cashier) |
-| `description` | TEXT | NULL | Role description |
-| `is_system` | BOOLEAN | DEFAULT false | System roles cannot be deleted |
-| `created_at` | TIMESTAMPTZ | NOT NULL | Creation timestamp |
-| `updated_at` | TIMESTAMPTZ | NOT NULL | Last modified timestamp |
+| Column        | Type         | Constraints      | Description                        |
+| ------------- | ------------ | ---------------- | ---------------------------------- |
+| `id`          | UUID         | PK, NOT NULL     | Unique role identifier             |
+| `name`        | VARCHAR(100) | UNIQUE, NOT NULL | Role name (e.g., Manager, Cashier) |
+| `description` | TEXT         | NULL             | Role description                   |
+| `is_system`   | BOOLEAN      | DEFAULT false    | System roles cannot be deleted     |
+| `created_at`  | TIMESTAMPTZ  | NOT NULL         | Creation timestamp                 |
+| `updated_at`  | TIMESTAMPTZ  | NOT NULL         | Last modified timestamp            |
 
 ---
 
 ### Table: `permissions`
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | UUID | PK, NOT NULL | Unique permission identifier |
-| `module` | VARCHAR(100) | NOT NULL | Module name (e.g., inventory, sales) |
-| `action` | VARCHAR(50) | NOT NULL | Action (create, read, update, delete) |
-| `name` | VARCHAR(150) | UNIQUE, NOT NULL | Full permission key (e.g., inventory.create) |
-| `description` | TEXT | NULL | Human-readable permission description |
+| Column        | Type         | Constraints      | Description                                  |
+| ------------- | ------------ | ---------------- | -------------------------------------------- |
+| `id`          | UUID         | PK, NOT NULL     | Unique permission identifier                 |
+| `module`      | VARCHAR(100) | NOT NULL         | Module name (e.g., inventory, sales)         |
+| `action`      | VARCHAR(50)  | NOT NULL         | Action (create, read, update, delete)        |
+| `name`        | VARCHAR(150) | UNIQUE, NOT NULL | Full permission key (e.g., inventory.create) |
+| `description` | TEXT         | NULL             | Human-readable permission description        |
 
 ---
 
 ### Table: `role_permissions`
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `role_id` | UUID | FK → roles.id | Reference to role |
+| Column          | Type | Constraints         | Description             |
+| --------------- | ---- | ------------------- | ----------------------- |
+| `role_id`       | UUID | FK → roles.id       | Reference to role       |
 | `permission_id` | UUID | FK → permissions.id | Reference to permission |
 
 **Composite PK**: (`role_id`, `permission_id`)
@@ -98,8 +98,8 @@
 
 ### Table: `user_roles`
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
+| Column    | Type | Constraints   | Description       |
+| --------- | ---- | ------------- | ----------------- |
 | `user_id` | UUID | FK → users.id | Reference to user |
 | `role_id` | UUID | FK → roles.id | Reference to role |
 
@@ -109,16 +109,16 @@
 
 ### Table: `refresh_tokens`
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | UUID | PK, NOT NULL | Token identifier |
-| `user_id` | UUID | FK → users.id | Owning user |
-| `token_hash` | VARCHAR(255) | NOT NULL | Hashed refresh token |
-| `expires_at` | TIMESTAMPTZ | NOT NULL | Token expiry time |
-| `is_revoked` | BOOLEAN | DEFAULT false | Revocation status |
-| `ip_address` | INET | NULL | IP address of issuing request |
-| `user_agent` | TEXT | NULL | Client user agent |
-| `created_at` | TIMESTAMPTZ | NOT NULL | Issuance timestamp |
+| Column       | Type         | Constraints   | Description                   |
+| ------------ | ------------ | ------------- | ----------------------------- |
+| `id`         | UUID         | PK, NOT NULL  | Token identifier              |
+| `user_id`    | UUID         | FK → users.id | Owning user                   |
+| `token_hash` | VARCHAR(255) | NOT NULL      | Hashed refresh token          |
+| `expires_at` | TIMESTAMPTZ  | NOT NULL      | Token expiry time             |
+| `is_revoked` | BOOLEAN      | DEFAULT false | Revocation status             |
+| `ip_address` | INET         | NULL          | IP address of issuing request |
+| `user_agent` | TEXT         | NULL          | Client user agent             |
+| `created_at` | TIMESTAMPTZ  | NOT NULL      | Issuance timestamp            |
 
 ---
 
@@ -126,55 +126,55 @@
 
 ### Table: `companies`
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | UUID | PK, NOT NULL | Company identifier |
-| `name` | VARCHAR(255) | NOT NULL | Company legal name |
-| `logo_url` | TEXT | NULL | Company logo URL |
-| `address` | TEXT | NULL | Registered address |
-| `phone` | VARCHAR(50) | NULL | Contact phone |
-| `email` | VARCHAR(255) | NULL | Contact email |
-| `tax_number` | VARCHAR(100) | NULL | Tax registration number |
-| `currency` | VARCHAR(10) | DEFAULT 'USD' | Default currency code |
-| `fiscal_year_start` | DATE | NULL | Fiscal year start date |
-| `created_at` | TIMESTAMPTZ | NOT NULL | Creation timestamp |
-| `updated_at` | TIMESTAMPTZ | NOT NULL | Last modified timestamp |
+| Column              | Type         | Constraints   | Description             |
+| ------------------- | ------------ | ------------- | ----------------------- |
+| `id`                | UUID         | PK, NOT NULL  | Company identifier      |
+| `name`              | VARCHAR(255) | NOT NULL      | Company legal name      |
+| `logo_url`          | TEXT         | NULL          | Company logo URL        |
+| `address`           | TEXT         | NULL          | Registered address      |
+| `phone`             | VARCHAR(50)  | NULL          | Contact phone           |
+| `email`             | VARCHAR(255) | NULL          | Contact email           |
+| `tax_number`        | VARCHAR(100) | NULL          | Tax registration number |
+| `currency`          | VARCHAR(10)  | DEFAULT 'USD' | Default currency code   |
+| `fiscal_year_start` | DATE         | NULL          | Fiscal year start date  |
+| `created_at`        | TIMESTAMPTZ  | NOT NULL      | Creation timestamp      |
+| `updated_at`        | TIMESTAMPTZ  | NOT NULL      | Last modified timestamp |
 
 ---
 
 ### Table: `branches`
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | UUID | PK, NOT NULL | Branch identifier |
-| `company_id` | UUID | FK → companies.id | Owning company |
-| `name` | VARCHAR(255) | NOT NULL | Branch name |
-| `address` | TEXT | NULL | Branch address |
-| `phone` | VARCHAR(50) | NULL | Branch phone |
-| `email` | VARCHAR(255) | NULL | Branch email |
-| `is_active` | BOOLEAN | DEFAULT true | Active status |
-| `created_at` | TIMESTAMPTZ | NOT NULL | Creation timestamp |
-| `updated_at` | TIMESTAMPTZ | NOT NULL | Last modified timestamp |
+| Column       | Type         | Constraints       | Description             |
+| ------------ | ------------ | ----------------- | ----------------------- |
+| `id`         | UUID         | PK, NOT NULL      | Branch identifier       |
+| `company_id` | UUID         | FK → companies.id | Owning company          |
+| `name`       | VARCHAR(255) | NOT NULL          | Branch name             |
+| `address`    | TEXT         | NULL              | Branch address          |
+| `phone`      | VARCHAR(50)  | NULL              | Branch phone            |
+| `email`      | VARCHAR(255) | NULL              | Branch email            |
+| `is_active`  | BOOLEAN      | DEFAULT true      | Active status           |
+| `created_at` | TIMESTAMPTZ  | NOT NULL          | Creation timestamp      |
+| `updated_at` | TIMESTAMPTZ  | NOT NULL          | Last modified timestamp |
 
 ---
 
 ### Table: `employees`
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | UUID | PK, NOT NULL | Employee identifier |
-| `user_id` | UUID | FK → users.id, NULL | Linked user account |
-| `branch_id` | UUID | FK → branches.id | Assigned branch |
-| `company_id` | UUID | FK → companies.id | Owning company |
-| `first_name` | VARCHAR(100) | NOT NULL | First name |
-| `last_name` | VARCHAR(100) | NOT NULL | Last name |
-| `phone` | VARCHAR(50) | NULL | Contact phone |
-| `email` | VARCHAR(255) | NULL | Employee email |
-| `hire_date` | DATE | NULL | Employment start date |
-| `status` | ENUM | NOT NULL | active / inactive / terminated |
-| `created_at` | TIMESTAMPTZ | NOT NULL | Creation timestamp |
-| `updated_at` | TIMESTAMPTZ | NOT NULL | Last modified timestamp |
-| `deleted_at` | TIMESTAMPTZ | NULL | Soft delete timestamp |
+| Column       | Type         | Constraints         | Description                    |
+| ------------ | ------------ | ------------------- | ------------------------------ |
+| `id`         | UUID         | PK, NOT NULL        | Employee identifier            |
+| `user_id`    | UUID         | FK → users.id, NULL | Linked user account            |
+| `branch_id`  | UUID         | FK → branches.id    | Assigned branch                |
+| `company_id` | UUID         | FK → companies.id   | Owning company                 |
+| `first_name` | VARCHAR(100) | NOT NULL            | First name                     |
+| `last_name`  | VARCHAR(100) | NOT NULL            | Last name                      |
+| `phone`      | VARCHAR(50)  | NULL                | Contact phone                  |
+| `email`      | VARCHAR(255) | NULL                | Employee email                 |
+| `hire_date`  | DATE         | NULL                | Employment start date          |
+| `status`     | ENUM         | NOT NULL            | active / inactive / terminated |
+| `created_at` | TIMESTAMPTZ  | NOT NULL            | Creation timestamp             |
+| `updated_at` | TIMESTAMPTZ  | NOT NULL            | Last modified timestamp        |
+| `deleted_at` | TIMESTAMPTZ  | NULL                | Soft delete timestamp          |
 
 ---
 
@@ -182,91 +182,91 @@
 
 ### Table: `categories`
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | UUID | PK | Category identifier |
-| `company_id` | UUID | FK → companies.id | Owning company |
-| `parent_id` | UUID | FK → categories.id, NULL | Parent category (self-referential) |
-| `name` | VARCHAR(255) | NOT NULL | Category name |
-| `slug` | VARCHAR(255) | UNIQUE | URL-safe identifier |
-| `image_url` | TEXT | NULL | Category image |
-| `sort_order` | INTEGER | DEFAULT 0 | Display sort order |
-| `created_at` | TIMESTAMPTZ | NOT NULL | Creation timestamp |
-| `updated_at` | TIMESTAMPTZ | NOT NULL | Last modified timestamp |
+| Column       | Type         | Constraints              | Description                        |
+| ------------ | ------------ | ------------------------ | ---------------------------------- |
+| `id`         | UUID         | PK                       | Category identifier                |
+| `company_id` | UUID         | FK → companies.id        | Owning company                     |
+| `parent_id`  | UUID         | FK → categories.id, NULL | Parent category (self-referential) |
+| `name`       | VARCHAR(255) | NOT NULL                 | Category name                      |
+| `slug`       | VARCHAR(255) | UNIQUE                   | URL-safe identifier                |
+| `image_url`  | TEXT         | NULL                     | Category image                     |
+| `sort_order` | INTEGER      | DEFAULT 0                | Display sort order                 |
+| `created_at` | TIMESTAMPTZ  | NOT NULL                 | Creation timestamp                 |
+| `updated_at` | TIMESTAMPTZ  | NOT NULL                 | Last modified timestamp            |
 
 ---
 
 ### Table: `brands`
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | UUID | PK | Brand identifier |
-| `company_id` | UUID | FK → companies.id | Owning company |
-| `name` | VARCHAR(255) | NOT NULL | Brand name |
-| `logo_url` | TEXT | NULL | Brand logo |
-| `created_at` | TIMESTAMPTZ | NOT NULL | Creation timestamp |
-| `updated_at` | TIMESTAMPTZ | NOT NULL | Last modified timestamp |
+| Column       | Type         | Constraints       | Description             |
+| ------------ | ------------ | ----------------- | ----------------------- |
+| `id`         | UUID         | PK                | Brand identifier        |
+| `company_id` | UUID         | FK → companies.id | Owning company          |
+| `name`       | VARCHAR(255) | NOT NULL          | Brand name              |
+| `logo_url`   | TEXT         | NULL              | Brand logo              |
+| `created_at` | TIMESTAMPTZ  | NOT NULL          | Creation timestamp      |
+| `updated_at` | TIMESTAMPTZ  | NOT NULL          | Last modified timestamp |
 
 ---
 
 ### Table: `units`
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | UUID | PK | Unit identifier |
-| `company_id` | UUID | FK → companies.id | Owning company |
-| `name` | VARCHAR(100) | NOT NULL | Unit name (e.g., Kilogram) |
-| `abbreviation` | VARCHAR(20) | NOT NULL | Short form (e.g., kg) |
+| Column         | Type         | Constraints       | Description                |
+| -------------- | ------------ | ----------------- | -------------------------- |
+| `id`           | UUID         | PK                | Unit identifier            |
+| `company_id`   | UUID         | FK → companies.id | Owning company             |
+| `name`         | VARCHAR(100) | NOT NULL          | Unit name (e.g., Kilogram) |
+| `abbreviation` | VARCHAR(20)  | NOT NULL          | Short form (e.g., kg)      |
 
 ---
 
 ### Table: `taxes`
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | UUID | PK | Tax identifier |
-| `company_id` | UUID | FK → companies.id | Owning company |
-| `name` | VARCHAR(100) | NOT NULL | Tax name (e.g., VAT 15%) |
-| `rate` | DECIMAL(6,4) | NOT NULL | Tax rate as decimal (0.15 = 15%) |
-| `is_inclusive` | BOOLEAN | DEFAULT false | Price-inclusive tax flag |
-| `is_active` | BOOLEAN | DEFAULT true | Active status |
+| Column         | Type         | Constraints       | Description                      |
+| -------------- | ------------ | ----------------- | -------------------------------- |
+| `id`           | UUID         | PK                | Tax identifier                   |
+| `company_id`   | UUID         | FK → companies.id | Owning company                   |
+| `name`         | VARCHAR(100) | NOT NULL          | Tax name (e.g., VAT 15%)         |
+| `rate`         | DECIMAL(6,4) | NOT NULL          | Tax rate as decimal (0.15 = 15%) |
+| `is_inclusive` | BOOLEAN      | DEFAULT false     | Price-inclusive tax flag         |
+| `is_active`    | BOOLEAN      | DEFAULT true      | Active status                    |
 
 ---
 
 ### Table: `products`
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | UUID | PK | Product identifier |
-| `company_id` | UUID | FK → companies.id | Owning company |
-| `category_id` | UUID | FK → categories.id, NULL | Product category |
-| `brand_id` | UUID | FK → brands.id, NULL | Product brand |
-| `unit_id` | UUID | FK → units.id | Unit of measure |
-| `tax_id` | UUID | FK → taxes.id, NULL | Applicable tax |
-| `name` | VARCHAR(255) | NOT NULL | Product name |
-| `sku` | VARCHAR(100) | UNIQUE | Stock keeping unit |
-| `description` | TEXT | NULL | Product description |
-| `cost_price` | DECIMAL(12,4) | NOT NULL | Purchase cost |
-| `selling_price` | DECIMAL(12,4) | NOT NULL | Retail selling price |
-| `wholesale_price` | DECIMAL(12,4) | NULL | Wholesale price |
-| `reorder_level` | DECIMAL(12,4) | DEFAULT 0 | Low stock threshold |
-| `image_url` | TEXT | NULL | Primary product image |
-| `status` | ENUM | NOT NULL | active / inactive / discontinued |
-| `created_at` | TIMESTAMPTZ | NOT NULL | Creation timestamp |
-| `updated_at` | TIMESTAMPTZ | NOT NULL | Last modified timestamp |
-| `deleted_at` | TIMESTAMPTZ | NULL | Soft delete timestamp |
+| Column            | Type          | Constraints              | Description                      |
+| ----------------- | ------------- | ------------------------ | -------------------------------- |
+| `id`              | UUID          | PK                       | Product identifier               |
+| `company_id`      | UUID          | FK → companies.id        | Owning company                   |
+| `category_id`     | UUID          | FK → categories.id, NULL | Product category                 |
+| `brand_id`        | UUID          | FK → brands.id, NULL     | Product brand                    |
+| `unit_id`         | UUID          | FK → units.id            | Unit of measure                  |
+| `tax_id`          | UUID          | FK → taxes.id, NULL      | Applicable tax                   |
+| `name`            | VARCHAR(255)  | NOT NULL                 | Product name                     |
+| `sku`             | VARCHAR(100)  | UNIQUE                   | Stock keeping unit               |
+| `description`     | TEXT          | NULL                     | Product description              |
+| `cost_price`      | DECIMAL(12,4) | NOT NULL                 | Purchase cost                    |
+| `selling_price`   | DECIMAL(12,4) | NOT NULL                 | Retail selling price             |
+| `wholesale_price` | DECIMAL(12,4) | NULL                     | Wholesale price                  |
+| `reorder_level`   | DECIMAL(12,4) | DEFAULT 0                | Low stock threshold              |
+| `image_url`       | TEXT          | NULL                     | Primary product image            |
+| `status`          | ENUM          | NOT NULL                 | active / inactive / discontinued |
+| `created_at`      | TIMESTAMPTZ   | NOT NULL                 | Creation timestamp               |
+| `updated_at`      | TIMESTAMPTZ   | NOT NULL                 | Last modified timestamp          |
+| `deleted_at`      | TIMESTAMPTZ   | NULL                     | Soft delete timestamp            |
 
 ---
 
 ### Table: `barcodes`
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | UUID | PK | Barcode record identifier |
-| `product_id` | UUID | FK → products.id | Associated product |
-| `barcode` | VARCHAR(100) | UNIQUE | Barcode value |
-| `type` | ENUM | NOT NULL | EAN13 / CODE128 / QR / CUSTOM |
-| `is_primary` | BOOLEAN | DEFAULT false | Primary barcode flag |
+| Column       | Type         | Constraints      | Description                   |
+| ------------ | ------------ | ---------------- | ----------------------------- |
+| `id`         | UUID         | PK               | Barcode record identifier     |
+| `product_id` | UUID         | FK → products.id | Associated product            |
+| `barcode`    | VARCHAR(100) | UNIQUE           | Barcode value                 |
+| `type`       | ENUM         | NOT NULL         | EAN13 / CODE128 / QR / CUSTOM |
+| `is_primary` | BOOLEAN      | DEFAULT false    | Primary barcode flag          |
 
 ---
 
@@ -274,26 +274,26 @@
 
 ### Table: `warehouses`
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | UUID | PK | Warehouse identifier |
-| `branch_id` | UUID | FK → branches.id | Assigned branch |
-| `company_id` | UUID | FK → companies.id | Owning company |
-| `name` | VARCHAR(255) | NOT NULL | Warehouse name |
-| `address` | TEXT | NULL | Physical location |
-| `is_active` | BOOLEAN | DEFAULT true | Active status |
+| Column       | Type         | Constraints       | Description          |
+| ------------ | ------------ | ----------------- | -------------------- |
+| `id`         | UUID         | PK                | Warehouse identifier |
+| `branch_id`  | UUID         | FK → branches.id  | Assigned branch      |
+| `company_id` | UUID         | FK → companies.id | Owning company       |
+| `name`       | VARCHAR(255) | NOT NULL          | Warehouse name       |
+| `address`    | TEXT         | NULL              | Physical location    |
+| `is_active`  | BOOLEAN      | DEFAULT true      | Active status        |
 
 ---
 
 ### Table: `stock`
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | UUID | PK | Stock record identifier |
-| `product_id` | UUID | FK → products.id | Product reference |
-| `warehouse_id` | UUID | FK → warehouses.id | Warehouse location |
-| `quantity` | DECIMAL(12,4) | NOT NULL, DEFAULT 0 | Current quantity on hand |
-| `updated_at` | TIMESTAMPTZ | NOT NULL | Last stock update time |
+| Column         | Type          | Constraints         | Description              |
+| -------------- | ------------- | ------------------- | ------------------------ |
+| `id`           | UUID          | PK                  | Stock record identifier  |
+| `product_id`   | UUID          | FK → products.id    | Product reference        |
+| `warehouse_id` | UUID          | FK → warehouses.id  | Warehouse location       |
+| `quantity`     | DECIMAL(12,4) | NOT NULL, DEFAULT 0 | Current quantity on hand |
+| `updated_at`   | TIMESTAMPTZ   | NOT NULL            | Last stock update time   |
 
 **Unique Constraint**: (`product_id`, `warehouse_id`)
 
@@ -301,46 +301,46 @@
 
 ### Table: `stock_movements`
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | UUID | PK | Movement identifier |
-| `product_id` | UUID | FK → products.id | Product reference |
-| `warehouse_id` | UUID | FK → warehouses.id | Warehouse reference |
-| `type` | ENUM | NOT NULL | sale / purchase / adjustment / transfer_in / transfer_out / return |
-| `quantity` | DECIMAL(12,4) | NOT NULL | Quantity changed (positive or negative) |
-| `reference_type` | VARCHAR(50) | NULL | Type of source document (sale, purchase, etc.) |
-| `reference_id` | UUID | NULL | ID of source document |
-| `note` | TEXT | NULL | Movement note |
-| `performed_by` | UUID | FK → users.id | User who triggered movement |
-| `created_at` | TIMESTAMPTZ | NOT NULL | Movement timestamp |
+| Column           | Type          | Constraints        | Description                                                        |
+| ---------------- | ------------- | ------------------ | ------------------------------------------------------------------ |
+| `id`             | UUID          | PK                 | Movement identifier                                                |
+| `product_id`     | UUID          | FK → products.id   | Product reference                                                  |
+| `warehouse_id`   | UUID          | FK → warehouses.id | Warehouse reference                                                |
+| `type`           | ENUM          | NOT NULL           | sale / purchase / adjustment / transfer_in / transfer_out / return |
+| `quantity`       | DECIMAL(12,4) | NOT NULL           | Quantity changed (positive or negative)                            |
+| `reference_type` | VARCHAR(50)   | NULL               | Type of source document (sale, purchase, etc.)                     |
+| `reference_id`   | UUID          | NULL               | ID of source document                                              |
+| `note`           | TEXT          | NULL               | Movement note                                                      |
+| `performed_by`   | UUID          | FK → users.id      | User who triggered movement                                        |
+| `created_at`     | TIMESTAMPTZ   | NOT NULL           | Movement timestamp                                                 |
 
 ---
 
 ### Table: `stock_transfers`
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | UUID | PK | Transfer identifier |
-| `from_warehouse_id` | UUID | FK → warehouses.id | Source warehouse |
-| `to_warehouse_id` | UUID | FK → warehouses.id | Destination warehouse |
-| `status` | ENUM | NOT NULL | pending / dispatched / received / cancelled |
-| `requested_by` | UUID | FK → users.id | Requesting user |
-| `approved_by` | UUID | FK → users.id, NULL | Approving user |
-| `note` | TEXT | NULL | Transfer notes |
-| `created_at` | TIMESTAMPTZ | NOT NULL | Creation timestamp |
-| `updated_at` | TIMESTAMPTZ | NOT NULL | Last modified timestamp |
+| Column              | Type        | Constraints         | Description                                 |
+| ------------------- | ----------- | ------------------- | ------------------------------------------- |
+| `id`                | UUID        | PK                  | Transfer identifier                         |
+| `from_warehouse_id` | UUID        | FK → warehouses.id  | Source warehouse                            |
+| `to_warehouse_id`   | UUID        | FK → warehouses.id  | Destination warehouse                       |
+| `status`            | ENUM        | NOT NULL            | pending / dispatched / received / cancelled |
+| `requested_by`      | UUID        | FK → users.id       | Requesting user                             |
+| `approved_by`       | UUID        | FK → users.id, NULL | Approving user                              |
+| `note`              | TEXT        | NULL                | Transfer notes                              |
+| `created_at`        | TIMESTAMPTZ | NOT NULL            | Creation timestamp                          |
+| `updated_at`        | TIMESTAMPTZ | NOT NULL            | Last modified timestamp                     |
 
 ---
 
 ### Table: `stock_transfer_items`
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | UUID | PK | Line item identifier |
-| `transfer_id` | UUID | FK → stock_transfers.id | Parent transfer |
-| `product_id` | UUID | FK → products.id | Product reference |
-| `quantity` | DECIMAL(12,4) | NOT NULL | Quantity to transfer |
-| `received_quantity` | DECIMAL(12,4) | DEFAULT 0 | Quantity actually received |
+| Column              | Type          | Constraints             | Description                |
+| ------------------- | ------------- | ----------------------- | -------------------------- |
+| `id`                | UUID          | PK                      | Line item identifier       |
+| `transfer_id`       | UUID          | FK → stock_transfers.id | Parent transfer            |
+| `product_id`        | UUID          | FK → products.id        | Product reference          |
+| `quantity`          | DECIMAL(12,4) | NOT NULL                | Quantity to transfer       |
+| `received_quantity` | DECIMAL(12,4) | DEFAULT 0               | Quantity actually received |
 
 ---
 
@@ -348,63 +348,63 @@
 
 ### Table: `sales`
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | UUID | PK | Sale identifier |
-| `branch_id` | UUID | FK → branches.id | Selling branch |
-| `customer_id` | UUID | FK → customers.id, NULL | Associated customer |
-| `user_id` | UUID | FK → users.id | Cashier/user |
-| `sale_number` | VARCHAR(50) | UNIQUE, NOT NULL | Human-readable sale reference |
-| `subtotal` | DECIMAL(14,4) | NOT NULL | Pre-tax, pre-discount total |
-| `discount_amount` | DECIMAL(14,4) | DEFAULT 0 | Total discount applied |
-| `tax_amount` | DECIMAL(14,4) | DEFAULT 0 | Total tax charged |
-| `grand_total` | DECIMAL(14,4) | NOT NULL | Final charged amount |
-| `paid_amount` | DECIMAL(14,4) | DEFAULT 0 | Amount collected |
-| `change_amount` | DECIMAL(14,4) | DEFAULT 0 | Change returned |
-| `status` | ENUM | NOT NULL | completed / voided / refunded |
-| `note` | TEXT | NULL | Sale notes |
-| `created_at` | TIMESTAMPTZ | NOT NULL | Sale timestamp |
+| Column            | Type          | Constraints             | Description                   |
+| ----------------- | ------------- | ----------------------- | ----------------------------- |
+| `id`              | UUID          | PK                      | Sale identifier               |
+| `branch_id`       | UUID          | FK → branches.id        | Selling branch                |
+| `customer_id`     | UUID          | FK → customers.id, NULL | Associated customer           |
+| `user_id`         | UUID          | FK → users.id           | Cashier/user                  |
+| `sale_number`     | VARCHAR(50)   | UNIQUE, NOT NULL        | Human-readable sale reference |
+| `subtotal`        | DECIMAL(14,4) | NOT NULL                | Pre-tax, pre-discount total   |
+| `discount_amount` | DECIMAL(14,4) | DEFAULT 0               | Total discount applied        |
+| `tax_amount`      | DECIMAL(14,4) | DEFAULT 0               | Total tax charged             |
+| `grand_total`     | DECIMAL(14,4) | NOT NULL                | Final charged amount          |
+| `paid_amount`     | DECIMAL(14,4) | DEFAULT 0               | Amount collected              |
+| `change_amount`   | DECIMAL(14,4) | DEFAULT 0               | Change returned               |
+| `status`          | ENUM          | NOT NULL                | completed / voided / refunded |
+| `note`            | TEXT          | NULL                    | Sale notes                    |
+| `created_at`      | TIMESTAMPTZ   | NOT NULL                | Sale timestamp                |
 
 ---
 
 ### Table: `sale_items`
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | UUID | PK | Line item identifier |
-| `sale_id` | UUID | FK → sales.id | Parent sale |
-| `product_id` | UUID | FK → products.id | Product sold |
-| `quantity` | DECIMAL(12,4) | NOT NULL | Quantity sold |
-| `unit_price` | DECIMAL(12,4) | NOT NULL | Price at time of sale |
-| `discount_amount` | DECIMAL(12,4) | DEFAULT 0 | Line-level discount |
-| `tax_amount` | DECIMAL(12,4) | DEFAULT 0 | Line-level tax |
-| `total` | DECIMAL(14,4) | NOT NULL | Line total |
+| Column            | Type          | Constraints      | Description           |
+| ----------------- | ------------- | ---------------- | --------------------- |
+| `id`              | UUID          | PK               | Line item identifier  |
+| `sale_id`         | UUID          | FK → sales.id    | Parent sale           |
+| `product_id`      | UUID          | FK → products.id | Product sold          |
+| `quantity`        | DECIMAL(12,4) | NOT NULL         | Quantity sold         |
+| `unit_price`      | DECIMAL(12,4) | NOT NULL         | Price at time of sale |
+| `discount_amount` | DECIMAL(12,4) | DEFAULT 0        | Line-level discount   |
+| `tax_amount`      | DECIMAL(12,4) | DEFAULT 0        | Line-level tax        |
+| `total`           | DECIMAL(14,4) | NOT NULL         | Line total            |
 
 ---
 
 ### Table: `invoices`
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | UUID | PK | Invoice identifier |
-| `sale_id` | UUID | FK → sales.id, UNIQUE | Associated sale |
-| `invoice_number` | VARCHAR(50) | UNIQUE, NOT NULL | Invoice reference number |
-| `status` | ENUM | NOT NULL | paid / partial / unpaid / voided |
-| `due_date` | DATE | NULL | Payment due date |
-| `issued_at` | TIMESTAMPTZ | NOT NULL | Invoice issuance timestamp |
+| Column           | Type        | Constraints           | Description                      |
+| ---------------- | ----------- | --------------------- | -------------------------------- |
+| `id`             | UUID        | PK                    | Invoice identifier               |
+| `sale_id`        | UUID        | FK → sales.id, UNIQUE | Associated sale                  |
+| `invoice_number` | VARCHAR(50) | UNIQUE, NOT NULL      | Invoice reference number         |
+| `status`         | ENUM        | NOT NULL              | paid / partial / unpaid / voided |
+| `due_date`       | DATE        | NULL                  | Payment due date                 |
+| `issued_at`      | TIMESTAMPTZ | NOT NULL              | Invoice issuance timestamp       |
 
 ---
 
 ### Table: `payments`
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | UUID | PK | Payment identifier |
-| `sale_id` | UUID | FK → sales.id | Associated sale |
-| `method` | ENUM | NOT NULL | cash / card / credit / split |
-| `amount` | DECIMAL(14,4) | NOT NULL | Amount paid |
-| `reference` | VARCHAR(255) | NULL | External payment reference |
-| `created_at` | TIMESTAMPTZ | NOT NULL | Payment timestamp |
+| Column       | Type          | Constraints   | Description                  |
+| ------------ | ------------- | ------------- | ---------------------------- |
+| `id`         | UUID          | PK            | Payment identifier           |
+| `sale_id`    | UUID          | FK → sales.id | Associated sale              |
+| `method`     | ENUM          | NOT NULL      | cash / card / credit / split |
+| `amount`     | DECIMAL(14,4) | NOT NULL      | Amount paid                  |
+| `reference`  | VARCHAR(255)  | NULL          | External payment reference   |
+| `created_at` | TIMESTAMPTZ   | NOT NULL      | Payment timestamp            |
 
 ---
 
@@ -412,54 +412,54 @@
 
 ### Table: `purchases`
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | UUID | PK | Purchase identifier |
-| `supplier_id` | UUID | FK → suppliers.id | Supplier |
-| `branch_id` | UUID | FK → branches.id | Receiving branch |
-| `warehouse_id` | UUID | FK → warehouses.id | Receiving warehouse |
-| `created_by` | UUID | FK → users.id | Creating user |
-| `purchase_number` | VARCHAR(50) | UNIQUE, NOT NULL | PO reference number |
-| `subtotal` | DECIMAL(14,4) | NOT NULL | Pre-tax total |
-| `tax_amount` | DECIMAL(14,4) | DEFAULT 0 | Tax on purchase |
-| `grand_total` | DECIMAL(14,4) | NOT NULL | Total payable |
-| `paid_amount` | DECIMAL(14,4) | DEFAULT 0 | Amount paid to supplier |
-| `status` | ENUM | NOT NULL | draft / sent / partial / received / cancelled |
-| `expected_date` | DATE | NULL | Expected delivery date |
-| `note` | TEXT | NULL | Purchase notes |
-| `created_at` | TIMESTAMPTZ | NOT NULL | Creation timestamp |
-| `updated_at` | TIMESTAMPTZ | NOT NULL | Last modified timestamp |
+| Column            | Type          | Constraints        | Description                                   |
+| ----------------- | ------------- | ------------------ | --------------------------------------------- |
+| `id`              | UUID          | PK                 | Purchase identifier                           |
+| `supplier_id`     | UUID          | FK → suppliers.id  | Supplier                                      |
+| `branch_id`       | UUID          | FK → branches.id   | Receiving branch                              |
+| `warehouse_id`    | UUID          | FK → warehouses.id | Receiving warehouse                           |
+| `created_by`      | UUID          | FK → users.id      | Creating user                                 |
+| `purchase_number` | VARCHAR(50)   | UNIQUE, NOT NULL   | PO reference number                           |
+| `subtotal`        | DECIMAL(14,4) | NOT NULL           | Pre-tax total                                 |
+| `tax_amount`      | DECIMAL(14,4) | DEFAULT 0          | Tax on purchase                               |
+| `grand_total`     | DECIMAL(14,4) | NOT NULL           | Total payable                                 |
+| `paid_amount`     | DECIMAL(14,4) | DEFAULT 0          | Amount paid to supplier                       |
+| `status`          | ENUM          | NOT NULL           | draft / sent / partial / received / cancelled |
+| `expected_date`   | DATE          | NULL               | Expected delivery date                        |
+| `note`            | TEXT          | NULL               | Purchase notes                                |
+| `created_at`      | TIMESTAMPTZ   | NOT NULL           | Creation timestamp                            |
+| `updated_at`      | TIMESTAMPTZ   | NOT NULL           | Last modified timestamp                       |
 
 ---
 
 ### Table: `purchase_items`
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | UUID | PK | Line item identifier |
-| `purchase_id` | UUID | FK → purchases.id | Parent purchase |
-| `product_id` | UUID | FK → products.id | Product ordered |
-| `quantity_ordered` | DECIMAL(12,4) | NOT NULL | Quantity ordered |
-| `quantity_received` | DECIMAL(12,4) | DEFAULT 0 | Quantity received to date |
-| `unit_cost` | DECIMAL(12,4) | NOT NULL | Per-unit cost |
-| `tax_amount` | DECIMAL(12,4) | DEFAULT 0 | Line-level tax |
-| `total` | DECIMAL(14,4) | NOT NULL | Line total |
+| Column              | Type          | Constraints       | Description               |
+| ------------------- | ------------- | ----------------- | ------------------------- |
+| `id`                | UUID          | PK                | Line item identifier      |
+| `purchase_id`       | UUID          | FK → purchases.id | Parent purchase           |
+| `product_id`        | UUID          | FK → products.id  | Product ordered           |
+| `quantity_ordered`  | DECIMAL(12,4) | NOT NULL          | Quantity ordered          |
+| `quantity_received` | DECIMAL(12,4) | DEFAULT 0         | Quantity received to date |
+| `unit_cost`         | DECIMAL(12,4) | NOT NULL          | Per-unit cost             |
+| `tax_amount`        | DECIMAL(12,4) | DEFAULT 0         | Line-level tax            |
+| `total`             | DECIMAL(14,4) | NOT NULL          | Line total                |
 
 ---
 
 ### Table: `purchase_returns`
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | UUID | PK | Return identifier |
-| `purchase_id` | UUID | FK → purchases.id | Source purchase |
-| `supplier_id` | UUID | FK → suppliers.id | Supplier |
-| `created_by` | UUID | FK → users.id | Creating user |
-| `return_number` | VARCHAR(50) | UNIQUE, NOT NULL | Return reference number |
-| `total_amount` | DECIMAL(14,4) | NOT NULL | Total return value |
-| `reason` | TEXT | NULL | Return reason |
-| `status` | ENUM | NOT NULL | pending / completed / cancelled |
-| `created_at` | TIMESTAMPTZ | NOT NULL | Creation timestamp |
+| Column          | Type          | Constraints       | Description                     |
+| --------------- | ------------- | ----------------- | ------------------------------- |
+| `id`            | UUID          | PK                | Return identifier               |
+| `purchase_id`   | UUID          | FK → purchases.id | Source purchase                 |
+| `supplier_id`   | UUID          | FK → suppliers.id | Supplier                        |
+| `created_by`    | UUID          | FK → users.id     | Creating user                   |
+| `return_number` | VARCHAR(50)   | UNIQUE, NOT NULL  | Return reference number         |
+| `total_amount`  | DECIMAL(14,4) | NOT NULL          | Total return value              |
+| `reason`        | TEXT          | NULL              | Return reason                   |
+| `status`        | ENUM          | NOT NULL          | pending / completed / cancelled |
+| `created_at`    | TIMESTAMPTZ   | NOT NULL          | Creation timestamp              |
 
 ---
 
@@ -467,21 +467,21 @@
 
 ### Table: `customers`
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | UUID | PK | Customer identifier |
-| `company_id` | UUID | FK → companies.id | Owning company |
-| `name` | VARCHAR(255) | NOT NULL | Customer name |
-| `email` | VARCHAR(255) | NULL | Email address |
-| `phone` | VARCHAR(50) | NULL | Phone number |
-| `address` | TEXT | NULL | Delivery/billing address |
-| `customer_type` | ENUM | NOT NULL | retail / wholesale |
-| `credit_limit` | DECIMAL(14,4) | DEFAULT 0 | Maximum credit balance |
-| `current_balance` | DECIMAL(14,4) | DEFAULT 0 | Outstanding balance owed |
-| `is_active` | BOOLEAN | DEFAULT true | Active status |
-| `created_at` | TIMESTAMPTZ | NOT NULL | Creation timestamp |
-| `updated_at` | TIMESTAMPTZ | NOT NULL | Last modified timestamp |
-| `deleted_at` | TIMESTAMPTZ | NULL | Soft delete timestamp |
+| Column            | Type          | Constraints       | Description              |
+| ----------------- | ------------- | ----------------- | ------------------------ |
+| `id`              | UUID          | PK                | Customer identifier      |
+| `company_id`      | UUID          | FK → companies.id | Owning company           |
+| `name`            | VARCHAR(255)  | NOT NULL          | Customer name            |
+| `email`           | VARCHAR(255)  | NULL              | Email address            |
+| `phone`           | VARCHAR(50)   | NULL              | Phone number             |
+| `address`         | TEXT          | NULL              | Delivery/billing address |
+| `customer_type`   | ENUM          | NOT NULL          | retail / wholesale       |
+| `credit_limit`    | DECIMAL(14,4) | DEFAULT 0         | Maximum credit balance   |
+| `current_balance` | DECIMAL(14,4) | DEFAULT 0         | Outstanding balance owed |
+| `is_active`       | BOOLEAN       | DEFAULT true      | Active status            |
+| `created_at`      | TIMESTAMPTZ   | NOT NULL          | Creation timestamp       |
+| `updated_at`      | TIMESTAMPTZ   | NOT NULL          | Last modified timestamp  |
+| `deleted_at`      | TIMESTAMPTZ   | NULL              | Soft delete timestamp    |
 
 ---
 
@@ -489,21 +489,21 @@
 
 ### Table: `suppliers`
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | UUID | PK | Supplier identifier |
-| `company_id` | UUID | FK → companies.id | Owning company |
-| `name` | VARCHAR(255) | NOT NULL | Supplier company name |
-| `contact_person` | VARCHAR(255) | NULL | Primary contact name |
-| `email` | VARCHAR(255) | NULL | Email address |
-| `phone` | VARCHAR(50) | NULL | Phone number |
-| `address` | TEXT | NULL | Supplier address |
-| `payment_terms` | INTEGER | DEFAULT 30 | Credit days |
-| `current_balance` | DECIMAL(14,4) | DEFAULT 0 | Outstanding payable |
-| `is_active` | BOOLEAN | DEFAULT true | Active status |
-| `created_at` | TIMESTAMPTZ | NOT NULL | Creation timestamp |
-| `updated_at` | TIMESTAMPTZ | NOT NULL | Last modified timestamp |
-| `deleted_at` | TIMESTAMPTZ | NULL | Soft delete timestamp |
+| Column            | Type          | Constraints       | Description             |
+| ----------------- | ------------- | ----------------- | ----------------------- |
+| `id`              | UUID          | PK                | Supplier identifier     |
+| `company_id`      | UUID          | FK → companies.id | Owning company          |
+| `name`            | VARCHAR(255)  | NOT NULL          | Supplier company name   |
+| `contact_person`  | VARCHAR(255)  | NULL              | Primary contact name    |
+| `email`           | VARCHAR(255)  | NULL              | Email address           |
+| `phone`           | VARCHAR(50)   | NULL              | Phone number            |
+| `address`         | TEXT          | NULL              | Supplier address        |
+| `payment_terms`   | INTEGER       | DEFAULT 30        | Credit days             |
+| `current_balance` | DECIMAL(14,4) | DEFAULT 0         | Outstanding payable     |
+| `is_active`       | BOOLEAN       | DEFAULT true      | Active status           |
+| `created_at`      | TIMESTAMPTZ   | NOT NULL          | Creation timestamp      |
+| `updated_at`      | TIMESTAMPTZ   | NOT NULL          | Last modified timestamp |
+| `deleted_at`      | TIMESTAMPTZ   | NULL              | Soft delete timestamp   |
 
 ---
 
@@ -511,39 +511,39 @@
 
 ### Table: `transactions`
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | UUID | PK | Transaction identifier |
-| `company_id` | UUID | FK → companies.id | Owning company |
-| `branch_id` | UUID | FK → branches.id, NULL | Branch reference |
-| `type` | ENUM | NOT NULL | income / expense |
-| `category` | VARCHAR(100) | NOT NULL | Transaction category |
-| `amount` | DECIMAL(14,4) | NOT NULL | Transaction amount |
-| `description` | TEXT | NULL | Description |
-| `reference_type` | VARCHAR(50) | NULL | Source document type |
-| `reference_id` | UUID | NULL | Source document ID |
-| `transaction_date` | DATE | NOT NULL | Transaction date |
-| `created_by` | UUID | FK → users.id | Recording user |
-| `created_at` | TIMESTAMPTZ | NOT NULL | Creation timestamp |
+| Column             | Type          | Constraints            | Description            |
+| ------------------ | ------------- | ---------------------- | ---------------------- |
+| `id`               | UUID          | PK                     | Transaction identifier |
+| `company_id`       | UUID          | FK → companies.id      | Owning company         |
+| `branch_id`        | UUID          | FK → branches.id, NULL | Branch reference       |
+| `type`             | ENUM          | NOT NULL               | income / expense       |
+| `category`         | VARCHAR(100)  | NOT NULL               | Transaction category   |
+| `amount`           | DECIMAL(14,4) | NOT NULL               | Transaction amount     |
+| `description`      | TEXT          | NULL                   | Description            |
+| `reference_type`   | VARCHAR(50)   | NULL                   | Source document type   |
+| `reference_id`     | UUID          | NULL                   | Source document ID     |
+| `transaction_date` | DATE          | NOT NULL               | Transaction date       |
+| `created_by`       | UUID          | FK → users.id          | Recording user         |
+| `created_at`       | TIMESTAMPTZ   | NOT NULL               | Creation timestamp     |
 
 ---
 
 ### Table: `expenses`
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | UUID | PK | Expense identifier |
-| `company_id` | UUID | FK → companies.id | Owning company |
-| `branch_id` | UUID | FK → branches.id, NULL | Branch reference |
-| `category` | VARCHAR(100) | NOT NULL | Expense category |
-| `amount` | DECIMAL(14,4) | NOT NULL | Expense amount |
-| `description` | TEXT | NULL | Expense description |
-| `receipt_url` | TEXT | NULL | Attached receipt URL |
-| `expense_date` | DATE | NOT NULL | Date of expense |
-| `approved_by` | UUID | FK → users.id, NULL | Approving user |
-| `status` | ENUM | NOT NULL | pending / approved / rejected |
-| `created_by` | UUID | FK → users.id | Recording user |
-| `created_at` | TIMESTAMPTZ | NOT NULL | Creation timestamp |
+| Column         | Type          | Constraints            | Description                   |
+| -------------- | ------------- | ---------------------- | ----------------------------- |
+| `id`           | UUID          | PK                     | Expense identifier            |
+| `company_id`   | UUID          | FK → companies.id      | Owning company                |
+| `branch_id`    | UUID          | FK → branches.id, NULL | Branch reference              |
+| `category`     | VARCHAR(100)  | NOT NULL               | Expense category              |
+| `amount`       | DECIMAL(14,4) | NOT NULL               | Expense amount                |
+| `description`  | TEXT          | NULL                   | Expense description           |
+| `receipt_url`  | TEXT          | NULL                   | Attached receipt URL          |
+| `expense_date` | DATE          | NOT NULL               | Date of expense               |
+| `approved_by`  | UUID          | FK → users.id, NULL    | Approving user                |
+| `status`       | ENUM          | NOT NULL               | pending / approved / rejected |
+| `created_by`   | UUID          | FK → users.id          | Recording user                |
+| `created_at`   | TIMESTAMPTZ   | NOT NULL               | Creation timestamp            |
 
 ---
 
@@ -551,19 +551,19 @@
 
 ### Table: `audit_logs`
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | UUID | PK | Log entry identifier |
-| `user_id` | UUID | FK → users.id, NULL | Performing user |
-| `action` | VARCHAR(100) | NOT NULL | Action performed (create, update, delete) |
-| `module` | VARCHAR(100) | NOT NULL | Affected module |
-| `entity_type` | VARCHAR(100) | NOT NULL | Affected entity (e.g., Product, Sale) |
-| `entity_id` | UUID | NULL | Affected record ID |
-| `old_values` | JSONB | NULL | State before change |
-| `new_values` | JSONB | NULL | State after change |
-| `ip_address` | INET | NULL | Request IP address |
-| `user_agent` | TEXT | NULL | Client user agent |
-| `created_at` | TIMESTAMPTZ | NOT NULL | Log entry timestamp |
+| Column        | Type         | Constraints         | Description                               |
+| ------------- | ------------ | ------------------- | ----------------------------------------- |
+| `id`          | UUID         | PK                  | Log entry identifier                      |
+| `user_id`     | UUID         | FK → users.id, NULL | Performing user                           |
+| `action`      | VARCHAR(100) | NOT NULL            | Action performed (create, update, delete) |
+| `module`      | VARCHAR(100) | NOT NULL            | Affected module                           |
+| `entity_type` | VARCHAR(100) | NOT NULL            | Affected entity (e.g., Product, Sale)     |
+| `entity_id`   | UUID         | NULL                | Affected record ID                        |
+| `old_values`  | JSONB        | NULL                | State before change                       |
+| `new_values`  | JSONB        | NULL                | State after change                        |
+| `ip_address`  | INET         | NULL                | Request IP address                        |
+| `user_agent`  | TEXT         | NULL                | Client user agent                         |
+| `created_at`  | TIMESTAMPTZ  | NOT NULL            | Log entry timestamp                       |
 
 **Note:** Audit log records are append-only. No UPDATE or DELETE operations are permitted on this table.
 
@@ -571,31 +571,31 @@
 
 ### Table: `notifications`
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | UUID | PK | Notification identifier |
-| `user_id` | UUID | FK → users.id | Target user |
-| `type` | VARCHAR(100) | NOT NULL | Notification type |
-| `title` | VARCHAR(255) | NOT NULL | Notification title |
-| `message` | TEXT | NOT NULL | Notification body |
-| `is_read` | BOOLEAN | DEFAULT false | Read status |
-| `metadata` | JSONB | NULL | Additional context data |
-| `created_at` | TIMESTAMPTZ | NOT NULL | Creation timestamp |
+| Column       | Type         | Constraints   | Description             |
+| ------------ | ------------ | ------------- | ----------------------- |
+| `id`         | UUID         | PK            | Notification identifier |
+| `user_id`    | UUID         | FK → users.id | Target user             |
+| `type`       | VARCHAR(100) | NOT NULL      | Notification type       |
+| `title`      | VARCHAR(255) | NOT NULL      | Notification title      |
+| `message`    | TEXT         | NOT NULL      | Notification body       |
+| `is_read`    | BOOLEAN      | DEFAULT false | Read status             |
+| `metadata`   | JSONB        | NULL          | Additional context data |
+| `created_at` | TIMESTAMPTZ  | NOT NULL      | Creation timestamp      |
 
 ---
 
 ### Table: `backups`
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | UUID | PK | Backup record identifier |
-| `filename` | VARCHAR(255) | NOT NULL | Backup file name |
-| `size_bytes` | BIGINT | NULL | Backup file size |
-| `storage_path` | TEXT | NOT NULL | File storage path |
-| `status` | ENUM | NOT NULL | pending / completed / failed |
-| `type` | ENUM | NOT NULL | manual / scheduled |
-| `created_by` | UUID | FK → users.id, NULL | Triggering user |
-| `created_at` | TIMESTAMPTZ | NOT NULL | Backup creation timestamp |
+| Column         | Type         | Constraints         | Description                  |
+| -------------- | ------------ | ------------------- | ---------------------------- |
+| `id`           | UUID         | PK                  | Backup record identifier     |
+| `filename`     | VARCHAR(255) | NOT NULL            | Backup file name             |
+| `size_bytes`   | BIGINT       | NULL                | Backup file size             |
+| `storage_path` | TEXT         | NOT NULL            | File storage path            |
+| `status`       | ENUM         | NOT NULL            | pending / completed / failed |
+| `type`         | ENUM         | NOT NULL            | manual / scheduled           |
+| `created_by`   | UUID         | FK → users.id, NULL | Triggering user              |
+| `created_at`   | TIMESTAMPTZ  | NOT NULL            | Backup creation timestamp    |
 
 ---
 
@@ -668,4 +668,4 @@ Admin Adjustment → POST /api/v1/inventory/adjustments
 
 ---
 
-*This document is part of the Enterprise POS System Phase 0 documentation suite.*
+_This document is part of the Enterprise POS System Phase 0 documentation suite._

@@ -53,14 +53,14 @@ The Enterprise POS System is structured as a **monorepo** containing two main ap
 
 ### Component Responsibilities
 
-| Component | Responsibility |
-|-----------|---------------|
-| **Nginx** | SSL termination, reverse proxy routing, static asset caching, rate limiting at network edge |
-| **Next.js Frontend** | Server-side rendering, client-side UI, route protection, API communication |
-| **Fastify API** | Business logic, authentication, data validation, database operations |
-| **PostgreSQL** | Persistent relational data storage for all business entities |
-| **Redis** | Refresh token store, session cache, rate limit counters, job queues |
-| **BullMQ Workers** | Asynchronous background processing (emails, reports, backups) |
+| Component            | Responsibility                                                                              |
+| -------------------- | ------------------------------------------------------------------------------------------- |
+| **Nginx**            | SSL termination, reverse proxy routing, static asset caching, rate limiting at network edge |
+| **Next.js Frontend** | Server-side rendering, client-side UI, route protection, API communication                  |
+| **Fastify API**      | Business logic, authentication, data validation, database operations                        |
+| **PostgreSQL**       | Persistent relational data storage for all business entities                                |
+| **Redis**            | Refresh token store, session cache, rate limit counters, job queues                         |
+| **BullMQ Workers**   | Asynchronous background processing (emails, reports, backups)                               |
 
 ---
 
@@ -70,20 +70,20 @@ The Enterprise POS System is structured as a **monorepo** containing two main ap
 
 The frontend is built with **Next.js 15** using the App Router. Page rendering strategy is chosen per route:
 
-| Page Type | Strategy | Rationale |
-|-----------|----------|-----------|
-| Public pages (login, reset) | Static (SSG) | No authentication required, cacheable |
-| Dashboard & analytics | Server-Side Rendering (SSR) | Fresh data on each load |
-| POS interface | Client-Side Rendering (CSR) | Real-time interaction, no SSR latency |
-| Reports | SSR + Client hydration | Initial data from server, filters client-side |
+| Page Type                   | Strategy                    | Rationale                                     |
+| --------------------------- | --------------------------- | --------------------------------------------- |
+| Public pages (login, reset) | Static (SSG)                | No authentication required, cacheable         |
+| Dashboard & analytics       | Server-Side Rendering (SSR) | Fresh data on each load                       |
+| POS interface               | Client-Side Rendering (CSR) | Real-time interaction, no SSR latency         |
+| Reports                     | SSR + Client hydration      | Initial data from server, filters client-side |
 
 ### State Management
 
-| Layer | Tool | Scope |
-|-------|------|-------|
-| Server state (API data) | TanStack Query | Fetch, cache, sync, and invalidate remote data |
-| Client/UI state | Zustand | Auth session, cart state, sidebar, theme, notifications |
-| Form state | React Hook Form + Zod | Form validation and controlled submission |
+| Layer                   | Tool                  | Scope                                                   |
+| ----------------------- | --------------------- | ------------------------------------------------------- |
+| Server state (API data) | TanStack Query        | Fetch, cache, sync, and invalidate remote data          |
+| Client/UI state         | Zustand               | Auth session, cart state, sidebar, theme, notifications |
+| Form state              | React Hook Form + Zod | Form validation and controlled submission               |
 
 ### Frontend Module Structure
 
@@ -175,23 +175,23 @@ apps/api/
 
 Each module follows a consistent four-layer structure:
 
-| Layer | File | Responsibility |
-|-------|------|----------------|
-| **Routes** | `*.routes.ts` | Register HTTP endpoints and attach handlers |
-| **Schema** | `*.schema.ts` | Zod or Fastify JSON Schema for validation |
+| Layer       | File           | Responsibility                               |
+| ----------- | -------------- | -------------------------------------------- |
+| **Routes**  | `*.routes.ts`  | Register HTTP endpoints and attach handlers  |
+| **Schema**  | `*.schema.ts`  | Zod or Fastify JSON Schema for validation    |
 | **Handler** | `*.handler.ts` | Parse request, call service, format response |
-| **Service** | `*.service.ts` | Business logic, database calls via Prisma |
+| **Service** | `*.service.ts` | Business logic, database calls via Prisma    |
 
 ### Background Job Processing
 
 BullMQ manages all asynchronous workloads:
 
-| Queue | Description |
-|-------|-------------|
-| `email-queue` | Send transactional emails (welcome, password reset, alerts) |
-| `report-queue` | Generate large report exports in background |
-| `backup-queue` | Scheduled database backup operations |
-| `notification-queue` | Dispatch in-app and push notifications |
+| Queue                | Description                                                 |
+| -------------------- | ----------------------------------------------------------- |
+| `email-queue`        | Send transactional emails (welcome, password reset, alerts) |
+| `report-queue`       | Generate large report exports in background                 |
+| `backup-queue`       | Scheduled database backup operations                        |
+| `notification-queue` | Dispatch in-app and push notifications                      |
 
 ---
 
@@ -205,28 +205,28 @@ PostgreSQL serves as the single source of truth for all persistent business data
 
 Database tables are logically grouped into domains:
 
-| Domain | Tables |
-|--------|--------|
-| **Auth** | `users`, `roles`, `permissions`, `role_permissions`, `user_roles`, `refresh_tokens` |
-| **Business** | `companies`, `branches`, `employees` |
-| **Catalog** | `products`, `categories`, `brands`, `units`, `taxes`, `barcodes` |
-| **Inventory** | `warehouses`, `stock`, `stock_movements`, `stock_transfers` |
-| **Sales** | `sales`, `sale_items`, `invoices`, `payments` |
-| **Purchase** | `purchases`, `purchase_items`, `purchase_returns` |
-| **Customer** | `customers` |
-| **Supplier** | `suppliers` |
-| **Accounting** | `transactions`, `expenses`, `incomes` |
-| **System** | `audit_logs`, `notifications`, `backups`, `settings` |
+| Domain         | Tables                                                                              |
+| -------------- | ----------------------------------------------------------------------------------- |
+| **Auth**       | `users`, `roles`, `permissions`, `role_permissions`, `user_roles`, `refresh_tokens` |
+| **Business**   | `companies`, `branches`, `employees`                                                |
+| **Catalog**    | `products`, `categories`, `brands`, `units`, `taxes`, `barcodes`                    |
+| **Inventory**  | `warehouses`, `stock`, `stock_movements`, `stock_transfers`                         |
+| **Sales**      | `sales`, `sale_items`, `invoices`, `payments`                                       |
+| **Purchase**   | `purchases`, `purchase_items`, `purchase_returns`                                   |
+| **Customer**   | `customers`                                                                         |
+| **Supplier**   | `suppliers`                                                                         |
+| **Accounting** | `transactions`, `expenses`, `incomes`                                               |
+| **System**     | `audit_logs`, `notifications`, `backups`, `settings`                                |
 
 ### Redis Usage
 
-| Purpose | Key Pattern | TTL |
-|---------|-------------|-----|
-| Refresh token store | `refresh:{userId}:{tokenId}` | 7 days |
-| Rate limit counters | `ratelimit:{ip}:{endpoint}` | 1 minute |
-| Session cache | `session:{userId}` | 15 minutes |
-| Report cache | `report:{hash}` | 30 minutes |
-| Low stock cache | `stock:low:{branchId}` | 5 minutes |
+| Purpose             | Key Pattern                  | TTL        |
+| ------------------- | ---------------------------- | ---------- |
+| Refresh token store | `refresh:{userId}:{tokenId}` | 7 days     |
+| Rate limit counters | `ratelimit:{ip}:{endpoint}`  | 1 minute   |
+| Session cache       | `session:{userId}`           | 15 minutes |
+| Report cache        | `report:{hash}`              | 30 minutes |
+| Low stock cache     | `stock:low:{branchId}`       | 5 minutes  |
 
 ---
 
@@ -459,13 +459,13 @@ The initial deployment is designed for vertical scaling on a single server, whic
 
 As load increases, the architecture supports horizontal scaling without application changes:
 
-| Component | Scaling Strategy |
-|-----------|-----------------|
-| **Next.js Frontend** | Multiple instances behind Nginx load balancer; stateless by design |
-| **Fastify API** | Multiple instances behind Nginx upstream; JWT auth is stateless |
-| **PostgreSQL** | Read replicas for heavy read workloads; connection pooling via PgBouncer |
-| **Redis** | Redis Sentinel for HA; Redis Cluster for high-throughput workloads |
-| **BullMQ Workers** | Additional worker processes can be spawned independently |
+| Component            | Scaling Strategy                                                         |
+| -------------------- | ------------------------------------------------------------------------ |
+| **Next.js Frontend** | Multiple instances behind Nginx load balancer; stateless by design       |
+| **Fastify API**      | Multiple instances behind Nginx upstream; JWT auth is stateless          |
+| **PostgreSQL**       | Read replicas for heavy read workloads; connection pooling via PgBouncer |
+| **Redis**            | Redis Sentinel for HA; Redis Cluster for high-throughput workloads       |
+| **BullMQ Workers**   | Additional worker processes can be spawned independently                 |
 
 ### Database Partitioning (Phase 3)
 
@@ -481,4 +481,4 @@ The data model includes `company_id` and `branch_id` foreign keys on all busines
 
 ---
 
-*This document is part of the Enterprise POS System Phase 0 documentation suite.*
+_This document is part of the Enterprise POS System Phase 0 documentation suite._

@@ -53,13 +53,13 @@ Internet
 
 ### Network Topology
 
-| Component | Exposure | Port |
-|-----------|----------|------|
-| Nginx | Public internet | 80, 443 |
-| Next.js | Internal (via Nginx) | 3000 |
-| Fastify API | Internal (via Nginx) | 4000 |
-| PostgreSQL | Internal only | 5432 |
-| Redis | Internal only | 6379 |
+| Component   | Exposure             | Port    |
+| ----------- | -------------------- | ------- |
+| Nginx       | Public internet      | 80, 443 |
+| Next.js     | Internal (via Nginx) | 3000    |
+| Fastify API | Internal (via Nginx) | 4000    |
+| PostgreSQL  | Internal only        | 5432    |
+| Redis       | Internal only        | 6379    |
 
 All backend services communicate over an isolated Docker network. No backend ports are exposed to the public internet.
 
@@ -69,33 +69,33 @@ All backend services communicate over an isolated Docker network. No backend por
 
 ### Minimum Production Requirements
 
-| Resource | Minimum | Recommended |
-|----------|---------|-------------|
-| **CPU** | 2 vCPU | 4 vCPU |
-| **RAM** | 4 GB | 8 GB |
-| **Storage** | 40 GB SSD | 100 GB SSD |
-| **OS** | Ubuntu 22.04 LTS | Ubuntu 22.04 LTS |
-| **Docker** | 26.x | Latest stable |
-| **Docker Compose** | 2.x | Latest stable |
+| Resource           | Minimum          | Recommended      |
+| ------------------ | ---------------- | ---------------- |
+| **CPU**            | 2 vCPU           | 4 vCPU           |
+| **RAM**            | 4 GB             | 8 GB             |
+| **Storage**        | 40 GB SSD        | 100 GB SSD       |
+| **OS**             | Ubuntu 22.04 LTS | Ubuntu 22.04 LTS |
+| **Docker**         | 26.x             | Latest stable    |
+| **Docker Compose** | 2.x              | Latest stable    |
 
 ### Software Prerequisites (Server)
 
-| Software | Version | Purpose |
-|----------|---------|---------|
-| Docker | 26.x+ | Container runtime |
-| Docker Compose | 2.x+ | Multi-container orchestration |
-| Nginx | 1.26.x | Reverse proxy |
-| Certbot | Latest | SSL certificate management |
-| Git | 2.x | Source code deployment |
+| Software       | Version | Purpose                       |
+| -------------- | ------- | ----------------------------- |
+| Docker         | 26.x+   | Container runtime             |
+| Docker Compose | 2.x+    | Multi-container orchestration |
+| Nginx          | 1.26.x  | Reverse proxy                 |
+| Certbot        | Latest  | SSL certificate management    |
+| Git            | 2.x     | Source code deployment        |
 
 ### Developer Machine Prerequisites
 
-| Software | Version | Purpose |
-|----------|---------|---------|
-| Node.js | 22.x LTS | Runtime for builds |
-| pnpm | 9.x | Package manager |
-| Docker Desktop | Latest | Local containerization |
-| Git | 2.x | Version control |
+| Software       | Version  | Purpose                |
+| -------------- | -------- | ---------------------- |
+| Node.js        | 22.x LTS | Runtime for builds     |
+| pnpm           | 9.x      | Package manager        |
+| Docker Desktop | Latest   | Local containerization |
+| Git            | 2.x      | Version control        |
 
 ---
 
@@ -252,11 +252,11 @@ pnpm dev
 
 **Development URLs:**
 
-| Service | URL |
-|---------|-----|
-| Frontend | `http://localhost:3000` |
-| API | `http://localhost:4000` |
-| API Health | `http://localhost:4000/health` |
+| Service       | URL                                                         |
+| ------------- | ----------------------------------------------------------- |
+| Frontend      | `http://localhost:3000`                                     |
+| API           | `http://localhost:4000`                                     |
+| API Health    | `http://localhost:4000/health`                              |
 | Prisma Studio | `http://localhost:5555` (run `pnpm --filter api db:studio`) |
 
 ---
@@ -282,11 +282,11 @@ services:
     volumes:
       - postgres_dev_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - '5432:5432'
     networks:
       - pos_dev_network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER}']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -298,11 +298,11 @@ services:
     volumes:
       - redis_dev_data:/data
     ports:
-      - "6379:6379"
+      - '6379:6379'
     networks:
       - pos_dev_network
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ['CMD', 'redis-cli', 'ping']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -331,8 +331,8 @@ services:
     image: nginx:1.26-alpine
     container_name: pos_nginx
     ports:
-      - "80:80"
-      - "443:443"
+      - '80:80'
+      - '443:443'
     volumes:
       - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./docker/nginx/certs:/etc/nginx/certs:ro
@@ -380,7 +380,7 @@ services:
       context: .
       dockerfile: apps/api/Dockerfile
     container_name: pos_worker
-    command: ["node", "dist/worker.js"]
+    command: ['node', 'dist/worker.js']
     env_file:
       - apps/api/.env
     depends_on:
@@ -403,7 +403,7 @@ services:
       - pos_network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER}']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -418,7 +418,7 @@ services:
       - pos_network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      test: ['CMD', 'redis-cli', '-a', '${REDIS_PASSWORD}', 'ping']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -440,14 +440,14 @@ networks:
 
 ### Migration Workflow
 
-| Command | Purpose |
-|---------|---------|
-| `pnpm --filter api db:migrate` | Apply all pending migrations (development) |
+| Command                             | Purpose                                          |
+| ----------------------------------- | ------------------------------------------------ |
+| `pnpm --filter api db:migrate`      | Apply all pending migrations (development)       |
 | `pnpm --filter api db:migrate:prod` | Apply migrations in production (non-interactive) |
-| `pnpm --filter api db:rollback` | Revert the last migration |
-| `pnpm --filter api db:seed` | Run seed data scripts |
-| `pnpm --filter api db:studio` | Open Prisma Studio (visual DB browser) |
-| `pnpm --filter api db:generate` | Regenerate Prisma client after schema changes |
+| `pnpm --filter api db:rollback`     | Revert the last migration                        |
+| `pnpm --filter api db:seed`         | Run seed data scripts                            |
+| `pnpm --filter api db:studio`       | Open Prisma Studio (visual DB browser)           |
+| `pnpm --filter api db:generate`     | Regenerate Prisma client after schema changes    |
 
 ### Production Migration Command
 
@@ -634,25 +634,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - uses: pnpm/action-setup@v4
         with:
           version: 9
-          
+
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'pnpm'
-          
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-        
+
       - name: Type check
         run: pnpm typecheck
-        
+
       - name: Lint
         run: pnpm lint
-        
+
       - name: Build
         run: pnpm build
 ```
@@ -704,12 +704,12 @@ jobs:
 
 ### Required GitHub Secrets
 
-| Secret | Description |
-|--------|-------------|
-| `SERVER_HOST` | Production server IP or hostname |
-| `SERVER_USER` | SSH username |
-| `SERVER_SSH_KEY` | Private SSH key for server access |
-| `REGISTRY_PASSWORD` | Container registry access token |
+| Secret              | Description                       |
+| ------------------- | --------------------------------- |
+| `SERVER_HOST`       | Production server IP or hostname  |
+| `SERVER_USER`       | SSH username                      |
+| `SERVER_SSH_KEY`    | Private SSH key for server access |
+| `REGISTRY_PASSWORD` | Container registry access token   |
 
 ---
 
@@ -717,19 +717,19 @@ jobs:
 
 ### Health Checks
 
-| Endpoint | Expected Response |
-|----------|------------------|
-| `GET /health` | `{ "status": "ok", "db": "connected", "redis": "connected" }` |
-| `GET /api/v1/health` | Same as above, API version |
+| Endpoint             | Expected Response                                             |
+| -------------------- | ------------------------------------------------------------- |
+| `GET /health`        | `{ "status": "ok", "db": "connected", "redis": "connected" }` |
+| `GET /api/v1/health` | Same as above, API version                                    |
 
 ### Log Management
 
-| Component | Log Location | Format |
-|-----------|-------------|--------|
-| Nginx | `/var/log/nginx/access.log` | Combined log format |
-| API | stdout (captured by Docker) | JSON (Pino structured) |
-| PostgreSQL | Docker container logs | PostgreSQL default |
-| Redis | Docker container logs | Redis default |
+| Component  | Log Location                | Format                 |
+| ---------- | --------------------------- | ---------------------- |
+| Nginx      | `/var/log/nginx/access.log` | Combined log format    |
+| API        | stdout (captured by Docker) | JSON (Pino structured) |
+| PostgreSQL | Docker container logs       | PostgreSQL default     |
+| Redis      | Docker container logs       | Redis default          |
 
 ```bash
 # View live API logs
@@ -770,4 +770,4 @@ docker exec -it pos_postgres psql -U pos_user -d enterprise_pos
 
 ---
 
-*This document is part of the Enterprise POS System Phase 0 documentation suite.*
+_This document is part of the Enterprise POS System Phase 0 documentation suite._

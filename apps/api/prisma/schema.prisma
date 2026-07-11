@@ -1,0 +1,72 @@
+// ─────────────────────────────────────────────
+// Prisma Schema — Enterprise POS System
+// ─────────────────────────────────────────────
+// Phase B1: Foundation setup only.
+// No models are defined in this phase.
+// Models will be added in Phase B2 (Authentication)
+// and subsequent phases.
+// ─────────────────────────────────────────────
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────
+// Phase B2 will add:
+//   - users
+//   - roles
+//   - permissions
+//   - role_permissions
+//   - user_roles
+//   - refresh_tokens
+//
+// Phase B3 will add:
+//   - companies
+//   - branches
+//   - employees
+//   - settings
+//
+// Phase B4 will add:
+//   - categories
+//   - brands
+//   - units
+//   - taxes
+//   - products
+//   - barcodes
+//
+// Phase B5 will add:
+//   - customers
+//   - suppliers
+//
+// Phase B6 will add:
+//   - warehouses
+//   - stock
+//   - stock_movements
+//   - stock_transfers
+//
+// Phase B7 will add:
+//   - purchases
+//   - purchase_items
+//   - purchase_returns
+//
+// Phase B8 will add:
+//   - sales
+//   - sale_items
+//   - invoices
+//   - payments
+//
+// Phase B9 will add:
+//   - transactions
+//   - expenses
+//   - incomes
+//
+// Phase B11 will add:
+//   - audit_logs
+//   - notifications
+//   - backups
+// ─────────────────────────────────────────────

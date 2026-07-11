@@ -47,15 +47,15 @@ The system aspires to be:
 
 Many retail and wholesale businesses face the following operational challenges:
 
-| Challenge | Impact |
-|-----------|--------|
-| Disconnected tools for sales, inventory, and accounting | Data inconsistency and manual reconciliation overhead |
-| No real-time stock visibility | Stockouts, overstocking, and poor purchasing decisions |
-| Lack of multi-branch coordination | Inconsistent pricing, inventory gaps, and fragmented reporting |
-| No centralized customer or supplier history | Missed business opportunities and poor relationship management |
-| Manual or spreadsheet-based accounting | Errors, delays, and lack of financial visibility |
-| No role-based access control | Security risks and unauthorized data access |
-| No audit trail | Inability to trace fraudulent or erroneous transactions |
+| Challenge                                               | Impact                                                         |
+| ------------------------------------------------------- | -------------------------------------------------------------- |
+| Disconnected tools for sales, inventory, and accounting | Data inconsistency and manual reconciliation overhead          |
+| No real-time stock visibility                           | Stockouts, overstocking, and poor purchasing decisions         |
+| Lack of multi-branch coordination                       | Inconsistent pricing, inventory gaps, and fragmented reporting |
+| No centralized customer or supplier history             | Missed business opportunities and poor relationship management |
+| Manual or spreadsheet-based accounting                  | Errors, delays, and lack of financial visibility               |
+| No role-based access control                            | Security risks and unauthorized data access                    |
+| No audit trail                                          | Inability to trace fraudulent or erroneous transactions        |
 
 Existing solutions are either too simplistic for enterprise use, too expensive for growing businesses, or require significant technical expertise to deploy and maintain. The Enterprise POS System bridges this gap with a professional, self-hostable, full-featured platform.
 
@@ -84,36 +84,42 @@ Existing solutions are either too simplistic for enterprise use, too expensive f
 
 ## 5. Target Users
 
-| User Type | Description | Primary Modules |
-|-----------|-------------|-----------------|
-| **System Administrator** | Manages system configuration, users, branches, and permissions | Settings, User Management, Audit Logs, Backup |
-| **Store Manager** | Oversees daily operations, reviews reports, manages staff | Dashboard, Reports, Inventory, Purchase |
-| **Cashier / POS Operator** | Processes customer transactions at the point of sale | POS, Sales, Customer Management |
-| **Inventory Manager** | Controls stock levels, conducts adjustments, manages transfers | Inventory, Products, Warehouses |
-| **Purchase Manager** | Manages supplier relationships and procurement workflows | Purchase, Suppliers, Inventory |
-| **Accountant** | Records financial transactions, generates financial reports | Accounting, Reports |
-| **Business Owner** | Reviews performance metrics and financial summaries | Dashboard, Reports, Analytics |
+| User Type                  | Description                                                    | Primary Modules                               |
+| -------------------------- | -------------------------------------------------------------- | --------------------------------------------- |
+| **System Administrator**   | Manages system configuration, users, branches, and permissions | Settings, User Management, Audit Logs, Backup |
+| **Store Manager**          | Oversees daily operations, reviews reports, manages staff      | Dashboard, Reports, Inventory, Purchase       |
+| **Cashier / POS Operator** | Processes customer transactions at the point of sale           | POS, Sales, Customer Management               |
+| **Inventory Manager**      | Controls stock levels, conducts adjustments, manages transfers | Inventory, Products, Warehouses               |
+| **Purchase Manager**       | Manages supplier relationships and procurement workflows       | Purchase, Suppliers, Inventory                |
+| **Accountant**             | Records financial transactions, generates financial reports    | Accounting, Reports                           |
+| **Business Owner**         | Reviews performance metrics and financial summaries            | Dashboard, Reports, Analytics                 |
 
 ---
 
 ## 6. Business Use Cases
 
 ### UC-01: Retail Store Operations
+
 A retail store uses the POS module for all customer-facing transactions. Cashiers scan products by barcode, apply discounts, collect payment, and issue printed or digital receipts. Inventory levels adjust automatically with each sale.
 
 ### UC-02: Multi-Branch Retail Chain
+
 A chain of stores operates multiple branches under a single company profile. Each branch maintains independent stock, sales records, and employee assignments. Management accesses consolidated reports across all branches from the central dashboard.
 
 ### UC-03: Wholesale Distribution
+
 A wholesale distributor manages bulk purchase orders from suppliers, receives stock into warehouses, and processes wholesale invoices to business customers. The purchase and inventory modules work together to track landed cost and available stock.
 
 ### UC-04: Financial Management
+
 The accounting team records expenses and income, reconciles transactions against sales and purchase records, and generates monthly profit/loss statements without relying on external accounting software.
 
 ### UC-05: Compliance and Auditing
+
 An internal auditor reviews the complete audit log to trace any modification to sales records, user permissions, or product pricing — with timestamps, user identification, and before/after values recorded for every action.
 
 ### UC-06: Supplier and Customer Relationship Management
+
 The purchasing team maintains detailed supplier profiles with contact information, purchase history, and payment terms. The sales team tracks customer purchase history to identify loyal customers and support targeted promotions.
 
 ---
@@ -122,20 +128,20 @@ The purchasing team maintains detailed supplier profiles with contact informatio
 
 ### In Scope
 
-| Domain | Included Functionality |
-|--------|------------------------|
-| **Authentication** | Login, logout, token refresh, password reset, session management |
-| **User & Role Management** | User profiles, employee records, role assignment, permission matrix |
-| **Business Configuration** | Company profile, branch management, system settings |
-| **Product Catalog** | Products, categories, brands, units of measure, barcodes, tax configuration |
-| **Inventory Management** | Warehouses, stock tracking, adjustments, inter-branch/warehouse transfers |
-| **Purchase Management** | Purchase orders, goods receipt, purchase returns, supplier invoices |
-| **Point of Sale** | Product search, cart, discounts, checkout, invoicing, payment, receipts |
-| **Customer Management** | Customer profiles, purchase history, balance tracking |
-| **Supplier Management** | Supplier profiles, purchase history, payment tracking |
-| **Accounting** | Income records, expense records, ledger, profit/loss summaries |
-| **Reporting & Analytics** | Sales, purchase, inventory, and financial reports with date filters |
-| **Enterprise Features** | Audit logging, notifications, backup, restore |
+| Domain                     | Included Functionality                                                      |
+| -------------------------- | --------------------------------------------------------------------------- |
+| **Authentication**         | Login, logout, token refresh, password reset, session management            |
+| **User & Role Management** | User profiles, employee records, role assignment, permission matrix         |
+| **Business Configuration** | Company profile, branch management, system settings                         |
+| **Product Catalog**        | Products, categories, brands, units of measure, barcodes, tax configuration |
+| **Inventory Management**   | Warehouses, stock tracking, adjustments, inter-branch/warehouse transfers   |
+| **Purchase Management**    | Purchase orders, goods receipt, purchase returns, supplier invoices         |
+| **Point of Sale**          | Product search, cart, discounts, checkout, invoicing, payment, receipts     |
+| **Customer Management**    | Customer profiles, purchase history, balance tracking                       |
+| **Supplier Management**    | Supplier profiles, purchase history, payment tracking                       |
+| **Accounting**             | Income records, expense records, ledger, profit/loss summaries              |
+| **Reporting & Analytics**  | Sales, purchase, inventory, and financial reports with date filters         |
+| **Enterprise Features**    | Audit logging, notifications, backup, restore                               |
 
 ### Out of Scope (Version 1.0)
 
@@ -152,19 +158,19 @@ The purchasing team maintains detailed supplier profiles with contact informatio
 
 The system is architected to support the following expansions in future versions:
 
-| Expansion | Description |
-|-----------|-------------|
-| **Mobile Application** | Native iOS and Android POS applications using the same backend API |
-| **E-Commerce Integration** | Synchronize product catalog and inventory with online storefronts |
-| **Loyalty & Rewards Module** | Customer point accumulation, redemption, and tier management |
-| **Advanced Analytics** | AI-driven sales forecasting, demand planning, and trend analysis |
-| **Payroll Module** | Employee salary management, attendance, and leave tracking |
-| **Multi-Currency Support** | Transactions and reporting in multiple currencies with exchange rate management |
+| Expansion                    | Description                                                                                   |
+| ---------------------------- | --------------------------------------------------------------------------------------------- |
+| **Mobile Application**       | Native iOS and Android POS applications using the same backend API                            |
+| **E-Commerce Integration**   | Synchronize product catalog and inventory with online storefronts                             |
+| **Loyalty & Rewards Module** | Customer point accumulation, redemption, and tier management                                  |
+| **Advanced Analytics**       | AI-driven sales forecasting, demand planning, and trend analysis                              |
+| **Payroll Module**           | Employee salary management, attendance, and leave tracking                                    |
+| **Multi-Currency Support**   | Transactions and reporting in multiple currencies with exchange rate management               |
 | **Third-Party Integrations** | Webhook-based integration with accounting platforms, payment gateways, and shipping providers |
-| **SaaS Multi-Tenancy** | Full tenant isolation to support multiple organizations on a single deployment |
-| **Franchise Management** | Centralized product and pricing control with per-franchise operational autonomy |
-| **Offline POS Mode** | Local-first POS operation with automatic synchronization on reconnection |
+| **SaaS Multi-Tenancy**       | Full tenant isolation to support multiple organizations on a single deployment                |
+| **Franchise Management**     | Centralized product and pricing control with per-franchise operational autonomy               |
+| **Offline POS Mode**         | Local-first POS operation with automatic synchronization on reconnection                      |
 
 ---
 
-*This document is part of the Enterprise POS System Phase 0 documentation suite.*
+_This document is part of the Enterprise POS System Phase 0 documentation suite._
