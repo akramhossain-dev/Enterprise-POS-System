@@ -68,4 +68,15 @@ export async function routes(fastify: FastifyInstance): Promise<void> {
       });
     },
   );
+
+  // ── Business Modules (Authentication & Metadata) ────
+  const { authRoutes } = await import('../modules/auth/auth.routes');
+  const { userRoutes } = await import('../modules/users/user.routes');
+  const { roleRoutes } = await import('../modules/roles/role.routes');
+  const { permissionRoutes } = await import('../modules/permissions/permission.routes');
+
+  await fastify.register(authRoutes, { prefix: '/auth' });
+  await fastify.register(userRoutes, { prefix: '/users' });
+  await fastify.register(roleRoutes, { prefix: '/roles' });
+  await fastify.register(permissionRoutes, { prefix: '/permissions' });
 }

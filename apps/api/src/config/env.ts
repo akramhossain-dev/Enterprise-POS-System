@@ -33,6 +33,12 @@ const envSchema = z.object({
 
   // CORS
   FRONTEND_URL: z.string().url().default('http://localhost:3000'),
+
+  // Security & JWT
+  JWT_SECRET: z.string().min(8),
+  JWT_EXPIRES_IN: z.string().min(2).default('15m'),
+  REFRESH_TOKEN_SECRET: z.string().min(8),
+  REFRESH_TOKEN_EXPIRES_IN: z.string().min(2).default('7d'),
 });
 
 // ─────────────────────────────────────────────

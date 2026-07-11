@@ -5,6 +5,7 @@ import { errorHandler } from './common/errors/errorHandler';
 import { API_PREFIX } from './common/constants';
 
 // Plugins
+import fastifyCookie from '@fastify/cookie';
 import corsPlugin from './plugins/cors';
 import helmetPlugin from './plugins/helmet';
 import swaggerPlugin from './plugins/swagger';
@@ -44,6 +45,7 @@ export async function buildApp(): Promise<FastifyInstance> {
   await fastify.register(helmetPlugin);
   await fastify.register(corsPlugin);
   await fastify.register(rateLimitPlugin);
+  await fastify.register(fastifyCookie);
 
   // ── Documentation ──────────────────────────
   await fastify.register(swaggerPlugin);

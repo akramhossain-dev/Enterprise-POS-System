@@ -60,3 +60,15 @@ export type AsyncRouteHandler<
   Query = unknown,
   Reply = unknown,
 > = (params: Params, body: Body, query: Query) => Promise<Reply>;
+
+// ── Fastify request user context type augmentation ──
+declare module 'fastify' {
+  interface FastifyRequest {
+    user?: {
+      id: string;
+      email: string;
+      roleId: string;
+      permissions: string[];
+    };
+  }
+}
