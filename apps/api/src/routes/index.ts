@@ -69,7 +69,7 @@ export async function routes(fastify: FastifyInstance): Promise<void> {
     },
   );
 
-  // ── Business Modules (Authentication & Metadata) ────
+  // ── Auth & User Management ───────────────────────────
   const { authRoutes } = await import('../modules/auth/auth.routes');
   const { userRoutes } = await import('../modules/users/user.routes');
   const { roleRoutes } = await import('../modules/roles/role.routes');
@@ -79,4 +79,15 @@ export async function routes(fastify: FastifyInstance): Promise<void> {
   await fastify.register(userRoutes, { prefix: '/users' });
   await fastify.register(roleRoutes, { prefix: '/roles' });
   await fastify.register(permissionRoutes, { prefix: '/permissions' });
+
+  // ── Core Business Management ──────────────────────────
+  const { companyRoutes } = await import('../modules/company/company.routes');
+  const { settingsRoutes } = await import('../modules/settings/settings.routes');
+  const { branchRoutes } = await import('../modules/branch/branch.routes');
+  const { employeeRoutes } = await import('../modules/employee/employee.routes');
+
+  await fastify.register(companyRoutes, { prefix: '/companies' });
+  await fastify.register(settingsRoutes, { prefix: '/companies' }); // nested: /companies/:companyId/settings
+  await fastify.register(branchRoutes, { prefix: '/branches' });
+  await fastify.register(employeeRoutes, { prefix: '/employees' });
 }

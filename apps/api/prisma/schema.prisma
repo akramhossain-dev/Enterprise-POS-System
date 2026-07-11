@@ -22,6 +22,12 @@ enum Status {
   DELETED
 }
 
+enum EmployeeStatus {
+  ACTIVE
+  INACTIVE
+  TERMINATED
+}
+
 // ─────────────────────────────────────────────
 // Models — System Foundation
 // ─────────────────────────────────────────────
@@ -51,6 +57,7 @@ model User {
   roleId        String         @map("role_id") @db.Uuid
   role          Role           @relation(fields: [roleId], references: [id], onDelete: Restrict)
   refreshTokens RefreshToken[]
+  employee      Employee?
   createdAt     DateTime       @default(now()) @map("created_at") @db.Timestamptz
   updatedAt     DateTime       @updatedAt @map("updated_at") @db.Timestamptz
 
@@ -101,4 +108,78 @@ model RefreshToken {
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
 
   @@map("refresh_tokens")
+}
+
+// ─────────────────────────────────────────────
+// Models — Business Domain
+// ─────────────────────────────────────────────
+
+model Company {
+  id              String            @id @default(uuid()) @db.Uuid
+  name            String            @db.VarChar(255)
+  logoUrl         String?           @map("logo_url") @db.Text
+  address         String?           @db.Text
+  phone           String?           @db.VarChar(50)
+  email           String?           @db.VarChar(255)
+  taxNumber       String?           @map("tax_number") @db.VarChar(100)
+  currency        String            @default("USD") @db.VarChar(10)
+  fiscalYearStart DateTime?         @map("fiscal_year_start") @db.Date
+  status          Status            @default(ACTIVE)
+  branches        Branch[]
+  employees       Employee[]
+  settings        BusinessSetting[]
+  createdAt       DateTime          @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime          @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@map("companies")
+}
+
+model Branch {
+  id        String     @id @default(uuid()) @db.Uuid
+  companyId String     @map("company_id") @db.Uuid
+  company   Company    @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  name      String     @db.VarChar(255)
+  address   String?    @db.Text
+  phone     String?    @db.VarChar(50)
+  email     String?    @db.VarChar(255)
+  status    Status     @default(ACTIVE)
+  employees Employee[]
+  createdAt DateTime   @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime   @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@map("branches")
+}
+
+model Employee {
+  id        String         @id @default(uuid()) @db.Uuid
+  userId    String?        @unique @map("user_id") @db.Uuid
+  user      User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+  companyId String         @map("company_id") @db.Uuid
+  company   Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  branchId  String         @map("branch_id") @db.Uuid
+  branch    Branch         @relation(fields: [branchId], references: [id], onDelete: Restrict)
+  firstName String         @map("first_name") @db.VarChar(100)
+  lastName  String         @map("last_name") @db.VarChar(100)
+  phone     String?        @db.VarChar(50)
+  email     String?        @db.VarChar(255)
+  hireDate  DateTime?      @map("hire_date") @db.Date
+  status    EmployeeStatus @default(ACTIVE)
+  createdAt DateTime       @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime       @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt DateTime?      @map("deleted_at") @db.Timestamptz
+
+  @@map("employees")
+}
+
+model BusinessSetting {
+  id        String   @id @default(uuid()) @db.Uuid
+  companyId String   @map("company_id") @db.Uuid
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  key       String   @db.VarChar(100)
+  value     String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@unique([companyId, key])
+  @@map("business_settings")
 }
