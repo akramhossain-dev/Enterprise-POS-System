@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { PrismaClient, Status, EmployeeStatus } from '@prisma/client';
+import { PrismaClient, Status, EmployeeStatus, ProductStatus } from '@prisma/client';
 import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
@@ -11,10 +11,16 @@ async function hashPassword(password: string): Promise<string> {
 }
 
 async function main() {
-  console.log('🌱 Starting database seeding (Phase B4)...');
+  console.log('🌱 Starting database seeding (Phase B5)...');
 
-  // 1. Clear existing records in correct dependency order
+  // ── Clear in dependency order ──────────────────────────────
   console.log('Clearing existing data...');
+  await prisma.productImage.deleteMany();
+  await prisma.product.deleteMany();
+  await prisma.category.deleteMany();
+  await prisma.brand.deleteMany();
+  await prisma.unit.deleteMany();
+  await prisma.tax.deleteMany();
   await prisma.businessSetting.deleteMany();
   await prisma.employee.deleteMany();
   await prisma.branch.deleteMany();
@@ -26,60 +32,72 @@ async function main() {
   await prisma.permission.deleteMany();
   await prisma.systemConfig.deleteMany();
 
-  // 2. Seed System Configurations
+  // ── System Configs ─────────────────────────────────────────
   console.log('Seeding system configurations...');
-  const configs = [
-    { key: 'system.name', value: 'Enterprise POS System', status: Status.ACTIVE },
-    { key: 'system.version', value: '1.0.0', status: Status.ACTIVE },
-    { key: 'system.maintenance', value: 'false', status: Status.ACTIVE },
-  ];
-  await prisma.systemConfig.createMany({ data: configs });
+  await prisma.systemConfig.createMany({
+    data: [
+      { key: 'system.name', value: 'Enterprise POS System', status: Status.ACTIVE },
+      { key: 'system.version', value: '1.0.0', status: Status.ACTIVE },
+      { key: 'system.maintenance', value: 'false', status: Status.ACTIVE },
+    ],
+  });
 
-  // 3. Seed Permissions (all modules)
+  // ── Permissions ────────────────────────────────────────────
   console.log('Seeding permissions...');
   const permissionsData = [
-    // ── User management ──
+    // User management
     { name: 'user.create', module: 'users', action: 'create' },
     { name: 'user.read', module: 'users', action: 'read' },
     { name: 'user.update', module: 'users', action: 'update' },
     { name: 'user.delete', module: 'users', action: 'delete' },
-
-    // ── Role & Permission lookup ──
+    // Role & Permission
     { name: 'role.read', module: 'roles', action: 'read' },
     { name: 'permission.read', module: 'permissions', action: 'read' },
-
-    // ── Company management ──
+    // Company
     { name: 'company.create', module: 'companies', action: 'create' },
     { name: 'company.read', module: 'companies', action: 'read' },
     { name: 'company.update', module: 'companies', action: 'update' },
     { name: 'company.delete', module: 'companies', action: 'delete' },
-
-    // ── Branch management ──
+    // Branch
     { name: 'branch.create', module: 'branches', action: 'create' },
     { name: 'branch.read', module: 'branches', action: 'read' },
     { name: 'branch.update', module: 'branches', action: 'update' },
     { name: 'branch.delete', module: 'branches', action: 'delete' },
-
-    // ── Employee management ──
+    // Employee
     { name: 'employee.create', module: 'employees', action: 'create' },
     { name: 'employee.read', module: 'employees', action: 'read' },
     { name: 'employee.update', module: 'employees', action: 'update' },
     { name: 'employee.delete', module: 'employees', action: 'delete' },
-
-    // ── Business settings ──
+    // Business Settings
     { name: 'settings.read', module: 'settings', action: 'read' },
     { name: 'settings.update', module: 'settings', action: 'update' },
     { name: 'settings.delete', module: 'settings', action: 'delete' },
-
-    // ── Product Catalog (future) ──
+    // ── B5: Catalog Permissions ──
+    // Category
+    { name: 'category.create', module: 'categories', action: 'create' },
+    { name: 'category.read', module: 'categories', action: 'read' },
+    { name: 'category.update', module: 'categories', action: 'update' },
+    { name: 'category.delete', module: 'categories', action: 'delete' },
+    // Brand
+    { name: 'brand.create', module: 'brands', action: 'create' },
+    { name: 'brand.read', module: 'brands', action: 'read' },
+    { name: 'brand.update', module: 'brands', action: 'update' },
+    { name: 'brand.delete', module: 'brands', action: 'delete' },
+    // Unit
+    { name: 'unit.create', module: 'units', action: 'create' },
+    { name: 'unit.read', module: 'units', action: 'read' },
+    { name: 'unit.update', module: 'units', action: 'update' },
+    { name: 'unit.delete', module: 'units', action: 'delete' },
+    // Tax
+    { name: 'tax.create', module: 'taxes', action: 'create' },
+    { name: 'tax.read', module: 'taxes', action: 'read' },
+    { name: 'tax.update', module: 'taxes', action: 'update' },
+    { name: 'tax.delete', module: 'taxes', action: 'delete' },
+    // Product
     { name: 'product.create', module: 'products', action: 'create' },
     { name: 'product.read', module: 'products', action: 'read' },
     { name: 'product.update', module: 'products', action: 'update' },
     { name: 'product.delete', module: 'products', action: 'delete' },
-
-    // ── Sales (future) ──
-    { name: 'sale.create', module: 'sales', action: 'create' },
-    { name: 'sale.read', module: 'sales', action: 'read' },
   ];
 
   const permissions: Record<string, string> = {};
@@ -89,33 +107,31 @@ async function main() {
   }
   console.log(`  Created ${String(permissionsData.length)} permissions`);
 
-  // 4. Seed Roles
+  // ── Roles ──────────────────────────────────────────────────
   console.log('Seeding roles...');
   const roleNames = ['SUPER_ADMIN', 'ADMIN', 'MANAGER', 'CASHIER'];
   const roles: Record<string, string> = {};
   for (const name of roleNames) {
     const created = await prisma.role.create({
-      data: {
-        name,
-        description: `${name.replace('_', ' ')} system access role`,
-      },
+      data: { name, description: `${name.replace('_', ' ')} system access role` },
     });
     roles[name] = created.id;
   }
 
-  // 5. Map Permissions to Roles
+  // ── Role → Permission Mapping ──────────────────────────────
   console.log('Mapping permissions to roles...');
 
-  // SUPER_ADMIN & ADMIN get all permissions
+  // SUPER_ADMIN & ADMIN → all permissions
   for (const roleKey of ['SUPER_ADMIN', 'ADMIN']) {
-    const data = Object.values(permissions).map((permId) => ({
-      roleId: roles[roleKey],
-      permissionId: permId,
-    }));
-    await prisma.rolePermission.createMany({ data });
+    await prisma.rolePermission.createMany({
+      data: Object.values(permissions).map((permId) => ({
+        roleId: roles[roleKey],
+        permissionId: permId,
+      })),
+    });
   }
 
-  // MANAGER: broad access except delete on sensitive modules
+  // MANAGER → broad access, no hard deletes on org/finance data
   const managerPerms = [
     'user.create',
     'user.read',
@@ -131,29 +147,42 @@ async function main() {
     'employee.update',
     'settings.read',
     'settings.update',
+    'category.create',
+    'category.read',
+    'category.update',
+    'brand.create',
+    'brand.read',
+    'brand.update',
+    'unit.create',
+    'unit.read',
+    'unit.update',
+    'tax.create',
+    'tax.read',
+    'tax.update',
     'product.create',
     'product.read',
     'product.update',
-    'sale.create',
-    'sale.read',
+    'product.delete',
   ];
   await prisma.rolePermission.createMany({
-    data: managerPerms.map((name) => ({
-      roleId: roles.MANAGER,
-      permissionId: permissions[name],
-    })),
+    data: managerPerms.map((name) => ({ roleId: roles.MANAGER, permissionId: permissions[name] })),
   });
 
-  // CASHIER: minimal operational permissions
-  const cashierPerms = ['product.read', 'sale.create', 'sale.read', 'branch.read', 'company.read'];
+  // CASHIER → minimal read-only + sales
+  const cashierPerms = [
+    'product.read',
+    'category.read',
+    'brand.read',
+    'unit.read',
+    'tax.read',
+    'branch.read',
+    'company.read',
+  ];
   await prisma.rolePermission.createMany({
-    data: cashierPerms.map((name) => ({
-      roleId: roles.CASHIER,
-      permissionId: permissions[name],
-    })),
+    data: cashierPerms.map((name) => ({ roleId: roles.CASHIER, permissionId: permissions[name] })),
   });
 
-  // 6. Seed Default Company
+  // ── Company ─────────────────────────────────────────────────
   console.log('Seeding default company...');
   const company = await prisma.company.create({
     data: {
@@ -168,7 +197,7 @@ async function main() {
   });
   console.log(`  Created company: ${company.name} (${company.id})`);
 
-  // 7. Seed Default Branch
+  // ── Branch ──────────────────────────────────────────────────
   console.log('Seeding default branch...');
   const branch = await prisma.branch.create({
     data: {
@@ -180,32 +209,26 @@ async function main() {
       status: Status.ACTIVE,
     },
   });
-  console.log(`  Created branch: ${branch.name} (${branch.id})`);
 
-  // 8. Seed Default Business Settings
+  // ── Business Settings ───────────────────────────────────────
   console.log('Seeding business settings...');
-  const defaultSettings = [
-    { key: 'invoice.prefix', value: 'INV' },
-    { key: 'invoice.next_number', value: '1001' },
-    { key: 'pos.tax_inclusive', value: 'false' },
-    { key: 'pos.allow_credit_sale', value: 'true' },
-    { key: 'receipt.footer', value: 'Thank you for your business!' },
-  ];
   await prisma.businessSetting.createMany({
-    data: defaultSettings.map((s) => ({ ...s, companyId: company.id })),
+    data: [
+      { companyId: company.id, key: 'invoice.prefix', value: 'INV' },
+      { companyId: company.id, key: 'invoice.next_number', value: '1001' },
+      { companyId: company.id, key: 'pos.tax_inclusive', value: 'false' },
+      { companyId: company.id, key: 'pos.allow_credit_sale', value: 'true' },
+      { companyId: company.id, key: 'receipt.footer', value: 'Thank you for your business!' },
+    ],
   });
-  console.log(`  Created ${String(defaultSettings.length)} default settings`);
 
-  // 9. Seed Default Users
+  // ── Users ───────────────────────────────────────────────────
   console.log('Seeding default users...');
-
-  // Admin user
-  const adminPassword = await hashPassword('admin123');
   const adminUser = await prisma.user.create({
     data: {
       name: 'System Admin',
       email: 'admin@enterprise-pos.com',
-      password: adminPassword,
+      password: await hashPassword('admin123'),
       phone: '1234567890',
       roleId: roles.ADMIN,
       status: Status.ACTIVE,
@@ -213,13 +236,11 @@ async function main() {
   });
   console.log(`  Created user: ${adminUser.email} (Password: admin123)`);
 
-  // Cashier user
-  const cashierPassword = await hashPassword('cashier123');
   const cashierUser = await prisma.user.create({
     data: {
       name: 'Jane Cashier',
       email: 'cashier@enterprise-pos.com',
-      password: cashierPassword,
+      password: await hashPassword('cashier123'),
       phone: '0987654321',
       roleId: roles.CASHIER,
       status: Status.ACTIVE,
@@ -227,9 +248,9 @@ async function main() {
   });
   console.log(`  Created user: ${cashierUser.email} (Password: cashier123)`);
 
-  // 10. Seed Default Employee linked to admin user
+  // ── Employee ─────────────────────────────────────────────────
   console.log('Seeding default employee...');
-  const adminEmployee = await prisma.employee.create({
+  await prisma.employee.create({
     data: {
       companyId: company.id,
       branchId: branch.id,
@@ -242,11 +263,128 @@ async function main() {
       status: EmployeeStatus.ACTIVE,
     },
   });
-  console.log(
-    `  Created employee: ${adminEmployee.firstName} ${adminEmployee.lastName} (linked to admin user)`,
-  );
 
-  console.log('✅ Seeding completed successfully!');
+  // ── Catalog: Units ───────────────────────────────────────────
+  console.log('Seeding catalog: units...');
+  const unitsData = [
+    { name: 'Piece', shortName: 'pcs' },
+    { name: 'Kilogram', shortName: 'kg' },
+    { name: 'Liter', shortName: 'L' },
+    { name: 'Box', shortName: 'box' },
+    { name: 'Meter', shortName: 'm' },
+    { name: 'Dozen', shortName: 'doz' },
+  ];
+  const unitIds: Record<string, string> = {};
+  for (const u of unitsData) {
+    const created = await prisma.unit.create({
+      data: { companyId: company.id, ...u, status: Status.ACTIVE },
+    });
+    unitIds[u.shortName] = created.id;
+  }
+  console.log(`  Created ${String(unitsData.length)} units`);
+
+  // ── Catalog: Categories ──────────────────────────────────────
+  console.log('Seeding catalog: categories...');
+  const categoriesData = [
+    { name: 'General', description: 'Uncategorized products' },
+    { name: 'Electronics', description: 'Electronic devices and accessories' },
+    { name: 'Groceries', description: 'Food and grocery items' },
+    { name: 'Clothing', description: 'Apparel and fashion' },
+    { name: 'Beverages', description: 'Drinks and beverages' },
+  ];
+  const categoryIds: Record<string, string> = {};
+  for (const c of categoriesData) {
+    const created = await prisma.category.create({
+      data: { companyId: company.id, ...c, status: Status.ACTIVE },
+    });
+    categoryIds[c.name] = created.id;
+  }
+  console.log(`  Created ${String(categoriesData.length)} categories`);
+
+  // ── Catalog: Brands ──────────────────────────────────────────
+  console.log('Seeding catalog: brands...');
+  const brandsData = [
+    { name: 'Generic', description: 'Generic / unbranded products' },
+    { name: 'Samsung', description: 'Samsung Electronics' },
+    { name: 'Apple', description: 'Apple Inc.' },
+  ];
+  const brandIds: Record<string, string> = {};
+  for (const b of brandsData) {
+    const created = await prisma.brand.create({
+      data: { companyId: company.id, ...b, status: Status.ACTIVE },
+    });
+    brandIds[b.name] = created.id;
+  }
+  console.log(`  Created ${String(brandsData.length)} brands`);
+
+  // ── Catalog: Taxes ───────────────────────────────────────────
+  console.log('Seeding catalog: taxes...');
+  const taxesData = [
+    { name: 'VAT 15%', percentage: 15 },
+    { name: 'VAT 5%', percentage: 5 },
+    { name: 'Tax Free', percentage: 0 },
+  ];
+  const taxIds: Record<string, string> = {};
+  for (const t of taxesData) {
+    const created = await prisma.tax.create({
+      data: { companyId: company.id, ...t, status: Status.ACTIVE },
+    });
+    taxIds[t.name] = created.id;
+  }
+  console.log(`  Created ${String(taxesData.length)} taxes`);
+
+  // ── Catalog: Demo Products ───────────────────────────────────
+  console.log('Seeding catalog: demo products...');
+  const productsData = [
+    {
+      name: 'USB-C Cable 1m',
+      sku: 'SKU-USBC-001',
+      barcode: '1234567890001',
+      categoryId: categoryIds.Electronics,
+      brandId: brandIds.Generic,
+      unitId: unitIds.pcs,
+      taxId: taxIds['VAT 15%'],
+      purchasePrice: 3.5,
+      sellingPrice: 7.99,
+      description: 'High-speed USB-C to USB-A cable, 1 meter',
+    },
+    {
+      name: 'Bottled Water 500ml',
+      sku: 'SKU-WATER-001',
+      barcode: '1234567890002',
+      categoryId: categoryIds.Beverages,
+      brandId: brandIds.Generic,
+      unitId: unitIds.pcs,
+      taxId: taxIds['Tax Free'],
+      purchasePrice: 0.25,
+      sellingPrice: 0.99,
+      description: 'Purified bottled water, 500ml',
+    },
+    {
+      name: 'Wireless Mouse',
+      sku: 'SKU-MOUSE-001',
+      barcode: '1234567890003',
+      categoryId: categoryIds.Electronics,
+      brandId: brandIds.Generic,
+      unitId: unitIds.pcs,
+      taxId: taxIds['VAT 15%'],
+      purchasePrice: 8.0,
+      sellingPrice: 19.99,
+      description: 'Ergonomic wireless mouse with USB receiver',
+    },
+  ];
+
+  for (const p of productsData) {
+    await prisma.product.create({
+      data: { companyId: company.id, status: ProductStatus.ACTIVE, ...p },
+    });
+  }
+  console.log(`  Created ${String(productsData.length)} demo products`);
+
+  console.log('✅ Seeding completed successfully! (Phase B5)');
+  console.log('');
+  console.log('  📧 Admin:   admin@enterprise-pos.com   / admin123');
+  console.log('  📧 Cashier: cashier@enterprise-pos.com / cashier123');
 }
 
 main()
@@ -254,8 +392,7 @@ main()
     await prisma.$disconnect();
   })
   .catch(async (e: unknown) => {
-    console.error('❌ Seeding failed:');
-    console.error(e);
+    console.error('❌ Seeding failed:', e);
     await prisma.$disconnect();
     process.exit(1);
   });

@@ -90,4 +90,17 @@ export async function routes(fastify: FastifyInstance): Promise<void> {
   await fastify.register(settingsRoutes, { prefix: '/companies' }); // nested: /companies/:companyId/settings
   await fastify.register(branchRoutes, { prefix: '/branches' });
   await fastify.register(employeeRoutes, { prefix: '/employees' });
+
+  // ── Product Catalog Management ────────────────────────
+  const { categoryRoutes } = await import('../modules/category/category.routes');
+  const { brandRoutes } = await import('../modules/brand/brand.routes');
+  const { unitRoutes } = await import('../modules/unit/unit.routes');
+  const { taxRoutes } = await import('../modules/tax/tax.routes');
+  const { productRoutes } = await import('../modules/product/product.routes');
+
+  await fastify.register(categoryRoutes, { prefix: '/categories' });
+  await fastify.register(brandRoutes, { prefix: '/brands' });
+  await fastify.register(unitRoutes, { prefix: '/units' });
+  await fastify.register(taxRoutes, { prefix: '/taxes' });
+  await fastify.register(productRoutes, { prefix: '/products' });
 }
