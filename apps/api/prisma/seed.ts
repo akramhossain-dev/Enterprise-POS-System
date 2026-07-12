@@ -98,6 +98,11 @@ async function main() {
     { name: 'product.read', module: 'products', action: 'read' },
     { name: 'product.update', module: 'products', action: 'update' },
     { name: 'product.delete', module: 'products', action: 'delete' },
+    // ── B6.1: Customer Permissions ──
+    { name: 'customer.create', module: 'customers', action: 'create' },
+    { name: 'customer.view', module: 'customers', action: 'view' },
+    { name: 'customer.update', module: 'customers', action: 'update' },
+    { name: 'customer.delete', module: 'customers', action: 'delete' },
   ];
 
   const permissions: Record<string, string> = {};

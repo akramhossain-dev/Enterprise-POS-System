@@ -103,4 +103,8 @@ export async function routes(fastify: FastifyInstance): Promise<void> {
   await fastify.register(unitRoutes, { prefix: '/units' });
   await fastify.register(taxRoutes, { prefix: '/taxes' });
   await fastify.register(productRoutes, { prefix: '/products' });
+
+  // ── Customer Management ───────────────────────────────────────────────────
+  const { customerRoutes } = await import('../modules/customer/customer.routes');
+  await fastify.register(customerRoutes, { prefix: '/customers' });
 }
