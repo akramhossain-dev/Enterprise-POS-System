@@ -12,6 +12,8 @@ import {
   handleDeleteCustomer,
   handleAddCustomerAddress,
   handleListCustomerAddresses,
+  handleGetCustomerLedger,
+  handleGetCustomerBalance,
 } from './customer.controller';
 
 export async function customerRoutes(fastify: FastifyInstance): Promise<void> {
@@ -78,6 +80,24 @@ export async function customerRoutes(fastify: FastifyInstance): Promise<void> {
       schema: { tags: ['Customers'], summary: 'Add customer address' },
     },
     handleAddCustomerAddress,
+  );
+
+  fastify.get(
+    '/:id/ledger',
+    {
+      preHandler: [authGuard, permissionGuard('customer.view')],
+      schema: { tags: ['Customers'], summary: 'Get customer transaction ledger history' },
+    },
+    handleGetCustomerLedger,
+  );
+
+  fastify.get(
+    '/:id/balance',
+    {
+      preHandler: [authGuard, permissionGuard('customer.view')],
+      schema: { tags: ['Customers'], summary: 'Get customer current balance' },
+    },
+    handleGetCustomerBalance,
   );
 }
 

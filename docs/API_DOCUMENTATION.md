@@ -599,48 +599,223 @@ Return the authenticated user's profile and permissions.
 | `DELETE` | `/pos/cart/:id/items/:itemId` | `pos.cart.update` | Remove item from cart               |
 | `DELETE` | `/pos/cart/:id/items`         | `pos.cart.update` | Clear all items from cart           |
 
-## 13. Sales — `/sales`
+## 13. Sales & Checkout — `/sales`, `/pos/checkout`, `/payments`, `/invoices`
 
-**Purpose:** POS sales transactions, invoicing, and payment management.
+**Purpose:** POS checkout transactions, subsequent payment processing, and invoice receipt generation.
 
 **Authentication Required:** Yes
 
 ---
 
-| Method  | Endpoint             | Permission     | Description                |
-| ------- | -------------------- | -------------- | -------------------------- |
-| `GET`   | `/sales`             | `sales.read`   | List sales with pagination |
-| `GET`   | `/sales/:id`         | `sales.read`   | Get sale detail            |
-| `POST`  | `/sales`             | `sales.create` | Create sale (checkout)     |
-| `GET`   | `/sales/:id/invoice` | `sales.read`   | Get invoice for sale       |
-| `GET`   | `/sales/:id/receipt` | `sales.read`   | Get receipt data           |
-| `GET`   | `/sales/:id/pdf`     | `sales.read`   | Download invoice PDF       |
-| `PATCH` | `/sales/:id/void`    | `sales.update` | Void a sale                |
+### POS Checkout (POST `/pos/checkout`)
 
-**Create Sale Request Body:**
+Converts an active cart into a completed sale, logs payment details, creates an invoice record, and reduces warehouse stock.
 
-```json
-{
-  "customerId": "uuid",
-  "warehouseId": "uuid",
-  "items": [
-    {
-      "productId": "uuid",
-      "quantity": 2,
-      "unitPrice": 15.0,
-      "discountAmount": 1.0
+- **Permission:** `sale.create`
+- **Request Body:**
+  ```json
+  {
+    "cartId": "uuid-of-cart",
+    "customerId": "uuid-of-customer", // Optional, required if credit sale (due amount > 0)
+    "paymentDetails": {
+      "paymentMethod": "CASH", // CASH, CARD, BANK, MOBILE_BANKING, OTHER
+      "amount": 57.25,
+      "reference": "Ref123", // Optional
+      "transactionId": "Tx999" // Optional
     }
-  ],
-  "discountAmount": 0,
-  "payments": [
-    {
-      "method": "cash",
-      "amount": 29.0
+  }
+  ```
+- **Response Data:**
+  ```json
+  {
+    "success": true,
+    "message": "Cart checked out successfully",
+    "data": {
+      "sale": {
+        "id": "uuid",
+        "companyId": "uuid",
+        "branchId": null,
+        "warehouseId": "uuid",
+        "customerId": "uuid",
+        "customerName": "John Doe",
+        "customerCode": "CUS-000002",
+        "sessionId": "uuid",
+        "invoiceNumber": "INV-000001",
+        "saleDate": "2026-07-12T14:08:55.855Z",
+        "subtotal": "55.0000",
+        "discount": "5.0000",
+        "tax": "2.2500",
+        "grandTotal": "57.2500",
+        "paidAmount": "57.2500",
+        "dueAmount": "0.0000",
+        "paymentStatus": "PAID",
+        "status": "COMPLETED",
+        "createdBy": "uuid",
+        "createdAt": "2026-07-12T14:08:55.855Z",
+        "updatedAt": "2026-07-12T14:08:55.855Z",
+        "items": [
+          {
+            "id": "uuid",
+            "saleId": "uuid",
+            "productId": "uuid",
+            "productName": "Wireless Mouse",
+            "productSku": "MS-01",
+            "productBarcode": "12345678",
+            "quantity": "3.0000",
+            "unitPrice": "20.0000",
+            "discount": "5.0000",
+            "tax": "2.2500",
+            "total": "57.2500"
+          }
+        ]
+      },
+      "invoice": {
+        "id": "uuid",
+        "saleId": "uuid",
+        "invoiceNumber": "INV-000001",
+        "invoiceDate": "2026-07-12T14:08:55.855Z",
+        "printCount": 0,
+        "createdAt": "2026-07-12T14:08:55.855Z"
+      },
+      "payment": {
+        "id": "uuid",
+        "saleId": "uuid",
+        "paymentMethod": "CASH",
+        "amount": "57.2500",
+        "reference": "Ref123",
+        "transactionId": null,
+        "paidAt": "2026-07-12T14:08:55.855Z",
+        "createdBy": "uuid"
+      }
     }
-  ],
-  "note": "Walk-in customer"
-}
-```
+  }
+  ```
+
+---
+
+### Record Sale Payment (POST `/payments`)
+
+Records a subsequent payment against a credit or partially paid sale.
+
+- **Permission:** `payment.create`
+- **Request Body:**
+  ```json
+  {
+    "saleId": "uuid-of-sale",
+    "paymentMethod": "MOBILE_BANKING",
+    "amount": 40.0,
+    "reference": "Ref999", // Optional
+    "transactionId": "Tx888" // Optional
+  }
+  ```
+- **Response Data:**
+  ```json
+  {
+    "success": true,
+    "message": "Payment recorded successfully",
+    "data": {
+      "payment": {
+        "id": "uuid",
+        "saleId": "uuid",
+        "paymentMethod": "MOBILE_BANKING",
+        "amount": "40.0000",
+        "reference": "Ref999",
+        "transactionId": "Tx888",
+        "paidAt": "2026-07-12T14:09:55.000Z",
+        "createdBy": "uuid"
+      },
+      "sale": {
+        "id": "uuid",
+        "paidAmount": "100.0000",
+        "dueAmount": "0.0000",
+        "paymentStatus": "PAID"
+        // (fully loaded Sale object)
+      }
+    }
+  }
+  ```
+
+---
+
+### Get Receipt Data (GET `/sales/:id/invoice`)
+
+Fetches formatted printing variables for receipts, including company details and complete payment logs.
+
+- **Permission:** `invoice.view`
+- **Response Data:**
+  ```json
+  {
+    "success": true,
+    "message": "Receipt print data retrieved",
+    "data": {
+      "businessInfo": {
+        "name": "Demo Company",
+        "address": "Dhaka, Bangladesh",
+        "phone": "+880123456789",
+        "email": "info@enterprise-pos.com",
+        "taxNumber": "BIN-1234567"
+      },
+      "customerInfo": {
+        "name": "John Doe",
+        "code": "CUS-000002",
+        "phone": null
+      },
+      "sale": {
+        "id": "uuid",
+        "invoiceNumber": "INV-000001",
+        "saleDate": "2026-07-12T14:08:55.855Z",
+        "status": "COMPLETED",
+        "paymentStatus": "PAID",
+        "subtotal": "55.0000",
+        "discount": "5.0000",
+        "tax": "2.2500",
+        "grandTotal": "57.2500",
+        "paidAmount": "57.2500",
+        "dueAmount": "0.0000"
+      },
+      "items": [
+        {
+          "productName": "Wireless Mouse",
+          "sku": "MS-01",
+          "quantity": "3.0000",
+          "unitPrice": "20.0000",
+          "discount": "5.0000",
+          "tax": "2.2500",
+          "total": "57.2500"
+        }
+      ],
+      "payments": [
+        {
+          "paymentMethod": "CASH",
+          "amount": "57.2500",
+          "reference": "Ref123",
+          "transactionId": null,
+          "paidAt": "2026-07-12T14:08:55.855Z"
+        }
+      ]
+    }
+  }
+  ```
+
+---
+
+### Record Invoice Print (POST `/invoices/:saleId/print`)
+
+Increments the printing counter on the invoice.
+
+- **Permission:** `invoice.print`
+- **Response Data:**
+  ```json
+  {
+    "success": true,
+    "message": "Invoice print count incremented",
+    "data": {
+      "id": "uuid",
+      "saleId": "uuid",
+      "printCount": 1
+    }
+  }
+  ```
 
 ---
 

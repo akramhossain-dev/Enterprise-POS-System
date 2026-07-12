@@ -146,6 +146,19 @@ async function main() {
     { name: 'pos.view', module: 'pos', action: 'view' },
     { name: 'pos.cart.create', module: 'pos', action: 'cart.create' },
     { name: 'pos.cart.update', module: 'pos', action: 'cart.update' },
+    // ── B9.2: Checkout, Payment & Invoice Permissions ──
+    { name: 'sale.create', module: 'sales', action: 'create' },
+    { name: 'sale.view', module: 'sales', action: 'view' },
+    { name: 'payment.create', module: 'payment', action: 'create' },
+    { name: 'invoice.view', module: 'invoice', action: 'view' },
+    { name: 'invoice.print', module: 'invoice', action: 'print' },
+    // ── B9.3: Sales Return, Refund & Customer Due Permissions ──
+    { name: 'sales.return.create', module: 'sales-return', action: 'create' },
+    { name: 'sales.return.view', module: 'sales-return', action: 'view' },
+    { name: 'sales.return.approve', module: 'sales-return', action: 'approve' },
+    { name: 'sales.return.complete', module: 'sales-return', action: 'complete' },
+    { name: 'refund.create', module: 'refund', action: 'create' },
+    { name: 'refund.view', module: 'refund', action: 'view' },
   ];
 
   const permissions: Record<string, string> = {};
@@ -225,6 +238,25 @@ async function main() {
     'tax.read',
     'branch.read',
     'company.read',
+    // POS & Cart
+    'pos.open',
+    'pos.close',
+    'pos.view',
+    'pos.cart.create',
+    'pos.cart.update',
+    // Sales, Payments & Invoices
+    'sale.create',
+    'sale.view',
+    'payment.create',
+    'invoice.view',
+    'invoice.print',
+    // Sales Return & Refund
+    'sales.return.create',
+    'sales.return.view',
+    'sales.return.approve',
+    'sales.return.complete',
+    'refund.create',
+    'refund.view',
   ];
   await prisma.rolePermission.createMany({
     data: cashierPerms.map((name) => ({ roleId: roles.CASHIER, permissionId: permissions[name] })),

@@ -95,3 +95,62 @@ export async function handleListCustomerAddresses(
     .status(200)
     .send(sendSuccess({ message: 'Addresses fetched successfully', data: addresses }));
 }
+
+import { prisma } from '../../lib/prisma';
+import { ForbiddenError } from '../../common/errors/AppError';
+import { getCustomerLedger, getCustomerBalance } from '../customer-ledger/customer-ledger.service';
+import { CustomerLedgerQuery } from '../customer-ledger/customer-ledger.types';
+import { z } from 'zod';
+import { CustomerLedgerEntryType } from '@prisma/client';
+
+async function getCompanyIdForUser(userId: string): Promise<string> {
+  const employee = await prisma.employee.findFirst({
+    where: { userId },
+  });
+  if (!employee) {
+    throw new ForbiddenError('User is not associated with any company profile');
+  }
+  return employee.companyId;
+}
+
+export async function handleGetCustomerLedger(
+  request: FastifyRequest,
+  reply: FastifyReply,
+): Promise<void> {
+  const { id } = request.params as { id: string };
+  const actor = request.user as { id: string };
+
+  const querySchema = z.object({
+    page: z.coerce.number().int().positive().optional(),
+    limit: z.coerce.number().int().positive().max(100).optional(),
+    entryType: z.nativeEnum(CustomerLedgerEntryType).optional(),
+    dateFrom: z.coerce.date().optional(),
+    dateTo: z.coerce.date().optional(),
+  });
+
+  const query = querySchema.parse(request.query) as CustomerLedgerQuery;
+  const companyId = await getCompanyIdForUser(actor.id);
+
+  const result = await getCustomerLedger(id, companyId, query);
+  reply
+    .status(200)
+    .send(
+      sendSuccess({
+        message: 'Customer ledger entries retrieved',
+        data: result.entries,
+        meta: result.meta,
+      }),
+    );
+}
+
+export async function handleGetCustomerBalance(
+  request: FastifyRequest,
+  reply: FastifyReply,
+): Promise<void> {
+  const { id } = request.params as { id: string };
+  const actor = request.user as { id: string };
+
+  const companyId = await getCompanyIdForUser(actor.id);
+  const result = await getCustomerBalance(id, companyId);
+  reply.status(200).send(sendSuccess({ message: 'Customer balance retrieved', data: result }));
+}
