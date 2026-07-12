@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
+import { FastifyRequest } from 'fastify';
 import { prisma } from '../../lib/prisma';
 import { env } from '../../config';
 import { hashPassword, comparePassword } from '../../common/utils/password';
@@ -109,7 +110,7 @@ export async function registerUser(body: RegisterBody) {
 /**
  * User login service.
  */
-export async function loginUser(body: LoginBody) {
+export async function loginUser(body: LoginBody, req?: FastifyRequest) {
   const user = await prisma.user.findUnique({
     where: { email: body.email },
     include: {
@@ -119,21 +120,67 @@ export async function loginUser(body: LoginBody) {
     },
   });
 
+  const { recordLogin } = await import('../login-history/login-history.service');
+  const { createUserSession } = await import('../session-history/session-history.service');
+  const { recordAuditLog } = await import('../audit/audit.service');
+
   if (!user) {
+    await recordLogin(null, 'FAILED', req);
+    await recordAuditLog({
+      action: 'LOGIN',
+      description: `Failed login attempt for email: ${body.email}`,
+      req,
+    });
     throw new UnauthorizedError('Invalid email or password');
   }
 
   const isValidPassword = await comparePassword(body.password, user.password);
   if (!isValidPassword) {
+    await recordLogin(user.id, 'FAILED', req);
+    await recordAuditLog({
+      userId: user.id,
+      action: 'LOGIN',
+      description: `Failed login attempt (invalid password) for user: ${user.email}`,
+      req,
+    });
     throw new UnauthorizedError('Invalid email or password');
   }
 
   if (user.status !== Status.ACTIVE) {
+    await recordLogin(user.id, 'FAILED', req);
+    await recordAuditLog({
+      userId: user.id,
+      action: 'LOGIN',
+      description: `Failed login attempt (inactive status: ${user.status}) for user: ${user.email}`,
+      req,
+    });
     throw new UnauthorizedError('User account is inactive or blocked');
   }
 
   const accessToken = await generateAccessToken(user.id, user.email, user.roleId);
   const refreshToken = await createRefreshToken(user.id);
+  const hashedRefresh = hashToken(refreshToken);
+
+  const dbRefreshToken = await prisma.refreshToken.findUnique({
+    where: { token: hashedRefresh },
+  });
+
+  const expiresAt = new Date();
+  expiresAt.setDate(expiresAt.getDate() + 7);
+
+  // 1. Create LoginHistory SUCCESS
+  const loginHist = await recordLogin(user.id, 'SUCCESS', req);
+
+  // 2. Create UserSession
+  await createUserSession(user.id, loginHist.id, dbRefreshToken?.id ?? null, expiresAt, req);
+
+  // 3. Create AuditLog
+  await recordAuditLog({
+    userId: user.id,
+    action: 'LOGIN',
+    description: `User logged in successfully: ${user.email}`,
+    req,
+  });
 
   return {
     accessToken,
@@ -167,7 +214,6 @@ export async function rotateRefreshToken(token: string) {
   });
 
   if (!tokenRecord || tokenRecord.expiresAt < new Date()) {
-    // Delete expired token if exists
     if (tokenRecord) {
       await prisma.refreshToken.delete({ where: { id: tokenRecord.id } });
     }
@@ -179,12 +225,10 @@ export async function rotateRefreshToken(token: string) {
     throw new UnauthorizedError('User account associated with this session is inactive');
   }
 
-  // Delete current token record (single-use rotation)
   await prisma.refreshToken.delete({
     where: { id: tokenRecord.id },
   });
 
-  // Issue new access and refresh token pairs
   const newAccessToken = await generateAccessToken(user.id, user.email, user.roleId);
   const newRefreshToken = await createRefreshToken(user.id);
 
@@ -203,13 +247,47 @@ export async function rotateRefreshToken(token: string) {
 /**
  * Session logout/revocation service.
  */
-export async function logoutUser(token: string): Promise<void> {
+export async function logoutUser(token: string, req?: FastifyRequest): Promise<void> {
   const hashed = hashToken(token);
-  try {
-    await prisma.refreshToken.delete({
-      where: { token: hashed },
+  const tokenRecord = await prisma.refreshToken.findFirst({
+    where: { token: hashed },
+  });
+
+  if (tokenRecord) {
+    const userId = tokenRecord.userId;
+    // 1. Record Logout timestamp in LoginHistory
+    const latestLogin = await prisma.loginHistory.findFirst({
+      where: { userId, logoutAt: null },
+      orderBy: { loginAt: 'desc' },
     });
-  } catch {
-    // Fail silently if token does not exist or was already deleted
+    if (latestLogin) {
+      await prisma.loginHistory.update({
+        where: { id: latestLogin.id },
+        data: { logoutAt: new Date() },
+      });
+    }
+
+    // 2. Revoke Session
+    await prisma.userSession.updateMany({
+      where: { refreshTokenId: tokenRecord.id, revokedAt: null },
+      data: { revokedAt: new Date() },
+    });
+
+    // 3. Record Audit Log
+    const { recordAuditLog } = await import('../audit/audit.service');
+    await recordAuditLog({
+      userId,
+      action: 'LOGOUT',
+      description: `User logged out successfully`,
+      req,
+    });
+
+    try {
+      await prisma.refreshToken.delete({
+        where: { id: tokenRecord.id },
+      });
+    } catch {
+      // Ignore
+    }
   }
 }

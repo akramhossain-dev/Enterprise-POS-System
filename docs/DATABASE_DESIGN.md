@@ -1054,6 +1054,53 @@ const result = await runInTransaction(async (tx) => {
 });
 ```
 
+## 12. Notification Domain
+
+### Table: `notifications`
+
+| Column       | Type         | Constraints       | Description                                                                                              |
+| ------------ | ------------ | ----------------- | -------------------------------------------------------------------------------------------------------- |
+| `id`         | UUID         | PK, NOT NULL      | Unique notification identifier                                                                           |
+| `company_id` | UUID         | FK → companies.id | Owning company                                                                                           |
+| `user_id`    | UUID         | FK → users.id     | Target recipient user                                                                                    |
+| `type`       | ENUM         | NOT NULL          | Category (SYSTEM, SALE, PURCHASE, PAYMENT, INVENTORY, CUSTOMER, SUPPLIER, SECURITY, ACCOUNTING, GENERAL) |
+| `title`      | VARCHAR(255) | NOT NULL          | Title/Subject                                                                                            |
+| `message`    | TEXT         | NOT NULL          | Detailed message body                                                                                    |
+| `priority`   | ENUM         | NOT NULL          | Priority (LOW, NORMAL, HIGH, URGENT)                                                                     |
+| `channel`    | ENUM         | NOT NULL          | Delivery channel (IN_APP, EMAIL, PUSH)                                                                   |
+| `status`     | ENUM         | NOT NULL          | Delivery status (PENDING, SENT, DELIVERED, READ, FAILED)                                                 |
+| `read_at`    | TIMESTAMPTZ  | NULL              | Timestamp when marked read                                                                               |
+| `created_at` | TIMESTAMPTZ  | NOT NULL          | Creation timestamp                                                                                       |
+
+---
+
+### Table: `notification_templates`
+
+| Column       | Type         | Constraints       | Description                                |
+| ------------ | ------------ | ----------------- | ------------------------------------------ |
+| `id`         | UUID         | PK, NOT NULL      | Unique template identifier                 |
+| `company_id` | UUID         | FK → companies.id | Owning company                             |
+| `name`       | VARCHAR(100) | NOT NULL          | Template name (unique per company)         |
+| `subject`    | VARCHAR(255) | NULL              | Subject line prefix                        |
+| `body`       | TEXT         | NOT NULL          | Message template content with placeholders |
+| `created_at` | TIMESTAMPTZ  | NOT NULL          | Creation timestamp                         |
+| `updated_at` | TIMESTAMPTZ  | NOT NULL          | Update timestamp                           |
+
+---
+
+### Table: `notification_preferences`
+
+| Column           | Type    | Constraints   | Description                  |
+| ---------------- | ------- | ------------- | ---------------------------- |
+| `id`             | UUID    | PK, NOT NULL  | Unique preference identifier |
+| `user_id`        | UUID    | FK → users.id | User profile reference       |
+| `type`           | ENUM    | NOT NULL      | Notification Category        |
+| `email_enabled`  | BOOLEAN | NOT NULL      | Email channel toggle         |
+| `push_enabled`   | BOOLEAN | NOT NULL      | Push channel toggle          |
+| `in_app_enabled` | BOOLEAN | NOT NULL      | In-App channel toggle        |
+
+---
+
 ### Database Indexing & Optimizations (B11.1 - B11.3)
 
 To support rapid dashboard aggregation and prevent sequential table scan bottlenecks, the following database index configurations are applied:
@@ -1073,4 +1120,101 @@ To support rapid dashboard aggregation and prevent sequential table scan bottlen
 
 ---
 
-_This document is part of the Enterprise POS System Phase B11.3 documentation suite._
+### Table: `audit_logs`
+
+| Column             | Type         | Constraints             | Description                                   |
+| ------------------ | ------------ | ----------------------- | --------------------------------------------- |
+| `id`               | UUID         | PK, NOT NULL            | Unique audit entry identifier                 |
+| `company_id`       | UUID         | FK → companies.id, NULL | Owning company reference                      |
+| `user_id`          | UUID         | FK → users.id, NULL     | Performing user profile reference             |
+| `action`           | VARCHAR(100) | NOT NULL                | Action category (LOGIN, LOGOUT, UPDATE, etc.) |
+| `entity_type`      | VARCHAR(100) | NULL                    | Name of affected model / entity               |
+| `entity_id`        | VARCHAR(100) | NULL                    | ID of affected record                         |
+| `reference_id`     | VARCHAR(100) | NULL                    | Secondary lookup reference ID                 |
+| `old_value`        | JSON         | NULL                    | Prior state values                            |
+| `new_value`        | JSON         | NULL                    | New state values                              |
+| `description`      | TEXT         | NULL                    | Contextual details description                |
+| `ip_address`       | VARCHAR(50)  | NULL                    | Client IP address                             |
+| `user_agent`       | TEXT         | NULL                    | Client browser user agent                     |
+| `device`           | VARCHAR(100) | NULL                    | Client device classification                  |
+| `browser`          | VARCHAR(100) | NULL                    | Client browser brand                          |
+| `operating_system` | VARCHAR(100) | NULL                    | Client operating system brand                 |
+| `request_id`       | VARCHAR(100) | NULL                    | Correlated HTTP request transaction ID        |
+| `created_at`       | TIMESTAMPTZ  | NOT NULL                | Record creation timestamp                     |
+
+---
+
+### Table: `login_histories`
+
+| Column             | Type         | Constraints         | Description                      |
+| ------------------ | ------------ | ------------------- | -------------------------------- |
+| `id`               | UUID         | PK, NOT NULL        | Unique login attempt identifier  |
+| `user_id`          | UUID         | FK → users.id, NULL | User profile reference           |
+| `ip_address`       | VARCHAR(50)  | NULL                | Client IP address                |
+| `user_agent`       | TEXT         | NULL                | Client browser user agent        |
+| `device`           | VARCHAR(100) | NULL                | Client device brand              |
+| `browser`          | VARCHAR(100) | NULL                | Client browser brand             |
+| `operating_system` | VARCHAR(100) | NULL                | Client OS brand                  |
+| `login_at`         | TIMESTAMPTZ  | NOT NULL            | Login timestamp                  |
+| `logout_at`        | TIMESTAMPTZ  | NULL                | Logout timestamp                 |
+| `status`           | VARCHAR(50)  | NOT NULL            | Attempt status (SUCCESS, FAILED) |
+
+---
+
+### Table: `user_sessions`
+
+| Column             | Type         | Constraints   | Description                           |
+| ------------------ | ------------ | ------------- | ------------------------------------- |
+| `id`               | UUID         | PK, NOT NULL  | Unique session identifier             |
+| `user_id`          | UUID         | FK → users.id | User profile reference                |
+| `session_id`       | VARCHAR(255) | NULL          | Web session cookie ID reference       |
+| `refresh_token_id` | VARCHAR(255) | NULL          | Associated DB refresh token lookup ID |
+| `ip_address`       | VARCHAR(50)  | NULL          | Last client IP address                |
+| `device`           | VARCHAR(100) | NULL          | Device brand                          |
+| `expires_at`       | TIMESTAMPTZ  | NOT NULL      | Session expiration date               |
+| `revoked_at`       | TIMESTAMPTZ  | NULL          | Session manual revocation timestamp   |
+| `created_at`       | TIMESTAMPTZ  | NOT NULL      | Session creation timestamp            |
+
+---
+
+### Table: `system_settings`
+
+| Column       | Type         | Constraints             | Description                                   |
+| ------------ | ------------ | ----------------------- | --------------------------------------------- |
+| `id`         | UUID         | PK, NOT NULL            | Unique setting identifier                     |
+| `company_id` | UUID         | FK → companies.id, NULL | Company reference (NULL for global settings)  |
+| `category`   | VARCHAR(50)  | NOT NULL                | Setting category (COMPANY, BRANCH, POS, etc.) |
+| `key`        | VARCHAR(100) | NOT NULL                | Settings key (unique per company)             |
+| `value`      | JSON         | NOT NULL                | Serialized setting JSON body payload          |
+| `created_at` | TIMESTAMPTZ  | NOT NULL                | Creation timestamp                            |
+| `updated_at` | TIMESTAMPTZ  | NOT NULL                | Last update timestamp                         |
+
+---
+
+### Database Indexing & Optimizations (B12.3 - Settings Domain)
+
+To ensure rapid configuration retrievals and integrity checks:
+
+- **SystemSetting (`system_settings`)**:
+  - `@@unique([company_id, key])`: Prevents duplication of setting configurations per company.
+  - `@@index([category])`: Speeds up category-based config lookups.
+
+---
+
+### Database Indexing & Optimizations (B12.2 - System Domain)
+
+To ensure rapid auditing retrievals and index lookups:
+
+- **AuditLog (`audit_logs`)**:
+  - `@@index([user_id])`: Speeds up individual activity streams.
+  - `@@index([created_at])`: Speeds up date-range filters.
+  - `@@index([entity_type])` & `@@index([entity_id])`: Speeds up record history audit logs lookups.
+  - `@@index([action])`: Speeds up specific action filters (e.g., login attempts).
+- **LoginHistory (`login_histories`)**:
+  - `@@index([user_id])` & `@@index([login_at])`: Speeds up user connection lists.
+- **UserSession (`user_sessions`)**:
+  - `@@index([user_id])` & `@@index([created_at])`: Optimizes active sessions lists and terminations.
+
+---
+
+_This document is part of the Enterprise POS System Phase B12.3 documentation suite._

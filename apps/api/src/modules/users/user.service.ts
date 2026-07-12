@@ -78,8 +78,7 @@ export async function findUserById(id: string) {
  * Update user fields (name, phone, status, roleId).
  */
 export async function modifyUser(id: string, body: UpdateUserBody) {
-  // Confirm target user exists
-  await findUserById(id);
+  const oldUser = await findUserById(id);
 
   if (body.roleId) {
     const roleExists = await prisma.role.findUnique({
@@ -116,6 +115,56 @@ export async function modifyUser(id: string, body: UpdateUserBody) {
     select: USER_SELECT_FIELDS,
   });
 
+  const roleId = body.roleId;
+  if (roleId) {
+    void Promise.resolve().then(async () => {
+      try {
+        const role = await prisma.role.findUnique({ where: { id: roleId } });
+        const employee = await prisma.employee.findFirst({ where: { userId: id } });
+        if (role && employee) {
+          const { triggerNotificationEvent } = await import('../notification/notification.service');
+          await triggerNotificationEvent(employee.companyId, id, 'SECURITY', 'Role Change', {
+            roleName: role.name,
+          });
+        }
+      } catch (err) {
+        console.error('Failed to trigger role change notification:', err);
+      }
+    });
+  }
+
+  // Record Update Audit Log
+  const oldVal = {
+    name: oldUser.name,
+    phone: oldUser.phone,
+    status: oldUser.status,
+    roleId: oldUser.roleId,
+  };
+  const newVal = {
+    name: updatedUser.name,
+    phone: updatedUser.phone,
+    status: updatedUser.status,
+    roleId: (updatedUser as { roleId?: string }).roleId,
+  };
+  void Promise.resolve().then(async () => {
+    try {
+      const { recordAuditLog } = await import('../audit/audit.service');
+      const employee = await prisma.employee.findFirst({ where: { userId: id } });
+      await recordAuditLog({
+        companyId: employee?.companyId ?? null,
+        userId: id,
+        action: 'UPDATE',
+        entityType: 'User',
+        entityId: id,
+        oldValue: oldVal,
+        newValue: newVal,
+        description: `Updated user profile details for user ID: ${id}`,
+      });
+    } catch (err) {
+      console.error('Failed to record update audit log:', err);
+    }
+  });
+
   return updatedUser;
 }
 
@@ -123,13 +172,31 @@ export async function modifyUser(id: string, body: UpdateUserBody) {
  * Soft delete user by setting status property to DELETED.
  */
 export async function softDeleteUser(id: string): Promise<void> {
-  // Confirm target user exists and is not already deleted
-  await findUserById(id);
+  const oldUser = await findUserById(id);
 
   await prisma.user.update({
     where: { id },
     data: {
       status: Status.DELETED,
     },
+  });
+
+  void Promise.resolve().then(async () => {
+    try {
+      const { recordAuditLog } = await import('../audit/audit.service');
+      const employee = await prisma.employee.findFirst({ where: { userId: id } });
+      await recordAuditLog({
+        companyId: employee?.companyId ?? null,
+        userId: id,
+        action: 'DELETE',
+        entityType: 'User',
+        entityId: id,
+        oldValue: { status: oldUser.status },
+        newValue: { status: Status.DELETED },
+        description: `Soft deleted user profile for ID ${id}`,
+      });
+    } catch (err) {
+      console.error('Failed to log user soft delete:', err);
+    }
   });
 }

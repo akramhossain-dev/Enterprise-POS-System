@@ -867,23 +867,16 @@ Increments the printing counter on the invoice.
 
 ---
 
-| Method   | Endpoint                 | Description             |
-| -------- | ------------------------ | ----------------------- |
-| `GET`    | `/settings`              | Get all system settings |
-| `PUT`    | `/settings`              | Update system settings  |
-| `GET`    | `/settings/company`      | Get company profile     |
-| `PUT`    | `/settings/company`      | Update company profile  |
-| `GET`    | `/settings/branches`     | List branches           |
-| `POST`   | `/settings/branches`     | Create branch           |
-| `PUT`    | `/settings/branches/:id` | Update branch           |
-| `GET`    | `/settings/taxes`        | List tax rates          |
-| `POST`   | `/settings/taxes`        | Create tax rate         |
-| `PUT`    | `/settings/taxes/:id`    | Update tax rate         |
-| `DELETE` | `/settings/taxes/:id`    | Delete tax rate         |
-| `GET`    | `/settings/units`        | List units of measure   |
-| `POST`   | `/settings/units`        | Create unit             |
-| `PUT`    | `/settings/units/:id`    | Update unit             |
-| `DELETE` | `/settings/units/:id`    | Delete unit             |
+| Method  | Endpoint              | Required Permission | Description                                         |
+| ------- | --------------------- | ------------------- | --------------------------------------------------- |
+| `GET`   | `/settings`           | `settings.view`     | Get all system configuration categories for company |
+| `GET`   | `/settings/:category` | `settings.view`     | Get system configuration details for a category     |
+| `PUT`   | `/settings/:category` | `settings.update`   | Create or overwrite configuration under a category  |
+| `PATCH` | `/settings/:category` | `settings.update`   | Partials merge update of configuration category     |
+
+Where `:category` can be: `COMPANY`, `BRANCH`, `POS`, `INVOICE`, `TAX`, `CURRENCY`, `LOCALE`, `EMAIL`, `BACKUP`, `SECURITY`, `FEATURE`, `SYSTEM`, `BARCODE`, `RECEIPT`.
+
+_SMTP/Email passwords and other sensitive fields are encrypted in the database and masked (`********`) in API outputs._
 
 ---
 
@@ -1420,6 +1413,113 @@ All reports support parameters: `page`, `limit`, `startDate`, `endDate`, `search
 - **Response**: Dynamic statement representing revenue, COGS, gross and net profit.
 - **Guarded by**: `report.financial.view`
 
+## Phase B12.1 — Centralized Notification System
+
+### Notification Endpoints
+
+#### 1. List Notifications — `GET /notifications`
+
+- **Response**: List of paginated notifications for the authenticated user.
+- **Guarded by**: `notification.view`
+- **Query Params**:
+  - `page` (integer, default: 1)
+  - `limit` (integer, default: 20)
+
+#### 2. List Unread Notifications — `GET /notifications/unread`
+
+- **Response**: List of unread notifications for the authenticated user.
+- **Guarded by**: `notification.view`
+
+#### 3. View Notification Details — `GET /notifications/:id`
+
+- **Response**: Details of a specific notification.
+- **Guarded by**: `notification.view`
+
+#### 4. Mark Notification Read — `PATCH /notifications/:id/read`
+
+- **Response**: Notification details updated to READ.
+- **Guarded by**: `notification.view`
+
+#### 5. Mark All Notifications Read — `PATCH /notifications/read-all`
+
+- **Response**: Marks all user unread notifications as read.
+- **Guarded by**: `notification.view`
+
+#### 6. Delete Notification — `DELETE /notifications/:id`
+
+- **Response**: Deletes a specific notification record.
+- **Guarded by**: `notification.manage`
+
+### Preference Endpoints
+
+#### 7. Get Notification Preferences — `GET /notification-preferences`
+
+- **Response**: Channel permissions toggle state per category type.
+- **Guarded by**: `notification.preference`
+
+#### 8. Update Notification Preferences — `PATCH /notification-preferences`
+
+- **Response**: Updated toggle config for category.
+- **Guarded by**: `notification.preference`
+- **Body Schema**:
+  - `type` (ENUM: `SYSTEM`, `SALE`, `PURCHASE`, `PAYMENT`, `INVENTORY`, `CUSTOMER`, `SUPPLIER`, `SECURITY`, `ACCOUNTING`, `GENERAL`)
+  - `emailEnabled` (boolean, optional)
+  - `pushEnabled` (boolean, optional)
+  - `inAppEnabled` (boolean, optional)
+
 ---
 
-_This document is part of the Enterprise POS System Phase B11.3 documentation suite._
+## Phase B12.2 — Audit Log & Activity Tracking
+
+### Audit Log Endpoints
+
+#### 1. List Audit Logs — `GET /audit-logs`
+
+- **Response**: Paginated list of system-wide audit logs.
+- **Guarded by**: `audit.view`
+- **Query Params**:
+  - `page` (integer, default: 1)
+  - `limit` (integer, default: 20)
+  - `startDate` (ISO string/date, optional)
+  - `endDate` (ISO string/date, optional)
+  - `action` (string, optional)
+  - `entityType` (string, optional)
+  - `ipAddress` (string, optional)
+  - `search` (string, optional)
+
+#### 2. Get Audit Log Details — `GET /audit-logs/:id`
+
+- **Response**: Detailed audit log entry containing client headers, raw inputs, and newValue/oldValue change states.
+- **Guarded by**: `audit.view`
+
+#### 3. List Caller Activity — `GET /activity`
+
+- **Response**: Paginated list of audit logs matching the caller's userId context.
+- **Guarded by**: `activity.view`
+- **Query Params**: Same as `GET /audit-logs`.
+
+#### 4. List Login History — `GET /login-history`
+
+- **Response**: Paginated list of login success and failure records.
+- **Guarded by**: `login.history.view`
+- **Query Params**:
+  - `page` (integer, default: 1)
+  - `limit` (integer, default: 20)
+  - `startDate` (ISO string/date, optional)
+  - `endDate` (ISO string/date, optional)
+  - `userId` (UUID, optional)
+  - `status` (SUCCESS/FAILED, optional)
+  - `ipAddress` (string, optional)
+
+#### 5. List Active Sessions — `GET /user-sessions`
+
+- **Response**: Paginated list of active/revoked user session tracking records.
+- **Guarded by**: `session.view`
+- **Query Params**:
+  - `page` (integer, default: 1)
+  - `limit` (integer, default: 20)
+  - `userId` (UUID, optional)
+
+---
+
+_This document is part of the Enterprise POS System Phase B12.2 documentation suite._

@@ -46,7 +46,7 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
  */
 export async function login(request: FastifyRequest, reply: FastifyReply) {
   const body = validateBody(loginBodySchema, request.body);
-  const { accessToken, refreshToken, user } = await loginUser(body);
+  const { accessToken, refreshToken, user } = await loginUser(body, request);
 
   void reply.setCookie(COOKIE_NAME, refreshToken, COOKIE_OPTIONS);
 
@@ -85,7 +85,7 @@ export async function refresh(request: FastifyRequest, reply: FastifyReply) {
 export async function logout(request: FastifyRequest, reply: FastifyReply) {
   const token = request.cookies[COOKIE_NAME];
   if (token) {
-    await logoutUser(token);
+    await logoutUser(token, request);
   }
 
   void reply.clearCookie(COOKIE_NAME, { path: '/' });

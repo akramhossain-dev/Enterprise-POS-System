@@ -9,6 +9,9 @@
 
 import { Prisma, MovementType } from '@prisma/client';
 import { BadRequestError } from '../../common/errors/AppError';
+import { createLogger } from '../../lib/logger';
+
+const log = createLogger('stock-movement-engine');
 
 // ── Prisma transaction client type ────────────────────────────────────────────
 
@@ -115,6 +118,9 @@ export async function applyStockOperation(
       damagedQuantity: true,
       averageCost: true,
       lastPurchasePrice: true,
+      minimumQuantity: true,
+      product: { select: { name: true, sku: true } },
+      warehouse: { select: { name: true } },
     },
   });
 
@@ -224,6 +230,46 @@ export async function applyStockOperation(
       runningValue,
     },
   });
+
+  // Record Stock Audit Log
+  void Promise.resolve().then(async () => {
+    try {
+      const { recordAuditLog } = await import('../audit/audit.service');
+      await recordAuditLog({
+        companyId,
+        userId: performedBy,
+        action: 'UPDATE',
+        entityType: 'Inventory',
+        entityId: inventory.id,
+        referenceId: movement.id,
+        oldValue: { availableQuantity: prevQty.toString() },
+        newValue: { availableQuantity: newQty.toString() },
+        description: `Stock level adjusted for product ${inventory.product.name} in warehouse ${inventory.warehouse.name}. Type: ${movementType}`,
+      });
+    } catch (err) {
+      log.error({ err }, 'Failed to record stock movement audit log');
+    }
+  });
+
+  // Trigger stock alerts asynchronously
+  if (newQty.lte(inventory.minimumQuantity)) {
+    const isOut = newQty.lte(0);
+    const template = isOut ? 'Out of Stock' : 'Low Stock';
+    void Promise.resolve().then(async () => {
+      try {
+        const { triggerNotificationEvent } = await import('../notification/notification.service');
+        await triggerNotificationEvent(companyId, performedBy, 'INVENTORY', template, {
+          productName: inventory.product.name,
+          sku: inventory.product.sku ?? 'N/A',
+          warehouseName: inventory.warehouse.name,
+          currentQuantity: newQty.toString(),
+          minimumQuantity: inventory.minimumQuantity.toString(),
+        });
+      } catch (err) {
+        log.error({ err }, 'Failed to trigger stock notification');
+      }
+    });
+  }
 
   return {
     movementId: movement.id,

@@ -54,6 +54,17 @@ export async function buildApp(): Promise<FastifyInstance> {
   await fastify.register(prismaPlugin);
   await fastify.register(redisPlugin);
 
+  // ── WebSocket ──────────────────────────────
+  const { default: fastifySocketIO } = await import('fastify-socket.io');
+  await fastify.register(fastifySocketIO, {
+    cors: {
+      origin: '*',
+    },
+  });
+
+  const { initSocketServer } = await import('./modules/notification/socket');
+  initSocketServer(fastify);
+
   // ── Global error handler ───────────────────
   fastify.setErrorHandler(errorHandler);
 

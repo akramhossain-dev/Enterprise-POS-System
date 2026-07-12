@@ -97,7 +97,7 @@ export async function createEmployee(body: CreateEmployeeBody) {
     }
   }
 
-  return prisma.employee.create({
+  const emp = await prisma.employee.create({
     data: {
       companyId: body.companyId,
       branchId: body.branchId,
@@ -111,6 +111,36 @@ export async function createEmployee(body: CreateEmployeeBody) {
     },
     select: EMPLOYEE_SELECT_FIELDS,
   });
+
+  const userId = body.userId;
+  if (userId) {
+    void Promise.resolve().then(async () => {
+      try {
+        const user = await prisma.user.findUnique({
+          where: { id: userId },
+          include: { role: true },
+        });
+        if (user) {
+          const roleName = (user as { role?: { name: string } }).role?.name ?? 'CASHIER';
+          const { triggerNotificationEvent } = await import('../notification/notification.service');
+          await triggerNotificationEvent(
+            body.companyId,
+            userId,
+            'SECURITY',
+            'New User Invitation',
+            {
+              companyName: company.name,
+              roleName,
+            },
+          );
+        }
+      } catch (err) {
+        console.error('Failed to trigger user invitation notification:', err);
+      }
+    });
+  }
+
+  return emp;
 }
 
 /**

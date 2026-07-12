@@ -268,6 +268,82 @@ export async function checkoutCart(
     console.warn(`[AUDIT] Customer Balance Updated: ${freshSale.customerId}`);
   }
 
+  // Trigger notifications asynchronously
+  void Promise.resolve().then(async () => {
+    try {
+      const { triggerNotificationEvent } = await import('../notification/notification.service');
+      const { recordAuditLog } = await import('../audit/audit.service');
+      const custName = freshSale.customer?.fullName ?? 'Walk-in Customer';
+
+      // Record Sale Audit Log
+      await recordAuditLog({
+        companyId: freshSale.companyId,
+        userId: cashierId,
+        action: 'SALE',
+        entityType: 'Sale',
+        entityId: freshSale.id,
+        referenceId: result.invoice.id,
+        newValue: {
+          invoiceNumber: result.invoice.invoiceNumber,
+          grandTotal: freshSale.grandTotal.toString(),
+          dueAmount: freshSale.dueAmount.toString(),
+          customerId: freshSale.customerId,
+        },
+        description: `POS sale checkout completed with invoice ${result.invoice.invoiceNumber}`,
+      });
+
+      // 1. New Sale
+      await triggerNotificationEvent(freshSale.companyId, cashierId, 'SALE', 'New Sale', {
+        invoiceNumber: result.invoice.invoiceNumber,
+        customerName: custName,
+        totalAmount: freshSale.grandTotal.toString(),
+      });
+
+      // 2. Payment Received
+      if (result.payment) {
+        await triggerNotificationEvent(
+          freshSale.companyId,
+          cashierId,
+          'PAYMENT',
+          'Payment Received',
+          {
+            amount: result.payment.amount.toString(),
+            invoiceNumber: result.invoice.invoiceNumber,
+            paymentMethod: result.payment.paymentMethod,
+          },
+        );
+      }
+
+      // 3. Payment Due
+      if (Number(freshSale.dueAmount) > 0) {
+        await triggerNotificationEvent(freshSale.companyId, cashierId, 'PAYMENT', 'Payment Due', {
+          invoiceNumber: result.invoice.invoiceNumber,
+          remainingBalance: freshSale.dueAmount.toString(),
+        });
+      }
+
+      // 4. Customer Due
+      if (freshSale.customerId) {
+        const cust = await prisma.customer.findUnique({ where: { id: freshSale.customerId } });
+        const custBalance = cust ? cust.currentBalance.toString() : '0';
+        if (Number(custBalance) > 0) {
+          await triggerNotificationEvent(
+            freshSale.companyId,
+            cashierId,
+            'CUSTOMER',
+            'Customer Due',
+            {
+              customerName: custName,
+              dueAmount: custBalance,
+            },
+          );
+        }
+      }
+    } catch (err) {
+      console.error('Failed to trigger checkout notifications:', err);
+    }
+  });
+
   return {
     sale: mapSale(freshSale),
     invoice: result.invoice,

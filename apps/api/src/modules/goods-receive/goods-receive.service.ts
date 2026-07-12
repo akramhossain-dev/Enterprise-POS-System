@@ -258,6 +258,42 @@ export async function completeGRN(id: string, actorId: string): Promise<MappedGo
   });
 
   console.warn(`[AUDIT] GRN Completed: ${grn.grnNumber}`);
+
+  // Trigger notifications asynchronously
+  const poId = grn.purchaseOrderId;
+  if (poId) {
+    void Promise.resolve().then(async () => {
+      try {
+        const po = await prisma.purchaseOrder.findUnique({
+          where: { id: poId },
+          include: {
+            supplier: true,
+            items: true,
+          },
+        });
+        if (po) {
+          const { triggerNotificationEvent } = await import('../notification/notification.service');
+          // 1. Purchase Completed
+          await triggerNotificationEvent(po.companyId, actorId, 'PURCHASE', 'Purchase Completed', {
+            orderNumber: po.purchaseOrderNumber,
+            supplierName: po.supplier.companyName,
+            itemCount: String(po.items.length),
+          });
+
+          // 2. Supplier Due
+          if (Number(po.supplier.currentBalance) > 0) {
+            await triggerNotificationEvent(po.companyId, actorId, 'SUPPLIER', 'Supplier Due', {
+              supplierName: po.supplier.companyName,
+              dueAmount: po.supplier.currentBalance.toString(),
+            });
+          }
+        }
+      } catch (err) {
+        console.error('Failed to trigger purchase notifications:', err);
+      }
+    });
+  }
+
   return mapGoodsReceive(result);
 }
 

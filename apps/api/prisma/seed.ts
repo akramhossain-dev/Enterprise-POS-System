@@ -202,6 +202,19 @@ async function main() {
     { name: 'report.stock.view', module: 'report-stock', action: 'view' },
     { name: 'report.financial.view', module: 'report-financial', action: 'view' },
     { name: 'report.ledger.view', module: 'report-ledger', action: 'view' },
+    // ── B12.1: Notification Permissions ──
+    { name: 'notification.view', module: 'notification', action: 'view' },
+    { name: 'notification.manage', module: 'notification', action: 'manage' },
+    { name: 'notification.preference', module: 'notification', action: 'preference' },
+    // ── B12.2: Audit Log & Activity Tracking Permissions ──
+    { name: 'audit.view', module: 'audit', action: 'view' },
+    { name: 'activity.view', module: 'activity', action: 'view' },
+    { name: 'login.history.view', module: 'login-history', action: 'view' },
+    { name: 'session.view', module: 'session', action: 'view' },
+    // ── B12.3: Enterprise Settings & System Configuration Permissions ──
+    { name: 'settings.view', module: 'settings', action: 'view' },
+    { name: 'company.manage', module: 'company', action: 'manage' },
+    { name: 'branch.manage', module: 'branch', action: 'manage' },
   ];
 
   const permissions: Record<string, string> = {};
@@ -575,6 +588,88 @@ async function main() {
     });
   }
   console.log('  Seeded 7 default expense categories');
+
+  const defaultTemplates = [
+    {
+      name: 'Low Stock',
+      subject: 'Low Stock Alert',
+      body: 'Product {productName} (SKU: {sku}) is running low on stock in warehouse {warehouseName}. Current: {currentQuantity}, Minimum: {minimumQuantity}.',
+      type: 'INVENTORY' as const,
+    },
+    {
+      name: 'Out of Stock',
+      subject: 'Out of Stock Alert',
+      body: 'Product {productName} (SKU: {sku}) is out of stock in warehouse {warehouseName}.',
+      type: 'INVENTORY' as const,
+    },
+    {
+      name: 'New Sale',
+      subject: 'Sale Completed',
+      body: 'New sale completed. Invoice Number: {invoiceNumber}, Customer: {customerName}, Total Amount: {totalAmount}.',
+      type: 'SALE' as const,
+    },
+    {
+      name: 'Purchase Completed',
+      subject: 'Purchase Order Received',
+      body: 'Purchase order {orderNumber} has been received. Supplier: {supplierName}, Items received: {itemCount}.',
+      type: 'PURCHASE' as const,
+    },
+    {
+      name: 'Payment Received',
+      subject: 'Payment Confirmed',
+      body: 'Payment of {amount} received for Invoice {invoiceNumber}. Method: {paymentMethod}.',
+      type: 'PAYMENT' as const,
+    },
+    {
+      name: 'Payment Due',
+      subject: 'Payment Due Notice',
+      body: 'Payment due notice for Invoice {invoiceNumber}. Remaining balance: {remainingBalance}.',
+      type: 'PAYMENT' as const,
+    },
+    {
+      name: 'Customer Due',
+      subject: 'Customer Outstanding Balance Notice',
+      body: 'Customer {customerName} has an outstanding balance of {dueAmount}.',
+      type: 'CUSTOMER' as const,
+    },
+    {
+      name: 'Supplier Due',
+      subject: 'Supplier Payable Notice',
+      body: 'Payable balance of {dueAmount} is due to supplier {supplierName}.',
+      type: 'SUPPLIER' as const,
+    },
+    {
+      name: 'New User Invitation',
+      subject: 'Invitation to join POS',
+      body: 'You have been invited to join {companyName} as a {roleName}. Click here to set up your account.',
+      type: 'SECURITY' as const,
+    },
+    {
+      name: 'Role Change',
+      subject: 'Role Updated',
+      body: 'Your system role has been changed to {roleName}.',
+      type: 'SECURITY' as const,
+    },
+    {
+      name: 'Password Change',
+      subject: 'Security Alert: Password Changed',
+      body: 'Your account password was successfully updated.',
+      type: 'SECURITY' as const,
+    },
+  ];
+
+  for (const t of defaultTemplates) {
+    await prisma.notificationTemplate.create({
+      data: {
+        companyId: company.id,
+        name: t.name,
+        subject: t.subject,
+        body: t.body,
+        type: t.type,
+      },
+    });
+  }
+  console.log('  Seeded default notification templates');
 
   console.log('✅ Seeding completed successfully! (Phase B5)');
   console.log('');

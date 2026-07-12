@@ -82,12 +82,14 @@ export async function routes(fastify: FastifyInstance): Promise<void> {
 
   // ── Core Business Management ──────────────────────────
   const { companyRoutes } = await import('../modules/company/company.routes');
-  const { settingsRoutes } = await import('../modules/settings/settings.routes');
+  const { settingsRoutes, systemSettingsRoutes } =
+    await import('../modules/settings/settings.routes');
   const { branchRoutes } = await import('../modules/branch/branch.routes');
   const { employeeRoutes } = await import('../modules/employee/employee.routes');
 
   await fastify.register(companyRoutes, { prefix: '/companies' });
   await fastify.register(settingsRoutes, { prefix: '/companies' }); // nested: /companies/:companyId/settings
+  await fastify.register(systemSettingsRoutes, { prefix: '/settings' });
   await fastify.register(branchRoutes, { prefix: '/branches' });
   await fastify.register(employeeRoutes, { prefix: '/employees' });
 
@@ -220,4 +222,23 @@ export async function routes(fastify: FastifyInstance): Promise<void> {
   // ── Sales & Purchase Reporting System (B11.2) ───────────────────────────────
   const { reportsRoutes } = await import('../modules/reports/reports.routes');
   await fastify.register(reportsRoutes, { prefix: '/reports' });
+
+  // ── Enterprise Notification System (B12.1) ──────────────────────────────────
+  const { notificationRoutes } = await import('../modules/notification/notification.routes');
+  await fastify.register(notificationRoutes, { prefix: '/notifications' });
+
+  const { notificationPreferenceRoutes } =
+    await import('../modules/notification-preference/notification-preference.routes');
+  await fastify.register(notificationPreferenceRoutes, { prefix: '/notification-preferences' });
+
+  // ── Audit Log & Activity Tracking (B12.2) ────────────────────────────────────
+  const { auditRoutes } = await import('../modules/audit/audit.routes');
+  await fastify.register(auditRoutes, { prefix: '/' });
+
+  const { loginHistoryRoutes } = await import('../modules/login-history/login-history.routes');
+  await fastify.register(loginHistoryRoutes, { prefix: '/' });
+
+  const { sessionHistoryRoutes } =
+    await import('../modules/session-history/session-history.routes');
+  await fastify.register(sessionHistoryRoutes, { prefix: '/' });
 }
