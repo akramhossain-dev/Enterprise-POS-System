@@ -48,15 +48,13 @@ export async function handleGetMovementsByProduct(
     ...(page !== undefined ? { page } : {}),
     ...(limit !== undefined ? { limit } : {}),
   });
-  reply
-    .status(200)
-    .send(
-      sendSuccess({
-        message: 'Product stock movements fetched successfully',
-        data: movements,
-        meta,
-      }),
-    );
+  reply.status(200).send(
+    sendSuccess({
+      message: 'Product stock movements fetched successfully',
+      data: movements,
+      meta,
+    }),
+  );
 }
 
 export async function handleGetMovementsByWarehouse(

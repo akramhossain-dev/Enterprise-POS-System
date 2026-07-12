@@ -132,15 +132,13 @@ export async function handleGetCustomerLedger(
   const companyId = await getCompanyIdForUser(actor.id);
 
   const result = await getCustomerLedger(id, companyId, query);
-  reply
-    .status(200)
-    .send(
-      sendSuccess({
-        message: 'Customer ledger entries retrieved',
-        data: result.entries,
-        meta: result.meta,
-      }),
-    );
+  reply.status(200).send(
+    sendSuccess({
+      message: 'Customer ledger entries retrieved',
+      data: result.entries,
+      meta: result.meta,
+    }),
+  );
 }
 
 export async function handleGetCustomerBalance(

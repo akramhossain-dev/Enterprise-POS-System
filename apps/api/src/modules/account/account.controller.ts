@@ -54,15 +54,13 @@ export async function handleListAccounts(req: FastifyRequest, reply: FastifyRepl
   const actor = req.user as { id: string };
 
   const result = await listAccounts(actor.id, query);
-  reply
-    .status(200)
-    .send(
-      sendSuccess({
-        message: 'Accounts fetched successfully',
-        data: result.accounts,
-        meta: result.meta,
-      }),
-    );
+  reply.status(200).send(
+    sendSuccess({
+      message: 'Accounts fetched successfully',
+      data: result.accounts,
+      meta: result.meta,
+    }),
+  );
 }
 
 export async function handleGetAccount(req: FastifyRequest, reply: FastifyReply): Promise<void> {

@@ -119,15 +119,13 @@ export async function handleListExpenses(req: FastifyRequest, reply: FastifyRepl
   }
 
   const data = await listExpenses(actor.id, query);
-  reply
-    .status(200)
-    .send(
-      sendSuccess({
-        message: 'Expenses fetched successfully',
-        data: data.expenses,
-        meta: data.meta,
-      }),
-    );
+  reply.status(200).send(
+    sendSuccess({
+      message: 'Expenses fetched successfully',
+      data: data.expenses,
+      meta: data.meta,
+    }),
+  );
 }
 
 export async function handleGetExpense(req: FastifyRequest, reply: FastifyReply): Promise<void> {
