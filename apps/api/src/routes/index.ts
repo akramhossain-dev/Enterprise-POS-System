@@ -129,4 +129,24 @@ export async function routes(fastify: FastifyInstance): Promise<void> {
 
   const { stockTransferRoutes } = await import('../modules/stock-transfer/stock-transfer.routes');
   await fastify.register(stockTransferRoutes, { prefix: '/stock-transfers' });
+
+  // ── Advanced Inventory (B7.3) ─────────────────────────────────────────────
+  const { inventoryLedgerRoutes } =
+    await import('../modules/inventory-ledger/inventory-ledger.routes');
+  await fastify.register(inventoryLedgerRoutes, { prefix: '/inventory-ledger' });
+
+  const { batchRoutes } = await import('../modules/batch/batch.routes');
+  await fastify.register(batchRoutes, { prefix: '/batches' });
+
+  const { serialRoutes } = await import('../modules/serial/serial.routes');
+  await fastify.register(serialRoutes, { prefix: '/serials' });
+
+  const { stockAlertRoutes } = await import('../modules/stock-alert/stock-alert.routes');
+  await fastify.register(stockAlertRoutes, { prefix: '/stock-alerts' });
+
+  const { stockTakeRoutes } = await import('../modules/stock-take/stock-take.routes');
+  await fastify.register(stockTakeRoutes, { prefix: '/stock-takes' });
+
+  const { reconciliationRoutes } = await import('../modules/reconciliation/reconciliation.routes');
+  await fastify.register(reconciliationRoutes, { prefix: '/reconciliation' });
 }

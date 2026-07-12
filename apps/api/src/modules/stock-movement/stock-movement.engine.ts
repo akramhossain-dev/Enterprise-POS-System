@@ -210,6 +210,21 @@ export async function applyStockOperation(
     select: { id: true },
   });
 
+  // ── Step 6: Create InventoryLedger entry (running balance) ─────────────────
+
+  const runningValue = newQty.mul(newAverageCost);
+
+  await tx.inventoryLedger.create({
+    data: {
+      companyId,
+      warehouseId,
+      productId,
+      movementId: movement.id,
+      runningQuantity: newQty,
+      runningValue,
+    },
+  });
+
   return {
     movementId: movement.id,
     previousQuantity: prevQty,

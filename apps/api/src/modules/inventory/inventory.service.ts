@@ -130,7 +130,7 @@ export async function addOpeningStock(
     });
 
     // 2. Create OPENING_STOCK movement record
-    await tx.stockMovement.create({
+    const movement = await tx.stockMovement.create({
       data: {
         companyId: body.companyId,
         warehouseId: body.warehouseId,
@@ -144,6 +144,19 @@ export async function addOpeningStock(
         referenceId: created.id,
         remarks: 'Initial opening stock',
         performedBy: actorId,
+      },
+      select: { id: true },
+    });
+
+    // 3. Create InventoryLedger entry (B7.3)
+    await tx.inventoryLedger.create({
+      data: {
+        companyId: body.companyId,
+        warehouseId: body.warehouseId,
+        productId: body.productId,
+        movementId: movement.id,
+        runningQuantity: body.quantity,
+        runningValue: body.quantity * body.averageCost,
       },
     });
 
