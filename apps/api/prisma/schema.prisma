@@ -181,6 +181,7 @@ model Company {
   stockAlerts      StockAlert[]
   stockTakes       StockTake[]
   reconciliations  Reconciliation[]
+  purchaseOrders   PurchaseOrder[]
   createdAt       DateTime          @default(now()) @map("created_at") @db.Timestamptz
   updatedAt       DateTime          @updatedAt @map("updated_at") @db.Timestamptz
 
@@ -201,6 +202,7 @@ model Branch {
   warehouses Warehouse[]
   // Stock operations (B7.2)
   stockMovements StockMovement[]
+  purchaseOrders PurchaseOrder[]
   createdAt  DateTime    @default(now()) @map("created_at") @db.Timestamptz
   updatedAt  DateTime    @updatedAt @map("updated_at") @db.Timestamptz
 
@@ -337,6 +339,7 @@ model Product {
   serialNumbers      SerialNumber[]
   stockAlerts        StockAlert[]
   stockTakeItems     StockTakeItem[]
+  purchaseOrderItems PurchaseOrderItem[]
   createdAt     DateTime       @default(now()) @map("created_at") @db.Timestamptz
   updatedAt     DateTime       @updatedAt @map("updated_at") @db.Timestamptz
 
@@ -443,6 +446,7 @@ model Supplier {
   status           SupplierStatus    @default(ACTIVE)
   notes            String?           @db.Text
   addresses        SupplierAddress[]
+  purchaseOrders   PurchaseOrder[]
   createdAt        DateTime          @default(now()) @map("created_at") @db.Timestamptz
   updatedAt        DateTime          @updatedAt @map("updated_at") @db.Timestamptz
   deletedAt        DateTime?         @map("deleted_at") @db.Timestamptz
@@ -507,6 +511,7 @@ model Warehouse {
   serialNumbers    SerialNumber[]
   stockAlerts      StockAlert[]
   stockTakes       StockTake[]
+  purchaseOrders   PurchaseOrder[]
   createdAt   DateTime        @default(now()) @map("created_at") @db.Timestamptz
   updatedAt   DateTime        @updatedAt @map("updated_at") @db.Timestamptz
   deletedAt   DateTime?       @map("deleted_at") @db.Timestamptz
@@ -882,4 +887,71 @@ model Reconciliation {
   @@index([status])
   @@index([createdBy])
   @@map("reconciliations")
+}
+
+// ─────────────────────────────────────────────
+// Enums & Models — Purchase Order (B8.1)
+// ─────────────────────────────────────────────
+
+enum PurchaseOrderStatus {
+  DRAFT
+  PENDING
+  APPROVED
+  REJECTED
+  PARTIALLY_RECEIVED
+  RECEIVED
+  CANCELLED
+}
+
+model PurchaseOrder {
+  id                  String              @id @default(uuid()) @db.Uuid
+  companyId           String              @map("company_id") @db.Uuid
+  company             Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  branchId            String?             @map("branch_id") @db.Uuid
+  branch              Branch?             @relation(fields: [branchId], references: [id], onDelete: SetNull)
+  warehouseId         String              @map("warehouse_id") @db.Uuid
+  warehouse           Warehouse           @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+  supplierId          String              @map("supplier_id") @db.Uuid
+  supplier            Supplier            @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  purchaseOrderNumber String              @map("purchase_order_number") @db.VarChar(100)
+  orderDate           DateTime            @default(now()) @map("order_date") @db.Timestamptz
+  expectedDate        DateTime?           @map("expected_date") @db.Timestamptz
+  status              PurchaseOrderStatus @default(DRAFT)
+  subtotal            Decimal             @db.Decimal(15, 4)
+  discount            Decimal             @default(0) @db.Decimal(15, 4)
+  tax                 Decimal             @default(0) @db.Decimal(15, 4)
+  shippingCost        Decimal             @default(0) @map("shipping_cost") @db.Decimal(15, 4)
+  grandTotal          Decimal             @map("grand_total") @db.Decimal(15, 4)
+  remarks             String?             @db.Text
+  createdBy           String              @map("created_by") @db.Uuid
+  approvedBy          String?             @map("approved_by") @db.Uuid
+  items               PurchaseOrderItem[]
+  createdAt           DateTime            @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt           DateTime            @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@unique([companyId, purchaseOrderNumber])
+  @@index([companyId])
+  @@index([branchId])
+  @@index([warehouseId])
+  @@index([supplierId])
+  @@index([status])
+  @@index([orderDate])
+  @@map("purchase_orders")
+}
+
+model PurchaseOrderItem {
+  id              String        @id @default(uuid()) @db.Uuid
+  purchaseOrderId String        @map("purchase_order_id") @db.Uuid
+  purchaseOrder   PurchaseOrder @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
+  productId       String        @map("product_id") @db.Uuid
+  product         Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity        Decimal       @db.Decimal(15, 4)
+  unitPrice       Decimal       @map("unit_price") @db.Decimal(15, 4)
+  discount        Decimal       @default(0) @db.Decimal(15, 4)
+  tax             Decimal       @default(0) @db.Decimal(15, 4)
+  total           Decimal       @db.Decimal(15, 4)
+
+  @@index([purchaseOrderId])
+  @@index([productId])
+  @@map("purchase_order_items")
 }

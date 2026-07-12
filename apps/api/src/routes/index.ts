@@ -149,4 +149,8 @@ export async function routes(fastify: FastifyInstance): Promise<void> {
 
   const { reconciliationRoutes } = await import('../modules/reconciliation/reconciliation.routes');
   await fastify.register(reconciliationRoutes, { prefix: '/reconciliation' });
+
+  // ── Purchase Order (B8.1) ──────────────────────────────────────────────────
+  const { purchaseOrderRoutes } = await import('../modules/purchase-order/purchase-order.routes');
+  await fastify.register(purchaseOrderRoutes, { prefix: '/purchase-orders' });
 }
