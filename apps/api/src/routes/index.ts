@@ -194,4 +194,25 @@ export async function routes(fastify: FastifyInstance): Promise<void> {
 
   const { refundRoutes } = await import('../modules/refund/refund.routes');
   await fastify.register(refundRoutes, { prefix: '/refunds' });
+
+  // ── Accounting Foundation (B10.1) ──────────────────────────────────────────
+  const { accountRoutes } = await import('../modules/account/account.routes');
+  await fastify.register(accountRoutes);
+
+  const { journalRoutes } = await import('../modules/journal/journal.routes');
+  await fastify.register(journalRoutes, { prefix: '/journals' });
+
+  // ── Income & Expense Management (B10.2) ────────────────────────────────────
+  const { expenseRoutes } = await import('../modules/expense/expense.routes');
+  await fastify.register(expenseRoutes);
+
+  const { incomeRoutes } = await import('../modules/income/income.routes');
+  await fastify.register(incomeRoutes);
+
+  // ── Financial Transactions & Reports (B10.3) ────────────────────────────────
+  const { transactionRoutes } = await import('../modules/financial-transaction/transaction.routes');
+  await fastify.register(transactionRoutes);
+
+  const { reportRoutes } = await import('../modules/financial-report/report.routes');
+  await fastify.register(reportRoutes);
 }

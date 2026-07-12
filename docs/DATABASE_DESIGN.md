@@ -726,41 +726,160 @@ Supplier 1 ────── * SupplierAddress
 
 ## 10. Accounting Domain
 
-### Table: `transactions`
+### Table: `account_categories`
 
-| Column             | Type          | Constraints            | Description            |
-| ------------------ | ------------- | ---------------------- | ---------------------- |
-| `id`               | UUID          | PK                     | Transaction identifier |
-| `company_id`       | UUID          | FK → companies.id      | Owning company         |
-| `branch_id`        | UUID          | FK → branches.id, NULL | Branch reference       |
-| `type`             | ENUM          | NOT NULL               | income / expense       |
-| `category`         | VARCHAR(100)  | NOT NULL               | Transaction category   |
-| `amount`           | DECIMAL(14,4) | NOT NULL               | Transaction amount     |
-| `description`      | TEXT          | NULL                   | Description            |
-| `reference_type`   | VARCHAR(50)   | NULL                   | Source document type   |
-| `reference_id`     | UUID          | NULL                   | Source document ID     |
-| `transaction_date` | DATE          | NOT NULL               | Transaction date       |
-| `created_by`       | UUID          | FK → users.id          | Recording user         |
-| `created_at`       | TIMESTAMPTZ   | NOT NULL               | Creation timestamp     |
+| Column       | Type         | Constraints       | Description                                              |
+| ------------ | ------------ | ----------------- | -------------------------------------------------------- |
+| `id`         | UUID         | PK, NOT NULL      | Unique category identifier                               |
+| `company_id` | UUID         | FK → companies.id | Owning company                                           |
+| `name`       | VARCHAR(100) | NOT NULL          | Category name                                            |
+| `type`       | ENUM         | NOT NULL          | Account type (ASSET, LIABILITY, EQUITY, INCOME, EXPENSE) |
+| `created_at` | TIMESTAMPTZ  | NOT NULL          | Creation timestamp                                       |
+
+---
+
+### Table: `accounts`
+
+| Column            | Type          | Constraints        | Description                                              |
+| ----------------- | ------------- | ------------------ | -------------------------------------------------------- |
+| `id`              | UUID          | PK, NOT NULL       | Unique account identifier                                |
+| `company_id`      | UUID          | FK → companies.id  | Owning company                                           |
+| `category_id`     | UUID          | FK → categories    | Account Category reference                               |
+| `parent_id`       | UUID          | FK → accounts,NULL | Parent account reference for hierarchical COA            |
+| `account_code`    | VARCHAR(100)  | NOT NULL           | Unique account code                                      |
+| `name`            | VARCHAR(150)  | NOT NULL           | Account name                                             |
+| `type`            | ENUM          | NOT NULL           | Account type (ASSET, LIABILITY, EQUITY, INCOME, EXPENSE) |
+| `opening_balance` | DECIMAL(15,4) | NOT NULL           | Starting balance of the account                          |
+| `current_balance` | DECIMAL(15,4) | NOT NULL           | Real-time balance of the account                         |
+| `status`          | ENUM          | NOT NULL           | Status (ACTIVE, INACTIVE)                                |
+| `created_at`      | TIMESTAMPTZ   | NOT NULL           | Creation timestamp                                       |
+| `updated_at`      | TIMESTAMPTZ   | NOT NULL           | Update timestamp                                         |
+
+---
+
+### Table: `journal_entries`
+
+| Column           | Type         | Constraints       | Description                              |
+| ---------------- | ------------ | ----------------- | ---------------------------------------- |
+| `id`             | UUID         | PK, NOT NULL      | Unique entry identifier                  |
+| `company_id`     | UUID         | FK → companies.id | Owning company                           |
+| `reference_type` | VARCHAR(100) | NULL              | Source module type (e.g. SALE, PURCHASE) |
+| `reference_id`   | UUID         | NULL              | Reference document UUID                  |
+| `entry_number`   | VARCHAR(100) | NOT NULL          | Sequential entry code (JE-XXXXXX)        |
+| `date`           | TIMESTAMPTZ  | NOT NULL          | Date of entry posting                    |
+| `description`    | TEXT         | NULL              | Transaction remarks/notes                |
+| `created_by`     | UUID         | FK → users.id     | Creating cashier/admin                   |
+| `created_at`     | TIMESTAMPTZ  | NOT NULL          | Entry record creation timestamp          |
+
+---
+
+### Table: `journal_entry_items`
+
+| Column             | Type          | Constraints      | Description                       |
+| ------------------ | ------------- | ---------------- | --------------------------------- |
+| `id`               | UUID          | PK, NOT NULL     | Unique item line identifier       |
+| `journal_entry_id` | UUID          | FK → journal     | JournalEntry header reference     |
+| `account_id`       | UUID          | FK → accounts.id | Affected ledger account reference |
+| `debit`            | DECIMAL(15,4) | NOT NULL         | Debit amount                      |
+| `credit`           | DECIMAL(15,4) | NOT NULL         | Credit amount                     |
+
+---
+
+### Table: `expense_categories`
+
+| Column        | Type         | Constraints       | Description                |
+| ------------- | ------------ | ----------------- | -------------------------- |
+| `id`          | UUID         | PK, NOT NULL      | Unique category identifier |
+| `company_id`  | UUID         | FK → companies.id | Owning company             |
+| `name`        | VARCHAR(100) | NOT NULL          | Category name              |
+| `description` | TEXT         | NULL              | Remarks/details            |
+| `status`      | ENUM         | NOT NULL          | ACTIVE, INACTIVE           |
+| `created_at`  | TIMESTAMPTZ  | NOT NULL          | Creation timestamp         |
+| `updated_at`  | TIMESTAMPTZ  | NOT NULL          | Update timestamp           |
 
 ---
 
 ### Table: `expenses`
 
-| Column         | Type          | Constraints            | Description                   |
-| -------------- | ------------- | ---------------------- | ----------------------------- |
-| `id`           | UUID          | PK                     | Expense identifier            |
-| `company_id`   | UUID          | FK → companies.id      | Owning company                |
-| `branch_id`    | UUID          | FK → branches.id, NULL | Branch reference              |
-| `category`     | VARCHAR(100)  | NOT NULL               | Expense category              |
-| `amount`       | DECIMAL(14,4) | NOT NULL               | Expense amount                |
-| `description`  | TEXT          | NULL                   | Expense description           |
-| `receipt_url`  | TEXT          | NULL                   | Attached receipt URL          |
-| `expense_date` | DATE          | NOT NULL               | Date of expense               |
-| `approved_by`  | UUID          | FK → users.id, NULL    | Approving user                |
-| `status`       | ENUM          | NOT NULL               | pending / approved / rejected |
-| `created_by`   | UUID          | FK → users.id          | Recording user                |
-| `created_at`   | TIMESTAMPTZ   | NOT NULL               | Creation timestamp            |
+| Column           | Type          | Constraints             | Description                              |
+| ---------------- | ------------- | ----------------------- | ---------------------------------------- |
+| `id`             | UUID          | PK, NOT NULL            | Unique expense identifier                |
+| `company_id`     | UUID          | FK → companies.id       | Owning company                           |
+| `branch_id`      | UUID          | FK → branches.id, NULL  | Recording branch                         |
+| `category_id`    | UUID          | FK → expense_categories | Expense category reference               |
+| `account_id`     | UUID          | FK → accounts.id        | Debited expense ledger account           |
+| `expense_number` | VARCHAR(100)  | NOT NULL                | Sequential reference number (EXP-XXXXXX) |
+| `date`           | TIMESTAMPTZ   | NOT NULL                | Date of payment                          |
+| `amount`         | DECIMAL(15,4) | NOT NULL                | Expense amount                           |
+| `payment_method` | ENUM          | NOT NULL                | CASH, BANK, CARD, MOBILE_BANKING, OTHER  |
+| `reference`      | VARCHAR(100)  | NULL                    | External invoice/bill reference          |
+| `description`    | TEXT          | NULL                    | Description/notes                        |
+| `attachment`     | TEXT          | NULL                    | Attached receipt URL/path                |
+| `status`         | ENUM          | NOT NULL                | ACTIVE, CANCELLED                        |
+| `created_by`     | UUID          | FK → users.id           | Creating cashier/admin                   |
+| `created_at`     | TIMESTAMPTZ   | NOT NULL                | Record creation timestamp                |
+| `updated_at`     | TIMESTAMPTZ   | NOT NULL                | Record update timestamp                  |
+
+---
+
+### Table: `incomes`
+
+| Column           | Type          | Constraints            | Description                              |
+| ---------------- | ------------- | ---------------------- | ---------------------------------------- |
+| `id`             | UUID          | PK, NOT NULL           | Unique income identifier                 |
+| `company_id`     | UUID          | FK → companies.id      | Owning company                           |
+| `branch_id`      | UUID          | FK → branches.id, NULL | Recording branch                         |
+| `account_id`     | UUID          | FK → accounts.id       | Credited income ledger account           |
+| `income_number`  | VARCHAR(100)  | NOT NULL               | Sequential reference number (INC-XXXXXX) |
+| `date`           | TIMESTAMPTZ   | NOT NULL               | Date of receipt                          |
+| `amount`         | DECIMAL(15,4) | NOT NULL               | Income amount                            |
+| `source`         | VARCHAR(150)  | NULL                   | Source designation (e.g. scrap, manual)  |
+| `payment_method` | ENUM          | NOT NULL               | CASH, BANK, CARD, MOBILE_BANKING, OTHER  |
+| `reference`      | VARCHAR(100)  | NULL                   | External reference info                  |
+| `description`    | TEXT          | NULL                   | Description/notes                        |
+| `status`         | ENUM          | NOT NULL               | ACTIVE, CANCELLED                        |
+| `created_by`     | UUID          | FK → users.id          | Creating cashier/admin                   |
+| `created_at`     | TIMESTAMPTZ   | NOT NULL               | Record creation timestamp                |
+| `updated_at`     | TIMESTAMPTZ   | NOT NULL               | Record update timestamp                  |
+
+---
+
+### Table: `payment_receipts`
+
+| Column           | Type          | Constraints             | Description                                               |
+| ---------------- | ------------- | ----------------------- | --------------------------------------------------------- |
+| `id`             | UUID          | PK, NOT NULL            | Unique identifier                                         |
+| `company_id`     | UUID          | FK → companies.id       | Owning company                                            |
+| `customer_id`    | UUID          | FK → customers.id, NULL | Associated customer                                       |
+| `supplier_id`    | UUID          | FK → suppliers.id, NULL | Associated supplier                                       |
+| `account_id`     | UUID          | FK → accounts.id        | Double-entry target ledger account                        |
+| `receipt_number` | VARCHAR(100)  | NOT NULL                | Sequential receipt number (RCT-XXXXXX)                    |
+| `type`           | ENUM          | NOT NULL                | CUSTOMER_PAYMENT, SUPPLIER_PAYMENT, ADVANCE_RECEIVE, etc. |
+| `amount`         | DECIMAL(15,4) | NOT NULL                | Amount received/paid                                      |
+| `payment_method` | ENUM          | NOT NULL                | CASH, BANK, CARD, MOBILE_BANKING, OTHER                   |
+| `reference`      | VARCHAR(100)  | NULL                    | Reference number/notes                                    |
+| `description`    | TEXT          | NULL                    | Remarks                                                   |
+| `date`           | TIMESTAMPTZ   | NOT NULL                | Date of payment                                           |
+| `created_by`     | UUID          | FK → users.id           | Creating cashier/admin                                    |
+| `created_at`     | TIMESTAMPTZ   | NOT NULL                | Record creation timestamp                                 |
+
+---
+
+### Table: `payment_vouchers`
+
+| Column           | Type          | Constraints       | Description                             |
+| ---------------- | ------------- | ----------------- | --------------------------------------- |
+| `id`             | UUID          | PK, NOT NULL      | Unique identifier                       |
+| `company_id`     | UUID          | FK → companies.id | Owning company                          |
+| `voucher_number` | VARCHAR(100)  | NOT NULL          | Sequential voucher number (VCH-XXXXXX)  |
+| `type`           | ENUM          | NOT NULL          | RECEIPT, PAYMENT, CONTRA, JOURNAL       |
+| `account_id`     | UUID          | FK → accounts.id  | Double-entry target ledger account      |
+| `amount`         | DECIMAL(15,4) | NOT NULL          | Voucher amount                          |
+| `payment_method` | ENUM          | NOT NULL          | CASH, BANK, CARD, MOBILE_BANKING, OTHER |
+| `description`    | TEXT          | NULL              | Remarks                                 |
+| `date`           | TIMESTAMPTZ   | NOT NULL          | Transaction date                        |
+| `created_by`     | UUID          | FK → users.id     | Creating cashier/admin                  |
+| `created_at`     | TIMESTAMPTZ   | NOT NULL          | Record creation timestamp               |
 
 ---
 

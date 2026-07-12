@@ -24,6 +24,16 @@ async function main() {
   await prisma.businessSetting.deleteMany();
   await prisma.employee.deleteMany();
   await prisma.branch.deleteMany();
+  await prisma.paymentReceipt.deleteMany();
+  await prisma.paymentVoucher.deleteMany();
+  await prisma.income.deleteMany();
+  await prisma.expense.deleteMany();
+  await prisma.expenseCategory.deleteMany();
+  await prisma.journalEntryItem.deleteMany();
+  await prisma.journalEntry.deleteMany();
+  await prisma.account.updateMany({ data: { parentId: null } });
+  await prisma.account.deleteMany();
+  await prisma.accountCategory.deleteMany();
   await prisma.company.deleteMany();
   await prisma.refreshToken.deleteMany();
   await prisma.user.deleteMany();
@@ -159,6 +169,25 @@ async function main() {
     { name: 'sales.return.complete', module: 'sales-return', action: 'complete' },
     { name: 'refund.create', module: 'refund', action: 'create' },
     { name: 'refund.view', module: 'refund', action: 'view' },
+    // ── B10.1: Chart of Accounts & Ledger Foundation Permissions ──
+    { name: 'account.create', module: 'accounting', action: 'account.create' },
+    { name: 'account.view', module: 'accounting', action: 'account.view' },
+    { name: 'account.update', module: 'accounting', action: 'account.update' },
+    { name: 'account.delete', module: 'accounting', action: 'account.delete' },
+    { name: 'ledger.view', module: 'accounting', action: 'ledger.view' },
+    // ── B10.2: Income & Expense Management Permissions ──
+    { name: 'expense.create', module: 'expense', action: 'create' },
+    { name: 'expense.view', module: 'expense', action: 'view' },
+    { name: 'expense.update', module: 'expense', action: 'update' },
+    { name: 'expense.delete', module: 'expense', action: 'delete' },
+    { name: 'income.create', module: 'income', action: 'create' },
+    { name: 'income.view', module: 'income', action: 'view' },
+    { name: 'income.update', module: 'income', action: 'update' },
+    { name: 'income.delete', module: 'income', action: 'delete' },
+    // ── B10.3: Financial Transactions & Reports Foundation Permissions ──
+    { name: 'financial.transaction.create', module: 'financial-transaction', action: 'create' },
+    { name: 'financial.transaction.view', module: 'financial-transaction', action: 'view' },
+    { name: 'financial.report.view', module: 'financial-report', action: 'view' },
   ];
 
   const permissions: Record<string, string> = {};
@@ -460,6 +489,78 @@ async function main() {
     });
   }
   console.log(`  Created ${String(productsData.length)} demo products`);
+
+  // ── Accounting Foundation Seeding (B10.1) ───────────────────
+  console.log('Seeding account categories & chart of accounts...');
+  const defaultCategories = [
+    { name: 'Asset Accounts', type: 'ASSET' as const },
+    { name: 'Liability Accounts', type: 'LIABILITY' as const },
+    { name: 'Equity Accounts', type: 'EQUITY' as const },
+    { name: 'Income Accounts', type: 'INCOME' as const },
+    { name: 'Expense Accounts', type: 'EXPENSE' as const },
+  ];
+
+  const catIds: Record<string, string> = {};
+  for (const cat of defaultCategories) {
+    const created = await prisma.accountCategory.create({
+      data: { companyId: company.id, name: cat.name, type: cat.type },
+    });
+    catIds[cat.name] = created.id;
+  }
+
+  const defaultAccounts = [
+    { code: '1000', name: 'Cash', type: 'ASSET' as const, cat: 'Asset Accounts' },
+    { code: '1100', name: 'Bank', type: 'ASSET' as const, cat: 'Asset Accounts' },
+    { code: '1200', name: 'Inventory', type: 'ASSET' as const, cat: 'Asset Accounts' },
+    { code: '1300', name: 'Accounts Receivable', type: 'ASSET' as const, cat: 'Asset Accounts' },
+    {
+      code: '2000',
+      name: 'Accounts Payable',
+      type: 'LIABILITY' as const,
+      cat: 'Liability Accounts',
+    },
+    { code: '4000', name: 'Sales', type: 'INCOME' as const, cat: 'Income Accounts' },
+    { code: '5000', name: 'Purchase', type: 'EXPENSE' as const, cat: 'Expense Accounts' },
+    { code: '5100', name: 'Expense', type: 'EXPENSE' as const, cat: 'Expense Accounts' },
+  ];
+
+  for (const acc of defaultAccounts) {
+    await prisma.account.create({
+      data: {
+        companyId: company.id,
+        categoryId: catIds[acc.cat],
+        accountCode: acc.code,
+        name: acc.name,
+        type: acc.type,
+        openingBalance: 0,
+        currentBalance: 0,
+        status: 'ACTIVE',
+      },
+    });
+  }
+  console.log('  Seeded 5 categories and 8 chart of accounts');
+
+  const initialExpenseCategories = [
+    { name: 'Rent', description: 'Office or warehouse rent' },
+    { name: 'Electricity', description: 'Utility bills' },
+    { name: 'Transport', description: 'Travel and shipping costs' },
+    { name: 'Salary', description: 'Employee payroll' },
+    { name: 'Maintenance', description: 'Office and hardware repair' },
+    { name: 'Marketing', description: 'Advertising and promotions' },
+    { name: 'Other', description: 'Miscellaneous expenses' },
+  ];
+
+  for (const cat of initialExpenseCategories) {
+    await prisma.expenseCategory.create({
+      data: {
+        companyId: company.id,
+        name: cat.name,
+        description: cat.description,
+        status: 'ACTIVE',
+      },
+    });
+  }
+  console.log('  Seeded 7 default expense categories');
 
   console.log('✅ Seeding completed successfully! (Phase B5)');
   console.log('');

@@ -1023,6 +1023,243 @@ Increments the printing counter on the invoice.
 | `GET /suppliers/:id/statement`        | Reports       |
 | `GET /suppliers/:id/performance`      | Analytics     |
 
+## Phase B10.1 — Accounting Foundation
+
+### Account Category Endpoints
+
+#### Create Category — `POST /account-categories`
+
+- **Body**: `{ "name": "Asset Accounts", "type": "ASSET" }`
+- **Response**: Mapped category DTO.
+
+#### List Categories — `GET /account-categories`
+
+- **Response**: List of account categories.
+
+### Account Endpoints
+
+#### Create Account — `POST /accounts`
+
+- **Body**:
+  ```json
+  {
+    "categoryId": "category-uuid",
+    "parentId": "optional-parent-uuid",
+    "accountCode": "1001",
+    "name": "Petty Cash",
+    "type": "ASSET",
+    "openingBalance": 100
+  }
+  ```
+- **Response**: Mapped Account DTO.
+
+#### List Accounts — `GET /accounts`
+
+- **Query Params**: `page`, `limit`, `type`, `status`, `search`
+- **Response**: List of accounts with pagination meta.
+
+#### Get Account Details — `GET /accounts/:id`
+
+- **Response**: Mapped Account DTO.
+
+#### Update Account — `PATCH /accounts/:id`
+
+- **Body**: `{ "name": "Updated Petty Cash", "status": "ACTIVE" }`
+- **Response**: Mapped Account DTO.
+
+#### Delete Account — `DELETE /accounts/:id`
+
+- **Response**: Success envelope. Blocked if account has transaction history or child accounts.
+
+### Journal Entry Endpoints
+
+#### Post Journal Entry — `POST /journals`
+
+- **Body**:
+  ```json
+  {
+    "date": "2026-07-12T00:00:00Z",
+    "description": "Bank to Cash Transfer",
+    "items": [
+      { "accountId": "cash-acc-uuid", "debit": 500, "credit": 0 },
+      { "accountId": "bank-acc-uuid", "debit": 0, "credit": 500 }
+    ]
+  }
+  ```
+- **Response**: Created Journal Entry details. Blocks and rolls back if debits do not equal credits.
+
+### General Ledger Endpoints
+
+#### Get Account General Ledger — `GET /accounts/:id/ledger`
+
+- **Query Params**: `dateFrom`, `dateTo`
+- **Response**: Detailed history of debits, credits, and running balances calculated based on account type normal balance conventions.
+
+## Phase B10.2 — Income & Expense Management
+
+### Expense Category Endpoints
+
+#### Create Expense Category — `POST /expense-categories`
+
+- **Body**: `{ "name": "Broadband Services", "description": "Internet bills" }`
+- **Response**: Mapped ExpenseCategory DTO.
+
+#### List Expense Categories — `GET /expense-categories`
+
+- **Query Params**: `status` (ACTIVE, INACTIVE)
+- **Response**: List of ExpenseCategory DTOs.
+
+#### Update Expense Category — `PATCH /expense-categories/:id`
+
+- **Body**: `{ "name": "Office Internet", "status": "ACTIVE" }`
+- **Response**: Mapped ExpenseCategory DTO.
+
+### Expense Entry Endpoints
+
+#### Create Expense Entry — `POST /expenses`
+
+- **Body**:
+  ```json
+  {
+    "categoryId": "category-uuid",
+    "accountId": "expense-ledger-account-uuid",
+    "date": "2026-07-12T00:00:00Z",
+    "amount": 150,
+    "paymentMethod": "CASH",
+    "description": "Internet bill July"
+  }
+  ```
+- **Response**: Mapped Expense DTO. Automatically creates balanced double-entry Journal Entry (debits Expense Account, credits standard Cash account `1000`) and adjusts ledger balances.
+
+#### List Expenses — `GET /expenses`
+
+- **Query Params**: `page`, `limit`, `dateFrom`, `dateTo`, `categoryId`, `paymentMethod`, `amountMin`, `amountMax`, `search`
+- **Response**: Paginated list of expenses.
+
+#### Get Expense Details — `GET /expenses/:id`
+
+- **Response**: Mapped Expense DTO.
+
+#### Update/Cancel Expense — `PATCH /expenses/:id`
+
+- **Body**: `{ "status": "CANCELLED" }`
+- **Response**: Mapped Expense DTO. If cancelled, posts reversing Journal Entry (credits Expense Account, debits Asset Account) and reverts balances.
+
+#### Delete Expense — `DELETE /expenses/:id`
+
+- **Response**: Success envelope. Deletes expense, rolls back balances, and purges posted journal entries.
+
+### Income Entry Endpoints
+
+#### Create Income Entry — `POST /incomes`
+
+- **Body**:
+  ```json
+  {
+    "accountId": "income-ledger-account-uuid",
+    "date": "2026-07-12T00:00:00Z",
+    "amount": 500,
+    "paymentMethod": "BANK",
+    "source": "Consulting fees",
+    "description": "Custom billing income"
+  }
+  ```
+- **Response**: Mapped Income DTO. Automatically posts balanced double-entry Journal Entry (debits standard Bank account `1100`, credits Income Account) and adjusts ledger balances.
+
+#### List Incomes — `GET /incomes`
+
+- **Query Params**: `page`, `limit`, `dateFrom`, `dateTo`, `paymentMethod`, `amountMin`, `amountMax`, `search`
+- **Response**: Paginated list of income entries.
+
+#### Get Income Details — `GET /incomes/:id`
+
+- **Response**: Mapped Income DTO.
+
+#### Update/Cancel Income — `PATCH /incomes/:id`
+
+- **Body**: `{ "status": "CANCELLED" }`
+- **Response**: Mapped Income DTO. If cancelled, posts reversing Journal Entry (credits Asset Account, debits Income Account) and reverts balances.
+
+#### Delete Income — `DELETE /incomes/:id`
+
+- **Response**: Success envelope. Deletes income, rolls back balances, and purges posted journal entries.
+
+## Phase B10.3 — Financial Transactions & Reports Foundation
+
+### Payment Receipt Endpoints
+
+#### Create Payment Receipt — `POST /receipts`
+
+- **Body**:
+  ```json
+  {
+    "customerId": "customer-uuid",
+    "accountId": "accounts-receivable-ledger-uuid",
+    "type": "CUSTOMER_PAYMENT",
+    "amount": 200,
+    "paymentMethod": "CASH",
+    "description": "Cash payment from customer",
+    "date": "2026-07-12T00:00:00Z"
+  }
+  ```
+- **Response**: Mapped PaymentReceipt DTO. Automatically creates balanced double-entry Journal Entry (debits standard Cash account `1000` or Bank `1100`, credits accounts receivable account) and adjusts ledger balances.
+
+#### List Payment Receipts — `GET /receipts`
+
+- **Query Params**: `page`, `limit`, `dateFrom`, `dateTo`, `type`, `paymentMethod`, `search`
+- **Response**: Paginated list of payment receipts.
+
+#### Get Payment Receipt Details — `GET /receipts/:id`
+
+- **Response**: Mapped PaymentReceipt DTO.
+
+### Payment Voucher Endpoints
+
+#### Create Payment Voucher — `POST /vouchers`
+
+- **Body**:
+  ```json
+  {
+    "accountId": "accounts-payable-ledger-uuid",
+    "type": "PAYMENT",
+    "amount": 350,
+    "paymentMethod": "BANK",
+    "description": "Bank payment to supplier",
+    "date": "2026-07-12T00:00:00Z"
+  }
+  ```
+- **Response**: Mapped PaymentVoucher DTO. Automatically creates balanced double-entry Journal Entry (debits accounts payable account, credits Bank account `1100`) and adjusts ledger balances.
+
+#### List Payment Vouchers — `GET /vouchers`
+
+- **Query Params**: `page`, `limit`, `dateFrom`, `dateTo`, `type`, `paymentMethod`, `search`
+- **Response**: Paginated list of payment vouchers.
+
+#### Get Payment Voucher Details — `GET /vouchers/:id`
+
+- **Response**: Mapped PaymentVoucher DTO.
+
+### Financial Report Endpoints
+
+#### Get General Ledger — `GET /reports/general-ledger`
+
+- **Query Params**: `accountId` (required), `startDate`, `endDate`
+- **Response**: Array of ledger rows: `{ "date": "...", "reference": "JE-000001", "debit": "...", "credit": "...", "balance": "..." }`.
+
+#### Get Account Statement — `GET /reports/account-statement/:accountId`
+
+- **Query Params**: `startDate`, `endDate`
+- **Response**: Account details with `{ "openingBalance": "...", "transactions": [...], "closingBalance": "..." }`.
+
+#### Get Trial Balance — `GET /reports/trial-balance`
+
+- **Response**: Array of rows containing account details, types, and total debit/credit aggregates.
+
+#### Get Financial Summary — `GET /reports/financial-summary`
+
+- **Query Params**: `startDate`, `endDate`
+- **Response**: `{ "totalIncome": "...", "totalExpense": "...", "netProfit": "..." }`.
+
 ---
 
-_This document is part of the Enterprise POS System Phase 0 documentation suite._
+_This document is part of the Enterprise POS System Phase B10.3 documentation suite._

@@ -93,6 +93,11 @@ model User {
   payments      Payment[]      @relation("PaymentCreator")
   salesReturns  SalesReturn[]  @relation("SalesReturnCreator")
   refunds       Refund[]       @relation("RefundCreator")
+  journalEntries JournalEntry[] @relation("JournalCreator")
+  expenses      Expense[]      @relation("ExpenseCreator")
+  incomes       Income[]       @relation("IncomeCreator")
+  paymentReceipts PaymentReceipt[] @relation("ReceiptCreator")
+  paymentVouchers PaymentVoucher[] @relation("VoucherCreator")
   createdAt     DateTime       @default(now()) @map("created_at") @db.Timestamptz
   updatedAt     DateTime       @updatedAt @map("updated_at") @db.Timestamptz
 
@@ -195,6 +200,14 @@ model Company {
   sales            Sale[]
   salesReturns     SalesReturn[]
   customerLedgerEntries CustomerLedgerEntry[]
+  accountCategories AccountCategory[]
+  accounts          Account[]
+  journalEntries    JournalEntry[]
+  expenseCategories ExpenseCategory[]
+  expenses          Expense[]
+  incomes           Income[]
+  paymentReceipts   PaymentReceipt[]
+  paymentVouchers   PaymentVoucher[]
   createdAt       DateTime          @default(now()) @map("created_at") @db.Timestamptz
   updatedAt       DateTime          @updatedAt @map("updated_at") @db.Timestamptz
 
@@ -221,6 +234,8 @@ model Branch {
   posSessions     POSSession[]
   sales           Sale[]
   salesReturns    SalesReturn[]
+  expenses        Expense[]
+  incomes         Income[]
   createdAt  DateTime    @default(now()) @map("created_at") @db.Timestamptz
   updatedAt  DateTime    @updatedAt @map("updated_at") @db.Timestamptz
 
@@ -419,6 +434,7 @@ model Customer {
   salesReturns     SalesReturn[]
   refunds          Refund[]
   ledgerEntries    CustomerLedgerEntry[]
+  paymentReceipts  PaymentReceipt[]
   createdAt        DateTime          @default(now()) @map("created_at") @db.Timestamptz
   updatedAt        DateTime          @updatedAt @map("updated_at") @db.Timestamptz
   deletedAt        DateTime?         @map("deleted_at") @db.Timestamptz
@@ -480,6 +496,7 @@ model Supplier {
   purchaseReturns  PurchaseReturn[]
   supplierPayments SupplierPayment[]
   ledgerEntries    SupplierLedgerEntry[]
+  paymentReceipts  PaymentReceipt[]
   createdAt        DateTime          @default(now()) @map("created_at") @db.Timestamptz
   updatedAt        DateTime          @updatedAt @map("updated_at") @db.Timestamptz
   deletedAt        DateTime?         @map("deleted_at") @db.Timestamptz
@@ -1512,4 +1529,260 @@ model CustomerLedgerEntry {
   @@index([customerId])
   @@index([createdAt])
   @@map("customer_ledger_entries")
+}
+
+// ─────────────────────────────────────────────
+// Accounting Foundation (B10.1)
+// ─────────────────────────────────────────────
+
+enum AccountType {
+  ASSET
+  LIABILITY
+  EQUITY
+  INCOME
+  EXPENSE
+}
+
+enum AccountStatus {
+  ACTIVE
+  INACTIVE
+}
+
+model AccountCategory {
+  id        String      @id @default(uuid()) @db.Uuid
+  companyId String      @map("company_id") @db.Uuid
+  company   Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  name      String      @db.VarChar(100)
+  type      AccountType
+  createdAt DateTime    @default(now()) @map("created_at") @db.Timestamptz
+
+  accounts  Account[]
+
+  @@unique([companyId, name])
+  @@index([companyId])
+  @@map("account_categories")
+}
+
+model Account {
+  id             String        @id @default(uuid()) @db.Uuid
+  companyId      String        @map("company_id") @db.Uuid
+  company        Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  categoryId     String        @map("category_id") @db.Uuid
+  category       AccountCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  parentId       String?       @map("parent_id") @db.Uuid
+  parent         Account?      @relation("AccountHierarchy", fields: [parentId], references: [id], onDelete: Restrict)
+  accountCode    String        @map("account_code") @db.VarChar(100)
+  name           String        @db.VarChar(150)
+  type           AccountType
+  openingBalance Decimal       @default(0) @map("opening_balance") @db.Decimal(15, 4)
+  currentBalance Decimal       @default(0) @map("current_balance") @db.Decimal(15, 4)
+  status         AccountStatus @default(ACTIVE)
+  createdAt      DateTime      @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt      DateTime      @updatedAt @map("updated_at") @db.Timestamptz
+
+  children       Account[]     @relation("AccountHierarchy")
+  journalItems   JournalEntryItem[]
+  expenses       Expense[]
+  incomes        Income[]
+  paymentReceipts PaymentReceipt[]
+  paymentVouchers PaymentVoucher[]
+
+  @@unique([companyId, accountCode])
+  @@index([companyId])
+  @@index([categoryId])
+  @@index([parentId])
+  @@map("accounts")
+}
+
+model JournalEntry {
+  id            String             @id @default(uuid()) @db.Uuid
+  companyId     String             @map("company_id") @db.Uuid
+  company       Company            @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  referenceType String?            @map("reference_type") @db.VarChar(100)
+  referenceId   String?            @map("reference_id") @db.Uuid
+  entryNumber   String             @map("entry_number") @db.VarChar(100)
+  date          DateTime           @map("date") @db.Timestamptz
+  description   String?            @db.Text
+  createdBy     String             @map("created_by") @db.Uuid
+  creator       User               @relation("JournalCreator", fields: [createdBy], references: [id], onDelete: Cascade)
+  createdAt     DateTime           @default(now()) @map("created_at") @db.Timestamptz
+
+  items         JournalEntryItem[]
+
+  @@unique([companyId, entryNumber])
+  @@index([companyId])
+  @@index([date])
+  @@map("journal_entries")
+}
+
+model JournalEntryItem {
+  id             String       @id @default(uuid()) @db.Uuid
+  journalEntryId String       @map("journal_entry_id") @db.Uuid
+  journalEntry   JournalEntry @relation(fields: [journalEntryId], references: [id], onDelete: Cascade)
+  accountId      String       @map("account_id") @db.Uuid
+  account        Account      @relation(fields: [accountId], references: [id], onDelete: Restrict)
+  debit          Decimal      @db.Decimal(15, 4)
+  credit         Decimal      @db.Decimal(15, 4)
+
+  @@index([journalEntryId])
+  @@index([accountId])
+  @@map("journal_entry_items")
+}
+
+enum ExpenseCategoryStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum ExpenseStatus {
+  ACTIVE
+  CANCELLED
+}
+
+enum IncomeStatus {
+  ACTIVE
+  CANCELLED
+}
+
+
+model ExpenseCategory {
+  id          String                @id @default(uuid()) @db.Uuid
+  companyId   String                @map("company_id") @db.Uuid
+  company     Company               @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  name        String                @db.VarChar(100)
+  description String?               @db.Text
+  status      ExpenseCategoryStatus @default(ACTIVE)
+  createdAt   DateTime              @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime              @updatedAt @map("updated_at") @db.Timestamptz
+
+  expenses    Expense[]
+
+  @@unique([companyId, name])
+  @@index([companyId])
+  @@map("expense_categories")
+}
+
+model Expense {
+  id            String          @id @default(uuid()) @db.Uuid
+  companyId     String          @map("company_id") @db.Uuid
+  company       Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  branchId      String?         @map("branch_id") @db.Uuid
+  branch        Branch?         @relation(fields: [branchId], references: [id], onDelete: SetNull)
+  categoryId    String          @map("category_id") @db.Uuid
+  category      ExpenseCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  accountId     String          @map("account_id") @db.Uuid
+  account       Account         @relation(fields: [accountId], references: [id], onDelete: Restrict)
+  expenseNumber String          @map("expense_number") @db.VarChar(100)
+  date          DateTime        @db.Timestamptz
+  amount        Decimal         @db.Decimal(15, 4)
+  paymentMethod PaymentMethod   @map("payment_method")
+  reference     String?         @db.VarChar(100)
+  description   String?         @db.Text
+  attachment    String?         @db.Text
+  status        ExpenseStatus   @default(ACTIVE)
+  createdBy     String          @map("created_by") @db.Uuid
+  creator       User            @relation("ExpenseCreator", fields: [createdBy], references: [id], onDelete: Cascade)
+  createdAt     DateTime        @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt     DateTime        @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@unique([companyId, expenseNumber])
+  @@index([companyId])
+  @@index([branchId])
+  @@index([categoryId])
+  @@index([accountId])
+  @@map("expenses")
+}
+
+model Income {
+  id            String        @id @default(uuid()) @db.Uuid
+  companyId     String        @map("company_id") @db.Uuid
+  company       Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  branchId      String?       @map("branch_id") @db.Uuid
+  branch        Branch?       @relation(fields: [branchId], references: [id], onDelete: SetNull)
+  accountId     String        @map("account_id") @db.Uuid
+  account       Account       @relation(fields: [accountId], references: [id], onDelete: Restrict)
+  incomeNumber  String        @map("income_number") @db.VarChar(100)
+  date          DateTime      @db.Timestamptz
+  amount        Decimal       @db.Decimal(15, 4)
+  source        String?       @db.VarChar(150)
+  paymentMethod PaymentMethod @map("payment_method")
+  reference     String?       @db.VarChar(100)
+  description   String?       @db.Text
+  status        IncomeStatus  @default(ACTIVE)
+  createdBy     String        @map("created_by") @db.Uuid
+  creator       User          @relation("IncomeCreator", fields: [createdBy], references: [id], onDelete: Cascade)
+  createdAt     DateTime      @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt     DateTime      @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@unique([companyId, incomeNumber])
+  @@index([companyId])
+  @@index([branchId])
+  @@index([accountId])
+  @@map("incomes")
+}
+
+enum ReceiptType {
+  CUSTOMER_PAYMENT
+  SUPPLIER_PAYMENT
+  ADVANCE_RECEIVE
+  ADVANCE_PAYMENT
+  OTHER
+}
+
+enum VoucherType {
+  RECEIPT
+  PAYMENT
+  CONTRA
+  JOURNAL
+}
+
+model PaymentReceipt {
+  id            String         @id @default(uuid()) @db.Uuid
+  companyId     String         @map("company_id") @db.Uuid
+  company       Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  customerId    String?        @map("customer_id") @db.Uuid
+  customer      Customer?      @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  supplierId    String?        @map("supplier_id") @db.Uuid
+  supplier      Supplier?      @relation(fields: [supplierId], references: [id], onDelete: SetNull)
+  accountId     String         @map("account_id") @db.Uuid
+  account       Account        @relation(fields: [accountId], references: [id], onDelete: Restrict)
+  receiptNumber String         @map("receipt_number") @db.VarChar(100)
+  type          ReceiptType
+  amount        Decimal        @db.Decimal(15, 4)
+  paymentMethod PaymentMethod  @map("payment_method")
+  reference     String?        @db.VarChar(100)
+  description   String?        @db.Text
+  date          DateTime       @db.Timestamptz
+  createdBy     String         @map("created_by") @db.Uuid
+  creator       User           @relation("ReceiptCreator", fields: [createdBy], references: [id], onDelete: Cascade)
+  createdAt     DateTime       @default(now()) @map("created_at") @db.Timestamptz
+
+  @@unique([companyId, receiptNumber])
+  @@index([companyId])
+  @@index([customerId])
+  @@index([supplierId])
+  @@index([accountId])
+  @@map("payment_receipts")
+}
+
+model PaymentVoucher {
+  id            String         @id @default(uuid()) @db.Uuid
+  companyId     String         @map("company_id") @db.Uuid
+  company       Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  voucherNumber String         @map("voucher_number") @db.VarChar(100)
+  type          VoucherType
+  accountId     String         @map("account_id") @db.Uuid
+  account       Account        @relation(fields: [accountId], references: [id], onDelete: Restrict)
+  amount        Decimal        @db.Decimal(15, 4)
+  paymentMethod PaymentMethod  @default(CASH) @map("payment_method")
+  description   String?        @db.Text
+  date          DateTime       @db.Timestamptz
+  createdBy     String         @map("created_by") @db.Uuid
+  creator       User           @relation("VoucherCreator", fields: [createdBy], references: [id], onDelete: Cascade)
+  createdAt     DateTime       @default(now()) @map("created_at") @db.Timestamptz
+
+  @@unique([companyId, voucherNumber])
+  @@index([companyId])
+  @@index([accountId])
+  @@map("payment_vouchers")
 }
