@@ -713,14 +713,13 @@ jobs:
 
 ---
 
-## 10. Monitoring & Operations
-
 ### Health Checks
 
-| Endpoint             | Expected Response                                             |
-| -------------------- | ------------------------------------------------------------- |
-| `GET /health`        | `{ "status": "ok", "db": "connected", "redis": "connected" }` |
-| `GET /api/v1/health` | Same as above, API version                                    |
+| Endpoint      | Accessibility | Expected Response                                                                                    | Description                                                |
+| ------------- | ------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| `GET /live`   | Public        | `{ "status": "UP", "timestamp": "..." }`                                                             | Liveness probe: returns instantly to confirm server is up. |
+| `GET /ready`  | Public        | `{ "status": "READY", "database": "UP", "redis": "UP", ... }`                                        | Readiness probe: confirms database and redis connection.   |
+| `GET /health` | Authenticated | `{ "status": "HEALTHY", "application": {...}, "database": {...}, "redis": {...}, "storage": {...} }` | Diagnostics check: restricted to users with `ADMIN` role.  |
 
 ### Log Management
 
@@ -768,6 +767,15 @@ docker exec pos_redis redis-cli FLUSHDB
 docker exec -it pos_postgres psql -U pos_user -d enterprise_pos
 ```
 
+### Production Security Checklist (Phase B13.2)
+
+When preparing to host in production:
+
+1. **Verify CORS Settings**: Restrict `ALLOWED_ORIGINS` strictly to your domain names (avoid wildcards `*`).
+2. **Setup Rate Limiting in Redis**: Ensure the Fastify rate limiter uses the shared Redis database instance by enabling Redis connectivity configurations in `.env`.
+3. **Audit Token Expired settings**: Keep JWT private/public keys secured and configure short token access expiries (`15m`).
+4. **Configure File Validation Limits**: Verify that file upload sizes do not exceed `10MB` and whitelist file extensions are defined.
+
 ---
 
-_This document is part of the Enterprise POS System Phase 0 documentation suite._
+_This document is part of the Enterprise POS System documentation suite._

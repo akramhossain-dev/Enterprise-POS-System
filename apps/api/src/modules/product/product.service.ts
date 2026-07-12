@@ -14,6 +14,7 @@ import {
   CreateProductBody,
   UpdateProductBody,
 } from './product.schema';
+import { getOrSetCache, clearCache } from '../analytics/analytics.service';
 
 // ─────────────────────────────────────────────
 // Prisma Select Objects
@@ -134,26 +135,31 @@ function handleUniqueConstraint(e: unknown, operation: string): never {
 // ─────────────────────────────────────────────
 
 export async function listProducts(query: ProductQuery) {
-  const { skip, take } = paginate(query);
-  const orderBy = sortBuilder(query.sortBy, query.sortOrder);
-  const searchFilter = filterBuilder(query.q, ['name', 'sku', 'barcode']);
+  const cacheKey = `products:${query.companyId ?? 'all'}:list:${JSON.stringify(query)}`;
+  return getOrSetCache(cacheKey, async () => {
+    const { skip, take } = paginate(query);
+    const orderBy = sortBuilder(query.sortBy, query.sortOrder);
+    const searchFilter = filterBuilder(query.q, ['name', 'sku', 'barcode']);
 
-  const where = {
-    ...searchFilter,
-    ...(query.status ? { status: query.status } : { status: { not: ProductStatus.DISCONTINUED } }),
-    ...(query.companyId && { companyId: query.companyId }),
-    ...(query.categoryId && { categoryId: query.categoryId }),
-    ...(query.brandId && { brandId: query.brandId }),
-    ...(query.unitId && { unitId: query.unitId }),
-    ...(query.taxId && { taxId: query.taxId }),
-  };
+    const where = {
+      ...searchFilter,
+      ...(query.status
+        ? { status: query.status }
+        : { status: { not: ProductStatus.DISCONTINUED } }),
+      ...(query.companyId && { companyId: query.companyId }),
+      ...(query.categoryId && { categoryId: query.categoryId }),
+      ...(query.brandId && { brandId: query.brandId }),
+      ...(query.unitId && { unitId: query.unitId }),
+      ...(query.taxId && { taxId: query.taxId }),
+    };
 
-  const [products, total] = await prisma.$transaction([
-    prisma.product.findMany({ where, select: PRODUCT_SELECT, orderBy, skip, take }),
-    prisma.product.count({ where }),
-  ]);
+    const [products, total] = await prisma.$transaction([
+      prisma.product.findMany({ where, select: PRODUCT_SELECT, orderBy, skip, take }),
+      prisma.product.count({ where }),
+    ]);
 
-  return { products, meta: buildPaginationMeta(query.page, query.limit, total) };
+    return { products, meta: buildPaginationMeta(query.page, query.limit, total) };
+  });
 }
 
 /**
@@ -161,49 +167,55 @@ export async function listProducts(query: ProductQuery) {
  * Optimized with indexed columns in Postgres.
  */
 export async function searchProducts(query: ProductSearchQuery) {
-  const { skip, take } = paginate(query);
-  const term = query.q.trim();
+  const cacheKey = `products:${query.companyId ?? 'all'}:search:${JSON.stringify(query)}`;
+  return getOrSetCache(cacheKey, async () => {
+    const { skip, take } = paginate(query);
+    const term = query.q.trim();
 
-  const where = {
-    status: { not: ProductStatus.DISCONTINUED },
-    ...(query.companyId && { companyId: query.companyId }),
-    OR: [
-      { name: { contains: term, mode: 'insensitive' as const } },
-      { sku: { contains: term, mode: 'insensitive' as const } },
-      { barcode: { contains: term, mode: 'insensitive' as const } },
-    ],
-  };
+    const where = {
+      status: { not: ProductStatus.DISCONTINUED },
+      ...(query.companyId && { companyId: query.companyId }),
+      OR: [
+        { name: { contains: term, mode: 'insensitive' as const } },
+        { sku: { contains: term, mode: 'insensitive' as const } },
+        { barcode: { contains: term, mode: 'insensitive' as const } },
+      ],
+    };
 
-  const [products, total] = await prisma.$transaction([
-    prisma.product.findMany({
-      where,
-      select: PRODUCT_SEARCH_SELECT,
-      orderBy: { name: 'asc' },
-      skip,
-      take,
-    }),
-    prisma.product.count({ where }),
-  ]);
+    const [products, total] = await prisma.$transaction([
+      prisma.product.findMany({
+        where,
+        select: PRODUCT_SEARCH_SELECT,
+        orderBy: { name: 'asc' },
+        skip,
+        take,
+      }),
+      prisma.product.count({ where }),
+    ]);
 
-  return { products, meta: buildPaginationMeta(query.page, query.limit, total) };
+    return { products, meta: buildPaginationMeta(query.page, query.limit, total) };
+  });
 }
 
 export async function findProductById(id: string) {
-  const product = await prisma.product.findFirst({
-    where: { id, status: { not: ProductStatus.DISCONTINUED } },
-    select: PRODUCT_SELECT,
+  const cacheKey = `product:${id}`;
+  return getOrSetCache(cacheKey, async () => {
+    const product = await prisma.product.findFirst({
+      where: { id, status: { not: ProductStatus.DISCONTINUED } },
+      select: PRODUCT_SELECT,
+    });
+    if (!product) {
+      throw new NotFoundError('Product not found');
+    }
+    return product;
   });
-  if (!product) {
-    throw new NotFoundError('Product not found');
-  }
-  return product;
 }
 
 export async function createProduct(body: CreateProductBody) {
   await validateCatalogFKs(body.companyId, body.unitId, body.categoryId, body.brandId, body.taxId);
 
   try {
-    return await prisma.product.create({
+    const created = await prisma.product.create({
       data: {
         companyId: body.companyId,
         unitId: body.unitId,
@@ -221,6 +233,13 @@ export async function createProduct(body: CreateProductBody) {
       },
       select: PRODUCT_SELECT,
     });
+
+    // Invalidate Cache
+    await clearCache(`products:${body.companyId}:*`);
+    await clearCache(`dashboard_overview_${body.companyId}_*`);
+    await clearCache(`sales_summary_${body.companyId}`);
+
+    return created;
   } catch (e) {
     handleUniqueConstraint(e, 'create');
   }
@@ -279,16 +298,30 @@ export async function updateProduct(id: string, body: UpdateProductBody) {
   }
 
   try {
-    return await prisma.product.update({ where: { id }, data, select: PRODUCT_SELECT });
+    const updated = await prisma.product.update({ where: { id }, data, select: PRODUCT_SELECT });
+
+    // Invalidate Cache
+    await clearCache(`products:${existing.companyId}:*`);
+    await clearCache(`product:${id}`);
+    await clearCache(`dashboard_overview_${existing.companyId}_*`);
+    await clearCache(`sales_summary_${existing.companyId}`);
+
+    return updated;
   } catch (e) {
     handleUniqueConstraint(e, 'update');
   }
 }
 
 export async function softDeleteProduct(id: string): Promise<void> {
-  await findProductById(id);
+  const existing = await findProductById(id);
   await prisma.product.update({
     where: { id },
     data: { status: ProductStatus.DISCONTINUED },
   });
+
+  // Invalidate Cache
+  await clearCache(`products:${existing.companyId}:*`);
+  await clearCache(`product:${id}`);
+  await clearCache(`dashboard_overview_${existing.companyId}_*`);
+  await clearCache(`sales_summary_${existing.companyId}`);
 }

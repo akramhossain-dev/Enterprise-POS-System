@@ -69,6 +69,8 @@ declare module 'fastify' {
       email: string;
       roleId: string;
       permissions: string[];
+      companyId?: string | null;
+      branchId?: string | null;
     };
   }
 }

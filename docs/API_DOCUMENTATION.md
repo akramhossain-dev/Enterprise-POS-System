@@ -1522,4 +1522,106 @@ All reports support parameters: `page`, `limit`, `startDate`, `endDate`, `search
 
 ---
 
-_This document is part of the Enterprise POS System Phase B12.2 documentation suite._
+## Phase B13.1 — Performance Optimization & Background Jobs
+
+### Health & Diagnostics Endpoints
+
+#### 1. Liveness Check — `GET /live`
+
+- **Authentication**: None
+- **Response `200`**:
+  ```json
+  {
+    "status": "UP",
+    "timestamp": "2026-07-12T22:22:42.000Z"
+  }
+  ```
+- **Description**: Lightweight liveness probe to verify that the HTTP server is listening.
+
+#### 2. Readiness Check — `GET /ready`
+
+- **Authentication**: None
+- **Response `200` (Ready)**:
+  ```json
+  {
+    "status": "READY",
+    "database": "UP",
+    "redis": "UP",
+    "timestamp": "2026-07-12T22:22:42.000Z"
+  }
+  ```
+- **Response `503` (Not Ready)**:
+  ```json
+  {
+    "status": "NOT_READY",
+    "database": "DOWN",
+    "redis": "UP",
+    "timestamp": "2026-07-12T22:22:42.000Z"
+  }
+  ```
+- **Description**: Confirms the server's backend dependencies (Database, Redis) are healthy and connected.
+
+#### 3. Health Diagnostics — `GET /health`
+
+- **Authentication**: Yes (Requires user role `ADMIN`)
+- **Response `200` (Healthy)**:
+  ```json
+  {
+    "status": "HEALTHY",
+    "timestamp": "2026-07-12T22:22:42.000Z",
+    "application": {
+      "uptimeSeconds": 142,
+      "nodeVersion": "v22.2.0",
+      "memoryUsageMb": {
+        "rss": 85.23,
+        "heapTotal": 45.12,
+        "heapUsed": 32.41
+      },
+      "cpuUsage": {
+        "user": 120000,
+        "system": 45000
+      }
+    },
+    "database": {
+      "status": "UP",
+      "latencyMs": 2.45
+    },
+    "redis": {
+      "status": "UP",
+      "latencyMs": 1.15
+    },
+    "queues": {
+      "status": "UP"
+    },
+    "storage": {
+      "status": "UP"
+    }
+  }
+  ```
+- **Description**: Detailed status metrics of the system, including backing services performance latencies.
+
+---
+
+## Phase B13.2 — Security Hardening & Observability
+
+### Security Policies and Protections
+
+#### 1. Input Sanitization & Anti-XSS Filters
+
+All POST, PUT, and PATCH request body payloads are recursively filtered to neutralize cross-site scripting (XSS) tag injections. All string properties have special characters (`<`, `>`, `&`, `"`, `'`, `/`) escaped into safe HTML entities automatically.
+
+#### 2. Prototype Pollution Mitigation
+
+In order to prevent JavaScript prototype pollution attacks, any properties named `__proto__` or `constructor` found in incoming request bodies are stripped and ignored globally during parsing.
+
+#### 3. Refresh Token Rotation (RTR) Reuse Prevention
+
+Refresh tokens are rotated on use. An opaque token rotated within the last 60 seconds is temporarily blacklisted. If a client attempts to reuse a blacklisted/rotated refresh token, the API marks it as a security breach, deletes all active refresh tokens for the associated user, and voids all active sessions.
+
+#### 4. Error Output Masking
+
+To prevent reconnaissance attacks, any unhandled database or internal system error resulting in an HTTP 500 status code is masked. The API returns a generic `'An unexpected internal error occurred'` error envelope to client requests, suppressing paths, stack traces, and database schemas.
+
+---
+
+_This document is part of the Enterprise POS System API documentation suite._

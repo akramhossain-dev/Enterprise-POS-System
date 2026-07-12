@@ -481,4 +481,27 @@ The data model includes `company_id` and `branch_id` foreign keys on all busines
 
 ---
 
-_This document is part of the Enterprise POS System Phase 0 documentation suite._
+## 10. Performance Optimization & Background Jobs
+
+Implemented in Phase B13.1:
+
+- **Redis Cache Layer**: Dynamic Redis cache integrated into the core service layers (`analytics`, `roles`, `permissions`, `categories`, `products`, `settings`) supporting wildcard key invalidations on CRUD actions.
+- **BullMQ Background Processing**: Distributed queue infrastructure (`email-queue`, `notification-queue`, `low-stock-queue`, `expiry-queue`, `daily-summary-queue`, `backup-queue`, `report-generation-queue`) with structured repeatable cron schedulers.
+- **API Optimization**: Automated Response Compression, ETag validation, connection pooling, and request duration tracing in structured logging.
+- **Rate Limiting**: Configured route-specific limits on public and authentication routes to mitigate DDoS and brute force scenarios.
+
+---
+
+## 11. Security Hardening & Observability
+
+Implemented in Phase B13.2:
+
+- **XSS & Prototype Pollution preValidation Filter**: A global pre-validation parser recursively escapes HTML elements in input payloads and ignores prototype manipulation attributes.
+- **Enhanced RTR (Refresh Token Rotation) Reuse Protection**: Storing rotated token hashes in Redis with a 60-second concurrency retry window. If a reused token is detected, all refresh tokens for that user are deleted and a security breach event is logged.
+- **Active status verification cache**: The `authGuard` verifies user state (`user:status:userId`) and attaches tenant boundary parameters (`user:employee:userId`) on every request, both backed by Redis with automated CRUD invalidation.
+- **Secure File Validation Decorator**: Wrapping S3 and Local storage services in a validating decorator validating MIME-types, file sizes, filename sanitization, and malware scanning hooks.
+- **Error log masking**: Masking built-in Fastify or DB server 500 error outputs with generic messages to prevent exposing paths, database schemas, or packages details.
+
+---
+
+_This document is part of the Enterprise POS System documentation suite._

@@ -2,9 +2,10 @@ import fp from 'fastify-plugin';
 import rateLimit from '@fastify/rate-limit';
 import { FastifyInstance } from 'fastify';
 import { env } from '../config';
+import { redisConnection } from '../modules/notification/queue';
 
 // ─────────────────────────────────────────────
-// Rate Limit Plugin
+// Rate Limit Plugin (Redis Backend)
 // ─────────────────────────────────────────────
 
 export default fp(
@@ -13,6 +14,7 @@ export default fp(
       global: true,
       max: env.NODE_ENV === 'production' ? 100 : 1000,
       timeWindow: '1 minute',
+      redis: redisConnection,
       errorResponseBuilder: (_request, context) => ({
         success: false,
         message: 'Too many requests — please slow down',

@@ -1,6 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { sendSuccess } from '../../common/responses/success';
 import { validateBody, validateQuery } from '../../common/utils/validate';
+import { verifyTenantScope } from '../../common/middleware/auth';
 import {
   categoryQuerySchema,
   createCategorySchema,
@@ -20,6 +21,7 @@ export async function handleListCategories(
   reply: FastifyReply,
 ): Promise<void> {
   const query = validateQuery(categoryQuerySchema, request.query) as CategoryQuery;
+  await verifyTenantScope(request, query.companyId);
   const result = await listCategories(query);
   reply.status(200).send(
     sendSuccess({
@@ -36,6 +38,7 @@ export async function handleGetCategory(
 ): Promise<void> {
   const { id } = request.params as { id: string };
   const category = await findCategoryById(id);
+  await verifyTenantScope(request, category.companyId);
   reply.status(200).send(sendSuccess({ message: 'Category fetched successfully', data: category }));
 }
 
@@ -44,6 +47,7 @@ export async function handleCreateCategory(
   reply: FastifyReply,
 ): Promise<void> {
   const body = validateBody(createCategorySchema, request.body);
+  await verifyTenantScope(request, body.companyId);
   const category = await createCategory(body);
   reply.status(201).send(sendSuccess({ message: 'Category created successfully', data: category }));
 }
@@ -53,9 +57,11 @@ export async function handleUpdateCategory(
   reply: FastifyReply,
 ): Promise<void> {
   const { id } = request.params as { id: string };
+  const category = await findCategoryById(id);
+  await verifyTenantScope(request, category.companyId);
   const body = validateBody(updateCategorySchema, request.body);
-  const category = await updateCategory(id, body);
-  reply.status(200).send(sendSuccess({ message: 'Category updated successfully', data: category }));
+  const updated = await updateCategory(id, body);
+  reply.status(200).send(sendSuccess({ message: 'Category updated successfully', data: updated }));
 }
 
 export async function handleDeleteCategory(
@@ -63,6 +69,8 @@ export async function handleDeleteCategory(
   reply: FastifyReply,
 ): Promise<void> {
   const { id } = request.params as { id: string };
+  const category = await findCategoryById(id);
+  await verifyTenantScope(request, category.companyId);
   await softDeleteCategory(id);
   reply.status(200).send(sendSuccess({ message: 'Category deleted successfully' }));
 }

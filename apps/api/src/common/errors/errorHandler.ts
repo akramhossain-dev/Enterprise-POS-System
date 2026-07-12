@@ -38,7 +38,7 @@ export function errorHandler(
     }
     reply.status(error.statusCode).send(
       sendError({
-        message: error.message,
+        message: error.statusCode >= 500 ? 'An unexpected internal error occurred' : error.message,
         errors: error.errors,
         statusCode: error.statusCode,
         code: error.code,
@@ -77,9 +77,16 @@ export function errorHandler(
 
     // Generic Fastify error
     log.error({ error: fastifyError.message, statusCode, url: request.url }, 'Fastify error');
+
+    // Secure masking: never return raw 500 or higher messages to client
+    const safeMessage =
+      statusCode >= 500
+        ? 'An unexpected internal error occurred'
+        : fastifyError.message || 'An unexpected error occurred';
+
     reply.status(statusCode).send(
       sendError({
-        message: fastifyError.message || 'An unexpected error occurred',
+        message: safeMessage,
         statusCode,
       }),
     );
@@ -90,7 +97,7 @@ export function errorHandler(
   log.error({ error, url: request.url }, 'Unhandled internal error');
   reply.status(500).send(
     sendError({
-      message: 'Internal server error',
+      message: 'An unexpected internal error occurred',
       statusCode: 500,
     }),
   );

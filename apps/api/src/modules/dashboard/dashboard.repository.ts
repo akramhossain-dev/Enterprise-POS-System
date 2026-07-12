@@ -133,9 +133,11 @@ export async function getAccountingTotals(companyId: string, startDate?: Date, e
   // Financial income accounts sum
   const incomeAccounts = await prisma.account.findMany({
     where: { companyId, type: AccountType.INCOME },
+    select: { id: true, currentBalance: true },
   });
   const expenseAccounts = await prisma.account.findMany({
     where: { companyId, type: AccountType.EXPENSE },
+    select: { id: true, currentBalance: true },
   });
 
   let totalIncome = new Prisma.Decimal(0);
@@ -149,49 +151,57 @@ export async function getAccountingTotals(companyId: string, startDate?: Date, e
     dateFilter.lte = endDate;
   }
 
-  // Aggregate income
-  for (const acc of incomeAccounts) {
-    if (startDate || endDate) {
+  const incomeAccountIds = incomeAccounts.map((acc) => acc.id);
+  const expenseAccountIds = expenseAccounts.map((acc) => acc.id);
+
+  if (startDate || endDate) {
+    // Single query aggregation for income
+    if (incomeAccountIds.length > 0) {
       const agg = await prisma.journalEntryItem.aggregate({
         where: {
-          accountId: acc.id,
+          accountId: { in: incomeAccountIds },
           journalEntry: { companyId, date: dateFilter },
         },
         _sum: { debit: true, credit: true },
       });
       const db = agg._sum.debit ?? new Prisma.Decimal(0);
       const cr = agg._sum.credit ?? new Prisma.Decimal(0);
-      totalIncome = totalIncome.add(cr.sub(db));
-    } else {
+      totalIncome = cr.sub(db);
+    }
+
+    // Single query aggregation for expense
+    if (expenseAccountIds.length > 0) {
+      const agg = await prisma.journalEntryItem.aggregate({
+        where: {
+          accountId: { in: expenseAccountIds },
+          journalEntry: { companyId, date: dateFilter },
+        },
+        _sum: { debit: true, credit: true },
+      });
+      const db = agg._sum.debit ?? new Prisma.Decimal(0);
+      const cr = agg._sum.credit ?? new Prisma.Decimal(0);
+      totalExpense = db.sub(cr);
+    }
+  } else {
+    for (const acc of incomeAccounts) {
       totalIncome = totalIncome.add(acc.currentBalance);
     }
-  }
-
-  // Aggregate expense
-  for (const acc of expenseAccounts) {
-    if (startDate || endDate) {
-      const agg = await prisma.journalEntryItem.aggregate({
-        where: {
-          accountId: acc.id,
-          journalEntry: { companyId, date: dateFilter },
-        },
-        _sum: { debit: true, credit: true },
-      });
-      const db = agg._sum.debit ?? new Prisma.Decimal(0);
-      const cr = agg._sum.credit ?? new Prisma.Decimal(0);
-      totalExpense = totalExpense.add(db.sub(cr));
-    } else {
+    for (const acc of expenseAccounts) {
       totalExpense = totalExpense.add(acc.currentBalance);
     }
   }
 
   // Active Cash (1000) & Bank (1100) balances
-  const cashAccount = await prisma.account.findFirst({
-    where: { companyId, accountCode: '1000' },
-  });
-  const bankAccount = await prisma.account.findFirst({
-    where: { companyId, accountCode: '1100' },
-  });
+  const [cashAccount, bankAccount] = await Promise.all([
+    prisma.account.findFirst({
+      where: { companyId, accountCode: '1000' },
+      select: { currentBalance: true },
+    }),
+    prisma.account.findFirst({
+      where: { companyId, accountCode: '1100' },
+      select: { currentBalance: true },
+    }),
+  ]);
 
   return {
     totalIncome,

@@ -200,6 +200,27 @@ export async function loginUser(body: LoginBody, req?: FastifyRequest) {
 export async function rotateRefreshToken(token: string) {
   const hashed = hashToken(token);
 
+  // Import Redis connection
+  const { redisConnection } = await import('../notification/queue');
+
+  // 1. Check for token reuse (Breach detection)
+  const reuseUserId = await redisConnection.get(`rotated_token:${hashed}`);
+  if (reuseUserId) {
+    // Revoke all active sessions of this user
+    await prisma.refreshToken.deleteMany({
+      where: { userId: reuseUserId },
+    });
+
+    const { recordAuditLog } = await import('../audit/audit.service');
+    await recordAuditLog({
+      userId: reuseUserId,
+      action: 'SECURITY_BREACH',
+      description: `Breach detected: Refresh token reuse attempt. Revoked all active sessions for this user.`,
+    });
+
+    throw new UnauthorizedError('Token reuse detected. All sessions revoked for safety.');
+  }
+
   const tokenRecord = await prisma.refreshToken.findUnique({
     where: { token: hashed },
     include: {
@@ -215,7 +236,11 @@ export async function rotateRefreshToken(token: string) {
 
   if (!tokenRecord || tokenRecord.expiresAt < new Date()) {
     if (tokenRecord) {
-      await prisma.refreshToken.delete({ where: { id: tokenRecord.id } });
+      try {
+        await prisma.refreshToken.delete({ where: { id: tokenRecord.id } });
+      } catch {
+        // Ignore deletion errors if token was already deleted concurrently
+      }
     }
     throw new UnauthorizedError('Expired or invalid refresh token');
   }
@@ -224,6 +249,9 @@ export async function rotateRefreshToken(token: string) {
   if (user.status !== Status.ACTIVE) {
     throw new UnauthorizedError('User account associated with this session is inactive');
   }
+
+  // 2. Blacklist this old token in Redis for 60 seconds (concurrency retry window)
+  await redisConnection.setex(`rotated_token:${hashed}`, 60, user.id);
 
   await prisma.refreshToken.delete({
     where: { id: tokenRecord.id },

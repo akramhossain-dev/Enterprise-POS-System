@@ -3,6 +3,7 @@ import { isDev } from './config';
 import { createLogger } from './lib/logger';
 import { errorHandler } from './common/errors/errorHandler';
 import { API_PREFIX } from './common/constants';
+import crypto from 'crypto';
 
 // Plugins
 import fastifyCookie from '@fastify/cookie';
@@ -12,9 +13,12 @@ import swaggerPlugin from './plugins/swagger';
 import rateLimitPlugin from './plugins/rate-limit';
 import prismaPlugin from './plugins/prisma';
 import redisPlugin from './plugins/redis';
+import fastifyCompress from '@fastify/compress';
+import fastifyEtag from '@fastify/etag';
 
-// Routes
 import { routes } from './routes';
+import { initScheduler } from './jobs/scheduler';
+import { sanitizeInput } from './common/utils/security';
 
 const log = createLogger('app');
 
@@ -47,6 +51,10 @@ export async function buildApp(): Promise<FastifyInstance> {
   await fastify.register(rateLimitPlugin);
   await fastify.register(fastifyCookie);
 
+  // ── Performance optimization plugins ───────
+  await fastify.register(fastifyCompress);
+  await fastify.register(fastifyEtag);
+
   // ── Documentation ──────────────────────────
   await fastify.register(swaggerPlugin);
 
@@ -65,6 +73,41 @@ export async function buildApp(): Promise<FastifyInstance> {
   const { initSocketServer } = await import('./modules/notification/socket');
   initSocketServer(fastify);
 
+  // ── Input Sanitization preValidation Hook ───
+  fastify.addHook('preValidation', (request, reply, done) => {
+    if (request.body) {
+      request.body = sanitizeInput(request.body);
+    }
+    done();
+  });
+
+  // ── Structured Logging Hooks ───────────────
+  fastify.addHook('onRequest', (request, reply, done) => {
+    request.headers['x-start-time'] = String(performance.now());
+    done();
+  });
+
+  fastify.addHook('onResponse', (request, reply, done) => {
+    const startTimeStr = request.headers['x-start-time'];
+    const duration = startTimeStr ? performance.now() - Number(startTimeStr) : 0;
+    const user = request.user as { id?: string } | null | undefined;
+    const userId = user?.id ?? 'anonymous';
+
+    request.log.info(
+      {
+        requestId: request.id,
+        userId,
+        method: request.method,
+        url: request.url,
+        statusCode: reply.statusCode,
+        executionTimeMs: Number(duration.toFixed(2)),
+      },
+      'Request completed',
+    );
+
+    done();
+  });
+
   // ── Global error handler ───────────────────
   fastify.setErrorHandler(errorHandler);
 
@@ -81,6 +124,13 @@ export async function buildApp(): Promise<FastifyInstance> {
 
   // ── Routes ─────────────────────────────────
   await fastify.register(routes, { prefix: API_PREFIX });
+
+  // ── Initialize background jobs scheduler ────
+  fastify.ready((err) => {
+    if (!err) {
+      void initScheduler();
+    }
+  });
 
   return fastify;
 }

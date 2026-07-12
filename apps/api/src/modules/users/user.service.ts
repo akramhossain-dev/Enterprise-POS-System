@@ -115,6 +115,17 @@ export async function modifyUser(id: string, body: UpdateUserBody) {
     select: USER_SELECT_FIELDS,
   });
 
+  // Invalidate session validation cache
+  void Promise.resolve().then(async () => {
+    try {
+      const { redisConnection } = await import('../notification/queue');
+      await redisConnection.del(`user:status:${id}`);
+      await redisConnection.del(`user:employee:${id}`);
+    } catch (err) {
+      console.error('Failed to invalidate user cache:', err);
+    }
+  });
+
   const roleId = body.roleId;
   if (roleId) {
     void Promise.resolve().then(async () => {
@@ -179,6 +190,17 @@ export async function softDeleteUser(id: string): Promise<void> {
     data: {
       status: Status.DELETED,
     },
+  });
+
+  // Invalidate session validation cache
+  void Promise.resolve().then(async () => {
+    try {
+      const { redisConnection } = await import('../notification/queue');
+      await redisConnection.del(`user:status:${id}`);
+      await redisConnection.del(`user:employee:${id}`);
+    } catch (err) {
+      console.error('Failed to invalidate user cache on soft delete:', err);
+    }
   });
 
   void Promise.resolve().then(async () => {

@@ -1,29 +1,42 @@
+import fs from 'fs';
+import path from 'path';
 import { FileStorageService, UploadResult } from './file-storage.interface';
 
-// ─────────────────────────────────────────────
-// Local/Stub Storage Service
-// ─────────────────────────────────────────────
-// Development-only no-op stub. Replace with a concrete adapter
-// (CloudinaryStorageService, S3StorageService, etc.) when ready.
-
 export class LocalStorageService implements FileStorageService {
-  upload(_file: Buffer, filename: string, _mimeType: string): Promise<UploadResult> {
-    // TODO: Implement local disk storage or swap for a cloud adapter
-    const key = `uploads/${String(Date.now())}-${filename}`;
-    return Promise.resolve({
-      key,
-      url: `/static/${key}`,
-    });
+  private uploadDir: string;
+  private baseUrl: string;
+
+  constructor(uploadDir = 'uploads', baseUrl = '/static/uploads') {
+    this.uploadDir = path.resolve(process.cwd(), uploadDir);
+    this.baseUrl = baseUrl;
+
+    if (!fs.existsSync(this.uploadDir)) {
+      fs.mkdirSync(this.uploadDir, { recursive: true });
+    }
   }
 
-  async delete(_key: string): Promise<void> {
-    // TODO: Remove from disk or cloud
+  async upload(file: Buffer, filename: string, _mimeType: string): Promise<UploadResult> {
+    const safeFilename = `${String(Date.now())}-${filename.replace(/[^a-zA-Z0-9.\-_]/g, '')}`;
+    const filePath = path.join(this.uploadDir, safeFilename);
+
+    await fs.promises.writeFile(filePath, file);
+
+    return {
+      key: safeFilename,
+      url: this.getUrl(safeFilename),
+    };
+  }
+
+  async delete(key: string): Promise<void> {
+    const filePath = path.join(this.uploadDir, key);
+    if (fs.existsSync(filePath)) {
+      await fs.promises.unlink(filePath);
+    }
   }
 
   getUrl(key: string): string {
-    return `/static/${key}`;
+    return `${this.baseUrl}/${key}`;
   }
 }
 
-/** Default singleton instance for use until DI is wired */
 export const storageService: FileStorageService = new LocalStorageService();
