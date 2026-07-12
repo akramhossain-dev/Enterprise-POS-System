@@ -170,6 +170,10 @@ model Company {
   suppliers       Supplier[]
   // Warehouse relations
   warehouses      Warehouse[]
+  // Stock operations (B7.2)
+  stockMovements  StockMovement[]
+  stockAdjustments StockAdjustment[]
+  stockTransfers  StockTransfer[]
   createdAt       DateTime          @default(now()) @map("created_at") @db.Timestamptz
   updatedAt       DateTime          @updatedAt @map("updated_at") @db.Timestamptz
 
@@ -188,6 +192,8 @@ model Branch {
   employees  Employee[]
   customers  Customer[]
   warehouses Warehouse[]
+  // Stock operations (B7.2)
+  stockMovements StockMovement[]
   createdAt  DateTime    @default(now()) @map("created_at") @db.Timestamptz
   updatedAt  DateTime    @updatedAt @map("updated_at") @db.Timestamptz
 
@@ -313,7 +319,11 @@ model Product {
   image         String?        @db.Text
   status        ProductStatus  @default(ACTIVE)
   images        ProductImage[]
-  inventories   Inventory[]
+  inventories        Inventory[]
+  // Stock operations (B7.2)
+  stockMovements     StockMovement[]
+  stockAdjustments   StockAdjustment[]
+  stockTransferItems StockTransferItem[]
   createdAt     DateTime       @default(now()) @map("created_at") @db.Timestamptz
   updatedAt     DateTime       @updatedAt @map("updated_at") @db.Timestamptz
 
@@ -473,6 +483,11 @@ model Warehouse {
   status      WarehouseStatus @default(ACTIVE)
   isDefault   Boolean         @default(false) @map("is_default")
   inventories Inventory[]
+  // Stock operations (B7.2)
+  stockMovements   StockMovement[]
+  stockAdjustments StockAdjustment[]
+  transfersFrom    StockTransfer[]  @relation("TransferFrom")
+  transfersTo      StockTransfer[]  @relation("TransferTo")
   createdAt   DateTime        @default(now()) @map("created_at") @db.Timestamptz
   updatedAt   DateTime        @updatedAt @map("updated_at") @db.Timestamptz
   deletedAt   DateTime?       @map("deleted_at") @db.Timestamptz
@@ -508,4 +523,137 @@ model Inventory {
   @@index([warehouseId])
   @@index([productId])
   @@map("inventories")
+}
+
+// ─────────────────────────────────────────────
+// Enums — Stock Operations (B7.2)
+// ─────────────────────────────────────────────
+
+enum MovementType {
+  OPENING_STOCK
+  PURCHASE
+  PURCHASE_RETURN
+  SALE
+  SALE_RETURN
+  TRANSFER_IN
+  TRANSFER_OUT
+  ADJUSTMENT_IN
+  ADJUSTMENT_OUT
+  DAMAGE
+  EXPIRED
+  LOST
+  MANUAL
+}
+
+enum AdjustmentType {
+  INCREASE
+  DECREASE
+  DAMAGE
+  EXPIRED
+  LOST
+}
+
+enum TransferStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  COMPLETED
+}
+
+// ─────────────────────────────────────────────
+// Models — Stock Operations (B7.2)
+// ─────────────────────────────────────────────
+
+model StockMovement {
+  id               String       @id @default(uuid()) @db.Uuid
+  companyId        String       @map("company_id") @db.Uuid
+  company          Company      @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  branchId         String?      @map("branch_id") @db.Uuid
+  branch           Branch?      @relation(fields: [branchId], references: [id], onDelete: SetNull)
+  warehouseId      String       @map("warehouse_id") @db.Uuid
+  warehouse        Warehouse    @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+  productId        String       @map("product_id") @db.Uuid
+  product          Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  referenceType    String?      @map("reference_type") @db.VarChar(50)
+  referenceId      String?      @map("reference_id") @db.Uuid
+  movementType     MovementType @map("movement_type")
+  quantity         Decimal      @db.Decimal(15, 4)
+  previousQuantity Decimal      @map("previous_quantity") @db.Decimal(15, 4)
+  newQuantity      Decimal      @map("new_quantity") @db.Decimal(15, 4)
+  unitCost         Decimal?     @map("unit_cost") @db.Decimal(15, 4)
+  remarks          String?      @db.Text
+  performedBy      String       @map("performed_by") @db.Uuid
+  createdAt        DateTime     @default(now()) @map("created_at") @db.Timestamptz
+
+  @@index([companyId])
+  @@index([warehouseId])
+  @@index([productId])
+  @@index([movementType])
+  @@index([referenceType, referenceId])
+  @@index([performedBy])
+  @@index([createdAt])
+  @@map("stock_movements")
+}
+
+model StockAdjustment {
+  id          String         @id @default(uuid()) @db.Uuid
+  companyId   String         @map("company_id") @db.Uuid
+  company     Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  warehouseId String         @map("warehouse_id") @db.Uuid
+  warehouse   Warehouse      @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+  productId   String         @map("product_id") @db.Uuid
+  product     Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
+  type        AdjustmentType
+  quantity    Decimal        @db.Decimal(15, 4)
+  reason      String         @db.VarChar(500)
+  remarks     String?        @db.Text
+  approvedBy  String?        @map("approved_by") @db.Uuid
+  createdBy   String         @map("created_by") @db.Uuid
+  createdAt   DateTime       @default(now()) @map("created_at") @db.Timestamptz
+
+  @@index([companyId])
+  @@index([warehouseId])
+  @@index([productId])
+  @@index([type])
+  @@index([createdBy])
+  @@index([createdAt])
+  @@map("stock_adjustments")
+}
+
+model StockTransfer {
+  id              String         @id @default(uuid()) @db.Uuid
+  companyId       String         @map("company_id") @db.Uuid
+  company         Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  fromWarehouseId String         @map("from_warehouse_id") @db.Uuid
+  fromWarehouse   Warehouse      @relation("TransferFrom", fields: [fromWarehouseId], references: [id], onDelete: Cascade)
+  toWarehouseId   String         @map("to_warehouse_id") @db.Uuid
+  toWarehouse     Warehouse      @relation("TransferTo", fields: [toWarehouseId], references: [id], onDelete: Cascade)
+  status          TransferStatus @default(PENDING)
+  remarks         String?        @db.Text
+  createdBy       String         @map("created_by") @db.Uuid
+  approvedBy      String?        @map("approved_by") @db.Uuid
+  items           StockTransferItem[]
+  createdAt       DateTime       @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime       @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@index([companyId])
+  @@index([fromWarehouseId])
+  @@index([toWarehouseId])
+  @@index([status])
+  @@index([createdBy])
+  @@map("stock_transfers")
+}
+
+model StockTransferItem {
+  id         String        @id @default(uuid()) @db.Uuid
+  transferId String        @map("transfer_id") @db.Uuid
+  transfer   StockTransfer @relation(fields: [transferId], references: [id], onDelete: Cascade)
+  productId  String        @map("product_id") @db.Uuid
+  product    Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity   Decimal       @db.Decimal(15, 4)
+
+  @@unique([transferId, productId])
+  @@index([transferId])
+  @@index([productId])
+  @@map("stock_transfer_items")
 }

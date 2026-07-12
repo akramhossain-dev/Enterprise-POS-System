@@ -117,6 +117,12 @@ async function main() {
     { name: 'inventory.view', module: 'inventory', action: 'view' },
     { name: 'inventory.update', module: 'inventory', action: 'update' },
     { name: 'inventory.opening_stock', module: 'inventory', action: 'opening_stock' },
+    // ── B7.2: Stock Operations Permissions ──
+    { name: 'stock.view', module: 'stock', action: 'view' },
+    { name: 'stock.history', module: 'stock', action: 'history' },
+    { name: 'stock.adjust', module: 'stock', action: 'adjust' },
+    { name: 'stock.transfer', module: 'stock', action: 'transfer' },
+    { name: 'stock.approve', module: 'stock', action: 'approve' },
   ];
 
   const permissions: Record<string, string> = {};

@@ -118,4 +118,15 @@ export async function routes(fastify: FastifyInstance): Promise<void> {
 
   const { inventoryRoutes } = await import('../modules/inventory/inventory.routes');
   await fastify.register(inventoryRoutes, { prefix: '/inventory' });
+
+  // ── Stock Operations (B7.2) ───────────────────────────────────────────────
+  const { stockMovementRoutes } = await import('../modules/stock-movement/stock-movement.routes');
+  await fastify.register(stockMovementRoutes, { prefix: '/stock-movements' });
+
+  const { stockAdjustmentRoutes } =
+    await import('../modules/stock-adjustment/stock-adjustment.routes');
+  await fastify.register(stockAdjustmentRoutes, { prefix: '/stock-adjustments' });
+
+  const { stockTransferRoutes } = await import('../modules/stock-transfer/stock-transfer.routes');
+  await fastify.register(stockTransferRoutes, { prefix: '/stock-transfers' });
 }

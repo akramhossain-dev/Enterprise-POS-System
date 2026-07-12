@@ -16,22 +16,13 @@ import {
   findInventoryByProductWarehouse,
   findInventoriesByProduct,
   findInventoriesByWarehouse,
-  createOpeningStock as repoCreateOpening,
   updateMinStock as repoUpdateMinStock,
   updateReorderLevel as repoUpdateReorderLevel,
 } from './inventory.repository';
 import { mapInventory, mapInventoryList, MappedInventory } from './inventory.mapper';
-import { InventoryAuditPayload } from './inventory.types';
 import { findWarehouseById } from '../warehouse/warehouse.repository';
 import { prisma } from '../../lib/prisma';
-
-// ── Audit stub ─────────────────────────────────────────────────────────────────
-
-async function emitAuditEvent(payload: InventoryAuditPayload): Promise<void> {
-  // TODO: Phase B_AUDIT — wire to AuditLogService.record(payload)
-  void payload;
-  await Promise.resolve();
-}
+import { MovementType } from '@prisma/client';
 
 // ── List ───────────────────────────────────────────────────────────────────────
 
@@ -72,6 +63,7 @@ export async function getInventoryByWarehouse(warehouseId: string): Promise<Mapp
 }
 
 // ── Opening Stock ──────────────────────────────────────────────────────────────
+// Creates inventory record + OPENING_STOCK movement in a single Prisma transaction.
 
 export async function addOpeningStock(
   body: OpeningStockBody,
@@ -96,28 +88,66 @@ export async function addOpeningStock(
   const existing = await findInventoryByProductWarehouse(body.productId, body.warehouseId);
   if (existing) {
     throw new ConflictError(
-      `Opening stock for product "${product.name}" in warehouse "${wh.name}" already exists. Stock movements should go through B7.2 Stock Movement module.`,
+      `Opening stock for product "${product.name}" in warehouse "${wh.name}" already exists. ` +
+        `Use the Stock Adjustment module for further stock changes.`,
     );
   }
 
-  const inv = await repoCreateOpening({
-    companyId: body.companyId,
-    warehouseId: body.warehouseId,
-    productId: body.productId,
-    quantity: body.quantity,
-    averageCost: body.averageCost,
-    minimumQuantity: body.minimumQuantity,
-    reorderQuantity: body.reorderQuantity,
-    ...(body.maximumQuantity !== undefined ? { maximumQuantity: body.maximumQuantity } : {}),
-  });
+  const inv = await prisma.$transaction(async (tx) => {
+    // 1. Create inventory record with initial quantity
+    const created = await tx.inventory.create({
+      data: {
+        companyId: body.companyId,
+        warehouseId: body.warehouseId,
+        productId: body.productId,
+        availableQuantity: body.quantity,
+        averageCost: body.averageCost,
+        lastPurchasePrice: body.averageCost,
+        minimumQuantity: body.minimumQuantity,
+        reorderQuantity: body.reorderQuantity,
+        ...(body.maximumQuantity !== undefined ? { maximumQuantity: body.maximumQuantity } : {}),
+        hasOpeningStock: true,
+      },
+      select: {
+        id: true,
+        companyId: true,
+        warehouseId: true,
+        productId: true,
+        availableQuantity: true,
+        reservedQuantity: true,
+        damagedQuantity: true,
+        minimumQuantity: true,
+        reorderQuantity: true,
+        maximumQuantity: true,
+        averageCost: true,
+        lastPurchasePrice: true,
+        hasOpeningStock: true,
+        createdAt: true,
+        updatedAt: true,
+        product: { select: { id: true, name: true, sku: true, barcode: true, status: true } },
+        warehouse: { select: { id: true, name: true, code: true } },
+      },
+    });
 
-  await emitAuditEvent({
-    actorId,
-    inventoryId: inv.id,
-    productId: inv.productId,
-    warehouseId: inv.warehouseId,
-    action: 'OPENING_STOCK',
-    changes: { quantity: body.quantity, averageCost: body.averageCost },
+    // 2. Create OPENING_STOCK movement record
+    await tx.stockMovement.create({
+      data: {
+        companyId: body.companyId,
+        warehouseId: body.warehouseId,
+        productId: body.productId,
+        movementType: MovementType.OPENING_STOCK,
+        quantity: body.quantity,
+        previousQuantity: 0,
+        newQuantity: body.quantity,
+        ...(body.averageCost > 0 ? { unitCost: body.averageCost } : {}),
+        referenceType: 'INVENTORY',
+        referenceId: created.id,
+        remarks: 'Initial opening stock',
+        performedBy: actorId,
+      },
+    });
+
+    return created;
   });
 
   return mapInventory(inv);
@@ -129,22 +159,12 @@ export async function updateMinStock(
   body: UpdateMinStockBody,
   actorId: string,
 ): Promise<MappedInventory> {
+  void actorId;
   const existing = await repoFindById(body.inventoryId);
   if (!existing) {
     throw new NotFoundError(`Inventory record with ID "${body.inventoryId}" not found`);
   }
-
   const updated = await repoUpdateMinStock(body);
-
-  await emitAuditEvent({
-    actorId,
-    inventoryId: updated.id,
-    productId: updated.productId,
-    warehouseId: updated.warehouseId,
-    action: 'STOCK_UPDATED',
-    changes: { minimumQuantity: body.minimumQuantity, reorderQuantity: body.reorderQuantity },
-  });
-
   return mapInventory(updated);
 }
 
@@ -154,28 +174,11 @@ export async function updateReorderLevel(
   body: UpdateReorderLevelBody,
   actorId: string,
 ): Promise<MappedInventory> {
+  void actorId;
   const existing = await repoFindById(body.inventoryId);
   if (!existing) {
     throw new NotFoundError(`Inventory record with ID "${body.inventoryId}" not found`);
   }
-
   const updated = await repoUpdateReorderLevel(body);
-
-  await emitAuditEvent({
-    actorId,
-    inventoryId: updated.id,
-    productId: updated.productId,
-    warehouseId: updated.warehouseId,
-    action: 'STOCK_UPDATED',
-    changes: { reorderQuantity: body.reorderQuantity },
-  });
-
   return mapInventory(updated);
 }
-
-// ── Future stubs (DO NOT implement) ───────────────────────────────────────────
-// adjustStock(inventoryId, qty, reason)     — Phase: B7.2 Stock Movement
-// transferStock(fromWH, toWH, productId)    — Phase: Transfer
-// reserveStock(inventoryId, qty, saleId)    — Phase: Sales
-// releaseReservation(inventoryId, qty)      — Phase: Sales
-// processReturn(inventoryId, qty, reason)   — Phase: Returns
