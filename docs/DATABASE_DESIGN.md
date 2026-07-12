@@ -1054,6 +1054,23 @@ const result = await runInTransaction(async (tx) => {
 });
 ```
 
+### Database Indexing & Optimizations (B11.1 - B11.3)
+
+To support rapid dashboard aggregation and prevent sequential table scan bottlenecks, the following database index configurations are applied:
+
+1. **Sale (`sales`)**:
+   - `@@index([created_at])`: Speeds up date-filtered sales queries and daily/weekly/monthly trend grouping.
+   - `@@index([customer_id])`: Speeds up customer summary lists.
+   - `@@index([sale_date])`: Speeds up date-filtered sales reports queries.
+2. **PurchaseOrder (`purchase_orders`)**:
+   - `@@index([created_at])`: Optimizes purchase totals calculations.
+   - `@@index([supplier_id])`: Speeds up supplier metrics filtering.
+3. **Inventory (`inventories`)**:
+   - `@@index([product_id])`: Optimizes stock query listings.
+   - `@@index([warehouse_id])`: Speeds up warehouse-wise inventory summaries.
+4. **Payment (`payments`)**:
+   - `@@index([created_at])`: Speeds up payment history and financial statement aggregations.
+
 ---
 
-_This document is part of the Enterprise POS System Phase 0 documentation suite._
+_This document is part of the Enterprise POS System Phase B11.3 documentation suite._

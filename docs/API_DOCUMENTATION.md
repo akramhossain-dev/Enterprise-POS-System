@@ -1260,6 +1260,166 @@ Increments the printing counter on the invoice.
 - **Query Params**: `startDate`, `endDate`
 - **Response**: `{ "totalIncome": "...", "totalExpense": "...", "netProfit": "..." }`.
 
+## Phase B11.1 — Dashboard Analytics System
+
+### Base Path — `/api/v1/dashboard`
+
+All dashboard endpoints support query filters `startDate` and `endDate` (ISO date-time format). If omitted, calculations default to the current month.
+
+#### Main Overview — `GET /dashboard/overview`
+
+- **Response**: `{ "success": true, "data": { "totalSales": "1200.00", "totalPurchase": "450.00", "totalRevenue": "1200.00", "totalExpense": "300.00", "netProfit": "900.00", "totalCustomers": 12, "totalSuppliers": 5, "totalProducts": 48, "lowStockItemsCount": 3 } }`
+- **Guarded by**: `dashboard.view`
+
+#### Sales Summary — `GET /dashboard/sales-summary`
+
+- **Response**: `{ "success": true, "data": { "todaySales": "350.00", "yesterdaySales": "500.00", "thisWeekSales": "1200.00", "thisMonthSales": "2400.00", "thisYearSales": "24000.00" } }`
+- **Guarded by**: `dashboard.view`
+
+#### Sales Trend — `GET /dashboard/sales-trend`
+
+- **Query Params**: `trend` (Daily, Weekly, Monthly)
+- **Response**: Array of trend intervals: `[{ "date": "2026-07-12", "salesAmount": "350.00", "numberOfOrders": 3 }]`
+- **Guarded by**: `analytics.view`
+
+#### Purchase Summary — `GET /dashboard/purchase-summary`
+
+- **Response**: `{ "success": true, "data": { "totalPurchase": 10, "pendingPurchase": 2, "completedPurchase": 8, "purchaseAmount": "4500.00" } }`
+- **Guarded by**: `dashboard.view`
+
+#### Inventory Summary — `GET /dashboard/inventory-summary`
+
+- **Response**: `{ "success": true, "data": { "totalProducts": 48, "totalStockValue": "15000.00", "lowStockCount": 3, "outOfStockCount": 1, "warehouseWiseStock": [{ "warehouseId": "uuid", "warehouseName": "Main Warehouse", "totalStock": "550" }] } }`
+- **Guarded by**: `dashboard.view`
+
+#### Customer Summary — `GET /dashboard/customer-summary`
+
+- **Response**: `{ "success": true, "data": { "totalCustomers": 12, "newCustomers": 2, "topCustomers": [{ "customerId": "uuid", "customerName": "John Doe", "totalPurchase": "850.00" }], "customerDueAmount": "250.00" } }`
+- **Guarded by**: `dashboard.view`
+
+#### Supplier Summary — `GET /dashboard/supplier-summary`
+
+- **Response**: `{ "success": true, "data": { "totalSuppliers": 5, "supplierDue": "120.00", "topSuppliers": [{ "supplierId": "uuid", "companyName": "Acme Corp", "totalPurchase": "900.00" }] } }`
+- **Guarded by**: `dashboard.view`
+
+#### Financial Summary — `GET /dashboard/financial-summary`
+
+- **Response**: `{ "success": true, "data": { "totalIncome": "1200.00", "totalExpense": "300.00", "profit": "900.00", "cashBalance": "4500.00", "bankBalance": "12000.00" } }`
+- **Guarded by**: `analytics.view`
+
+#### Top Products — `GET /dashboard/top-products`
+
+- **Query Params**: `limit`
+- **Response**: `[{ "productId": "uuid", "productName": "Item A", "quantitySold": "45.00", "revenue": "900.00" }]`
+- **Guarded by**: `analytics.view`
+
+#### Top Customers — `GET /dashboard/top-customers`
+
+- **Query Params**: `limit`
+- **Response**: `[{ "customerId": "uuid", "customerName": "John Doe", "totalPurchase": "850.00", "totalPayment": "600.00" }]`
+- **Guarded by**: `analytics.view`
+
+## Phase B11.2 & B11.3 — Reporting System
+
+### Base Path — `/api/v1/reports`
+
+All reports support parameters: `page`, `limit`, `startDate`, `endDate`, `search`, `warehouseId`, `productId`, `sortBy`, and `sortOrder`.
+
+#### 1. Detailed Sales — `GET /reports/sales`
+
+- **Response**: Paginated list of sales orders matching filters.
+- **Guarded by**: `report.sales.view`
+
+#### 2. Sales Summary — `GET /reports/sales-summary`
+
+- **Response**: Summary metrics: gross sales, net sales, taxes, discounts.
+- **Guarded by**: `report.sales.view`
+
+#### 3. Product Sales — `GET /reports/product-sales`
+
+- **Response**: Product sale quantities, average prices, product costs, and profit margins.
+- **Guarded by**: `report.sales.view`
+
+#### 4. Customer Sales — `GET /reports/customer-sales`
+
+- **Response**: Customers buying counts, dues, total orders.
+- **Guarded by**: `report.customer.view`
+
+#### 5. Detailed Purchases — `GET /reports/purchases`
+
+- **Response**: Paginated list of purchase orders.
+- **Guarded by**: `report.purchase.view`
+
+#### 6. Purchase Summary — `GET /reports/purchase-summary`
+
+- **Response**: Totals, counts, average purchase value.
+- **Guarded by**: `report.purchase.view`
+
+#### 7. Supplier Purchases — `GET /reports/supplier-purchases`
+
+- **Response**: Supplier purchase orders count, payables, dues.
+- **Guarded by**: `report.supplier.view`
+
+#### 8. Profit Analysis — `GET /reports/profit-analysis`
+
+- **Response**: Sales revenue, product cost, discounts, gross profit.
+- **Guarded by**: `report.profit.view`
+
+#### 9. Inventory Report — `GET /reports/inventory`
+
+- **Response**: Paginated product inventory list: SKU, Warehouse, Available, Reserved, Average Cost, Value.
+- **Guarded by**: `report.inventory.view`
+
+#### 10. Low Stock Report — `GET /reports/low-stock`
+
+- **Response**: Products where current stock is less than or equal to minimum required.
+- **Guarded by**: `report.inventory.view`
+
+#### 11. Out Of Stock Report — `GET /reports/out-of-stock`
+
+- **Response**: Products where available inventory is 0 or negative.
+- **Guarded by**: `report.inventory.view`
+
+#### 12. Stock Movements — `GET /reports/stock-movements`
+
+- **Response**: Stock ledger entries filtered by product/warehouse/movement type.
+- **Guarded by**: `report.stock.view`
+
+#### 13. Batch Report — `GET /reports/batches`
+
+- **Response**: Product batch numbers, quantities, mfg dates, expiry dates.
+- **Guarded by**: `report.inventory.view`
+
+#### 14. Expiry Report — `GET /reports/expiry`
+
+- **Response**: Alerts for expired/expiring batches within 30 days.
+- **Guarded by**: `report.inventory.view`
+
+#### 15. Warehouse Report — `GET /reports/warehouses`
+
+- **Response**: Summary totals per warehouse.
+- **Guarded by**: `report.inventory.view`
+
+#### 16. Inventory Valuation — `GET /reports/inventory-valuation`
+
+- **Response**: Weighted average value aggregates per warehouse and company.
+- **Guarded by**: `report.inventory.view`
+
+#### 17. General Ledger — `GET /reports/general-ledger`
+
+- **Response**: Ledger entries with running balances per account.
+- **Guarded by**: `report.ledger.view`
+
+#### 18. Trial Balance — `GET /reports/trial-balance`
+
+- **Response**: Ledger-wide trial balance.
+- **Guarded by**: `report.financial.view`
+
+#### 19. Profit & Loss Sheet — `GET /reports/profit-loss`
+
+- **Response**: Dynamic statement representing revenue, COGS, gross and net profit.
+- **Guarded by**: `report.financial.view`
+
 ---
 
-_This document is part of the Enterprise POS System Phase B10.3 documentation suite._
+_This document is part of the Enterprise POS System Phase B11.3 documentation suite._

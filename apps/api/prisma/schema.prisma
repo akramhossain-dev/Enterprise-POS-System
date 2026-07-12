@@ -992,6 +992,7 @@ model PurchaseOrder {
   @@index([supplierId])
   @@index([status])
   @@index([orderDate])
+  @@index([createdAt])
   @@map("purchase_orders")
 }
 
@@ -1360,6 +1361,8 @@ model Sale {
   @@index([sessionId])
   @@index([paymentStatus])
   @@index([status])
+  @@index([createdAt])
+  @@index([saleDate])
   @@map("sales")
 }
 
@@ -1392,8 +1395,10 @@ model Payment {
   paidAt        DateTime      @default(now()) @map("paid_at") @db.Timestamptz
   createdBy     String        @map("created_by") @db.Uuid
   creator       User          @relation("PaymentCreator", fields: [createdBy], references: [id], onDelete: Cascade)
+  createdAt     DateTime      @default(now()) @map("created_at") @db.Timestamptz
 
   @@index([saleId])
+  @@index([createdAt])
   @@map("payments")
 }
 

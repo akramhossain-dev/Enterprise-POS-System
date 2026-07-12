@@ -213,6 +213,11 @@ export async function routes(fastify: FastifyInstance): Promise<void> {
   const { transactionRoutes } = await import('../modules/financial-transaction/transaction.routes');
   await fastify.register(transactionRoutes);
 
-  const { reportRoutes } = await import('../modules/financial-report/report.routes');
-  await fastify.register(reportRoutes);
+  // ── Dashboard Analytics System (B11.1) ──────────────────────────────────────
+  const { dashboardRoutes } = await import('../modules/dashboard/dashboard.routes');
+  await fastify.register(dashboardRoutes, { prefix: '/dashboard' });
+
+  // ── Sales & Purchase Reporting System (B11.2) ───────────────────────────────
+  const { reportsRoutes } = await import('../modules/reports/reports.routes');
+  await fastify.register(reportsRoutes, { prefix: '/reports' });
 }

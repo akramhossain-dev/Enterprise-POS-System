@@ -6,6 +6,7 @@ import {
   AccountStatementReport,
   TrialBalanceRow,
   FinancialSummaryReport,
+  ProfitLossReport,
 } from './report.types';
 
 async function getCompanyIdForUser(userId: string): Promise<string> {
@@ -270,6 +271,86 @@ export async function getFinancialSummaryReport(
   return {
     totalIncome: totalIncome.toFixed(2),
     totalExpense: totalExpense.toFixed(2),
+    netProfit: netProfit.toFixed(2),
+  };
+}
+
+export async function getProfitLossReport(
+  userId: string,
+  startDate?: Date,
+  endDate?: Date,
+): Promise<ProfitLossReport> {
+  const companyId = await getCompanyIdForUser(userId);
+
+  let revenue = 0;
+  const incomeAccounts = await prisma.account.findMany({
+    where: { companyId, type: AccountType.INCOME },
+  });
+
+  const dateFilter: Prisma.DateTimeFilter = {};
+  if (startDate) {
+    dateFilter.gte = startDate;
+  }
+  if (endDate) {
+    dateFilter.lte = endDate;
+  }
+
+  for (const acc of incomeAccounts) {
+    const sum = await prisma.journalEntryItem.aggregate({
+      where: {
+        accountId: acc.id,
+        journalEntry: { companyId, date: dateFilter },
+      },
+      _sum: { debit: true, credit: true },
+    });
+    const db = Number(sum._sum.debit ?? 0);
+    const cr = Number(sum._sum.credit ?? 0);
+    revenue += cr - db;
+  }
+
+  const salesItems = await prisma.saleItem.findMany({
+    where: {
+      sale: {
+        companyId,
+        saleDate: dateFilter,
+      },
+    },
+    include: {
+      product: { select: { purchasePrice: true } },
+    },
+  });
+
+  let cogsVal = 0;
+  for (const item of salesItems) {
+    cogsVal += Number(item.quantity) * Number(item.product.purchasePrice);
+  }
+
+  let operatingExpense = 0;
+  const expenseAccounts = await prisma.account.findMany({
+    where: { companyId, type: AccountType.EXPENSE, accountCode: { not: '5000' } },
+  });
+
+  for (const acc of expenseAccounts) {
+    const sum = await prisma.journalEntryItem.aggregate({
+      where: {
+        accountId: acc.id,
+        journalEntry: { companyId, date: dateFilter },
+      },
+      _sum: { debit: true, credit: true },
+    });
+    const db = Number(sum._sum.debit ?? 0);
+    const cr = Number(sum._sum.credit ?? 0);
+    operatingExpense += db - cr;
+  }
+
+  const grossProfit = revenue - cogsVal;
+  const netProfit = grossProfit - operatingExpense;
+
+  return {
+    revenue: revenue.toFixed(2),
+    cogs: cogsVal.toFixed(2),
+    grossProfit: grossProfit.toFixed(2),
+    operatingExpense: operatingExpense.toFixed(2),
     netProfit: netProfit.toFixed(2),
   };
 }

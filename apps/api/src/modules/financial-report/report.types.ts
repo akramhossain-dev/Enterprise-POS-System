@@ -29,3 +29,11 @@ export interface FinancialSummaryReport {
   totalExpense: string;
   netProfit: string;
 }
+
+export interface ProfitLossReport {
+  revenue: string;
+  cogs: string;
+  grossProfit: string;
+  operatingExpense: string;
+  netProfit: string;
+}

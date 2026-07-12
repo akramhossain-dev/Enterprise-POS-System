@@ -188,6 +188,20 @@ async function main() {
     { name: 'financial.transaction.create', module: 'financial-transaction', action: 'create' },
     { name: 'financial.transaction.view', module: 'financial-transaction', action: 'view' },
     { name: 'financial.report.view', module: 'financial-report', action: 'view' },
+    // ── B11.1: Dashboard Analytics System Permissions ──
+    { name: 'dashboard.view', module: 'dashboard', action: 'view' },
+    { name: 'analytics.view', module: 'analytics', action: 'view' },
+    // ── B11.2: Sales & Purchase Reporting System Permissions ──
+    { name: 'report.sales.view', module: 'report-sales', action: 'view' },
+    { name: 'report.purchase.view', module: 'report-purchase', action: 'view' },
+    { name: 'report.profit.view', module: 'report-profit', action: 'view' },
+    { name: 'report.customer.view', module: 'report-customer', action: 'view' },
+    { name: 'report.supplier.view', module: 'report-supplier', action: 'view' },
+    // ── B11.3: Inventory & Financial Reports Permissions ──
+    { name: 'report.inventory.view', module: 'report-inventory', action: 'view' },
+    { name: 'report.stock.view', module: 'report-stock', action: 'view' },
+    { name: 'report.financial.view', module: 'report-financial', action: 'view' },
+    { name: 'report.ledger.view', module: 'report-ledger', action: 'view' },
   ];
 
   const permissions: Record<string, string> = {};
