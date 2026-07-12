@@ -3,6 +3,12 @@ import { redisConnection } from '../modules/notification/queue';
 import { runExpiryAlertJob, runLowStockAlertJob, runReorderScanJob } from './inventory-jobs';
 import { prisma } from '../lib/prisma';
 import { createLogger } from '../lib/logger';
+import { exec } from 'child_process';
+import { promisify } from 'util';
+import path from 'path';
+import fs from 'fs';
+
+const execAsync = promisify(exec);
 
 const log = createLogger('workers');
 const connection = redisConnection as unknown as never;
@@ -87,25 +93,210 @@ export const dailySummaryWorker = new Worker(
 );
 registerWorkerHandlers(dailySummaryWorker);
 
-// 4. Backup Worker (Preparation)
+// 4. Backup Worker — pg_dump based database backup
 export const backupWorker = new Worker(
   'backup-queue',
   async (job: Job) => {
     log.info(`Processing DB backup job ${job.id ?? 'unknown'}`);
-    await Promise.resolve(); // Simulate backup IO
-    log.info(`Database backup file successfully created for job ${job.id ?? 'unknown'}`);
+
+    const dbUrl = process.env.DATABASE_URL;
+    if (!dbUrl) {
+      log.error('DATABASE_URL is not set — cannot perform backup');
+      return;
+    }
+
+    // Create backups directory if it doesn't exist
+    const backupsDir = path.resolve(process.cwd(), 'backups');
+    if (!fs.existsSync(backupsDir)) {
+      fs.mkdirSync(backupsDir, { recursive: true });
+    }
+
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const backupFile = path.join(backupsDir, `backup-${timestamp}.sql`);
+
+    try {
+      // Run pg_dump using DATABASE_URL
+      await execAsync(`pg_dump "${dbUrl}" -f "${backupFile}" --no-password`, {
+        timeout: 5 * 60 * 1000, // 5 minute timeout
+      });
+
+      const stats = fs.statSync(backupFile);
+      const sizeMb = (stats.size / 1024 / 1024).toFixed(2);
+
+      log.info(
+        { backupFile, sizeMb: `${sizeMb} MB`, jobId: job.id ?? 'unknown' },
+        'Database backup completed successfully',
+      );
+    } catch (error) {
+      log.error({ error, backupFile }, 'Database backup failed');
+      // Remove empty/corrupt backup file on failure
+      if (fs.existsSync(backupFile)) {
+        fs.unlinkSync(backupFile);
+      }
+      throw error;
+    }
   },
   { connection },
 );
 registerWorkerHandlers(backupWorker);
 
-// 5. Report Generation Worker (Preparation)
+// 5. Report Generation Worker
 export const reportGenerationWorker = new Worker(
   'report-generation-queue',
   async (job: Job) => {
-    log.info(`Processing report generation job ${job.id ?? 'unknown'}`);
-    await Promise.resolve(); // Simulate report compiling
-    log.info(`Report successfully generated for job ${job.id ?? 'unknown'}`);
+    const jobData = job.data as {
+      reportType?: string;
+      companyId?: string;
+      startDate?: string;
+      endDate?: string;
+    };
+    const { reportType, companyId, startDate, endDate } = jobData;
+
+    log.info(
+      { jobId: job.id ?? 'unknown', reportType, companyId, startDate, endDate },
+      'Report generation job started',
+    );
+
+    if (!companyId) {
+      log.error({ jobId: job.id }, 'companyId is required for report generation');
+      return;
+    }
+
+    // Build date filter
+    const start = startDate ? new Date(startDate) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const end = endDate ? new Date(endDate) : new Date();
+
+    // Ensure reports directory exists
+    const reportsDir = path.resolve(process.cwd(), 'reports');
+    if (!fs.existsSync(reportsDir)) {
+      fs.mkdirSync(reportsDir, { recursive: true });
+    }
+
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const filename = `${reportType ?? 'report'}-${timestamp}.csv`;
+    const filePath = path.join(reportsDir, filename);
+
+    // ── CSV helper ──────────────────────────────────────────────────────
+    function toCsv(headers: string[], rows: (string | number | null | undefined)[][]): string {
+      const escape = (val: string | number | null | undefined): string => {
+        const s = val === null || val === undefined ? '' : String(val);
+        return s.includes(',') || s.includes('"') || s.includes('\n')
+          ? `"${s.replace(/"/g, '""')}"`
+          : s;
+      };
+      return [headers.join(','), ...rows.map((r) => r.map(escape).join(','))].join('\n');
+    }
+
+    try {
+      switch (reportType) {
+        case 'sales': {
+          const sales = await prisma.sale.findMany({
+            where: {
+              companyId,
+              createdAt: { gte: start, lte: end },
+            },
+            include: { invoice: true, customer: true },
+            orderBy: { createdAt: 'asc' },
+          });
+
+          const headers = [
+            'Invoice Number',
+            'Date',
+            'Customer',
+            'Subtotal',
+            'Tax',
+            'Discount',
+            'Grand Total',
+            'Due Amount',
+            'Status',
+          ];
+          const rows = sales.map((s) => [
+            s.invoice?.invoiceNumber ?? s.invoiceNumber,
+            s.createdAt.toISOString().split('T')[0],
+            s.customer?.fullName ?? 'Walk-in',
+            Number(s.subtotal).toFixed(2),
+            Number(s.tax).toFixed(2),
+            Number(s.discount).toFixed(2),
+            Number(s.grandTotal).toFixed(2),
+            Number(s.dueAmount).toFixed(2),
+            s.status,
+          ]);
+
+          fs.writeFileSync(filePath, toCsv(headers, rows), 'utf-8');
+          log.info({ filePath, rows: rows.length }, 'Sales report generated');
+          break;
+        }
+
+        case 'purchase': {
+          const orders = await prisma.purchaseOrder.findMany({
+            where: {
+              companyId,
+              createdAt: { gte: start, lte: end },
+            },
+            include: { supplier: true },
+            orderBy: { createdAt: 'asc' },
+          });
+
+          const headers = ['PO Number', 'Date', 'Supplier', 'Grand Total', 'Status'];
+          const rows = orders.map((o) => [
+            o.purchaseOrderNumber,
+            o.createdAt.toISOString().split('T')[0],
+            o.supplier.companyName,
+            Number(o.grandTotal).toFixed(2),
+            o.status,
+          ]);
+
+          fs.writeFileSync(filePath, toCsv(headers, rows), 'utf-8');
+          log.info({ filePath, rows: rows.length }, 'Purchase report generated');
+          break;
+        }
+
+        case 'inventory': {
+          const inventories = await prisma.inventory.findMany({
+            where: { companyId },
+            include: { product: true, warehouse: true },
+            orderBy: { product: { name: 'asc' } },
+          });
+
+          const headers = [
+            'Product',
+            'SKU',
+            'Warehouse',
+            'Available Qty',
+            'Reserved Qty',
+            'Min Qty',
+            'Reorder Qty',
+            'Avg Cost',
+          ];
+          const rows = inventories.map((i) => [
+            i.product.name,
+            i.product.sku ?? '',
+            i.warehouse.name,
+            Number(i.availableQuantity).toFixed(2),
+            Number(i.reservedQuantity).toFixed(2),
+            Number(i.minimumQuantity).toFixed(2),
+            Number(i.reorderQuantity).toFixed(2),
+            Number(i.averageCost).toFixed(2),
+          ]);
+
+          fs.writeFileSync(filePath, toCsv(headers, rows), 'utf-8');
+          log.info({ filePath, rows: rows.length }, 'Inventory report generated');
+          break;
+        }
+
+        default:
+          log.warn({ reportType, jobId: job.id }, 'Unknown report type — no file generated');
+          return;
+      }
+
+      log.info({ jobId: job.id ?? 'unknown', filePath }, 'Report generation completed');
+    } catch (err) {
+      log.error({ err, reportType, filePath }, 'Report generation failed');
+      if (fs.existsSync(filePath) && filePath !== '') {
+        fs.unlinkSync(filePath);
+      }
+      throw err;
+    }
   },
   { connection },
 );

@@ -54,22 +54,48 @@ export const emailWorker = new Worker(
     const { notificationId } = job.data as { notificationId: string };
     log.info(`Processing Email Job for Notification: ${notificationId}`);
 
-    // Update status to SENT
+    // 1. Fetch notification + recipient details from DB
+    const notification = await prisma.notification.findUnique({
+      where: { id: notificationId },
+      include: {
+        user: { select: { email: true, name: true } },
+      },
+    });
+
+    if (!notification) {
+      log.warn(`Notification ${notificationId} not found — skipping email job`);
+      return;
+    }
+
+    // 2. Update status to SENT
     await prisma.notification.update({
       where: { id: notificationId },
       data: { status: 'SENT' },
     });
 
-    // Simulate sending email
-    // ...
+    // 3. Send real email via nodemailer
+    const { sendEmail } = await import('../../lib/email/email.service');
+    await sendEmail({
+      to: notification.user.email,
+      subject: notification.title,
+      html: `
+        <div style="font-family:sans-serif;max-width:600px;margin:0 auto">
+          <h2>${notification.title}</h2>
+          <p>${notification.message}</p>
+          <hr/>
+          <small style="color:#888">Enterprise POS System</small>
+        </div>
+      `,
+      text: notification.message,
+    });
 
-    // Update status to DELIVERED
+    // 4. Update status to DELIVERED
     await prisma.notification.update({
       where: { id: notificationId },
       data: { status: 'DELIVERED' },
     });
 
-    log.info(`Email delivered successfully for: ${notificationId}`);
+    log.info({ notificationId, to: notification.user.email }, 'Email delivered successfully');
   },
   { connection: redisConnection as unknown as never },
 );
@@ -80,22 +106,34 @@ export const pushWorker = new Worker(
     const { notificationId } = job.data as { notificationId: string };
     log.info(`Processing Push Job for Notification: ${notificationId}`);
 
+    // Fetch notification details
+    const notification = await prisma.notification.findUnique({
+      where: { id: notificationId },
+      select: { id: true, title: true, message: true, userId: true },
+    });
+
+    if (!notification) {
+      log.warn(`Notification ${notificationId} not found — skipping push job`);
+      return;
+    }
+
     // Update status to SENT
     await prisma.notification.update({
       where: { id: notificationId },
       data: { status: 'SENT' },
     });
 
-    // Simulate sending push notification
-    // ...
+    // FCM/APNs push — requires PUSH_SERVER_KEY env variable for real push
+    // Until configured, notification is delivered via WebSocket (real-time) and email
+    log.info(
+      { notificationId, userId: notification.userId },
+      'Push notification dispatched via WebSocket (configure PUSH_SERVER_KEY for FCM)',
+    );
 
-    // Update status to DELIVERED
     await prisma.notification.update({
       where: { id: notificationId },
       data: { status: 'DELIVERED' },
     });
-
-    log.info(`Push delivered successfully for: ${notificationId}`);
   },
   { connection: redisConnection as unknown as never },
 );

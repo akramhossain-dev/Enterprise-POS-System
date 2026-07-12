@@ -1,4 +1,7 @@
 import { redisConnection } from '../notification/queue';
+import { createLogger } from '../../lib/logger';
+
+const log = createLogger('analytics-cache');
 
 export async function getOrSetCache<T>(
   key: string,
@@ -8,20 +11,20 @@ export async function getOrSetCache<T>(
   try {
     const cached = await redisConnection.get(key);
     if (cached !== null) {
-      console.warn(`[CACHE HIT] Key: ${key}`);
+      log.debug({ key }, 'Cache hit');
       return JSON.parse(cached) as T;
     }
   } catch (err) {
-    console.error(`[CACHE ERROR] Failed to get cache for key ${key}:`, err);
+    log.error({ err, key }, 'Failed to get cache');
   }
 
-  console.warn(`[CACHE MISS] Key: ${key}. Fetching fresh data...`);
+  log.debug({ key }, 'Cache miss — fetching fresh data');
   const fresh = await fetcher();
 
   try {
     await redisConnection.setex(key, ttlSeconds, JSON.stringify(fresh));
   } catch (err) {
-    console.error(`[CACHE ERROR] Failed to set cache for key ${key}:`, err);
+    log.error({ err, key }, 'Failed to set cache');
   }
 
   return fresh;
@@ -35,16 +38,16 @@ export async function clearCache(key?: string): Promise<void> {
         if (keys.length > 0) {
           await redisConnection.del(...keys);
         }
-        console.warn(`[CACHE CLEAR] Pattern: ${key}, keys deleted: ${String(keys.length)}`);
+        log.info({ pattern: key, deleted: keys.length }, 'Cache pattern cleared');
       } else {
         await redisConnection.del(key);
-        console.warn(`[CACHE CLEAR] Key: ${key}`);
+        log.info({ key }, 'Cache key cleared');
       }
     } else {
       await redisConnection.flushdb();
-      console.warn('[CACHE CLEAR] Full Cache Purged');
+      log.warn('Full cache purged (flushdb)');
     }
   } catch (err) {
-    console.error('[CACHE CLEAR ERROR] Failed to clear cache:', err);
+    log.error({ err }, 'Failed to clear cache');
   }
 }

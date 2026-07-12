@@ -12,6 +12,9 @@ import {
 } from './goods-receive.repository';
 import { mapGoodsReceive, mapGoodsReceiveList, MappedGoodsReceive } from './goods-receive.mapper';
 import { applyStockOperation } from '../stock-movement/stock-movement.engine';
+import { createLogger } from '../../lib/logger';
+
+const log = createLogger('goods-receive-service');
 
 async function validateWarehouseAndSupplier(
   warehouseId: string,
@@ -100,7 +103,7 @@ export async function createGRN(
     );
   });
 
-  console.warn(`[AUDIT] GRN Created: ${gr.grnNumber}`);
+  log.info({ grnNumber: gr.grnNumber }, 'GRN created');
   return mapGoodsReceive(gr);
 }
 
@@ -190,9 +193,7 @@ export async function completeGRN(id: string, actorId: string): Promise<MappedGo
           remarks: `Received via ${grn.grnNumber}`,
           performedBy: actorId,
         });
-        console.warn(
-          `[AUDIT] Stock Updated for product "${item.productId}" via GRN ${grn.grnNumber}`,
-        );
+        log.info({ productId: item.productId, grnNumber: grn.grnNumber }, 'Stock updated via GRN');
       }
     }
 
@@ -247,8 +248,9 @@ export async function completeGRN(id: string, actorId: string): Promise<MappedGo
           where: { id: po.id },
           data: { status: newStatus },
         });
-        console.warn(
-          `[AUDIT] Purchase Order ${po.purchaseOrderNumber} status updated to ${newStatus}`,
+        log.info(
+          { poNumber: po.purchaseOrderNumber, newStatus },
+          'Purchase order status updated after GRN completion',
         );
       }
     }
@@ -257,7 +259,7 @@ export async function completeGRN(id: string, actorId: string): Promise<MappedGo
     return await updateGoodsReceiveStatus(id, GoodsReceiveStatus.COMPLETED, tx);
   });
 
-  console.warn(`[AUDIT] GRN Completed: ${grn.grnNumber}`);
+  log.info({ grnNumber: grn.grnNumber }, 'GRN completed');
 
   // Trigger notifications asynchronously
   const poId = grn.purchaseOrderId;
@@ -289,7 +291,7 @@ export async function completeGRN(id: string, actorId: string): Promise<MappedGo
           }
         }
       } catch (err) {
-        console.error('Failed to trigger purchase notifications:', err);
+        log.error({ err }, 'Failed to trigger purchase notifications');
       }
     });
   }
@@ -309,6 +311,6 @@ export async function cancelGRN(id: string): Promise<MappedGoodsReceive> {
   }
 
   const updated = await updateGoodsReceiveStatus(id, GoodsReceiveStatus.CANCELLED);
-  console.warn(`[AUDIT] GRN Cancelled: ${grn.grnNumber}`);
+  log.info({ grnNumber: grn.grnNumber }, 'GRN cancelled');
   return mapGoodsReceive(updated);
 }

@@ -16,13 +16,27 @@ import {
 } from './warehouse.repository';
 import { mapWarehouse, mapWarehouseList, MappedWarehouse } from './warehouse.mapper';
 import { WarehouseAuditPayload } from './warehouse.types';
+import { recordAuditLog } from '../audit/audit.service';
 
-// ── Audit stub ─────────────────────────────────────────────────────────────────
+// ── Audit event ────────────────────────────────────────────────────────────────
 
 async function emitAuditEvent(payload: WarehouseAuditPayload): Promise<void> {
-  // TODO: Phase B_AUDIT — wire to AuditLogService.record(payload)
-  void payload;
-  await Promise.resolve();
+  try {
+    await recordAuditLog({
+      userId: payload.actorId,
+      action: payload.action,
+      entityType: 'Warehouse',
+      entityId: payload.warehouseId,
+      newValue: {
+        warehouseCode: payload.warehouseCode,
+        changes: payload.changes,
+      },
+      description: `Warehouse ${payload.action.toLowerCase()}: ${payload.warehouseCode}`,
+    });
+  } catch (err) {
+    const { createLogger } = await import('../../lib/logger');
+    createLogger('warehouse-audit').error({ err }, 'Failed to record warehouse audit log');
+  }
 }
 
 // ── List ───────────────────────────────────────────────────────────────────────

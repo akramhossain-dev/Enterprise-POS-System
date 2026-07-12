@@ -5,6 +5,9 @@ import { encrypt, decrypt } from '../../common/utils/encryption';
 import { redisConnection } from '../notification/queue';
 import { recordAuditLog } from '../audit/audit.service';
 import { SettingCategory, getCategorySchema } from './settings.schema';
+import { createLogger } from '../../lib/logger';
+
+const log = createLogger('settings-service');
 
 // ── Keep Old BusinessSetting Mappings for Backward Compatibility ──────────
 
@@ -81,7 +84,7 @@ export async function upsertSetting(companyId: string, key: string, body: { valu
         description: `Upserted setting: ${key}`,
       });
     } catch (err) {
-      console.error('Failed to log setting change:', err);
+      log.error({ err }, 'Failed to log setting change');
     }
   });
 
@@ -161,7 +164,10 @@ export async function getSystemSettingByCategory(
       return mask ? maskSensitive(parsed) : decryptSensitive(parsed);
     }
   } catch (err) {
-    console.error('Failed to get settings cache:', err);
+    log.error(
+      { err, cacheKey: `settings:${companyId}:${category}` },
+      'Failed to get settings cache',
+    );
   }
 
   const record = await prisma.systemSetting.findFirst({
@@ -178,7 +184,7 @@ export async function getSystemSettingByCategory(
   try {
     await redisConnection.setex(cacheKey, 3600, JSON.stringify(valObj));
   } catch (err) {
-    console.error('Failed to set settings cache:', err);
+    log.error({ err }, 'Failed to set settings cache');
   }
 
   return mask ? maskSensitive(valObj) : decryptSensitive(valObj);
@@ -252,7 +258,7 @@ export async function saveSystemSettingCategory(
   try {
     await redisConnection.del(cacheKey);
   } catch (err) {
-    console.error('Failed to invalidate settings cache:', err);
+    log.error({ err }, 'Failed to invalidate settings cache');
   }
 
   // Trigger Audit Log

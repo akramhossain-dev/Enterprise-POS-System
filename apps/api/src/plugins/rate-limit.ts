@@ -8,6 +8,10 @@ import { redisConnection } from '../modules/notification/queue';
 // Rate Limit Plugin (Redis Backend)
 // ─────────────────────────────────────────────
 
+// Routes excluded from rate limiting:
+// Health checks must always be reachable (Docker, load balancers, uptime monitors)
+const RATE_LIMIT_ALLOWLIST = ['/api/v1/live', '/api/v1/ready'];
+
 export default fp(
   async (fastify: FastifyInstance) => {
     await fastify.register(rateLimit, {
@@ -22,9 +26,11 @@ export default fp(
         statusCode: 429,
         retryAfter: context.after,
       }),
-      // Skip rate limiting for health check and docs
       skipOnError: false,
-      allowList: [],
+      allowList: (request) => {
+        // Skip rate limiting for health check endpoints
+        return RATE_LIMIT_ALLOWLIST.includes(request.url);
+      },
       keyGenerator: (request) => {
         // Use X-Forwarded-For if behind a proxy (Nginx), else direct IP
         const forwarded = request.headers['x-forwarded-for'];

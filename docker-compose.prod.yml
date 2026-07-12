@@ -1,0 +1,146 @@
+# ─────────────────────────────────────────────
+# Enterprise POS System — Production Docker Compose
+# ─────────────────────────────────────────────
+# Usage:
+#   1. cp apps/api/.env.example .env.prod
+#   2. Edit .env.prod with real production values
+#   3. docker compose -f docker-compose.prod.yml --env-file .env.prod up -d
+#
+# SECURITY: Do NOT commit .env.prod to version control.
+# ─────────────────────────────────────────────
+
+services:
+  # ── API Server ───────────────────────────────
+  api:
+    build:
+      context: apps/api
+      dockerfile: Dockerfile
+      target: production
+    container_name: enterprise-pos-api-prod
+    restart: always
+    env_file:
+      - .env.prod
+    environment:
+      NODE_ENV: production
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    expose:
+      - '4000'
+    healthcheck:
+      test: ['CMD', 'wget', '-qO-', 'http://localhost:4000/api/v1/live']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - pos-internal
+    volumes:
+      - api_backups:/app/backups
+      - api_uploads:/app/uploads
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '3'
+
+  # ── Nginx Reverse Proxy ──────────────────────
+  nginx:
+    image: nginx:alpine
+    container_name: enterprise-pos-nginx-prod
+    restart: always
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./docker/nginx/nginx.prod.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./docker/nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - api
+    networks:
+      - pos-internal
+      - pos-external
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '3'
+
+  # ── PostgreSQL Database ──────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: enterprise-pos-postgres-prod
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    expose:
+      - '5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    networks:
+      - pos-internal
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '3'
+
+  # ── Redis Cache ──────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: enterprise-pos-redis-prod
+    restart: always
+    command: >
+      redis-server
+        --appendonly yes
+        --maxmemory 512mb
+        --maxmemory-policy allkeys-lru
+        --requirepass ${REDIS_PASSWORD}
+    expose:
+      - '6379'
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', '-a', '${REDIS_PASSWORD}', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - pos-internal
+    logging:
+      driver: json-file
+      options:
+        max-size: '5m'
+        max-file: '3'
+
+# ── Volumes ──────────────────────────────────
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  api_backups:
+    driver: local
+  api_uploads:
+    driver: local
+
+# ── Networks ─────────────────────────────────
+networks:
+  pos-internal:
+    driver: bridge
+    internal: true # Database/Redis not reachable from outside
+  pos-external:
+    driver: bridge # Nginx publicly accessible

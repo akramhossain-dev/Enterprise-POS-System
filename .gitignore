@@ -55,5 +55,9 @@ coverage/
 postgres_data/
 redis_data/
 
+# Application data directories (should never be in version control)
+uploads/
+backups/
+
 # TypeScript build info
 *.tsbuildinfo

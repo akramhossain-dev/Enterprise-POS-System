@@ -30,13 +30,28 @@ import {
   MappedCustomerAddress,
 } from './customer.mapper';
 import { CustomerAuditPayload } from './customer.types';
+import { recordAuditLog } from '../audit/audit.service';
 
-// ── Audit hook stub ────────────────────────────────────────────────────────────
+// ── Audit event ──────────────────────────────────────────────────────────────────
 
 async function emitAuditEvent(payload: CustomerAuditPayload): Promise<void> {
-  // TODO: Phase B_AUDIT — wire to AuditLogService.record(payload)
-  void payload;
-  await Promise.resolve();
+  try {
+    await recordAuditLog({
+      userId: payload.actorId,
+      action: payload.action,
+      entityType: 'Customer',
+      entityId: payload.customerId,
+      newValue: {
+        customerCode: payload.customerCode,
+        changes: payload.changes,
+      },
+      description: `Customer ${payload.action.toLowerCase()}: ${payload.customerCode}`,
+    });
+  } catch (err) {
+    // Non-fatal: audit failure should not block the primary operation
+    const { createLogger } = await import('../../lib/logger');
+    createLogger('customer-audit').error({ err }, 'Failed to record customer audit log');
+  }
 }
 
 // ── List ───────────────────────────────────────────────────────────────────────

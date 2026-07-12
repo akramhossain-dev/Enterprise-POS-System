@@ -35,10 +35,36 @@ const envSchema = z.object({
   FRONTEND_URL: z.string().url().default('http://localhost:3000'),
 
   // Security & JWT
-  JWT_SECRET: z.string().min(8),
+  JWT_SECRET: z.string().min(32, 'JWT_SECRET must be at least 32 characters for security'),
   JWT_EXPIRES_IN: z.string().min(2).default('15m'),
-  REFRESH_TOKEN_SECRET: z.string().min(8),
+  REFRESH_TOKEN_SECRET: z
+    .string()
+    .min(32, 'REFRESH_TOKEN_SECRET must be at least 32 characters for security'),
   REFRESH_TOKEN_EXPIRES_IN: z.string().min(2).default('7d'),
+
+  // Email (SMTP) — optional; if not set, emails are only logged
+  SMTP_HOST: z.string().optional(),
+  SMTP_PORT: z.coerce.number().int().positive().optional(),
+  SMTP_USER: z.string().optional(),
+  SMTP_PASS: z.string().optional(),
+  SMTP_FROM: z.string().email().optional(),
+  SMTP_SECURE: z
+    .string()
+    .transform((v) => v === 'true')
+    .optional(),
+
+  // File Storage
+  STORAGE_PROVIDER: z.enum(['local', 's3', 'r2', 'minio']).default('local'),
+  STORAGE_REGION: z.string().optional(),
+  STORAGE_ACCESS_KEY_ID: z.string().optional(),
+  STORAGE_SECRET_ACCESS_KEY: z.string().optional(),
+  STORAGE_BUCKET: z.string().optional(),
+  STORAGE_PUBLIC_URL: z.string().optional(),
+  STORAGE_ENDPOINT: z.string().optional(),
+  STORAGE_FORCE_PATH_STYLE: z
+    .string()
+    .transform((v) => v === 'true')
+    .optional(),
 });
 
 // ─────────────────────────────────────────────

@@ -12,6 +12,9 @@ import {
 import { applyStockOperation } from '../stock-movement/stock-movement.engine';
 import { buildPaginationMeta } from '../../common/utils/query';
 import { MovementType, PaymentStatus, SaleStatus } from '@prisma/client';
+import { createLogger } from '../../lib/logger';
+
+const log = createLogger('sales-service');
 
 async function getCompanyIdForUser(userId: string): Promise<string> {
   const employee = await prisma.employee.findFirst({
@@ -257,15 +260,15 @@ export async function checkoutCart(
     throw new NotFoundError('Failed to retrieve checked out sale details');
   }
 
-  // Audit Logs
-  console.warn(`[AUDIT] Sale Created: ${result.saleId}`);
+  // Structured audit logs
+  log.info({ saleId: result.saleId }, 'Sale created');
   if (result.payment) {
-    console.warn(`[AUDIT] Payment Added: ${result.payment.id}`);
+    log.info({ paymentId: result.payment.id }, 'Payment added');
   }
-  console.warn(`[AUDIT] Invoice Generated: ${result.invoice.id}`);
-  console.warn(`[AUDIT] Stock Deducted for Sale: ${result.saleId}`);
+  log.info({ invoiceId: result.invoice.id }, 'Invoice generated');
+  log.info({ saleId: result.saleId }, 'Stock deducted for sale');
   if (freshSale.customerId) {
-    console.warn(`[AUDIT] Customer Balance Updated: ${freshSale.customerId}`);
+    log.info({ customerId: freshSale.customerId }, 'Customer balance updated');
   }
 
   // Trigger notifications asynchronously
@@ -340,7 +343,7 @@ export async function checkoutCart(
         }
       }
     } catch (err) {
-      console.error('Failed to trigger checkout notifications:', err);
+      log.error({ err }, 'Failed to trigger checkout notifications');
     }
   });
 
@@ -450,5 +453,5 @@ export async function recordInvoicePrint(id: string, userId: string): Promise<vo
   }
 
   await incrementInvoicePrintCount(id);
-  console.warn(`[AUDIT] Invoice Printed for Sale: ${id}`);
+  log.info({ saleId: id }, 'Invoice print recorded');
 }

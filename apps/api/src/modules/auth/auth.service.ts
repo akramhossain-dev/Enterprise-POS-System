@@ -44,15 +44,32 @@ async function generateAccessToken(userId: string, email: string, roleId: string
 
 /**
  * Generate a cryptographically secure opaque refresh token.
- * Expire time configured from REFRESH_TOKEN_EXPIRES_IN (defaults to 7d).
+ * Expire time configured from REFRESH_TOKEN_EXPIRES_IN (e.g. '7d', '30d').
  */
 async function createRefreshToken(userId: string): Promise<string> {
   const rawToken = crypto.randomBytes(32).toString('hex');
   const hashed = hashToken(rawToken);
 
-  // Parse REFRESH_TOKEN_EXPIRES_IN (simple parsing: default 7 days)
+  // Parse REFRESH_TOKEN_EXPIRES_IN (supports: 7d, 30d, 1d, etc.)
   const expiresAt = new Date();
-  expiresAt.setDate(expiresAt.getDate() + 7);
+  const expiresInStr = env.REFRESH_TOKEN_EXPIRES_IN; // Has Zod .default('7d')
+  const match = /^(\d+)([dhms])$/.exec(expiresInStr);
+  if (match) {
+    const [, rawValue, unit] = match;
+    const value = parseInt(rawValue ?? '7', 10);
+    if (unit === 'd') {
+      expiresAt.setDate(expiresAt.getDate() + value);
+    } else if (unit === 'h') {
+      expiresAt.setHours(expiresAt.getHours() + value);
+    } else if (unit === 'm') {
+      expiresAt.setMinutes(expiresAt.getMinutes() + value);
+    } else if (unit === 's') {
+      expiresAt.setSeconds(expiresAt.getSeconds() + value);
+    }
+  } else {
+    // Fallback: 7 days
+    expiresAt.setDate(expiresAt.getDate() + 7);
+  }
 
   await prisma.refreshToken.create({
     data: {

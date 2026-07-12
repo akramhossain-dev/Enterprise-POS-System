@@ -8,6 +8,9 @@ import {
 } from '../../common/utils/query';
 import { EmployeeStatus, Status } from '@prisma/client';
 import { EmployeeQuery, CreateEmployeeBody, UpdateEmployeeBody } from './employee.schema';
+import { createLogger } from '../../lib/logger';
+
+const log = createLogger('employee-service');
 
 const EMPLOYEE_SELECT_FIELDS = {
   id: true,
@@ -135,7 +138,7 @@ export async function createEmployee(body: CreateEmployeeBody) {
           );
         }
       } catch (err) {
-        console.error('Failed to trigger user invitation notification:', err);
+        log.error({ err }, 'Failed to trigger user invitation notification');
       }
     });
   }

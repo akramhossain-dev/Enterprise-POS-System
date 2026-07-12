@@ -31,13 +31,27 @@ import {
   MappedSupplierAddress,
 } from './supplier.mapper';
 import { SupplierAuditPayload } from './supplier.types';
+import { recordAuditLog } from '../audit/audit.service';
 
-// ── Audit hook stub ────────────────────────────────────────────────────────────
+// ── Audit event ────────────────────────────────────────────────────────────────
 
 async function emitAuditEvent(payload: SupplierAuditPayload): Promise<void> {
-  // TODO: Phase B_AUDIT — wire to AuditLogService.record(payload)
-  void payload;
-  await Promise.resolve();
+  try {
+    await recordAuditLog({
+      userId: payload.actorId,
+      action: payload.action,
+      entityType: 'Supplier',
+      entityId: payload.supplierId,
+      newValue: {
+        supplierCode: payload.supplierCode,
+        changes: payload.changes,
+      },
+      description: `Supplier ${payload.action.toLowerCase()}: ${payload.supplierCode}`,
+    });
+  } catch (err) {
+    const { createLogger } = await import('../../lib/logger');
+    createLogger('supplier-audit').error({ err }, 'Failed to record supplier audit log');
+  }
 }
 
 // ── List ───────────────────────────────────────────────────────────────────────

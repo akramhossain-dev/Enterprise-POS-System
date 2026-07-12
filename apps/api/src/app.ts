@@ -1,5 +1,5 @@
 import Fastify, { FastifyInstance } from 'fastify';
-import { isDev } from './config';
+import { isDev, env } from './config';
 import { createLogger } from './lib/logger';
 import { errorHandler } from './common/errors/errorHandler';
 import { API_PREFIX } from './common/constants';
@@ -62,11 +62,16 @@ export async function buildApp(): Promise<FastifyInstance> {
   await fastify.register(prismaPlugin);
   await fastify.register(redisPlugin);
 
+  // ── Prometheus Metrics ─────────────────────
+  const metricsPlugin = await import('./plugins/metrics');
+  await fastify.register(metricsPlugin.default);
+
   // ── WebSocket ──────────────────────────────
   const { default: fastifySocketIO } = await import('fastify-socket.io');
   await fastify.register(fastifySocketIO, {
     cors: {
-      origin: '*',
+      origin: env.FRONTEND_URL, // Restrict to configured frontend URL only
+      credentials: true,
     },
   });
 

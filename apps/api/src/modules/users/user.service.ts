@@ -8,6 +8,9 @@ import {
   filterBuilder,
 } from '../../common/utils/query';
 import { Status } from '@prisma/client';
+import { createLogger } from '../../lib/logger';
+
+const log = createLogger('user-service');
 
 const USER_SELECT_FIELDS = {
   id: true,
@@ -122,7 +125,7 @@ export async function modifyUser(id: string, body: UpdateUserBody) {
       await redisConnection.del(`user:status:${id}`);
       await redisConnection.del(`user:employee:${id}`);
     } catch (err) {
-      console.error('Failed to invalidate user cache:', err);
+      log.error({ err }, 'Failed to invalidate user cache');
     }
   });
 
@@ -139,7 +142,7 @@ export async function modifyUser(id: string, body: UpdateUserBody) {
           });
         }
       } catch (err) {
-        console.error('Failed to trigger role change notification:', err);
+        log.error({ err }, 'Failed to trigger role change notification');
       }
     });
   }
@@ -172,7 +175,7 @@ export async function modifyUser(id: string, body: UpdateUserBody) {
         description: `Updated user profile details for user ID: ${id}`,
       });
     } catch (err) {
-      console.error('Failed to record update audit log:', err);
+      log.error({ err }, 'Failed to record update audit log');
     }
   });
 
@@ -199,7 +202,7 @@ export async function softDeleteUser(id: string): Promise<void> {
       await redisConnection.del(`user:status:${id}`);
       await redisConnection.del(`user:employee:${id}`);
     } catch (err) {
-      console.error('Failed to invalidate user cache on soft delete:', err);
+      log.error({ err }, 'Failed to invalidate user cache on soft delete');
     }
   });
 
@@ -218,7 +221,7 @@ export async function softDeleteUser(id: string): Promise<void> {
         description: `Soft deleted user profile for ID ${id}`,
       });
     } catch (err) {
-      console.error('Failed to log user soft delete:', err);
+      log.error({ err }, 'Failed to log user soft delete');
     }
   });
 }
