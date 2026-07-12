@@ -148,19 +148,46 @@ export async function createInvoice(
   const tax = body.tax ?? Number(gr.tax.toString());
   const grandTotal = body.grandTotal ?? subtotal - discount + tax;
 
-  const inv = await prisma.supplierInvoice.create({
-    data: {
-      goodsReceiveId: body.goodsReceiveId,
-      supplierId: gr.supplierId,
-      invoiceNumber: body.invoiceNumber,
-      invoiceDate: new Date(body.invoiceDate),
-      subtotal,
-      tax,
-      discount,
-      grandTotal,
-      status: SupplierInvoiceStatus.PENDING,
-    },
-    select: SELECT,
+  const inv = await prisma.$transaction(async (tx) => {
+    const invoiceRecord = await tx.supplierInvoice.create({
+      data: {
+        goodsReceiveId: body.goodsReceiveId,
+        supplierId: gr.supplierId,
+        invoiceNumber: body.invoiceNumber,
+        invoiceDate: new Date(body.invoiceDate),
+        subtotal,
+        tax,
+        discount,
+        grandTotal,
+        status: SupplierInvoiceStatus.PENDING,
+      },
+      select: SELECT,
+    });
+
+    const updatedSupplier = await tx.supplier.update({
+      where: { id: gr.supplierId },
+      data: {
+        currentBalance: {
+          increment: grandTotal,
+        },
+      },
+      select: { currentBalance: true },
+    });
+
+    await tx.supplierLedgerEntry.create({
+      data: {
+        companyId: gr.companyId,
+        supplierId: gr.supplierId,
+        entryType: 'PURCHASE',
+        amount: grandTotal,
+        runningBalance: updatedSupplier.currentBalance,
+        referenceId: invoiceRecord.id,
+        referenceNo: invoiceRecord.invoiceNumber,
+        description: `Invoice ${invoiceRecord.invoiceNumber} created for GRN ${gr.grnNumber}`,
+      },
+    });
+
+    return invoiceRecord;
   });
 
   console.warn(`[AUDIT] Supplier Invoice Created: ${inv.invoiceNumber}`);

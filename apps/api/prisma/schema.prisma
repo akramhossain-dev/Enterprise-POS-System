@@ -88,6 +88,7 @@ model User {
   role          Role           @relation(fields: [roleId], references: [id], onDelete: Restrict)
   refreshTokens RefreshToken[]
   employee      Employee?
+  posSessions   POSSession[]
   createdAt     DateTime       @default(now()) @map("created_at") @db.Timestamptz
   updatedAt     DateTime       @updatedAt @map("updated_at") @db.Timestamptz
 
@@ -183,6 +184,10 @@ model Company {
   reconciliations  Reconciliation[]
   purchaseOrders   PurchaseOrder[]
   goodsReceives    GoodsReceive[]
+  purchaseReturns  PurchaseReturn[]
+  supplierPayments SupplierPayment[]
+  ledgerEntries    SupplierLedgerEntry[]
+  posSessions      POSSession[]
   createdAt       DateTime          @default(now()) @map("created_at") @db.Timestamptz
   updatedAt       DateTime          @updatedAt @map("updated_at") @db.Timestamptz
 
@@ -205,6 +210,8 @@ model Branch {
   stockMovements StockMovement[]
   purchaseOrders PurchaseOrder[]
   goodsReceives  GoodsReceive[]
+  purchaseReturns PurchaseReturn[]
+  posSessions     POSSession[]
   createdAt  DateTime    @default(now()) @map("created_at") @db.Timestamptz
   updatedAt  DateTime    @updatedAt @map("updated_at") @db.Timestamptz
 
@@ -343,6 +350,8 @@ model Product {
   stockTakeItems     StockTakeItem[]
   purchaseOrderItems PurchaseOrderItem[]
   goodsReceiveItems  GoodsReceiveItem[]
+  purchaseReturnItems PurchaseReturnItem[]
+  cartItems           CartItem[]
   createdAt     DateTime       @default(now()) @map("created_at") @db.Timestamptz
   updatedAt     DateTime       @updatedAt @map("updated_at") @db.Timestamptz
 
@@ -394,6 +403,7 @@ model Customer {
   status           CustomerStatus    @default(ACTIVE)
   notes            String?           @db.Text
   addresses        CustomerAddress[]
+  carts            Cart[]
   createdAt        DateTime          @default(now()) @map("created_at") @db.Timestamptz
   updatedAt        DateTime          @updatedAt @map("updated_at") @db.Timestamptz
   deletedAt        DateTime?         @map("deleted_at") @db.Timestamptz
@@ -452,6 +462,9 @@ model Supplier {
   purchaseOrders   PurchaseOrder[]
   goodsReceives    GoodsReceive[]
   supplierInvoices SupplierInvoice[]
+  purchaseReturns  PurchaseReturn[]
+  supplierPayments SupplierPayment[]
+  ledgerEntries    SupplierLedgerEntry[]
   createdAt        DateTime          @default(now()) @map("created_at") @db.Timestamptz
   updatedAt        DateTime          @updatedAt @map("updated_at") @db.Timestamptz
   deletedAt        DateTime?         @map("deleted_at") @db.Timestamptz
@@ -518,6 +531,8 @@ model Warehouse {
   stockTakes       StockTake[]
   purchaseOrders   PurchaseOrder[]
   goodsReceives    GoodsReceive[]
+  purchaseReturns  PurchaseReturn[]
+  posSessions      POSSession[]
   createdAt   DateTime        @default(now()) @map("created_at") @db.Timestamptz
   updatedAt   DateTime        @updatedAt @map("updated_at") @db.Timestamptz
   deletedAt   DateTime?       @map("deleted_at") @db.Timestamptz
@@ -1002,6 +1017,7 @@ model GoodsReceive {
   receivedBy      String             @map("received_by") @db.Uuid
   items           GoodsReceiveItem[]
   invoice         SupplierInvoice?
+  purchaseReturns PurchaseReturn[]
   createdAt       DateTime           @default(now()) @map("created_at") @db.Timestamptz
   updatedAt       DateTime           @updatedAt @map("updated_at") @db.Timestamptz
 
@@ -1057,4 +1073,198 @@ model SupplierInvoice {
   @@index([supplierId])
   @@index([status])
   @@map("supplier_invoices")
+}
+
+// ─────────────────────────────────────────────
+// Enums & Models — Purchase Return & Supplier Payment (B8.3)
+// ─────────────────────────────────────────────
+
+enum PurchaseReturnStatus {
+  DRAFT
+  APPROVED
+  COMPLETED
+  CANCELLED
+}
+
+model PurchaseReturn {
+  id             String               @id @default(uuid()) @db.Uuid
+  companyId      String               @map("company_id") @db.Uuid
+  company        Company              @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  branchId       String?              @map("branch_id") @db.Uuid
+  branch         Branch?              @relation(fields: [branchId], references: [id], onDelete: SetNull)
+  warehouseId    String               @map("warehouse_id") @db.Uuid
+  warehouse      Warehouse            @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+  supplierId     String               @map("supplier_id") @db.Uuid
+  supplier       Supplier             @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  goodsReceiveId String               @map("goods_receive_id") @db.Uuid
+  goodsReceive   GoodsReceive         @relation(fields: [goodsReceiveId], references: [id], onDelete: Cascade)
+  returnNumber   String               @map("return_number") @db.VarChar(100)
+  returnDate     DateTime             @default(now()) @map("return_date") @db.Timestamptz
+  status         PurchaseReturnStatus @default(DRAFT)
+  subtotal       Decimal              @db.Decimal(15, 4)
+  tax            Decimal              @default(0) @db.Decimal(15, 4)
+  discount       Decimal              @default(0) @db.Decimal(15, 4)
+  grandTotal     Decimal              @map("grand_total") @db.Decimal(15, 4)
+  reason         String?              @db.Text
+  createdBy      String               @map("created_by") @db.Uuid
+  items          PurchaseReturnItem[]
+  createdAt      DateTime             @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt      DateTime             @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@unique([companyId, returnNumber])
+  @@index([companyId])
+  @@index([branchId])
+  @@index([warehouseId])
+  @@index([supplierId])
+  @@index([goodsReceiveId])
+  @@index([status])
+  @@map("purchase_returns")
+}
+
+model PurchaseReturnItem {
+  id               String         @id @default(uuid()) @db.Uuid
+  purchaseReturnId String         @map("purchase_return_id") @db.Uuid
+  purchaseReturn   PurchaseReturn @relation(fields: [purchaseReturnId], references: [id], onDelete: Cascade)
+  productId        String         @map("product_id") @db.Uuid
+  product          Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity         Decimal        @db.Decimal(15, 4)
+  unitCost         Decimal        @map("unit_cost") @db.Decimal(15, 4)
+  total            Decimal        @db.Decimal(15, 4)
+
+  @@index([purchaseReturnId])
+  @@index([productId])
+  @@map("purchase_return_items")
+}
+
+enum PaymentMethod {
+  CASH
+  BANK
+  CARD
+  MOBILE_BANKING
+  OTHER
+}
+
+model SupplierPayment {
+  id            String        @id @default(uuid()) @db.Uuid
+  companyId     String        @map("company_id") @db.Uuid
+  company       Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  supplierId    String        @map("supplier_id") @db.Uuid
+  supplier      Supplier      @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  paymentNumber String        @map("payment_number") @db.VarChar(100)
+  paymentDate   DateTime      @default(now()) @map("payment_date") @db.Timestamptz
+  amount        Decimal       @db.Decimal(15, 4)
+  paymentMethod PaymentMethod @map("payment_method")
+  reference     String?       @db.VarChar(255)
+  notes         String?       @db.Text
+  createdBy     String        @map("created_by") @db.Uuid
+  createdAt     DateTime      @default(now()) @map("created_at") @db.Timestamptz
+
+  @@unique([companyId, paymentNumber])
+  @@index([companyId])
+  @@index([supplierId])
+  @@map("supplier_payments")
+}
+
+enum SupplierLedgerEntryType {
+  PURCHASE
+  PURCHASE_RETURN
+  PAYMENT
+}
+
+model SupplierLedgerEntry {
+  id             String                  @id @default(uuid()) @db.Uuid
+  companyId      String                  @map("company_id") @db.Uuid
+  company        Company                 @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  supplierId     String                  @map("supplier_id") @db.Uuid
+  supplier       Supplier                @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  entryType      SupplierLedgerEntryType @map("entry_type")
+  amount         Decimal                 @db.Decimal(15, 4)
+  runningBalance Decimal                 @map("running_balance") @db.Decimal(15, 4)
+  referenceId    String                  @map("reference_id") @db.Uuid
+  referenceNo    String                  @map("reference_no") @db.VarChar(100)
+  description    String?                 @db.Text
+  createdAt      DateTime                @default(now()) @map("created_at") @db.Timestamptz
+
+  @@index([companyId])
+  @@index([supplierId])
+  @@index([createdAt])
+  @@map("supplier_ledger_entries")
+}
+
+enum POSSessionStatus {
+  OPEN
+  CLOSED
+  SUSPENDED
+}
+
+model POSSession {
+  id            String           @id @default(uuid()) @db.Uuid
+  companyId     String           @map("company_id") @db.Uuid
+  company       Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  branchId      String?          @map("branch_id") @db.Uuid
+  branch        Branch?          @relation(fields: [branchId], references: [id], onDelete: SetNull)
+  warehouseId   String           @map("warehouse_id") @db.Uuid
+  warehouse     Warehouse        @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+  cashierId     String           @map("cashier_id") @db.Uuid
+  cashier       User             @relation(fields: [cashierId], references: [id], onDelete: Cascade)
+  sessionNumber String           @map("session_number") @db.VarChar(100)
+  openingCash   Decimal          @map("opening_cash") @db.Decimal(15, 4)
+  closingCash   Decimal?         @map("closing_cash") @db.Decimal(15, 4)
+  status        POSSessionStatus @default(OPEN)
+  openedAt      DateTime         @default(now()) @map("opened_at") @db.Timestamptz
+  closedAt      DateTime?        @map("closed_at") @db.Timestamptz
+  createdAt     DateTime         @default(now()) @map("created_at") @db.Timestamptz
+  carts         Cart[]
+
+  @@unique([companyId, sessionNumber])
+  @@index([companyId])
+  @@index([branchId])
+  @@index([warehouseId])
+  @@index([cashierId])
+  @@map("pos_sessions")
+}
+
+enum CartStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+  HOLD
+}
+
+model Cart {
+  id         String     @id @default(uuid()) @db.Uuid
+  sessionId  String     @map("session_id") @db.Uuid
+  session    POSSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  customerId String?    @map("customer_id") @db.Uuid
+  customer   Customer?  @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  status     CartStatus @default(ACTIVE)
+  subtotal   Decimal    @db.Decimal(15, 4)
+  discount   Decimal    @default(0) @db.Decimal(15, 4)
+  tax        Decimal    @default(0) @db.Decimal(15, 4)
+  grandTotal Decimal    @map("grand_total") @db.Decimal(15, 4)
+  createdAt  DateTime   @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt  DateTime   @updatedAt @map("updated_at") @db.Timestamptz
+  items      CartItem[]
+
+  @@index([sessionId])
+  @@index([customerId])
+  @@map("carts")
+}
+
+model CartItem {
+  id        String   @id @default(uuid()) @db.Uuid
+  cartId    String   @map("cart_id") @db.Uuid
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  productId String   @map("product_id") @db.Uuid
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity  Decimal  @db.Decimal(15, 4)
+  unitPrice Decimal  @map("unit_price") @db.Decimal(15, 4)
+  discount  Decimal  @default(0) @db.Decimal(15, 4)
+  tax       Decimal  @default(0) @db.Decimal(15, 4)
+  total     Decimal  @db.Decimal(15, 4)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  @@index([cartId])
+  @@index([productId])
+  @@map("cart_items")
 }

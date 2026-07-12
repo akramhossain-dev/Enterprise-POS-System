@@ -13,6 +13,7 @@ import {
   SupplierQuery,
   CreateSupplierBody,
   CreateAddressBody,
+  supplierLedgerQuerySchema,
 } from './supplier.schema';
 import {
   listSuppliers,
@@ -23,6 +24,7 @@ import {
   addAddress,
   listSupplierAddresses,
 } from './supplier.service';
+import { getSupplierLedger, getSupplierBalance } from '../supplier-ledger/supplier-ledger.service';
 
 export async function handleListSuppliers(
   request: FastifyRequest,
@@ -94,4 +96,30 @@ export async function handleListSupplierAddresses(
   reply
     .status(200)
     .send(sendSuccess({ message: 'Addresses fetched successfully', data: addresses }));
+}
+
+export async function handleGetSupplierLedger(
+  request: FastifyRequest,
+  reply: FastifyReply,
+): Promise<void> {
+  const { id } = request.params as { id: string };
+  const query = validateQuery(
+    supplierLedgerQuerySchema as unknown as import('zod').ZodSchema<
+      import('./supplier.schema').SupplierLedgerQuery
+    >,
+    request.query,
+  );
+  const { entries, meta } = await getSupplierLedger(id, query);
+  reply
+    .status(200)
+    .send(sendSuccess({ message: 'Supplier ledger entries fetched', data: entries, meta }));
+}
+
+export async function handleGetSupplierBalance(
+  request: FastifyRequest,
+  reply: FastifyReply,
+): Promise<void> {
+  const { id } = request.params as { id: string };
+  const balance = await getSupplierBalance(id);
+  reply.status(200).send(sendSuccess({ message: 'Supplier balance fetched', data: balance }));
 }

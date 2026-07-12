@@ -12,6 +12,8 @@ import {
   handleDeleteSupplier,
   handleAddSupplierAddress,
   handleListSupplierAddresses,
+  handleGetSupplierLedger,
+  handleGetSupplierBalance,
 } from './supplier.controller';
 
 export async function supplierRoutes(fastify: FastifyInstance): Promise<void> {
@@ -82,6 +84,26 @@ export async function supplierRoutes(fastify: FastifyInstance): Promise<void> {
       schema: { tags: ['Suppliers'], summary: 'Add address to supplier' },
     },
     handleAddSupplierAddress,
+  );
+
+  // ── Supplier Ledger & Balance (B8.3) ───────────────────────────────────────
+
+  fastify.get(
+    '/:id/ledger',
+    {
+      preHandler: [authGuard, permissionGuard('supplier.payment.view')],
+      schema: { tags: ['Suppliers'], summary: 'Get supplier ledger entries' },
+    },
+    handleGetSupplierLedger,
+  );
+
+  fastify.get(
+    '/:id/balance',
+    {
+      preHandler: [authGuard, permissionGuard('supplier.payment.view')],
+      schema: { tags: ['Suppliers'], summary: 'Get supplier balance details' },
+    },
+    handleGetSupplierBalance,
   );
 }
 

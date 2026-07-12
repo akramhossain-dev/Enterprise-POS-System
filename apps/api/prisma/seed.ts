@@ -123,6 +123,29 @@ async function main() {
     { name: 'stock.adjust', module: 'stock', action: 'adjust' },
     { name: 'stock.transfer', module: 'stock', action: 'transfer' },
     { name: 'stock.approve', module: 'stock', action: 'approve' },
+    // ── B8: Purchase Module Permissions ──
+    { name: 'purchase.create', module: 'purchase', action: 'create' },
+    { name: 'purchase.view', module: 'purchase', action: 'view' },
+    { name: 'purchase.update', module: 'purchase', action: 'update' },
+    { name: 'purchase.delete', module: 'purchase', action: 'delete' },
+    { name: 'purchase.approve', module: 'purchase', action: 'approve' },
+    { name: 'purchase.receive', module: 'purchase', action: 'receive' },
+    { name: 'purchase.receive.view', module: 'purchase', action: 'receive.view' },
+    { name: 'purchase.receive.complete', module: 'purchase', action: 'receive.complete' },
+    { name: 'supplier.invoice.create', module: 'purchase', action: 'invoice.create' },
+    { name: 'supplier.invoice.view', module: 'purchase', action: 'invoice.view' },
+    { name: 'purchase.return.create', module: 'purchase', action: 'return.create' },
+    { name: 'purchase.return.view', module: 'purchase', action: 'return.view' },
+    { name: 'purchase.return.approve', module: 'purchase', action: 'return.approve' },
+    { name: 'purchase.return.complete', module: 'purchase', action: 'return.complete' },
+    { name: 'supplier.payment.create', module: 'purchase', action: 'payment.create' },
+    { name: 'supplier.payment.view', module: 'purchase', action: 'payment.view' },
+    // ── B9.1: POS & Cart Module Permissions ──
+    { name: 'pos.open', module: 'pos', action: 'open' },
+    { name: 'pos.close', module: 'pos', action: 'close' },
+    { name: 'pos.view', module: 'pos', action: 'view' },
+    { name: 'pos.cart.create', module: 'pos', action: 'cart.create' },
+    { name: 'pos.cart.update', module: 'pos', action: 'cart.update' },
   ];
 
   const permissions: Record<string, string> = {};

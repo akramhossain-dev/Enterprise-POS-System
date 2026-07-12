@@ -149,3 +149,23 @@ export const updateAddressSchema = z.object({
   isDefault: z.boolean().optional(),
 });
 export type UpdateAddressBody = z.infer<typeof updateAddressSchema>;
+
+// ── Supplier Ledger Query (B8.3) ──────────────────────────────────────────────
+
+export const supplierLedgerQuerySchema = z
+  .object({
+    page: z.coerce.number().int().positive().optional(),
+    limit: z.coerce.number().int().positive().max(100).optional(),
+    entryType: z.enum(['PURCHASE', 'PURCHASE_RETURN', 'PAYMENT']).optional(),
+    dateFrom: z.string().datetime({ offset: true }).optional(),
+    dateTo: z.string().datetime({ offset: true }).optional(),
+  })
+  .transform((d) => ({
+    ...d,
+    page: d.page ?? 1,
+    limit: d.limit ?? 20,
+    dateFrom: d.dateFrom ? new Date(d.dateFrom) : undefined,
+    dateTo: d.dateTo ? new Date(d.dateTo) : undefined,
+  }));
+
+export type SupplierLedgerQuery = z.infer<typeof supplierLedgerQuerySchema>;

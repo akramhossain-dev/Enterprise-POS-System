@@ -408,6 +408,56 @@
 
 ---
 
+### Table: `pos_sessions`
+
+| Column           | Type          | Constraints             | Description                           |
+| ---------------- | ------------- | ----------------------- | ------------------------------------- |
+| `id`             | UUID          | PK                      | Unique POS Session ID                 |
+| `company_id`     | UUID          | FK → companies.id       | Owning company                        |
+| `branch_id`      | UUID          | FK → branches.id, NULL  | Owning branch                         |
+| `warehouse_id`   | UUID          | FK → warehouses.id      | Designated warehouse for stock lookup |
+| `cashier_id`     | UUID          | FK → users.id           | User who opened the session           |
+| `session_number` | VARCHAR(100)  | UNIQUE per company      | Sequential session number             |
+| `opening_cash`   | DECIMAL(15,4) | NOT NULL                | Cash present at open                  |
+| `closing_cash`   | DECIMAL(15,4) | NULL                    | Cash counted at close                 |
+| `status`         | ENUM          | OPEN, CLOSED, SUSPENDED | Session status                        |
+| `opened_at`      | TIMESTAMPTZ   | NOT NULL                | Session opened timestamp              |
+| `closed_at`      | TIMESTAMPTZ   | NULL                    | Session closed timestamp              |
+
+---
+
+### Table: `carts`
+
+| Column        | Type          | Constraints                        | Description                             |
+| ------------- | ------------- | ---------------------------------- | --------------------------------------- |
+| `id`          | UUID          | PK                                 | Unique Cart ID                          |
+| `session_id`  | UUID          | FK → pos_sessions.id               | Parent POS Session                      |
+| `customer_id` | UUID          | FK → customers.id, NULL            | Associated customer (NULL for Walkin)   |
+| `status`      | ENUM          | ACTIVE, COMPLETED, CANCELLED, HOLD | Cart status                             |
+| `subtotal`    | DECIMAL(15,4) | NOT NULL                           | Pre-tax, pre-discount total sum         |
+| `discount`    | DECIMAL(15,4) | DEFAULT 0                          | Cart discount total                     |
+| `tax`         | DECIMAL(15,4) | DEFAULT 0                          | Cart tax total                          |
+| `grand_total` | DECIMAL(15,4) | NOT NULL                           | Grand total (Subtotal - Discount + Tax) |
+| `created_at`  | TIMESTAMPTZ   | NOT NULL                           | Created timestamp                       |
+| `updated_at`  | TIMESTAMPTZ   | NOT NULL                           | Updated timestamp                       |
+
+---
+
+### Table: `cart_items`
+
+| Column       | Type          | Constraints      | Description                              |
+| ------------ | ------------- | ---------------- | ---------------------------------------- |
+| `id`         | UUID          | PK               | Unique Cart Item ID                      |
+| `cart_id`    | UUID          | FK → carts.id    | Parent cart                              |
+| `product_id` | UUID          | FK → products.id | Product reference                        |
+| `quantity`   | DECIMAL(15,4) | NOT NULL         | Quantity added to cart                   |
+| `unit_price` | DECIMAL(15,4) | NOT NULL         | Selling price at checkout                |
+| `discount`   | DECIMAL(15,4) | DEFAULT 0        | Line item discount                       |
+| `tax`        | DECIMAL(15,4) | DEFAULT 0        | Line item tax                            |
+| `total`      | DECIMAL(15,4) | NOT NULL         | Line item total (Qty*Price - Disc + Tax) |
+
+---
+
 ## 7. Purchase Domain
 
 ### Table: `purchase_orders`
@@ -502,6 +552,75 @@
 | `discount`         | DECIMAL(15,4) | DEFAULT 0                      | Discount amount                    |
 | `grand_total`      | DECIMAL(15,4) | NOT NULL                       | Invoice grand total                |
 | `status`           | ENUM          | PENDING, PAID, CANCELLED       | Invoice status                     |
+
+---
+
+### Table: `purchase_returns`
+
+| Column             | Type          | Constraints                           | Description                 |
+| ------------------ | ------------- | ------------------------------------- | --------------------------- |
+| `id`               | UUID          | PK                                    | Unique purchase return ID   |
+| `company_id`       | UUID          | FK → companies.id                     | Owning company              |
+| `branch_id`        | UUID          | FK → branches.id, NULL                | Branch reference            |
+| `warehouse_id`     | UUID          | FK → warehouses.id                    | Warehouse returning from    |
+| `supplier_id`      | UUID          | FK → suppliers.id                     | Supplier returning to       |
+| `goods_receive_id` | UUID          | FK → goods_receives.id                | Linked Goods Receive Note   |
+| `return_number`    | VARCHAR(100)  | UNIQUE per company                    | Sequential return number    |
+| `return_date`      | TIMESTAMPTZ   | NOT NULL                              | Date of return              |
+| `status`           | ENUM          | DRAFT, APPROVED, COMPLETED, CANCELLED | Return status               |
+| `subtotal`         | DECIMAL(15,4) | NOT NULL                              | Total returned item value   |
+| `tax`              | DECIMAL(15,4) | DEFAULT 0                             | Tax on return               |
+| `discount`         | DECIMAL(15,4) | DEFAULT 0                             | Discount on return          |
+| `grand_total`      | DECIMAL(15,4) | NOT NULL                              | Grand total returned value  |
+| `reason`           | TEXT          | NULL                                  | Reason for return           |
+| `created_by`       | UUID          | NOT NULL                              | User who created the return |
+
+---
+
+### Table: `purchase_return_items`
+
+| Column               | Type          | Constraints              | Description                   |
+| -------------------- | ------------- | ------------------------ | ----------------------------- |
+| `id`                 | UUID          | PK                       | Unique line item ID           |
+| `purchase_return_id` | UUID          | FK → purchase_returns.id | Parent return record          |
+| `product_id`         | UUID          | FK → products.id         | Returned product              |
+| `quantity`           | DECIMAL(15,4) | NOT NULL                 | Quantity returned             |
+| `unit_cost`          | DECIMAL(15,4) | NOT NULL                 | Unit cost of product returned |
+| `total`              | DECIMAL(15,4) | NOT NULL                 | Line total amount             |
+
+---
+
+### Table: `supplier_payments`
+
+| Column           | Type          | Constraints                             | Description                       |
+| ---------------- | ------------- | --------------------------------------- | --------------------------------- |
+| `id`             | UUID          | PK                                      | Unique payment ID                 |
+| `company_id`     | UUID          | FK → companies.id                       | Owning company                    |
+| `supplier_id`    | UUID          | FK → suppliers.id                       | Supplier being paid               |
+| `payment_number` | VARCHAR(100)  | UNIQUE per company                      | Sequential payment number         |
+| `payment_date`   | TIMESTAMPTZ   | NOT NULL                                | Date payment was made             |
+| `amount`         | DECIMAL(15,4) | NOT NULL                                | Amount paid                       |
+| `payment_method` | ENUM          | CASH, BANK, CARD, MOBILE_BANKING, OTHER | Payment method                    |
+| `reference`      | VARCHAR(255)  | NULL                                    | Check, bank transfer, or card ref |
+| `notes`          | TEXT          | NULL                                    | Internal payment notes            |
+| `created_by`     | UUID          | NOT NULL                                | User who logged the payment       |
+
+---
+
+### Table: `supplier_ledger_entries`
+
+| Column            | Type          | Constraints                        | Description                                        |
+| ----------------- | ------------- | ---------------------------------- | -------------------------------------------------- |
+| `id`              | UUID          | PK                                 | Unique ledger log ID                               |
+| `company_id`      | UUID          | FK → companies.id                  | Owning company                                     |
+| `supplier_id`     | UUID          | FK → suppliers.id                  | Supplier whose account is affected                 |
+| `entry_type`      | ENUM          | PURCHASE, PURCHASE_RETURN, PAYMENT | Ledger movement type                               |
+| `amount`          | DECIMAL(15,4) | NOT NULL                           | Positive for Purchase, negative for return/payment |
+| `running_balance` | DECIMAL(15,4) | NOT NULL                           | Supplier balance after entry                       |
+| `reference_id`    | UUID          | NOT NULL                           | Linked source transaction ID                       |
+| `reference_no`    | VARCHAR(100)  | NOT NULL                           | Linked transaction code/number                     |
+| `description`     | TEXT          | NULL                               | Text details of ledger entry                       |
+| `created_at`      | TIMESTAMPTZ   | NOT NULL                           | Timestamp of ledger post                           |
 
 ---
 

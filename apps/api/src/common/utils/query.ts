@@ -1,8 +1,8 @@
 import { PaginationMeta } from '../../types';
 
 export interface PaginationQueryOptions {
-  page?: number;
-  limit?: number;
+  page?: number | undefined;
+  limit?: number | undefined;
 }
 
 export interface PaginationResult {

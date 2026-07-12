@@ -161,4 +161,20 @@ export async function routes(fastify: FastifyInstance): Promise<void> {
   const { supplierInvoiceRoutes } =
     await import('../modules/supplier-invoice/supplier-invoice.routes');
   await fastify.register(supplierInvoiceRoutes, { prefix: '/supplier-invoices' });
+
+  // ── Purchase Return & Supplier Payment (B8.3) ───────────────────────────────
+  const { purchaseReturnRoutes } =
+    await import('../modules/purchase-return/purchase-return.routes');
+  await fastify.register(purchaseReturnRoutes, { prefix: '/purchase-returns' });
+
+  const { supplierPaymentRoutes } =
+    await import('../modules/supplier-payment/supplier-payment.routes');
+  await fastify.register(supplierPaymentRoutes, { prefix: '/supplier-payments' });
+
+  // ── POS Core & Cart System (B9.1) ───────────────────────────────────────────
+  const { posRoutes } = await import('../modules/pos/pos.routes');
+  await fastify.register(posRoutes, { prefix: '/pos' });
+
+  const { cartRoutes } = await import('../modules/cart/cart.routes');
+  await fastify.register(cartRoutes, { prefix: '/pos/cart' });
 }

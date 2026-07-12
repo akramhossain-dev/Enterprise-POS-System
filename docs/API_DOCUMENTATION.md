@@ -538,6 +538,67 @@ Return the authenticated user's profile and permissions.
 | `GET`  | `/supplier-invoices`     | `supplier.invoice.view`   | List Supplier Invoices                     |
 | `GET`  | `/supplier-invoices/:id` | `supplier.invoice.view`   | Get specific Supplier Invoice by ID        |
 
+---
+
+### 12.4 Purchase Returns — `/purchase-returns`
+
+| Method  | Endpoint                         | Permission                 | Description                                                           |
+| ------- | -------------------------------- | -------------------------- | --------------------------------------------------------------------- |
+| `POST`  | `/purchase-returns`              | `purchase.return.create`   | Create a DRAFT Purchase Return against a completed GRN                |
+| `GET`   | `/purchase-returns`              | `purchase.return.view`     | List Purchase Returns                                                 |
+| `GET`   | `/purchase-returns/:id`          | `purchase.return.view`     | Get a specific Purchase Return by ID                                  |
+| `PATCH` | `/purchase-returns/:id/approve`  | `purchase.return.approve`  | Approve a DRAFT Purchase Return                                       |
+| `PATCH` | `/purchase-returns/:id/complete` | `purchase.return.complete` | Complete Return (decreases stock, reduces supplier due, posts ledger) |
+| `PATCH` | `/purchase-returns/:id/cancel`   | `purchase.return.complete` | Cancel a DRAFT or APPROVED Purchase Return                            |
+
+---
+
+### 12.5 Supplier Payments — `/supplier-payments`
+
+| Method | Endpoint                 | Permission                | Description                                                          |
+| ------ | ------------------------ | ------------------------- | -------------------------------------------------------------------- |
+| `POST` | `/supplier-payments`     | `supplier.payment.create` | Create a Supplier Payment (reduces supplier due, creates ledger log) |
+| `GET`  | `/supplier-payments`     | `supplier.payment.view`   | List Supplier Payments                                               |
+| `GET`  | `/supplier-payments/:id` | `supplier.payment.view`   | Get specific Supplier Payment details by ID                          |
+
+---
+
+### 12.6 Supplier Ledger — `/suppliers/:id/ledger`
+
+| Method | Endpoint                 | Permission              | Description                                                                     |
+| ------ | ------------------------ | ----------------------- | ------------------------------------------------------------------------------- |
+| `GET`  | `/suppliers/:id/ledger`  | `supplier.payment.view` | Retrieve paginated ledger entries (purchases, returns, payments) for a supplier |
+| `GET`  | `/suppliers/:id/balance` | `supplier.payment.view` | Fetch current due balance and credit limit details for a supplier               |
+
+---
+
+### 12.7 POS Core & Cart System — `/pos`
+
+#### POS Session Endpoints
+
+| Method | Endpoint               | Permission  | Description                        |
+| ------ | ---------------------- | ----------- | ---------------------------------- |
+| `POST` | `/pos/session/open`    | `pos.open`  | Open a new POS session for cashier |
+| `GET`  | `/pos/session/current` | `pos.view`  | Retrieve cashier's active session  |
+| `POST` | `/pos/session/close`   | `pos.close` | Close active POS session           |
+
+#### Product Search Endpoint
+
+| Method | Endpoint               | Permission | Description                         |
+| ------ | ---------------------- | ---------- | ----------------------------------- |
+| `GET`  | `/pos/products/search` | `pos.view` | Search products by Name/SKU/Barcode |
+
+#### Cart Endpoints
+
+| Method   | Endpoint                      | Permission        | Description                         |
+| -------- | ----------------------------- | ----------------- | ----------------------------------- |
+| `POST`   | `/pos/cart`                   | `pos.cart.create` | Create a new active cart            |
+| `GET`    | `/pos/cart/:id`               | `pos.cart.update` | Get cart details with line items    |
+| `POST`   | `/pos/cart/:id/items`         | `pos.cart.update` | Add an item (or increment quantity) |
+| `PATCH`  | `/pos/cart/:id/items/:itemId` | `pos.cart.update` | Update quantity or pricing details  |
+| `DELETE` | `/pos/cart/:id/items/:itemId` | `pos.cart.update` | Remove item from cart               |
+| `DELETE` | `/pos/cart/:id/items`         | `pos.cart.update` | Clear all items from cart           |
+
 ## 13. Sales — `/sales`
 
 **Purpose:** POS sales transactions, invoicing, and payment management.
