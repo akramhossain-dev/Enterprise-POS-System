@@ -111,4 +111,11 @@ export async function routes(fastify: FastifyInstance): Promise<void> {
   // ── Supplier Management ───────────────────────────────────────────────────
   const { supplierRoutes } = await import('../modules/supplier/supplier.routes');
   await fastify.register(supplierRoutes, { prefix: '/suppliers' });
+
+  // ── Warehouse & Inventory Foundation ──────────────────────────────────────
+  const { warehouseRoutes } = await import('../modules/warehouse/warehouse.routes');
+  await fastify.register(warehouseRoutes, { prefix: '/warehouses' });
+
+  const { inventoryRoutes } = await import('../modules/inventory/inventory.routes');
+  await fastify.register(inventoryRoutes, { prefix: '/inventory' });
 }

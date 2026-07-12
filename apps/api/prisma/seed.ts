@@ -108,6 +108,15 @@ async function main() {
     { name: 'supplier.view', module: 'suppliers', action: 'view' },
     { name: 'supplier.update', module: 'suppliers', action: 'update' },
     { name: 'supplier.delete', module: 'suppliers', action: 'delete' },
+    // ── B7.1: Warehouse Permissions ──
+    { name: 'warehouse.create', module: 'warehouses', action: 'create' },
+    { name: 'warehouse.view', module: 'warehouses', action: 'view' },
+    { name: 'warehouse.update', module: 'warehouses', action: 'update' },
+    { name: 'warehouse.delete', module: 'warehouses', action: 'delete' },
+    // ── B7.1: Inventory Permissions ──
+    { name: 'inventory.view', module: 'inventory', action: 'view' },
+    { name: 'inventory.update', module: 'inventory', action: 'update' },
+    { name: 'inventory.opening_stock', module: 'inventory', action: 'opening_stock' },
   ];
 
   const permissions: Record<string, string> = {};
