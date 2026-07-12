@@ -23,15 +23,13 @@ export async function handleGetSettings(
   ) as Pick<SettingParams, 'companyId'>;
   const query = validateQuery(settingsQuerySchema, request.query) as SettingsQuery;
   const result = await getSettings(companyId, query);
-  reply
-    .status(200)
-    .send(
-      sendSuccess({
-        message: 'Settings fetched successfully',
-        data: result.settings,
-        meta: result.meta,
-      }),
-    );
+  reply.status(200).send(
+    sendSuccess({
+      message: 'Settings fetched successfully',
+      data: result.settings,
+      meta: result.meta,
+    }),
+  );
 }
 
 /**

@@ -24,15 +24,13 @@ export async function handleListBranches(
 ): Promise<void> {
   const query = validateQuery(branchQuerySchema, request.query) as BranchQuery;
   const result = await listBranches(query);
-  reply
-    .status(200)
-    .send(
-      sendSuccess({
-        message: 'Branches fetched successfully',
-        data: result.branches,
-        meta: result.meta,
-      }),
-    );
+  reply.status(200).send(
+    sendSuccess({
+      message: 'Branches fetched successfully',
+      data: result.branches,
+      meta: result.meta,
+    }),
+  );
 }
 
 /**

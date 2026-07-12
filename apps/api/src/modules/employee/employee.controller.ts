@@ -24,15 +24,13 @@ export async function handleListEmployees(
 ): Promise<void> {
   const query = validateQuery(employeeQuerySchema, request.query) as EmployeeQuery;
   const result = await listEmployees(query);
-  reply
-    .status(200)
-    .send(
-      sendSuccess({
-        message: 'Employees fetched successfully',
-        data: result.employees,
-        meta: result.meta,
-      }),
-    );
+  reply.status(200).send(
+    sendSuccess({
+      message: 'Employees fetched successfully',
+      data: result.employees,
+      meta: result.meta,
+    }),
+  );
 }
 
 /**
