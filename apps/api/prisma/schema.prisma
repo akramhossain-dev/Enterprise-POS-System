@@ -182,6 +182,7 @@ model Company {
   stockTakes       StockTake[]
   reconciliations  Reconciliation[]
   purchaseOrders   PurchaseOrder[]
+  goodsReceives    GoodsReceive[]
   createdAt       DateTime          @default(now()) @map("created_at") @db.Timestamptz
   updatedAt       DateTime          @updatedAt @map("updated_at") @db.Timestamptz
 
@@ -203,6 +204,7 @@ model Branch {
   // Stock operations (B7.2)
   stockMovements StockMovement[]
   purchaseOrders PurchaseOrder[]
+  goodsReceives  GoodsReceive[]
   createdAt  DateTime    @default(now()) @map("created_at") @db.Timestamptz
   updatedAt  DateTime    @updatedAt @map("updated_at") @db.Timestamptz
 
@@ -340,6 +342,7 @@ model Product {
   stockAlerts        StockAlert[]
   stockTakeItems     StockTakeItem[]
   purchaseOrderItems PurchaseOrderItem[]
+  goodsReceiveItems  GoodsReceiveItem[]
   createdAt     DateTime       @default(now()) @map("created_at") @db.Timestamptz
   updatedAt     DateTime       @updatedAt @map("updated_at") @db.Timestamptz
 
@@ -447,6 +450,8 @@ model Supplier {
   notes            String?           @db.Text
   addresses        SupplierAddress[]
   purchaseOrders   PurchaseOrder[]
+  goodsReceives    GoodsReceive[]
+  supplierInvoices SupplierInvoice[]
   createdAt        DateTime          @default(now()) @map("created_at") @db.Timestamptz
   updatedAt        DateTime          @updatedAt @map("updated_at") @db.Timestamptz
   deletedAt        DateTime?         @map("deleted_at") @db.Timestamptz
@@ -512,6 +517,7 @@ model Warehouse {
   stockAlerts      StockAlert[]
   stockTakes       StockTake[]
   purchaseOrders   PurchaseOrder[]
+  goodsReceives    GoodsReceive[]
   createdAt   DateTime        @default(now()) @map("created_at") @db.Timestamptz
   updatedAt   DateTime        @updatedAt @map("updated_at") @db.Timestamptz
   deletedAt   DateTime?       @map("deleted_at") @db.Timestamptz
@@ -926,6 +932,7 @@ model PurchaseOrder {
   createdBy           String              @map("created_by") @db.Uuid
   approvedBy          String?             @map("approved_by") @db.Uuid
   items               PurchaseOrderItem[]
+  goodsReceives       GoodsReceive[]
   createdAt           DateTime            @default(now()) @map("created_at") @db.Timestamptz
   updatedAt           DateTime            @updatedAt @map("updated_at") @db.Timestamptz
 
@@ -954,4 +961,100 @@ model PurchaseOrderItem {
   @@index([purchaseOrderId])
   @@index([productId])
   @@map("purchase_order_items")
+}
+
+// ─────────────────────────────────────────────
+// Enums & Models — Goods Receive Note (GRN) & Supplier Invoice (B8.2)
+// ─────────────────────────────────────────────
+
+enum GoodsReceiveStatus {
+  DRAFT
+  COMPLETED
+  CANCELLED
+}
+
+enum SupplierInvoiceStatus {
+  PENDING
+  PAID
+  CANCELLED
+}
+
+model GoodsReceive {
+  id              String             @id @default(uuid()) @db.Uuid
+  companyId       String             @map("company_id") @db.Uuid
+  company         Company            @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  branchId        String?            @map("branch_id") @db.Uuid
+  branch          Branch?            @relation(fields: [branchId], references: [id], onDelete: SetNull)
+  warehouseId     String             @map("warehouse_id") @db.Uuid
+  warehouse       Warehouse          @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+  supplierId      String             @map("supplier_id") @db.Uuid
+  supplier        Supplier           @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  purchaseOrderId String?            @map("purchase_order_id") @db.Uuid
+  purchaseOrder   PurchaseOrder?     @relation(fields: [purchaseOrderId], references: [id], onDelete: SetNull)
+  grnNumber       String             @map("grn_number") @db.VarChar(100)
+  receiveDate     DateTime           @default(now()) @map("receive_date") @db.Timestamptz
+  status          GoodsReceiveStatus @default(DRAFT)
+  subtotal        Decimal            @db.Decimal(15, 4)
+  discount        Decimal            @default(0) @db.Decimal(15, 4)
+  tax             Decimal            @default(0) @db.Decimal(15, 4)
+  grandTotal      Decimal            @map("grand_total") @db.Decimal(15, 4)
+  remarks         String?            @db.Text
+  receivedBy      String             @map("received_by") @db.Uuid
+  items           GoodsReceiveItem[]
+  invoice         SupplierInvoice?
+  createdAt       DateTime           @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime           @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@unique([companyId, grnNumber])
+  @@index([companyId])
+  @@index([branchId])
+  @@index([warehouseId])
+  @@index([supplierId])
+  @@index([purchaseOrderId])
+  @@index([status])
+  @@index([receiveDate])
+  @@map("goods_receives")
+}
+
+model GoodsReceiveItem {
+  id               String       @id @default(uuid()) @db.Uuid
+  goodsReceiveId   String       @map("goods_receive_id") @db.Uuid
+  goodsReceive     GoodsReceive @relation(fields: [goodsReceiveId], references: [id], onDelete: Cascade)
+  productId        String       @map("product_id") @db.Uuid
+  product          Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity         Decimal      @db.Decimal(15, 4) // PO quantity ordered
+  receivedQuantity Decimal      @map("received_quantity") @db.Decimal(15, 4) // actually received
+  unitCost         Decimal      @map("unit_cost") @db.Decimal(15, 4)
+  batchNumber      String?      @map("batch_number") @db.VarChar(100)
+  expiryDate       DateTime?    @map("expiry_date") @db.Date
+  serialRequired   Boolean      @default(false) @map("serial_required")
+  total            Decimal      @db.Decimal(15, 4)
+  createdAt        DateTime     @default(now()) @map("created_at") @db.Timestamptz
+
+  @@index([goodsReceiveId])
+  @@index([productId])
+  @@map("goods_receive_items")
+}
+
+model SupplierInvoice {
+  id             String                @id @default(uuid()) @db.Uuid
+  goodsReceiveId String                @unique @map("goods_receive_id") @db.Uuid
+  goodsReceive   GoodsReceive          @relation(fields: [goodsReceiveId], references: [id], onDelete: Cascade)
+  supplierId     String                @map("supplier_id") @db.Uuid
+  supplier       Supplier              @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  invoiceNumber  String                @map("invoice_number") @db.VarChar(100)
+  invoiceDate    DateTime              @map("invoice_date") @db.Date
+  subtotal       Decimal               @db.Decimal(15, 4)
+  tax            Decimal               @default(0) @db.Decimal(15, 4)
+  discount       Decimal               @default(0) @db.Decimal(15, 4)
+  grandTotal     Decimal               @map("grand_total") @db.Decimal(15, 4)
+  status         SupplierInvoiceStatus @default(PENDING)
+  createdAt      DateTime              @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt      DateTime              @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@unique([supplierId, invoiceNumber])
+  @@index([goodsReceiveId])
+  @@index([supplierId])
+  @@index([status])
+  @@map("supplier_invoices")
 }

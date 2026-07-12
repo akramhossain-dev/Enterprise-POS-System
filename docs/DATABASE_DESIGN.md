@@ -410,56 +410,98 @@
 
 ## 7. Purchase Domain
 
-### Table: `purchases`
+### Table: `purchase_orders`
 
-| Column            | Type          | Constraints        | Description                                   |
-| ----------------- | ------------- | ------------------ | --------------------------------------------- |
-| `id`              | UUID          | PK                 | Purchase identifier                           |
-| `supplier_id`     | UUID          | FK → suppliers.id  | Supplier                                      |
-| `branch_id`       | UUID          | FK → branches.id   | Receiving branch                              |
-| `warehouse_id`    | UUID          | FK → warehouses.id | Receiving warehouse                           |
-| `created_by`      | UUID          | FK → users.id      | Creating user                                 |
-| `purchase_number` | VARCHAR(50)   | UNIQUE, NOT NULL   | PO reference number                           |
-| `subtotal`        | DECIMAL(14,4) | NOT NULL           | Pre-tax total                                 |
-| `tax_amount`      | DECIMAL(14,4) | DEFAULT 0          | Tax on purchase                               |
-| `grand_total`     | DECIMAL(14,4) | NOT NULL           | Total payable                                 |
-| `paid_amount`     | DECIMAL(14,4) | DEFAULT 0          | Amount paid to supplier                       |
-| `status`          | ENUM          | NOT NULL           | draft / sent / partial / received / cancelled |
-| `expected_date`   | DATE          | NULL               | Expected delivery date                        |
-| `note`            | TEXT          | NULL               | Purchase notes                                |
-| `created_at`      | TIMESTAMPTZ   | NOT NULL           | Creation timestamp                            |
-| `updated_at`      | TIMESTAMPTZ   | NOT NULL           | Last modified timestamp                       |
-
----
-
-### Table: `purchase_items`
-
-| Column              | Type          | Constraints       | Description               |
-| ------------------- | ------------- | ----------------- | ------------------------- |
-| `id`                | UUID          | PK                | Line item identifier      |
-| `purchase_id`       | UUID          | FK → purchases.id | Parent purchase           |
-| `product_id`        | UUID          | FK → products.id  | Product ordered           |
-| `quantity_ordered`  | DECIMAL(12,4) | NOT NULL          | Quantity ordered          |
-| `quantity_received` | DECIMAL(12,4) | DEFAULT 0         | Quantity received to date |
-| `unit_cost`         | DECIMAL(12,4) | NOT NULL          | Per-unit cost             |
-| `tax_amount`        | DECIMAL(12,4) | DEFAULT 0         | Line-level tax            |
-| `total`             | DECIMAL(14,4) | NOT NULL          | Line total                |
+| Column                  | Type          | Constraints                                                                 | Description                       |
+| ----------------------- | ------------- | --------------------------------------------------------------------------- | --------------------------------- |
+| `id`                    | UUID          | PK                                                                          | Unique purchase order ID          |
+| `company_id`            | UUID          | FK → companies.id                                                           | Company                           |
+| `branch_id`             | UUID          | FK → branches.id, NULL                                                      | Branch                            |
+| `warehouse_id`          | UUID          | FK → warehouses.id                                                          | Target warehouse                  |
+| `supplier_id`           | UUID          | FK → suppliers.id                                                           | Supplier                          |
+| `purchase_order_number` | VARCHAR(100)  | UNIQUE per company                                                          | Purchase order reference number   |
+| `order_date`            | TIMESTAMPTZ   | NOT NULL                                                                    | Date PO was placed                |
+| `expected_date`         | TIMESTAMPTZ   | NULL                                                                        | Expected delivery date            |
+| `status`                | ENUM          | DRAFT, PENDING, APPROVED, REJECTED, PARTIALLY_RECEIVED, RECEIVED, CANCELLED | Status                            |
+| `subtotal`              | DECIMAL(15,4) | NOT NULL                                                                    | Total cost before tax/discounts   |
+| `discount`              | DECIMAL(15,4) | DEFAULT 0                                                                   | Order-level discount              |
+| `tax`                   | DECIMAL(15,4) | DEFAULT 0                                                                   | Order-level tax                   |
+| `shipping_cost`         | DECIMAL(15,4) | DEFAULT 0                                                                   | Shipping cost                     |
+| `grand_total`           | DECIMAL(15,4) | NOT NULL                                                                    | Grand total amount                |
+| `remarks`               | TEXT          | NULL                                                                        | Internal remarks                  |
+| `created_by`            | UUID          | NOT NULL                                                                    | User who created the PO           |
+| `approved_by`           | UUID          | NULL                                                                        | User who approved/rejected the PO |
 
 ---
 
-### Table: `purchase_returns`
+### Table: `purchase_order_items`
 
-| Column          | Type          | Constraints       | Description                     |
-| --------------- | ------------- | ----------------- | ------------------------------- |
-| `id`            | UUID          | PK                | Return identifier               |
-| `purchase_id`   | UUID          | FK → purchases.id | Source purchase                 |
-| `supplier_id`   | UUID          | FK → suppliers.id | Supplier                        |
-| `created_by`    | UUID          | FK → users.id     | Creating user                   |
-| `return_number` | VARCHAR(50)   | UNIQUE, NOT NULL  | Return reference number         |
-| `total_amount`  | DECIMAL(14,4) | NOT NULL          | Total return value              |
-| `reason`        | TEXT          | NULL              | Return reason                   |
-| `status`        | ENUM          | NOT NULL          | pending / completed / cancelled |
-| `created_at`    | TIMESTAMPTZ   | NOT NULL          | Creation timestamp              |
+| Column              | Type          | Constraints             | Description             |
+| ------------------- | ------------- | ----------------------- | ----------------------- |
+| `id`                | UUID          | PK                      | Unique item ID          |
+| `purchase_order_id` | UUID          | FK → purchase_orders.id | Parent PO               |
+| `product_id`        | UUID          | FK → products.id        | Product ordered         |
+| `quantity`          | DECIMAL(15,4) | NOT NULL                | Quantity ordered        |
+| `unit_price`        | DECIMAL(15,4) | NOT NULL                | Purchase price per unit |
+| `discount`          | DECIMAL(15,4) | DEFAULT 0               | Item-level discount     |
+| `tax`               | DECIMAL(15,4) | DEFAULT 0               | Item-level tax          |
+| `total`             | DECIMAL(15,4) | NOT NULL                | Line total amount       |
+
+---
+
+### Table: `goods_receives`
+
+| Column              | Type          | Constraints                   | Description                        |
+| ------------------- | ------------- | ----------------------------- | ---------------------------------- |
+| `id`                | UUID          | PK                            | Unique GRN ID                      |
+| `company_id`        | UUID          | FK → companies.id             | Company                            |
+| `branch_id`         | UUID          | FK → branches.id, NULL        | Branch                             |
+| `warehouse_id`      | UUID          | FK → warehouses.id            | Target warehouse                   |
+| `supplier_id`       | UUID          | FK → suppliers.id             | Supplier                           |
+| `purchase_order_id` | UUID          | FK → purchase_orders.id, NULL | Linked PO reference                |
+| `grn_number`        | VARCHAR(100)  | UNIQUE per company            | Goods Receive Note sequence number |
+| `receive_date`      | TIMESTAMPTZ   | NOT NULL                      | Date items were received           |
+| `status`            | ENUM          | DRAFT, COMPLETED, CANCELLED   | Status                             |
+| `subtotal`          | DECIMAL(15,4) | NOT NULL                      | Pre-tax total                      |
+| `discount`          | DECIMAL(15,4) | DEFAULT 0                     | Discount on receipt                |
+| `tax`               | DECIMAL(15,4) | DEFAULT 0                     | Tax on receipt                     |
+| `grand_total`       | DECIMAL(15,4) | NOT NULL                      | Grand total received value         |
+| `remarks`           | TEXT          | NULL                          | Internal remarks                   |
+| `received_by`       | UUID          | NOT NULL                      | User receiving the stock           |
+
+---
+
+### Table: `goods_receive_items`
+
+| Column              | Type          | Constraints            | Description                    |
+| ------------------- | ------------- | ---------------------- | ------------------------------ |
+| `id`                | UUID          | PK                     | Unique line item ID            |
+| `goods_receive_id`  | UUID          | FK → goods_receives.id | Parent GRN                     |
+| `product_id`        | UUID          | FK → products.id       | Received product               |
+| `quantity`          | DECIMAL(15,4) | NOT NULL               | Ordered quantity from PO       |
+| `received_quantity` | DECIMAL(15,4) | NOT NULL               | Actually received quantity     |
+| `unit_cost`         | DECIMAL(15,4) | NOT NULL               | Unit cost of item              |
+| `batch_number`      | VARCHAR(100)  | NULL                   | Linked batch tracking code     |
+| `expiry_date`       | DATE          | NULL                   | Linked expiration date         |
+| `serial_required`   | BOOLEAN       | DEFAULT false          | Serial number requirement flag |
+| `total`             | DECIMAL(15,4) | NOT NULL               | Line total value               |
+
+---
+
+### Table: `supplier_invoices`
+
+| Column             | Type          | Constraints                    | Description                        |
+| ------------------ | ------------- | ------------------------------ | ---------------------------------- |
+| `id`               | UUID          | PK                             | Unique supplier invoice ID         |
+| `goods_receive_id` | UUID          | UNIQUE, FK → goods_receives.id | Linked GRN                         |
+| `supplier_id`      | UUID          | FK → suppliers.id              | Supplier                           |
+| `invoice_number`   | VARCHAR(100)  | UNIQUE per supplier            | Supplier's original invoice number |
+| `invoice_date`     | DATE          | NOT NULL                       | Date supplier invoice was issued   |
+| `subtotal`         | DECIMAL(15,4) | NOT NULL                       | Subtotal value                     |
+| `tax`              | DECIMAL(15,4) | DEFAULT 0                      | Tax amount                         |
+| `discount`         | DECIMAL(15,4) | DEFAULT 0                      | Discount amount                    |
+| `grand_total`      | DECIMAL(15,4) | NOT NULL                       | Invoice grand total                |
+| `status`           | ENUM          | PENDING, PAID, CANCELLED       | Invoice status                     |
 
 ---
 

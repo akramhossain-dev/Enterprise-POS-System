@@ -153,4 +153,12 @@ export async function routes(fastify: FastifyInstance): Promise<void> {
   // ── Purchase Order (B8.1) ──────────────────────────────────────────────────
   const { purchaseOrderRoutes } = await import('../modules/purchase-order/purchase-order.routes');
   await fastify.register(purchaseOrderRoutes, { prefix: '/purchase-orders' });
+
+  // ── Goods Receive & Supplier Invoice (B8.2) ─────────────────────────────────
+  const { goodsReceiveRoutes } = await import('../modules/goods-receive/goods-receive.routes');
+  await fastify.register(goodsReceiveRoutes, { prefix: '/goods-receive' });
+
+  const { supplierInvoiceRoutes } =
+    await import('../modules/supplier-invoice/supplier-invoice.routes');
+  await fastify.register(supplierInvoiceRoutes, { prefix: '/supplier-invoices' });
 }

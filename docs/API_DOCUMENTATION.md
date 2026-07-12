@@ -496,72 +496,47 @@ Return the authenticated user's profile and permissions.
 
 ---
 
-## 12. Purchases — `/purchases`
-
-**Purpose:** Purchase order management, goods receipt, and purchase returns.
+## 12. Purchases & Goods Receive
 
 **Authentication Required:** Yes
 
 ---
 
-### Purchase Orders
+### 12.1 Purchase Orders — `/purchase-orders`
 
-| Method  | Endpoint                | Permission         | Description                 |
-| ------- | ----------------------- | ------------------ | --------------------------- |
-| `GET`   | `/purchases`            | `purchases.read`   | List purchase orders        |
-| `GET`   | `/purchases/:id`        | `purchases.read`   | Get PO detail               |
-| `POST`  | `/purchases`            | `purchases.create` | Create purchase order       |
-| `PUT`   | `/purchases/:id`        | `purchases.update` | Update draft PO             |
-| `PATCH` | `/purchases/:id/send`   | `purchases.update` | Mark PO as sent to supplier |
-| `PATCH` | `/purchases/:id/cancel` | `purchases.update` | Cancel PO                   |
-| `GET`   | `/purchases/:id/pdf`    | `purchases.read`   | Download PO as PDF          |
-
-**Create Purchase Order Request Body:**
-
-```json
-{
-  "supplierId": "uuid",
-  "warehouseId": "uuid",
-  "expectedDate": "2026-08-01",
-  "items": [
-    {
-      "productId": "uuid",
-      "quantityOrdered": 100,
-      "unitCost": 8.5
-    }
-  ],
-  "note": "Urgent restock"
-}
-```
-
-### Goods Receipt
-
-| Method | Endpoint                 | Permission         | Description          |
-| ------ | ------------------------ | ------------------ | -------------------- |
-| `POST` | `/purchases/:id/receive` | `purchases.update` | Record goods receipt |
-
-**Receive Request Body:**
-
-```json
-{
-  "items": [
-    {
-      "purchaseItemId": "uuid",
-      "quantityReceived": 90
-    }
-  ],
-  "note": "10 units damaged in transit"
-}
-```
-
-### Purchase Returns
-
-| Method | Endpoint             | Permission         | Description            |
-| ------ | -------------------- | ------------------ | ---------------------- |
-| `GET`  | `/purchases/returns` | `purchases.read`   | List purchase returns  |
-| `POST` | `/purchases/returns` | `purchases.create` | Create purchase return |
+| Method   | Endpoint                       | Permission         | Description                                                         |
+| -------- | ------------------------------ | ------------------ | ------------------------------------------------------------------- |
+| `POST`   | `/purchase-orders`             | `purchase.create`  | Create a new Purchase Order (defaults to DRAFT)                     |
+| `GET`    | `/purchase-orders`             | `purchase.view`    | List Purchase Orders (filters by date, supplier, warehouse, status) |
+| `GET`    | `/purchase-orders/:id`         | `purchase.view`    | Get a specific Purchase Order by ID                                 |
+| `PATCH`  | `/purchase-orders/:id`         | `purchase.update`  | Update PO header/items (DRAFT/PENDING status only)                  |
+| `DELETE` | `/purchase-orders/:id`         | `purchase.delete`  | Delete a PO (DRAFT/PENDING status only)                             |
+| `PATCH`  | `/purchase-orders/:id/submit`  | `purchase.update`  | Submit PO for approval (DRAFT -> PENDING)                           |
+| `PATCH`  | `/purchase-orders/:id/approve` | `purchase.approve` | Approve PENDING PO                                                  |
+| `PATCH`  | `/purchase-orders/:id/reject`  | `purchase.approve` | Reject PENDING PO                                                   |
+| `PATCH`  | `/purchase-orders/:id/cancel`  | `purchase.update`  | Cancel PO                                                           |
 
 ---
+
+### 12.2 Goods Receive Note (GRN) — `/goods-receive`
+
+| Method  | Endpoint                      | Permission                  | Description                                                           |
+| ------- | ----------------------------- | --------------------------- | --------------------------------------------------------------------- |
+| `POST`  | `/goods-receive`              | `purchase.receive`          | Create a DRAFT Goods Receive Note                                     |
+| `GET`   | `/goods-receive`              | `purchase.receive.view`     | List GRNs (filters by supplier, warehouse, status)                    |
+| `GET`   | `/goods-receive/:id`          | `purchase.receive.view`     | Get a specific GRN by ID                                              |
+| `PATCH` | `/goods-receive/:id/complete` | `purchase.receive.complete` | Complete GRN (updates stock, recalculates avgCost, updates PO status) |
+| `PATCH` | `/goods-receive/:id/cancel`   | `purchase.receive`          | Cancel DRAFT GRN                                                      |
+
+---
+
+### 12.3 Supplier Invoices — `/supplier-invoices`
+
+| Method | Endpoint                 | Permission                | Description                                |
+| ------ | ------------------------ | ------------------------- | ------------------------------------------ |
+| `POST` | `/supplier-invoices`     | `supplier.invoice.create` | Create Supplier Invoice from Completed GRN |
+| `GET`  | `/supplier-invoices`     | `supplier.invoice.view`   | List Supplier Invoices                     |
+| `GET`  | `/supplier-invoices/:id` | `supplier.invoice.view`   | Get specific Supplier Invoice by ID        |
 
 ## 13. Sales — `/sales`
 
