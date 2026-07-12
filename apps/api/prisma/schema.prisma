@@ -47,6 +47,12 @@ enum Gender {
   OTHER
 }
 
+enum SupplierStatus {
+  ACTIVE
+  INACTIVE
+  BLOCKED
+}
+
 // ─────────────────────────────────────────────
 // Models — System Foundation
 // ─────────────────────────────────────────────
@@ -155,6 +161,8 @@ model Company {
   products        Product[]
   // Customer relations
   customers       Customer[]
+  // Supplier relations
+  suppliers       Supplier[]
   createdAt       DateTime          @default(now()) @map("created_at") @db.Timestamptz
   updatedAt       DateTime          @updatedAt @map("updated_at") @db.Timestamptz
 
@@ -379,4 +387,58 @@ model CustomerAddress {
 
   @@index([customerId])
   @@map("customer_addresses")
+}
+
+// ─────────────────────────────────────────────
+// Models — Supplier Domain
+// ─────────────────────────────────────────────
+
+model Supplier {
+  id               String            @id @default(uuid()) @db.Uuid
+  companyId        String            @map("company_id") @db.Uuid
+  company          Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  supplierCode     String            @unique @map("supplier_code") @db.VarChar(20)
+  companyName      String            @map("company_name") @db.VarChar(255)
+  contactPerson    String?           @map("contact_person") @db.VarChar(200)
+  email            String?           @unique @db.VarChar(255)
+  phone            String?           @unique @db.VarChar(50)
+  alternativePhone String?           @map("alternative_phone") @db.VarChar(50)
+  website          String?           @db.VarChar(255)
+  taxNumber        String?           @map("tax_number") @db.VarChar(100)
+  creditLimit      Decimal           @default(0) @map("credit_limit") @db.Decimal(15, 4)
+  openingBalance   Decimal           @default(0) @map("opening_balance") @db.Decimal(15, 4)
+  currentBalance   Decimal           @default(0) @map("current_balance") @db.Decimal(15, 4)
+  status           SupplierStatus    @default(ACTIVE)
+  notes            String?           @db.Text
+  addresses        SupplierAddress[]
+  createdAt        DateTime          @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt        DateTime          @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt        DateTime?         @map("deleted_at") @db.Timestamptz
+
+  @@index([supplierCode])
+  @@index([companyName])
+  @@index([phone])
+  @@index([email])
+  @@index([companyId])
+  @@map("suppliers")
+}
+
+model SupplierAddress {
+  id           String   @id @default(uuid()) @db.Uuid
+  supplierId   String   @map("supplier_id") @db.Uuid
+  supplier     Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  label        String   @db.VarChar(100)
+  country      String?  @db.VarChar(100)
+  state        String?  @db.VarChar(100)
+  city         String?  @db.VarChar(100)
+  area         String?  @db.VarChar(100)
+  postalCode   String?  @map("postal_code") @db.VarChar(20)
+  addressLine1 String   @map("address_line1") @db.VarChar(255)
+  addressLine2 String?  @map("address_line2") @db.VarChar(255)
+  isDefault    Boolean  @default(false) @map("is_default")
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@index([supplierId])
+  @@map("supplier_addresses")
 }

@@ -107,4 +107,8 @@ export async function routes(fastify: FastifyInstance): Promise<void> {
   // ── Customer Management ───────────────────────────────────────────────────
   const { customerRoutes } = await import('../modules/customer/customer.routes');
   await fastify.register(customerRoutes, { prefix: '/customers' });
+
+  // ── Supplier Management ───────────────────────────────────────────────────
+  const { supplierRoutes } = await import('../modules/supplier/supplier.routes');
+  await fastify.register(supplierRoutes, { prefix: '/suppliers' });
 }

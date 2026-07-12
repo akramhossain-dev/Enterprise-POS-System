@@ -676,4 +676,142 @@ Return the authenticated user's profile and permissions.
 
 ---
 
+## Phase B6.2 — Supplier Management
+
+**Base:** `/api/v1/suppliers`  
+**Auth:** Bearer JWT required on all endpoints  
+**Phase:** B6.2 — Supplier Management
+
+### Supplier Endpoints
+
+| Method   | Endpoint                   | Permission      | Description                                     |
+| -------- | -------------------------- | --------------- | ----------------------------------------------- |
+| `GET`    | `/suppliers`               | supplier.view   | List suppliers (search, filter, sort, paginate) |
+| `GET`    | `/suppliers/:id`           | supplier.view   | Get supplier by ID                              |
+| `POST`   | `/suppliers`               | supplier.create | Create a new supplier                           |
+| `PATCH`  | `/suppliers/:id`           | supplier.update | Update supplier fields                          |
+| `DELETE` | `/suppliers/:id`           | supplier.delete | Soft delete supplier                            |
+| `GET`    | `/suppliers/:id/addresses` | supplier.view   | List supplier addresses                         |
+| `POST`   | `/suppliers/:id/addresses` | supplier.update | Add address to supplier                         |
+
+### Query Parameters — GET /suppliers
+
+| Parameter   | Type     | Description                                                              |
+| ----------- | -------- | ------------------------------------------------------------------------ |
+| `q`         | string   | Full-text search: companyName, contactPerson, phone, email, supplierCode |
+| `status`    | enum     | `ACTIVE` \| `INACTIVE` \| `BLOCKED`                                      |
+| `companyId` | UUID     | Filter by company                                                        |
+| `dateFrom`  | ISO date | Filter createdAt >= dateFrom                                             |
+| `dateTo`    | ISO date | Filter createdAt <= dateTo                                               |
+| `sortBy`    | enum     | `companyName` \| `createdAt` \| `currentBalance`                         |
+| `sortOrder` | enum     | `asc` \| `desc` (default: `desc`)                                        |
+| `page`      | integer  | Page number (default: 1)                                                 |
+| `limit`     | integer  | Items per page (default: 20, max: 100)                                   |
+
+### Create Supplier — POST /suppliers
+
+```json
+{
+  "companyId": "uuid",
+  "companyName": "Acme Supplies Ltd",
+  "contactPerson": "John Doe",
+  "email": "contact@acme.com",
+  "phone": "+8801700000001",
+  "alternativePhone": "+8801700000099",
+  "website": "https://acme.com",
+  "taxNumber": "TAX-001",
+  "creditLimit": 50000,
+  "openingBalance": 0,
+  "status": "ACTIVE",
+  "notes": "Primary electronics supplier",
+  "addresses": [
+    {
+      "label": "Head Office",
+      "country": "Bangladesh",
+      "state": "Dhaka Division",
+      "city": "Dhaka",
+      "area": "Gulshan",
+      "postalCode": "1212",
+      "addressLine1": "123 Business Road",
+      "addressLine2": "Floor 5",
+      "isDefault": true
+    }
+  ]
+}
+```
+
+**Success Response (201):**
+
+```json
+{
+  "success": true,
+  "message": "Supplier created successfully",
+  "data": {
+    "id": "uuid",
+    "companyId": "uuid",
+    "supplierCode": "SUP-000001",
+    "companyName": "Acme Supplies Ltd",
+    "contactPerson": "John Doe",
+    "email": "contact@acme.com",
+    "phone": "+8801700000001",
+    "alternativePhone": null,
+    "website": "https://acme.com",
+    "taxNumber": "TAX-001",
+    "creditLimit": "50000.0000",
+    "openingBalance": "0.0000",
+    "currentBalance": "0.0000",
+    "status": "ACTIVE",
+    "notes": "Primary electronics supplier",
+    "addresses": [
+      {
+        "id": "uuid",
+        "supplierId": "uuid",
+        "label": "Head Office",
+        "country": "Bangladesh",
+        "city": "Dhaka",
+        "addressLine1": "123 Business Road",
+        "isDefault": true,
+        "createdAt": "2026-07-12T10:41:00.000Z",
+        "updatedAt": "2026-07-12T10:41:00.000Z"
+      }
+    ],
+    "createdAt": "2026-07-12T10:41:00.000Z",
+    "updatedAt": "2026-07-12T10:41:00.000Z",
+    "deletedAt": null
+  }
+}
+```
+
+### Business Rules
+
+- `supplierCode` is auto-generated in format `SUP-000001`, `SUP-000002`, etc.
+- `email` and `phone` must be unique across non-deleted suppliers.
+- `website` must be a valid URL if provided.
+- `currentBalance` is initialized from `openingBalance` on creation.
+- Deletion is soft-delete only (`deletedAt` timestamp + status → `INACTIVE`).
+- Deleted suppliers are excluded from all list/search queries.
+
+### Error Responses
+
+| Code | Scenario                     |
+| ---- | ---------------------------- |
+| 400  | Validation failure (Zod)     |
+| 401  | Missing or invalid JWT token |
+| 403  | Insufficient permissions     |
+| 404  | Supplier not found           |
+| 409  | Duplicate email or phone     |
+
+### Future Endpoints (Not Yet Implemented)
+
+| Endpoint                              | Phase         |
+| ------------------------------------- | ------------- |
+| `GET /suppliers/:id/purchase-history` | Purchase Mgmt |
+| `GET /suppliers/:id/ledger`           | Accounting    |
+| `GET /suppliers/:id/due`              | Accounting    |
+| `GET /suppliers/:id/payment-history`  | Accounting    |
+| `GET /suppliers/:id/statement`        | Reports       |
+| `GET /suppliers/:id/performance`      | Analytics     |
+
+---
+
 _This document is part of the Enterprise POS System Phase 0 documentation suite._

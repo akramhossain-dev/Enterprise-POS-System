@@ -103,6 +103,11 @@ async function main() {
     { name: 'customer.view', module: 'customers', action: 'view' },
     { name: 'customer.update', module: 'customers', action: 'update' },
     { name: 'customer.delete', module: 'customers', action: 'delete' },
+    // ── B6.2: Supplier Permissions ──
+    { name: 'supplier.create', module: 'suppliers', action: 'create' },
+    { name: 'supplier.view', module: 'suppliers', action: 'view' },
+    { name: 'supplier.update', module: 'suppliers', action: 'update' },
+    { name: 'supplier.delete', module: 'suppliers', action: 'delete' },
   ];
 
   const permissions: Record<string, string> = {};

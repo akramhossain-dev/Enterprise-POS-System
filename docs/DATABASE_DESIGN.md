@@ -487,23 +487,79 @@
 
 ## 9. Supplier Domain
 
+> **Status:** ✅ Implemented — Phase B6.2  
+> **Migration:** `20260712104102_add_supplier_management`
+
 ### Table: `suppliers`
 
-| Column            | Type          | Constraints       | Description             |
-| ----------------- | ------------- | ----------------- | ----------------------- |
-| `id`              | UUID          | PK                | Supplier identifier     |
-| `company_id`      | UUID          | FK → companies.id | Owning company          |
-| `name`            | VARCHAR(255)  | NOT NULL          | Supplier company name   |
-| `contact_person`  | VARCHAR(255)  | NULL              | Primary contact name    |
-| `email`           | VARCHAR(255)  | NULL              | Email address           |
-| `phone`           | VARCHAR(50)   | NULL              | Phone number            |
-| `address`         | TEXT          | NULL              | Supplier address        |
-| `payment_terms`   | INTEGER       | DEFAULT 30        | Credit days             |
-| `current_balance` | DECIMAL(14,4) | DEFAULT 0         | Outstanding payable     |
-| `is_active`       | BOOLEAN       | DEFAULT true      | Active status           |
-| `created_at`      | TIMESTAMPTZ   | NOT NULL          | Creation timestamp      |
-| `updated_at`      | TIMESTAMPTZ   | NOT NULL          | Last modified timestamp |
-| `deleted_at`      | TIMESTAMPTZ   | NULL              | Soft delete timestamp   |
+| Column              | Type           | Constraints                 | Description                    |
+| ------------------- | -------------- | --------------------------- | ------------------------------ |
+| `id`                | UUID           | PK, default uuid()          | Supplier identifier            |
+| `company_id`        | UUID           | FK → companies.id (CASCADE) | Owning company                 |
+| `supplier_code`     | VARCHAR(20)    | UNIQUE, NOT NULL            | Auto-generated (SUP-000001...) |
+| `company_name`      | VARCHAR(255)   | NOT NULL                    | Supplier company/business name |
+| `contact_person`    | VARCHAR(200)   | NULL                        | Primary contact name           |
+| `email`             | VARCHAR(255)   | UNIQUE, NULL                | Email address                  |
+| `phone`             | VARCHAR(50)    | UNIQUE, NULL                | Primary phone number           |
+| `alternative_phone` | VARCHAR(50)    | NULL                        | Secondary phone number         |
+| `website`           | VARCHAR(255)   | NULL                        | Company website URL            |
+| `tax_number`        | VARCHAR(100)   | NULL                        | VAT / Tax registration number  |
+| `credit_limit`      | DECIMAL(15,4)  | DEFAULT 0                   | Maximum allowed credit         |
+| `opening_balance`   | DECIMAL(15,4)  | DEFAULT 0                   | Balance at onboarding          |
+| `current_balance`   | DECIMAL(15,4)  | DEFAULT 0                   | Running payable balance        |
+| `status`            | SupplierStatus | DEFAULT ACTIVE              | ACTIVE / INACTIVE / BLOCKED    |
+| `notes`             | TEXT           | NULL                        | Internal notes                 |
+| `created_at`        | TIMESTAMPTZ    | NOT NULL                    | Creation timestamp             |
+| `updated_at`        | TIMESTAMPTZ    | NOT NULL                    | Last modified timestamp        |
+| `deleted_at`        | TIMESTAMPTZ    | NULL                        | Soft delete timestamp          |
+
+**Indexes:** `supplier_code`, `company_name`, `phone`, `email`, `company_id`
+
+### Table: `supplier_addresses`
+
+| Column          | Type         | Constraints                 | Description                      |
+| --------------- | ------------ | --------------------------- | -------------------------------- |
+| `id`            | UUID         | PK, default uuid()          | Address identifier               |
+| `supplier_id`   | UUID         | FK → suppliers.id (CASCADE) | Owning supplier                  |
+| `label`         | VARCHAR(100) | NOT NULL                    | Address label (Head Office, etc) |
+| `country`       | VARCHAR(100) | NULL                        | Country name                     |
+| `state`         | VARCHAR(100) | NULL                        | State / Province                 |
+| `city`          | VARCHAR(100) | NULL                        | City                             |
+| `area`          | VARCHAR(100) | NULL                        | Area / District                  |
+| `postal_code`   | VARCHAR(20)  | NULL                        | ZIP / Postal code                |
+| `address_line1` | VARCHAR(255) | NOT NULL                    | Primary address line             |
+| `address_line2` | VARCHAR(255) | NULL                        | Secondary address line           |
+| `is_default`    | BOOLEAN      | DEFAULT false               | Primary address flag             |
+| `created_at`    | TIMESTAMPTZ  | NOT NULL                    | Creation timestamp               |
+| `updated_at`    | TIMESTAMPTZ  | NOT NULL                    | Last modified timestamp          |
+
+**Indexes:** `supplier_id`
+
+### Enum: `SupplierStatus`
+
+| Value      | Description                                |
+| ---------- | ------------------------------------------ |
+| `ACTIVE`   | Supplier is active and accepting orders    |
+| `INACTIVE` | Supplier is temporarily inactive           |
+| `BLOCKED`  | Supplier is blocked (payment issues, etc.) |
+
+### Relationships
+
+```
+Company  1 ────── * Supplier
+Supplier 1 ────── * SupplierAddress
+```
+
+### Future Tables (Reserved)
+
+| Table                       | Phase         | Purpose                      |
+| --------------------------- | ------------- | ---------------------------- |
+| `supplier_purchase_history` | Purchase Mgmt | Linked purchase orders       |
+| `supplier_ledger`           | Accounting    | Double-entry ledger entries  |
+| `supplier_due`              | Accounting    | Outstanding payables         |
+| `supplier_payments`         | Accounting    | Payment transactions         |
+| `supplier_statements`       | Reports       | Periodic statement snapshots |
+| `supplier_performance`      | Analytics     | Delivery/quality KPIs        |
 
 ---
 
