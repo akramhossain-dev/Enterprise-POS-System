@@ -25,6 +25,10 @@ export const apiConfig = {
     roles: '/roles',
     permissions: '/permissions',
     workspaces: '/workspaces',
+    products: '/products',
+    categories: '/categories',
+    brands: '/brands',
+    units: '/units',
   },
 } as const;
 

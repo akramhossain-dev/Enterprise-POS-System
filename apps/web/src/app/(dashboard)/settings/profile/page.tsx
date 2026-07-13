@@ -36,8 +36,11 @@ export default function ProfilePage() {
           <h2 className="text-lg font-semibold text-foreground">My Profile</h2>
           <p className="text-sm text-muted-foreground">Your personal information</p>
         </div>
-        <Button asChild leftIcon={<Pencil className="w-4 h-4" />} variant="outline" size="sm">
-          <Link href="/settings/profile/edit">Edit profile</Link>
+        <Button asChild variant="outline" size="sm">
+          <Link href="/settings/profile/edit" className="inline-flex items-center gap-1.5">
+            <Pencil className="w-4 h-4" />
+            <span>Edit profile</span>
+          </Link>
         </Button>
       </div>
 

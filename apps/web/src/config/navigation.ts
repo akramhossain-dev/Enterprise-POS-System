@@ -67,7 +67,7 @@ export const navigationConfig: NavSection[] = [
       {
         id: 'inventory',
         label: 'Inventory',
-        href: '/inventory',
+        href: '/products',
         icon: Package,
         permission: 'inventory:view',
       },

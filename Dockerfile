@@ -13,14 +13,11 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 WORKDIR /app
 
 # Copy workspace manifests FIRST to maximise layer cache.
-# Both apps must be present so pnpm can resolve the full workspace graph.
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY apps/api/package.json ./apps/api/
 COPY apps/web/package.json ./apps/web/
 
-# Install ALL workspace dependencies (dev + prod) needed for building.
-# HUSKY=0 — skips git-hook installation (no .git dir inside Docker).
-# --frozen-lockfile ensures reproducible installs.
+# Install ALL workspace dependencies (dev + prod) needed for building
 RUN HUSKY=0 pnpm install --frozen-lockfile
 
 # ── Stage 2: Builder ──────────────────────────
@@ -34,14 +31,18 @@ WORKDIR /app
 COPY --from=deps /app/node_modules            ./node_modules
 COPY --from=deps /app/apps/api/node_modules   ./apps/api/node_modules
 
-# Copy source (filtered by .dockerignore — no node_modules, no .next, no .env)
+# Copy source
 COPY . .
 
-# Generate Prisma client (must run inside the builder so the binary is available)
+# Generate Prisma client
 RUN pnpm --filter @enterprise-pos/api exec prisma generate
 
 # Compile TypeScript → dist/
 RUN pnpm --filter @enterprise-pos/api run build
+
+# Prune devDependencies to keep the node_modules small for production
+# HUSKY=0 prevents prepare script from running husky which isn't in prod.
+RUN HUSKY=0 pnpm prune --prod
 
 # ── Stage 3: Production Runtime ───────────────
 FROM node:20-alpine AS production
@@ -50,34 +51,19 @@ FROM node:20-alpine AS production
 RUN addgroup --system --gid 1001 nodejs \
     && adduser  --system --uid 1001 apiuser
 
-RUN corepack enable && corepack prepare pnpm@latest --activate
-
 WORKDIR /app
 
-# Copy only what pnpm needs to install production deps.
-# Both workspace manifests are required so pnpm can resolve the graph
-# even though we only install the api package in this stage.
-COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
-COPY apps/api/package.json ./apps/api/
-COPY apps/web/package.json ./apps/web/
+# Copy pruned workspace manifests and node_modules from builder
+COPY --from=builder /app/package.json /app/pnpm-workspace.yaml /app/pnpm-lock.yaml ./
+COPY --from=builder /app/node_modules ./node_modules
 
-# Install production-only dependencies for the API.
-# HUSKY=0 — husky is a devDependency; without this flag the root
-# "prepare" lifecycle script tries to run `husky` which doesn't exist
-# in --prod mode, causing: sh: husky: not found → exit code 1.
-RUN HUSKY=0 pnpm install --prod --frozen-lockfile --filter @enterprise-pos/api...
+# Copy api directory (including its own dist, node_modules, and prisma schema)
+COPY --from=builder /app/apps/api/package.json ./apps/api/
+COPY --from=builder /app/apps/api/dist ./apps/api/dist
+COPY --from=builder /app/apps/api/node_modules ./apps/api/node_modules
+COPY --from=builder /app/apps/api/prisma ./apps/api/prisma
 
-# Copy compiled application from builder
-COPY --from=builder /app/apps/api/dist             ./apps/api/dist
-
-# Copy generated Prisma binary client from builder
-COPY --from=builder /app/apps/api/node_modules/.prisma \
-                                                   ./apps/api/node_modules/.prisma
-
-# Copy Prisma schema (needed for prisma migrate deploy at runtime)
-COPY --from=builder /app/apps/api/prisma           ./apps/api/prisma
-
-# Set correct ownership before dropping privileges
+# Set correct ownership
 RUN chown -R apiuser:nodejs /app
 
 USER apiuser
