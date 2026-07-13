@@ -12,11 +12,14 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /app
 
-# Copy only the workspace manifests first (maximises layer cache reuse)
+# Copy workspace manifests FIRST to maximise layer cache.
+# Both apps must be present so pnpm can resolve the full workspace graph.
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY apps/api/package.json ./apps/api/
+COPY apps/web/package.json ./apps/web/
 
-# Install ALL dependencies (dev + prod) for building
+# Install ALL workspace dependencies (dev + prod) needed for building
+# --frozen-lockfile ensures reproducible installs
 RUN pnpm install --frozen-lockfile
 
 # ── Stage 2: Builder ──────────────────────────
@@ -30,19 +33,19 @@ WORKDIR /app
 COPY --from=deps /app/node_modules            ./node_modules
 COPY --from=deps /app/apps/api/node_modules   ./apps/api/node_modules
 
-# Copy full repo source (filtered by .dockerignore at build context)
+# Copy source (filtered by .dockerignore — no node_modules, no .next, no .env)
 COPY . .
 
-# Generate Prisma client
+# Generate Prisma client (must run inside the builder so the binary is available)
 RUN pnpm --filter @enterprise-pos/api exec prisma generate
 
-# Compile TypeScript
+# Compile TypeScript → dist/
 RUN pnpm --filter @enterprise-pos/api run build
 
 # ── Stage 3: Production Runtime ───────────────
 FROM node:20-alpine AS production
 
-# Security: non-root user
+# Security: run as non-root user
 RUN addgroup --system --gid 1001 nodejs \
     && adduser  --system --uid 1001 apiuser
 
@@ -50,24 +53,27 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /app
 
-# Copy workspace manifests needed for `pnpm install --prod`
+# Copy only what pnpm needs to install production deps.
+# Both workspace manifests are required so pnpm can resolve the graph
+# even though we only install the api package in this stage.
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY apps/api/package.json ./apps/api/
+COPY apps/web/package.json ./apps/web/
 
-# Install production-only dependencies
-RUN pnpm install --prod --frozen-lockfile
+# Install production-only dependencies for the API
+RUN pnpm install --prod --frozen-lockfile --filter @enterprise-pos/api...
 
 # Copy compiled application from builder
 COPY --from=builder /app/apps/api/dist             ./apps/api/dist
 
-# Copy generated Prisma client (binary) from builder
+# Copy generated Prisma binary client from builder
 COPY --from=builder /app/apps/api/node_modules/.prisma \
                                                    ./apps/api/node_modules/.prisma
 
-# Copy Prisma schema (needed for migrations at runtime)
+# Copy Prisma schema (needed for prisma migrate deploy at runtime)
 COPY --from=builder /app/apps/api/prisma           ./apps/api/prisma
 
-# Set correct ownership
+# Set correct ownership before dropping privileges
 RUN chown -R apiuser:nodejs /app
 
 USER apiuser

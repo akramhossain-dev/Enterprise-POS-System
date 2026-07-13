@@ -3,9 +3,9 @@ import type { NextRequest } from 'next/server';
 import { authConfig } from '@/config/auth';
 
 /**
- * Next.js middleware for route-level auth protection.
+ * Next.js Edge middleware for route-level auth protection.
  * Runs on the Edge runtime — no Node.js APIs.
- * Token validation happens in the AuthProvider (client-side).
+ * Token validation happens in AuthProvider (client-side).
  * This middleware handles fast redirects based on cookie presence.
  */
 export function middleware(request: NextRequest) {
@@ -16,6 +16,10 @@ export function middleware(request: NextRequest) {
   );
 
   const isProtectedRoute = authConfig.protectedRoutes.some(
+    (route) => pathname === route || pathname.startsWith(route + '/'),
+  );
+
+  const isGuestOnly = authConfig.guestOnlyRoutes.some(
     (route) => pathname === route || pathname.startsWith(route + '/'),
   );
 
@@ -30,8 +34,8 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // Redirect authenticated users away from public routes (login, etc.)
-  if (isPublicRoute && hasSessionCookie && pathname === authConfig.routes.login) {
+  // Redirect authenticated users away from guest-only routes (login, etc.)
+  if (isGuestOnly && hasSessionCookie) {
     return NextResponse.redirect(new URL(authConfig.routes.dashboard, request.url));
   }
 

@@ -3,7 +3,6 @@
 // ============================================================
 
 export type UserRole = 'super_admin' | 'admin' | 'manager' | 'cashier' | 'viewer';
-
 export type UserStatus = 'active' | 'inactive' | 'suspended' | 'pending';
 
 export interface User {
@@ -13,10 +12,15 @@ export interface User {
   lastName: string;
   fullName: string;
   avatar?: string | null;
+  phone?: string | null;
+  bio?: string | null;
+  timezone?: string;
   role: UserRole;
   roles: string[];
   permissions: string[];
   status: UserStatus;
+  emailVerified?: boolean;
+  twoFactorEnabled?: boolean;
   workspaceId?: string | null;
   lastLoginAt?: string | null;
   createdAt: string;
@@ -57,6 +61,47 @@ export interface ChangePasswordPayload {
   newPassword: string;
   confirmPassword: string;
 }
+
+export interface VerifyEmailPayload {
+  token: string;
+}
+
+export interface ResendVerificationPayload {
+  email: string;
+}
+
+export interface TwoFactorPayload {
+  code: string;
+  useBackupCode?: boolean;
+}
+
+export interface UpdateProfilePayload {
+  firstName: string;
+  lastName: string;
+  phone?: string;
+  bio?: string;
+  timezone?: string;
+}
+
+// ============================================================
+// SESSION TYPES
+// ============================================================
+
+export interface ActiveSession {
+  id: string;
+  device: string;
+  browser: string;
+  os: string;
+  ip: string;
+  location?: string;
+  lastActiveAt: string;
+  createdAt: string;
+  isCurrent: boolean;
+}
+
+// ============================================================
+// RBAC TYPES
+// ============================================================
 
 export interface Permission {
   id: string;

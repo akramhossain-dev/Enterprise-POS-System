@@ -3,26 +3,29 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Eye, EyeOff, LogIn } from 'lucide-react';
+import { LogIn, Mail } from 'lucide-react';
+import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { useAuth } from '@/hooks/use-auth';
 import { loginSchema, type LoginInput } from '@/utils/validators';
 import { normalizeError } from '@/utils/error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Alert } from '@/components/ui/alert';
+import { PasswordInput } from './password-input';
 
 export function LoginForm() {
   const { login, isLoading } = useAuth();
-  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<LoginInput, unknown, LoginInput>({
     resolver: zodResolver(loginSchema) as never,
     defaultValues: { email: '', password: '', rememberMe: false },
+    mode: 'onBlur',
   });
 
   const onSubmit = async (data: LoginInput) => {
@@ -35,89 +38,78 @@ export function LoginForm() {
     }
   };
 
-  return (
-    <div className="glass-card rounded-2xl p-8">
-      <div className="mb-6">
-        <h1 className="text-xl font-bold text-foreground mb-1">Sign In</h1>
-        <p className="text-sm text-muted-foreground">Enter your credentials to access the system</p>
-      </div>
+  const isSubmittingForm = isSubmitting || isLoading;
 
+  return (
+    <motion.form
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      onSubmit={handleSubmit(onSubmit)}
+      className="space-y-5"
+      noValidate
+    >
       {error && (
         <Alert
           variant="destructive"
-          title="Authentication failed"
+          title="Sign in failed"
           description={error}
           dismissible
           onDismiss={() => setError(null)}
-          className="mb-5"
         />
       )}
 
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        noValidate
-        aria-label="Login form"
-        className="space-y-4"
-      >
-        <Input
-          id="login-email"
-          label="Email address"
-          type="email"
-          placeholder="you@company.com"
-          autoComplete="email"
-          required
-          error={errors.email?.message}
-          {...register('email')}
-        />
+      <Input
+        {...register('email')}
+        id="email"
+        type="email"
+        label="Email address"
+        placeholder="you@company.com"
+        autoComplete="email"
+        autoFocus
+        required
+        leftElement={<Mail className="w-4 h-4 text-muted-foreground" />}
+        error={errors.email?.message}
+      />
 
-        <Input
-          id="login-password"
+      <div className="space-y-1">
+        <PasswordInput
+          {...register('password')}
+          id="password"
           label="Password"
-          type={showPassword ? 'text' : 'password'}
           placeholder="Enter your password"
           autoComplete="current-password"
           required
           error={errors.password?.message}
-          rightElement={
-            <button
-              type="button"
-              onClick={() => setShowPassword((v) => !v)}
-              className="text-muted-foreground hover:text-foreground transition-colors"
-              aria-label={showPassword ? 'Hide password' : 'Show password'}
-            >
-              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-            </button>
-          }
-          {...register('password')}
         />
-
-        <div className="flex items-center justify-between">
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              className="w-4 h-4 rounded border-input accent-primary"
-              {...register('rememberMe')}
-            />
-            <span className="text-sm text-muted-foreground">Remember me</span>
-          </label>
-          <a
-            href="/forgot-password"
-            className="text-sm text-primary hover:text-primary/80 transition-colors"
-          >
+        <div className="flex justify-end">
+          <Link href="/forgot-password" className="text-xs text-primary hover:underline">
             Forgot password?
-          </a>
+          </Link>
         </div>
+      </div>
 
-        <Button
-          type="submit"
-          className="w-full mt-2"
-          loading={isLoading}
-          rightIcon={<LogIn className="w-4 h-4" />}
-          id="login-submit"
-        >
-          Sign In
-        </Button>
-      </form>
-    </div>
+      {/* Remember Me */}
+      <label className="flex items-center gap-2.5 cursor-pointer select-none group">
+        <input
+          {...register('rememberMe')}
+          type="checkbox"
+          id="rememberMe"
+          className="w-4 h-4 rounded border-input bg-background accent-primary cursor-pointer"
+        />
+        <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
+          Remember me for 30 days
+        </span>
+      </label>
+
+      <Button
+        type="submit"
+        className="w-full"
+        size="lg"
+        loading={isSubmittingForm}
+        leftIcon={!isSubmittingForm ? <LogIn className="w-4 h-4" /> : undefined}
+      >
+        {isSubmittingForm ? 'Signing in…' : 'Sign in'}
+      </Button>
+    </motion.form>
   );
 }

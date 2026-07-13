@@ -8,15 +8,22 @@ import type {
   LoginCredentials,
   ForgotPasswordPayload,
   ResetPasswordPayload,
-  ChangePasswordPayload,
+  VerifyEmailPayload,
+  ResendVerificationPayload,
+  TwoFactorPayload,
+  ActiveSession,
 } from '@/types/auth';
 
 interface LoginResponse {
   user: User;
   tokens: AuthTokens;
+  requiresTwoFactor?: boolean;
+  twoFactorSessionToken?: string;
 }
 
 class AuthService extends ApiClient {
+  // ── Core Auth ──────────────────────────────
+
   async login(credentials: LoginCredentials): Promise<LoginResponse> {
     const response = await this.post<LoginResponse>(apiConfig.endpoints.auth.login, credentials);
     if (response.data.tokens?.accessToken) {
@@ -38,6 +45,16 @@ class AuthService extends ApiClient {
     return response.data;
   }
 
+  async refreshToken(): Promise<{ accessToken: string }> {
+    const response = await this.post<{ accessToken: string }>(apiConfig.endpoints.auth.refresh);
+    if (response.data.accessToken) {
+      tokenManager.setAccessToken(response.data.accessToken);
+    }
+    return response.data;
+  }
+
+  // ── Password ───────────────────────────────
+
   async forgotPassword(payload: ForgotPasswordPayload): Promise<ApiResponse<null>> {
     return this.post<null>(apiConfig.endpoints.auth.forgotPassword, payload);
   }
@@ -46,16 +63,47 @@ class AuthService extends ApiClient {
     return this.post<null>(apiConfig.endpoints.auth.resetPassword, payload);
   }
 
-  async changePassword(payload: ChangePasswordPayload): Promise<ApiResponse<null>> {
-    return this.post<null>('/auth/change-password', payload);
+  async changePassword(payload: {
+    currentPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+  }): Promise<ApiResponse<null>> {
+    return this.post<null>(apiConfig.endpoints.auth.changePassword, payload);
   }
 
-  async refreshToken(): Promise<{ accessToken: string }> {
-    const response = await this.post<{ accessToken: string }>(apiConfig.endpoints.auth.refresh);
-    if (response.data.accessToken) {
-      tokenManager.setAccessToken(response.data.accessToken);
+  // ── Email Verification ─────────────────────
+
+  async verifyEmail(payload: VerifyEmailPayload): Promise<ApiResponse<{ user: User }>> {
+    return this.post<{ user: User }>(apiConfig.endpoints.auth.verifyEmail, payload);
+  }
+
+  async resendVerification(payload: ResendVerificationPayload): Promise<ApiResponse<null>> {
+    return this.post<null>(apiConfig.endpoints.auth.resendVerification, payload);
+  }
+
+  // ── Two Factor ─────────────────────────────
+
+  async verifyTwoFactor(payload: TwoFactorPayload): Promise<LoginResponse> {
+    const response = await this.post<LoginResponse>(apiConfig.endpoints.auth.twoFactor, payload);
+    if (response.data.tokens?.accessToken) {
+      tokenManager.setAccessToken(response.data.tokens.accessToken);
     }
     return response.data;
+  }
+
+  // ── Sessions ───────────────────────────────
+
+  async getActiveSessions(): Promise<ActiveSession[]> {
+    const response = await this.get<ActiveSession[]>(apiConfig.endpoints.sessions);
+    return response.data;
+  }
+
+  async revokeSession(sessionId: string): Promise<ApiResponse<null>> {
+    return this.delete<null>(`${apiConfig.endpoints.sessions}/${sessionId}`);
+  }
+
+  async revokeAllSessions(): Promise<ApiResponse<null>> {
+    return this.delete<null>(`${apiConfig.endpoints.sessions}/all`);
   }
 }
 

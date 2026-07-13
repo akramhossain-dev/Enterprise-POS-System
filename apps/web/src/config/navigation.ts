@@ -134,9 +134,8 @@ export const navigationConfig: NavSection[] = [
       {
         id: 'settings',
         label: 'Settings',
-        href: '/settings',
+        href: '/settings/profile',
         icon: Settings,
-        permission: 'settings:view',
       },
     ],
   },
