@@ -1,0 +1,61 @@
+# ─────────────────────────────────────────────────────────────────
+#  .dockerignore  — Enterprise POS Monorepo
+#  Prevents large/unnecessary files from reaching the build daemon.
+# ─────────────────────────────────────────────────────────────────
+
+# Git
+.git
+.gitignore
+.github
+
+# Node modules (installed fresh inside Docker)
+**/node_modules
+
+# Next.js build output
+apps/web/.next
+apps/web/out
+
+# API dist (built inside Docker)
+apps/api/dist
+
+# Logs
+**/*.log
+**/logs/
+**/npm-debug.log*
+
+# Test artefacts
+**/coverage/
+apps/api/vitest.config.ts
+
+# Development & local configs
+**/.env
+**/.env.local
+**/.env.*.local
+apps/api/.env
+
+# Editor / OS
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+
+# Turbo cache
+**/.turbo
+
+# Docker files (not needed inside the image)
+Dockerfile*
+docker-compose*.yml
+docker/
+
+# Uploads directory
+apps/api/uploads
+
+# Documentation
+docs/
+*.md
+!apps/api/prisma/
+
+# Husky / lint-staged
+.husky
+.lintstagedrc.js
+.prettierrc

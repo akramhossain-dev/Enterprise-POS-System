@@ -2,7 +2,7 @@
 
 > Production-grade retail management platform built with Fastify, Next.js, PostgreSQL, and Redis.
 
-**Current Status:** Phase B1 — Backend Foundation ✅
+**Current Status:** Phase B1 — Backend Foundation ✅ | Phase F1 — Frontend Foundation ✅
 
 ---
 
@@ -40,6 +40,10 @@ Enterprise POS System is a comprehensive retail management solution supporting:
 | API Docs          | Swagger / OpenAPI 3.0      |
 | Infrastructure    | Docker + Docker Compose    |
 | CI                | GitHub Actions             |
+| **Frontend**      | Next.js 15 + React 19      |
+| **Styling**       | Tailwind CSS v4            |
+| **State**         | Zustand + TanStack Query   |
+| **Forms**         | React Hook Form + Zod      |
 
 ---
 
@@ -209,6 +213,24 @@ pnpm type-check     # Type-check all packages
 
 ---
 
+## Frontend Commands (Phase F1)
+
+```bash
+# Start frontend dev server (http://localhost:3000)
+pnpm --filter @enterprise-pos/web dev
+
+# Build frontend for production
+pnpm --filter @enterprise-pos/web build
+
+# Type check frontend
+pnpm --filter @enterprise-pos/web type-check
+
+# Lint frontend
+pnpm --filter @enterprise-pos/web lint
+```
+
+---
+
 ## API Endpoints (Phase B1)
 
 | Method | Endpoint         | Description                           |
@@ -248,7 +270,7 @@ pnpm type-check     # Type-check all packages
 | B10    | Backend  | Reports               | Planned     |
 | B11    | Backend  | Enterprise Features   | Planned     |
 | B12    | Backend  | Production Ready      | Planned     |
-| F1     | Frontend | Foundation            | Planned     |
+| F1     | Frontend | Foundation            | ✅ Complete |
 | F2–F12 | Frontend | UI Modules            | Planned     |
 
 See [`docs/DEVELOPMENT_ROADMAP.md`](docs/DEVELOPMENT_ROADMAP.md) for the complete roadmap.
