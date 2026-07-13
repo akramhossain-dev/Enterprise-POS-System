@@ -7,6 +7,7 @@ import {
   createCategorySchema,
   updateCategorySchema,
   CategoryQuery,
+  CreateCategoryBody,
 } from './category.schema';
 import {
   listCategories,
@@ -37,7 +38,7 @@ export async function handleGetCategory(
   reply: FastifyReply,
 ): Promise<void> {
   const { id } = request.params as { id: string };
-  const category = await findCategoryById(id);
+  const category = await findCategoryById(id, true);
   await verifyTenantScope(request, category.companyId);
   reply.status(200).send(sendSuccess({ message: 'Category fetched successfully', data: category }));
 }
@@ -46,7 +47,7 @@ export async function handleCreateCategory(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const body = validateBody(createCategorySchema, request.body);
+  const body = validateBody(createCategorySchema, request.body) as CreateCategoryBody;
   await verifyTenantScope(request, body.companyId);
   const category = await createCategory(body);
   reply.status(201).send(sendSuccess({ message: 'Category created successfully', data: category }));

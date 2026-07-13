@@ -27,7 +27,7 @@ export async function handleListBrands(
 
 export async function handleGetBrand(request: FastifyRequest, reply: FastifyReply): Promise<void> {
   const { id } = request.params as { id: string };
-  const brand = await findBrandById(id);
+  const brand = await findBrandById(id, true);
   reply.status(200).send(sendSuccess({ message: 'Brand fetched successfully', data: brand }));
 }
 

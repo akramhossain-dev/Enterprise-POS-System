@@ -16,12 +16,18 @@ export const createUnitSchema = z.object({
   companyId: z.string().uuid({ message: 'companyId must be a valid UUID' }),
   name: z.string().min(1, 'Name is required').max(100),
   shortName: z.string().min(1, 'Short name is required').max(20),
+  description: z.string().max(2000).optional().nullable(),
+  baseUnitId: z.string().uuid().optional().nullable(),
+  conversionRatio: z.coerce.number().positive().optional().nullable(),
 });
 export type CreateUnitBody = z.infer<typeof createUnitSchema>;
 
 export const updateUnitSchema = z.object({
   name: z.string().min(1).max(100).optional(),
   shortName: z.string().min(1).max(20).optional(),
+  description: z.string().max(2000).optional().nullable(),
+  baseUnitId: z.string().uuid().optional().nullable(),
+  conversionRatio: z.coerce.number().positive().optional().nullable(),
   status: z.nativeEnum(Status).optional(),
 });
 export type UpdateUnitBody = z.infer<typeof updateUnitSchema>;

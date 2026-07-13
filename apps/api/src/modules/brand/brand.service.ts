@@ -14,16 +14,24 @@ const SELECT = {
   companyId: true,
   name: true,
   description: true,
+  logo: true,
+  website: true,
+  country: true,
   status: true,
   createdAt: true,
   updatedAt: true,
+  _count: {
+    select: {
+      products: true,
+    },
+  },
 };
 
 export async function listBrands(query: BrandQuery) {
   const { skip, take } = paginate(query);
   const orderBy = sortBuilder(query.sortBy, query.sortOrder);
   const where = {
-    ...filterBuilder(query.q, ['name', 'description']),
+    ...filterBuilder(query.q, ['name', 'description', 'website', 'country']),
     status: query.status ?? { not: Status.DELETED },
     ...(query.companyId && { companyId: query.companyId }),
   };
@@ -34,9 +42,9 @@ export async function listBrands(query: BrandQuery) {
   return { brands, meta: buildPaginationMeta(query.page, query.limit, total) };
 }
 
-export async function findBrandById(id: string) {
+export async function findBrandById(id: string, includeDeleted = false) {
   const brand = await prisma.brand.findFirst({
-    where: { id, status: { not: Status.DELETED } },
+    where: { id, ...(includeDeleted ? {} : { status: { not: Status.DELETED } }) },
     select: SELECT,
   });
   if (!brand) {
@@ -55,19 +63,36 @@ export async function createBrand(body: CreateBrandBody) {
   }
 
   return prisma.brand.create({
-    data: { companyId: body.companyId, name: body.name, description: body.description ?? null },
+    data: {
+      companyId: body.companyId,
+      name: body.name,
+      description: body.description ?? null,
+      logo: body.logo ?? null,
+      website: body.website ?? null,
+      country: body.country ?? null,
+    },
     select: SELECT,
   });
 }
 
 export async function updateBrand(id: string, body: UpdateBrandBody) {
-  await findBrandById(id);
+  const includeDeleted = body.status === Status.ACTIVE;
+  await findBrandById(id, includeDeleted);
   const data: Record<string, unknown> = {};
   if (body.name !== undefined) {
     data.name = body.name;
   }
   if (body.description !== undefined) {
     data.description = body.description;
+  }
+  if (body.logo !== undefined) {
+    data.logo = body.logo;
+  }
+  if (body.website !== undefined) {
+    data.website = body.website;
+  }
+  if (body.country !== undefined) {
+    data.country = body.country;
   }
   if (body.status !== undefined) {
     data.status = body.status;

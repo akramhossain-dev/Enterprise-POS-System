@@ -7,23 +7,31 @@ import {
   sortBuilder,
   filterBuilder,
 } from '../../common/utils/query';
-import { UnitQuery, CreateUnitBody, UpdateUnitBody } from './unit.schema';
+import { CreateUnitBody, UnitQuery, UpdateUnitBody } from './unit.schema';
 
 const SELECT = {
   id: true,
   companyId: true,
   name: true,
   shortName: true,
+  description: true,
+  baseUnitId: true,
+  conversionRatio: true,
   status: true,
   createdAt: true,
   updatedAt: true,
+  _count: {
+    select: {
+      products: true,
+    },
+  },
 };
 
 export async function listUnits(query: UnitQuery) {
   const { skip, take } = paginate(query);
   const orderBy = sortBuilder(query.sortBy, query.sortOrder);
   const where = {
-    ...filterBuilder(query.q, ['name', 'shortName']),
+    ...filterBuilder(query.q, ['name', 'shortName', 'description']),
     status: query.status ?? { not: Status.DELETED },
     ...(query.companyId && { companyId: query.companyId }),
   };
@@ -34,9 +42,9 @@ export async function listUnits(query: UnitQuery) {
   return { units, meta: buildPaginationMeta(query.page, query.limit, total) };
 }
 
-export async function findUnitById(id: string) {
+export async function findUnitById(id: string, includeDeleted = false) {
   const unit = await prisma.unit.findFirst({
-    where: { id, status: { not: Status.DELETED } },
+    where: { id, ...(includeDeleted ? {} : { status: { not: Status.DELETED } }) },
     select: SELECT,
   });
   if (!unit) {
@@ -55,19 +63,36 @@ export async function createUnit(body: CreateUnitBody) {
   }
 
   return prisma.unit.create({
-    data: { companyId: body.companyId, name: body.name, shortName: body.shortName },
+    data: {
+      companyId: body.companyId,
+      name: body.name,
+      shortName: body.shortName,
+      description: body.description ?? null,
+      baseUnitId: body.baseUnitId ?? null,
+      conversionRatio: body.conversionRatio ?? 1.0,
+    },
     select: SELECT,
   });
 }
 
 export async function updateUnit(id: string, body: UpdateUnitBody) {
-  await findUnitById(id);
+  const includeDeleted = body.status === Status.ACTIVE;
+  await findUnitById(id, includeDeleted);
   const data: Record<string, unknown> = {};
   if (body.name !== undefined) {
     data.name = body.name;
   }
   if (body.shortName !== undefined) {
     data.shortName = body.shortName;
+  }
+  if (body.description !== undefined) {
+    data.description = body.description;
+  }
+  if (body.baseUnitId !== undefined) {
+    data.baseUnitId = body.baseUnitId;
+  }
+  if (body.conversionRatio !== undefined) {
+    data.conversionRatio = body.conversionRatio;
   }
   if (body.status !== undefined) {
     data.status = body.status;

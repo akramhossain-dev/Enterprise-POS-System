@@ -2,23 +2,58 @@ export type ProductStatus = 'ACTIVE' | 'INACTIVE' | 'DISCONTINUED';
 
 export interface Category {
   id: string;
+  companyId: string;
   name: string;
-  description?: string;
-  status: 'ACTIVE' | 'INACTIVE';
+  slug?: string | null;
+  description?: string | null;
+  parentId?: string | null;
+  parent?: Category | null;
+  children?: Category[];
+  image?: string | null;
+  icon?: string | null;
+  displayOrder?: number;
+  status: 'ACTIVE' | 'INACTIVE' | 'PENDING' | 'DELETED';
+  seoTitle?: string | null;
+  seoDescription?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+  _count?: {
+    products: number;
+  };
 }
 
 export interface Brand {
   id: string;
+  companyId: string;
   name: string;
-  description?: string;
-  status: 'ACTIVE' | 'INACTIVE';
+  description?: string | null;
+  logo?: string | null;
+  website?: string | null;
+  country?: string | null;
+  status: 'ACTIVE' | 'INACTIVE' | 'PENDING' | 'DELETED';
+  createdAt?: string;
+  updatedAt?: string;
+  _count?: {
+    products: number;
+  };
 }
 
 export interface Unit {
   id: string;
+  companyId: string;
   name: string;
   shortName: string;
-  status: 'ACTIVE' | 'INACTIVE';
+  description?: string | null;
+  baseUnitId?: string | null;
+  baseUnit?: Unit | null;
+  derivedUnits?: Unit[];
+  conversionRatio?: number | null;
+  status: 'ACTIVE' | 'INACTIVE' | 'PENDING' | 'DELETED';
+  createdAt?: string;
+  updatedAt?: string;
+  _count?: {
+    products: number;
+  };
 }
 
 export interface Tax {

@@ -16,7 +16,7 @@ export async function handleListUnits(request: FastifyRequest, reply: FastifyRep
 
 export async function handleGetUnit(request: FastifyRequest, reply: FastifyReply): Promise<void> {
   const { id } = request.params as { id: string };
-  const unit = await findUnitById(id);
+  const unit = await findUnitById(id, true);
   reply.status(200).send(sendSuccess({ message: 'Unit fetched successfully', data: unit }));
 }
 

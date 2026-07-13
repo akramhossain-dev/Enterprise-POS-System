@@ -11,6 +11,9 @@ import {
   Building2,
   Shield,
   Bell,
+  Layers,
+  Tag,
+  Ruler,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -70,6 +73,27 @@ export const navigationConfig: NavSection[] = [
         href: '/products',
         icon: Package,
         permission: 'inventory:view',
+      },
+      {
+        id: 'categories',
+        label: 'Categories',
+        href: '/products/categories',
+        icon: Layers,
+        permission: 'category.read',
+      },
+      {
+        id: 'brands',
+        label: 'Brands',
+        href: '/products/brands',
+        icon: Tag,
+        permission: 'brand.read',
+      },
+      {
+        id: 'units',
+        label: 'Units',
+        href: '/products/units',
+        icon: Ruler,
+        permission: 'unit.read',
       },
       {
         id: 'purchase',

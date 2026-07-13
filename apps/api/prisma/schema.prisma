@@ -290,15 +290,24 @@ model BusinessSetting {
 // ─────────────────────────────────────────────
 
 model Category {
-  id          String    @id @default(uuid()) @db.Uuid
-  companyId   String    @map("company_id") @db.Uuid
-  company     Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  name        String    @db.VarChar(255)
-  description String?   @db.Text
-  status      Status    @default(ACTIVE)
-  products    Product[]
-  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  id             String     @id @default(uuid()) @db.Uuid
+  companyId      String     @map("company_id") @db.Uuid
+  company        Company    @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  name           String     @db.VarChar(255)
+  slug           String?    @db.VarChar(255)
+  description    String?    @db.Text
+  status         Status     @default(ACTIVE)
+  parentId       String?    @map("parent_id") @db.Uuid
+  parent         Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children       Category[] @relation("CategoryHierarchy")
+  image          String?    @db.Text
+  icon           String?    @db.VarChar(100)
+  displayOrder   Int        @default(0) @map("display_order")
+  seoTitle       String?    @map("seo_title") @db.VarChar(255)
+  seoDescription String?    @map("seo_description") @db.Text
+  products       Product[]
+  createdAt      DateTime   @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt      DateTime   @updatedAt @map("updated_at") @db.Timestamptz
 
   @@index([companyId])
   @@map("categories")
@@ -310,6 +319,9 @@ model Brand {
   company     Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
   name        String    @db.VarChar(255)
   description String?   @db.Text
+  logo        String?   @db.Text
+  website     String?   @db.VarChar(255)
+  country     String?   @db.VarChar(100)
   status      Status    @default(ACTIVE)
   products    Product[]
   createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
@@ -320,15 +332,20 @@ model Brand {
 }
 
 model Unit {
-  id        String    @id @default(uuid()) @db.Uuid
-  companyId String    @map("company_id") @db.Uuid
-  company   Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  name      String    @db.VarChar(100)
-  shortName String    @map("short_name") @db.VarChar(20)
-  status    Status    @default(ACTIVE)
-  products  Product[]
-  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  id              String    @id @default(uuid()) @db.Uuid
+  companyId       String    @map("company_id") @db.Uuid
+  company         Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  name            String    @db.VarChar(100)
+  shortName       String    @map("short_name") @db.VarChar(20)
+  description     String?   @db.Text
+  baseUnitId      String?   @map("base_unit_id") @db.Uuid
+  baseUnit        Unit?     @relation("UnitHierarchy", fields: [baseUnitId], references: [id], onDelete: SetNull)
+  derivedUnits    Unit[]    @relation("UnitHierarchy")
+  conversionRatio Decimal?  @default(1.0) @map("conversion_ratio") @db.Decimal(12, 4)
+  status          Status    @default(ACTIVE)
+  products        Product[]
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime  @updatedAt @map("updated_at") @db.Timestamptz
 
   @@index([companyId])
   @@map("units")
