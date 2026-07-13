@@ -18,9 +18,10 @@ COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY apps/api/package.json ./apps/api/
 COPY apps/web/package.json ./apps/web/
 
-# Install ALL workspace dependencies (dev + prod) needed for building
-# --frozen-lockfile ensures reproducible installs
-RUN pnpm install --frozen-lockfile
+# Install ALL workspace dependencies (dev + prod) needed for building.
+# HUSKY=0 — skips git-hook installation (no .git dir inside Docker).
+# --frozen-lockfile ensures reproducible installs.
+RUN HUSKY=0 pnpm install --frozen-lockfile
 
 # ── Stage 2: Builder ──────────────────────────
 FROM node:20-alpine AS builder
@@ -60,8 +61,11 @@ COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY apps/api/package.json ./apps/api/
 COPY apps/web/package.json ./apps/web/
 
-# Install production-only dependencies for the API
-RUN pnpm install --prod --frozen-lockfile --filter @enterprise-pos/api...
+# Install production-only dependencies for the API.
+# HUSKY=0 — husky is a devDependency; without this flag the root
+# "prepare" lifecycle script tries to run `husky` which doesn't exist
+# in --prod mode, causing: sh: husky: not found → exit code 1.
+RUN HUSKY=0 pnpm install --prod --frozen-lockfile --filter @enterprise-pos/api...
 
 # Copy compiled application from builder
 COPY --from=builder /app/apps/api/dist             ./apps/api/dist
