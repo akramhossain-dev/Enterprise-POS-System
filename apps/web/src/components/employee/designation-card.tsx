@@ -1,0 +1,76 @@
+'use client';
+
+import React from 'react';
+import { Briefcase, Edit, Trash2, CheckCircle2, XCircle } from 'lucide-react';
+import type { Designation } from '@/types/employee';
+
+interface DesignationCardProps {
+  designation: Designation;
+  onEdit: (desig: Designation) => void;
+  onDelete: (id: string) => void;
+}
+
+export function DesignationCard({ designation, onEdit, onDelete }: DesignationCardProps) {
+  return (
+    <div className="group rounded-2xl border border-border bg-card p-5 transition-all hover:border-primary/20 hover:shadow-md">
+      <div className="flex items-start justify-between">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <Briefcase className="w-5 h-5" />
+          </div>
+          <div>
+            <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors text-sm md:text-base">
+              {designation.name}
+            </h3>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Dept: {designation.departmentName || 'General Administration'}
+            </p>
+          </div>
+        </div>
+
+        {/* Status Badge */}
+        <span
+          className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium tracking-wide uppercase border ${
+            designation.status === 'ACTIVE'
+              ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
+              : 'bg-muted text-muted-foreground border-border'
+          }`}
+        >
+          {designation.status === 'ACTIVE' ? (
+            <CheckCircle2 className="w-2.5 h-2.5" />
+          ) : (
+            <XCircle className="w-2.5 h-2.5" />
+          )}
+          {designation.status}
+        </span>
+      </div>
+
+      <p className="mt-4 text-xs text-muted-foreground line-clamp-2 min-h-[2rem]">
+        {designation.description || 'No description provided for this designation.'}
+      </p>
+
+      {/* Footer Controls */}
+      <div className="mt-5 flex items-center justify-between border-t border-border/50 pt-3">
+        <span className="text-[10px] text-muted-foreground/60">
+          Created {new Date(designation.createdAt).toLocaleDateString()}
+        </span>
+        <div className="flex items-center gap-1.5">
+          <button
+            onClick={() => onEdit(designation)}
+            className="p-1.5 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+            title="Edit Designation"
+          >
+            <Edit className="w-3.5 h-3.5" />
+          </button>
+          <button
+            onClick={() => onDelete(designation.id)}
+            className="p-1.5 rounded-lg text-muted-foreground hover:bg-rose-500/10 hover:text-rose-500 transition-colors"
+            title="Delete Designation"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}

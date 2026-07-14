@@ -32,6 +32,11 @@ export const apiConfig = {
     customers: '/customers',
     suppliers: '/suppliers',
     supplierPayments: '/supplier-payments',
+    employees: '/employees',
+    auditLogs: '/audit-logs',
+    activity: '/activity',
+    loginHistory: '/login-history',
+    userSessions: '/user-sessions',
   },
 } as const;
 

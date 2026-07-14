@@ -14,6 +14,10 @@ import {
   Layers,
   Tag,
   Ruler,
+  Network,
+  Briefcase,
+  UserCheck,
+  KeyRound,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -139,6 +143,47 @@ export const navigationConfig: NavSection[] = [
     ],
   },
   {
+    id: 'administration',
+    label: 'Administration',
+    items: [
+      {
+        id: 'employees',
+        label: 'Employees',
+        href: '/employees',
+        icon: UserCheck,
+        permission: 'employee.read',
+      },
+      {
+        id: 'users',
+        label: 'User Accounts',
+        href: '/users',
+        icon: KeyRound,
+        permission: 'user.read',
+      },
+      {
+        id: 'roles',
+        label: 'Roles & Permissions',
+        href: '/roles',
+        icon: Shield,
+        permission: 'role.read',
+      },
+      {
+        id: 'departments',
+        label: 'Departments',
+        href: '/departments',
+        icon: Network,
+        permission: 'employee.read',
+      },
+      {
+        id: 'designations',
+        label: 'Designations',
+        href: '/designations',
+        icon: Briefcase,
+        permission: 'employee.read',
+      },
+    ],
+  },
+  {
     id: 'system',
     label: 'System',
     items: [
@@ -147,13 +192,6 @@ export const navigationConfig: NavSection[] = [
         label: 'Notifications',
         href: '/notifications',
         icon: Bell,
-      },
-      {
-        id: 'roles',
-        label: 'Roles & Permissions',
-        href: '/settings/roles',
-        icon: Shield,
-        permission: 'roles:view',
       },
       {
         id: 'settings',
