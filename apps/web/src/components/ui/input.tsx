@@ -14,7 +14,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     { className, type = 'text', label, error, hint, leftElement, rightElement, id, ...props },
     ref,
   ) => {
-    const inputId = id ?? React.useId();
+    const uniqueId = React.useId();
+    const inputId = id ?? uniqueId;
     const errorId = `${inputId}-error`;
     const hintId = `${inputId}-hint`;
 
