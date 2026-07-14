@@ -27,14 +27,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v5
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
+
+      - name: Enable pnpm via Corepack
+        run: corepack enable pnpm
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -65,14 +64,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v5
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
+
+      - name: Enable pnpm via Corepack
+        run: corepack enable pnpm
 
       - name: Restore node_modules cache
         uses: actions/cache/restore@v4
@@ -108,14 +106,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v5
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
+
+      - name: Enable pnpm via Corepack
+        run: corepack enable pnpm
 
       - name: Restore node_modules cache
         uses: actions/cache/restore@v4
@@ -148,14 +145,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v5
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
+
+      - name: Enable pnpm via Corepack
+        run: corepack enable pnpm
 
       - name: Restore node_modules cache
         uses: actions/cache/restore@v4
@@ -204,14 +200,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v5
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
+
+      - name: Enable pnpm via Corepack
+        run: corepack enable pnpm
 
       - name: Restore node_modules cache
         uses: actions/cache/restore@v4
