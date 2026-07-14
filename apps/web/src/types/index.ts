@@ -6,3 +6,4 @@ export * from './auth';
 export * from './api';
 export * from './common';
 export * from './customer';
+export * from './supplier';

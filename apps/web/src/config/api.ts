@@ -30,6 +30,8 @@ export const apiConfig = {
     brands: '/brands',
     units: '/units',
     customers: '/customers',
+    suppliers: '/suppliers',
+    supplierPayments: '/supplier-payments',
   },
 } as const;
 

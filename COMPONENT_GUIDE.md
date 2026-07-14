@@ -324,3 +324,85 @@ Skeleton placeholder for the full customer profile page — header, metrics, tab
 | `/customers/:id`      | `app/(dashboard)/customers/[id]/page.tsx`      | Tabbed profile page (Overview, Transactions, Addresses, Notes)             |
 | `/customers/:id/edit` | `app/(dashboard)/customers/[id]/edit/page.tsx` | Edit customer form with pre-filled data                                    |
 | `/customers/archive`  | `app/(dashboard)/customers/archive/page.tsx`   | Archived customers with restore/delete                                     |
+
+---
+
+## 4. Supplier Management Components (Phase F5.2)
+
+### SupplierAvatar
+
+`src/components/supplier/supplier-avatar.tsx`
+
+Displays a supplier's logo (if provided via `logoUrl`) or a gradient-coloured initials fallback derived from `companyName`. Uses rounded-xl corners to reflect a business/brand aesthetic.
+
+| Prop       | Type                                                | Default |
+| ---------- | --------------------------------------------------- | ------- |
+| `supplier` | `{ companyName: string; logoUrl?: string \| null }` | —       |
+| `size`     | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'`              | `'md'`  |
+
+### SupplierStatusBadge
+
+`src/components/supplier/supplier-status-badge.tsx`
+
+Renders a colour-coded badge for `ACTIVE` (green), `INACTIVE` (amber), and `ARCHIVED` (grey) statuses.
+
+### SupplierDueBadge
+
+`src/components/supplier/supplier-due-badge.tsx`
+
+Displays the outstanding supplier balance as a badge: green (`Settled`) when balance ≤ 0, amber for moderate dues, and red for balances above $50,000.
+
+### SupplierCard
+
+`src/components/supplier/supplier-card.tsx`
+
+Compact grid/list card showing avatar, company name, supplier code, contact details (phone/email/website/address), due badge, and member-since date. Hover-animated, clickable.
+
+### SupplierSummaryCard
+
+`src/components/supplier/supplier-summary-card.tsx`
+
+Four-metric card: **Total Purchase**, **Total Paid**, **Outstanding Due**, and **Credit Limit**, plus an animated credit utilisation progress bar (green < 50% → amber < 80% → red ≥ 80%).
+
+### SupplierLedgerTable
+
+`src/components/supplier/supplier-ledger-table.tsx`
+
+Table-format ledger with entry-type icons (PURCHASE / PAYMENT / PURCHASE_RETURN), reference number, date, amount with sign prefix, and running balance. Includes loading skeleton and empty state.
+
+### PaymentHistoryTable
+
+`src/components/supplier/payment-history-table.tsx`
+
+Payment list table with method icons (cash/bank/card/mobile/other), payment number, reference, date, status badge, and amount. Includes loading skeleton and empty state.
+
+### PurchaseHistoryPlaceholder
+
+`src/components/supplier/purchase-history-placeholder.tsx`
+
+UI foundation for the Purchase History section with 4 sub-tabs: **Purchase Orders**, **GRN**, **Invoices**, **Returns**. Each shows a labelled placeholder pointing to the future Purchase Module (Phase B7).
+
+### SupplierForm
+
+`src/components/supplier/supplier-form.tsx`
+
+Full-featured form with React Hook Form + Zod validation. Five sections: Business Information, Contact Information, Address, Account Settings, Notes. Supports create and edit modes via the `supplier` prop.
+
+### SupplierFormSkeleton / SupplierProfileSkeleton
+
+`src/components/supplier/supplier-form-skeleton.tsx`
+`src/components/supplier/supplier-profile-skeleton.tsx`
+
+Shimmer loading skeletons for the form and profile pages.
+
+---
+
+## Supplier Pages (Phase F5.2)
+
+| Route                 | File                                           | Description                                                                        |
+| --------------------- | ---------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `/suppliers`          | `app/(dashboard)/suppliers/page.tsx`           | Enterprise DataTable with server pagination, search, filters, bulk actions         |
+| `/suppliers/new`      | `app/(dashboard)/suppliers/new/page.tsx`       | Create supplier form                                                               |
+| `/suppliers/:id`      | `app/(dashboard)/suppliers/[id]/page.tsx`      | 5-tab profile (Overview, Ledger, Purchases, Payments, Notes) + inline address mgmt |
+| `/suppliers/:id/edit` | `app/(dashboard)/suppliers/[id]/edit/page.tsx` | Edit supplier form with pre-filled data                                            |
+| `/suppliers/archive`  | `app/(dashboard)/suppliers/archive/page.tsx`   | Archived suppliers with restore/delete                                             |
