@@ -18,6 +18,9 @@ import {
   Briefcase,
   UserCheck,
   KeyRound,
+  Warehouse,
+  Store,
+  LayoutGrid,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -125,6 +128,27 @@ export const navigationConfig: NavSection[] = [
         href: '/suppliers',
         icon: Building2,
         permission: 'suppliers:view',
+      },
+      {
+        id: 'warehouses',
+        label: 'Warehouses',
+        href: '/warehouses',
+        icon: Warehouse,
+        permission: 'warehouse.view',
+      },
+      {
+        id: 'branches',
+        label: 'Branches',
+        href: '/branches',
+        icon: Store,
+        permission: 'branch.read',
+      },
+      {
+        id: 'storage-locations',
+        label: 'Storage Locations',
+        href: '/storage-locations',
+        icon: LayoutGrid,
+        permission: 'warehouse.view',
       },
       {
         id: 'accounting',

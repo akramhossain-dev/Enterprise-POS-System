@@ -256,7 +256,7 @@ export default function EmployeesPage() {
                 className="w-full rounded-xl border border-border bg-background p-2 text-xs focus:ring-primary focus:border-primary"
               >
                 <option value="">All Branches</option>
-                {branches?.map((b) => (
+                {branches?.data?.map((b) => (
                   <option key={b.id} value={b.id}>
                     {b.name}
                   </option>

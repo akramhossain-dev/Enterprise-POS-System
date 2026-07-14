@@ -37,6 +37,9 @@ export const apiConfig = {
     activity: '/activity',
     loginHistory: '/login-history',
     userSessions: '/user-sessions',
+    warehouses: '/warehouses',
+    branches: '/branches',
+    storageLocations: '/storage-locations',
   },
 } as const;
 

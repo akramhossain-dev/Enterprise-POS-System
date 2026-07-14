@@ -98,7 +98,7 @@ export default function NewEmployeePage() {
 
   const onSubmit = async (values: EmployeeFormValues) => {
     // Resolve target company ID from selected branch location
-    const branch = branches?.find((b) => b.id === values.branchId);
+    const branch = branches?.data?.find((b) => b.id === values.branchId);
     if (!branch) {
       alert('Selected branch location invalid');
       return;
@@ -241,7 +241,7 @@ export default function NewEmployeePage() {
                 className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="">Select Corporate Branch...</option>
-                {branches?.map((b) => (
+                {branches?.data?.map((b) => (
                   <option key={b.id} value={b.id}>
                     {b.name}
                   </option>

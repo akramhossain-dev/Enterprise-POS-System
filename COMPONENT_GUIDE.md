@@ -406,3 +406,54 @@ Shimmer loading skeletons for the form and profile pages.
 | `/suppliers/:id`      | `app/(dashboard)/suppliers/[id]/page.tsx`      | 5-tab profile (Overview, Ledger, Purchases, Payments, Notes) + inline address mgmt |
 | `/suppliers/:id/edit` | `app/(dashboard)/suppliers/[id]/edit/page.tsx` | Edit supplier form with pre-filled data                                            |
 | `/suppliers/archive`  | `app/(dashboard)/suppliers/archive/page.tsx`   | Archived suppliers with restore/delete                                             |
+
+---
+
+## 4. Warehouse & Branch Management Components (Phase F6.1)
+
+### WarehouseCard
+
+`src/components/warehouse/warehouse-card.tsx`
+
+Compact grid card showing warehouse name, code, associated branch office, active manager, and real-time fill level progress bar.
+
+### BranchCard
+
+`src/components/warehouse/branch-card.tsx`
+
+Summary panel for storefront outlets displaying manager name, active staff size, linked warehouses count, address, and contacts.
+
+### CapacityCard
+
+`src/components/warehouse/capacity-card.tsx`
+
+Visual gauge highlighting cubic volumetric limits, utilized m³, remaining free storage, and over-capacity warnings (>90%).
+
+### StorageLocationCard
+
+`src/components/warehouse/storage-location-card.tsx`
+
+Grid widget depicting individual warehouse bins (Zone, Rack, Shelf, Bin, Barcode, Status) with update triggers.
+
+### UtilizationProgress
+
+`src/components/warehouse/utilization-progress.tsx`
+
+Premium color-coded utilization gauge: green (<70%), yellow (70-90%), and red (≥90%).
+
+---
+
+## Warehouse & Branch Pages (Phase F6.1)
+
+| Route                  | File                                            | Description                                                                           |
+| ---------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `/warehouses`          | `app/(dashboard)/warehouses/page.tsx`           | Depot directory & KPIs (online status, space utilization, and bulk archiving actions) |
+| `/warehouses/new`      | `app/(dashboard)/warehouses/new/page.tsx`       | Register new depot with capacity details and branch affiliations                      |
+| `/warehouses/:id`      | `app/(dashboard)/warehouses/[id]/page.tsx`      | Multi-tab profiles (overview, storage bins, stock logs, recent activity)              |
+| `/warehouses/:id/edit` | `app/(dashboard)/warehouses/[id]/edit/page.tsx` | Edit form modifying phone, manager context, and storage environment                   |
+| `/warehouses/archive`  | `app/(dashboard)/warehouses/archive/page.tsx`   | Archived depots list with restore buttons                                             |
+| `/branches`            | `app/(dashboard)/branches/page.tsx`             | Multi-branch listing table detailing contact numbers and status tags                  |
+| `/branches/new`        | `app/(dashboard)/branches/new/page.tsx`         | Form creating branch offices with Zod validation                                      |
+| `/branches/:id`        | `app/(dashboard)/branches/[id]/page.tsx`        | Branch profiles with tabs for assigned staff and linked depots                        |
+| `/branches/:id/edit`   | `app/(dashboard)/branches/[id]/edit/page.tsx`   | Edit form updating storefront name, contacts, and opening date                        |
+| `/storage-locations`   | `app/(dashboard)/storage-locations/page.tsx`    | Central storage bins catalog supporting search by barcode, rack level, and zone       |
