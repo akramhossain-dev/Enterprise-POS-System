@@ -8,13 +8,21 @@ on:
 
 env:
   NODE_VERSION: '20'
+  PNPM_VERSION: '9'
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}/api
 
+# Cancel in-progress runs on the same branch (saves CI minutes)
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  # ── Lint ────────────────────────────────────
-  lint:
-    name: Lint
+  # ─────────────────────────────────────────────────────────────
+  # SHARED SETUP (install + generate) — other jobs restore cache
+  # ─────────────────────────────────────────────────────────────
+  setup:
+    name: Install & Generate
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -22,6 +30,8 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -32,27 +42,36 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # Cache node_modules so downstream jobs don't reinstall
+      - name: Cache node_modules
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            node_modules
+            apps/api/node_modules
+            apps/web/node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+
       - name: Generate Prisma client
-        run: pnpm --filter @enterprise-pos/api exec prisma generate
+        run: pnpm --filter @enterprise-pos/api prisma:generate
         env:
           DATABASE_URL: postgresql://test:test@localhost:5432/test
 
-      - name: Run ESLint (API)
-        run: pnpm --filter @enterprise-pos/api lint
-
-      - name: Check Prettier formatting (API)
-        run: pnpm --filter @enterprise-pos/api exec prettier --check "src/**/*.ts"
-
-  # ── Type Check ──────────────────────────────
-  type-check:
-    name: Type Check
+  # ─────────────────────────────────────────────────────────────
+  # LINT
+  # ─────────────────────────────────────────────────────────────
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
+    needs: [setup]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -60,11 +79,62 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Restore node_modules cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            node_modules
+            apps/api/node_modules
+            apps/web/node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Generate Prisma client
-        run: pnpm --filter @enterprise-pos/api exec prisma generate
+        run: pnpm --filter @enterprise-pos/api prisma:generate
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/test
+
+      - name: Lint API (ESLint)
+        run: pnpm --filter @enterprise-pos/api lint
+
+      - name: Lint API (Prettier)
+        run: pnpm --filter @enterprise-pos/api exec prettier --check "src/**/*.ts"
+
+      - name: Lint Web (ESLint / Next.js)
+        run: pnpm --filter @enterprise-pos/web lint:check
+
+  # ─────────────────────────────────────────────────────────────
+  # TYPE CHECK
+  # ─────────────────────────────────────────────────────────────
+  type-check:
+    name: Type Check
+    runs-on: ubuntu-latest
+    needs: [setup]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Restore node_modules cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            node_modules
+            apps/api/node_modules
+            apps/web/node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Generate Prisma client
+        run: pnpm --filter @enterprise-pos/api prisma:generate
         env:
           DATABASE_URL: postgresql://test:test@localhost:5432/test
 
@@ -74,16 +144,21 @@ jobs:
       - name: Type check Web
         run: pnpm --filter @enterprise-pos/web type-check
 
-  # ── Unit Tests ───────────────────────────────
+  # ─────────────────────────────────────────────────────────────
+  # UNIT TESTS (Vitest — no real DB/Redis needed)
+  # ─────────────────────────────────────────────────────────────
   test:
     name: Tests
     runs-on: ubuntu-latest
+    needs: [setup]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -91,23 +166,31 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Restore node_modules cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            node_modules
+            apps/api/node_modules
+            apps/web/node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Generate Prisma client
-        run: pnpm --filter @enterprise-pos/api exec prisma generate
+        run: pnpm --filter @enterprise-pos/api prisma:generate
         env:
           DATABASE_URL: postgresql://test:test@localhost:5432/test
 
-      - name: Run tests
-        run: pnpm --filter @enterprise-pos/api test
+      - name: Run tests with coverage
+        run: pnpm --filter @enterprise-pos/api test:coverage
         env:
           NODE_ENV: test
+          # Auth secrets used in unit test mocks — no real services needed
           JWT_SECRET: ci-test-secret-that-is-at-least-32-characters-long
           REFRESH_TOKEN_SECRET: ci-test-refresh-secret-that-is-at-least-32-characters
           JWT_EXPIRES_IN: 15m
           REFRESH_TOKEN_EXPIRES_IN: 7d
           FRONTEND_URL: http://localhost:3000
+          # vitest.config.ts mocks out DB/Redis — these are fallback values only
           DATABASE_URL: postgresql://test:test@localhost:5432/test
           REDIS_URL: redis://localhost:6379
 
@@ -119,7 +202,9 @@ jobs:
           path: apps/api/coverage/
           retention-days: 14
 
-  # ── Build ────────────────────────────────────
+  # ─────────────────────────────────────────────────────────────
+  # BUILD (API + Web)
+  # ─────────────────────────────────────────────────────────────
   build:
     name: Build
     runs-on: ubuntu-latest
@@ -130,6 +215,8 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -137,25 +224,46 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Restore node_modules cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            node_modules
+            apps/api/node_modules
+            apps/web/node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Generate Prisma client
-        run: pnpm --filter @enterprise-pos/api exec prisma generate
+        run: pnpm --filter @enterprise-pos/api prisma:generate
         env:
           DATABASE_URL: postgresql://test:test@localhost:5432/test
 
       - name: Build API
         run: pnpm --filter @enterprise-pos/api build
 
-      - name: Upload build artifact
+      - name: Build Web
+        run: pnpm --filter @enterprise-pos/web build
+        env:
+          # Required by Next.js build — set to placeholder for CI artifact build
+          NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL || 'http://localhost:4000' }}
+
+      - name: Upload API build artifact
         uses: actions/upload-artifact@v4
         with:
           name: api-build
           path: apps/api/dist/
           retention-days: 7
 
-  # ── Docker Build & Push ──────────────────────
+      - name: Upload Web build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: apps/web/.next/
+          retention-days: 7
+
+  # ─────────────────────────────────────────────────────────────
+  # DOCKER BUILD & PUSH (main branch only)
+  # ─────────────────────────────────────────────────────────────
   docker:
     name: Docker Build & Push
     runs-on: ubuntu-latest
@@ -191,29 +299,25 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
-          # ✅ Context must be the REPO ROOT so the Dockerfile can access
-          #    the monorepo workspace files (pnpm-workspace.yaml, turbo.json, etc.)
           context: .
-          # ✅ Dockerfile lives at repo root, not inside apps/api
           file: Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          # ✅ GitHub Actions layer cache — dramatically speeds up rebuilds
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          # ✅ Build only the production target stage
           target: production
-          # ✅ Provenance & SBOM for supply-chain security
           provenance: true
           sbom: true
 
-  # ── Deploy to Staging ────────────────────────
+  # ─────────────────────────────────────────────────────────────
+  # DEPLOY — STAGING
+  # ─────────────────────────────────────────────────────────────
   deploy-staging:
     name: Deploy to Staging
     runs-on: ubuntu-latest
     needs: [docker]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && secrets.STAGING_HOST != ''
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     environment:
       name: staging
       url: ${{ vars.STAGING_URL }}
@@ -230,14 +334,16 @@ jobs:
             docker compose -f docker-compose.prod.yml pull api
             docker compose -f docker-compose.prod.yml up -d api
             docker image prune -f
-            echo "✅ Deployment to staging completed at $(date)"
+            echo "✅ Staging deployment completed at $(date)"
 
-  # ── Deploy to Production ─────────────────────
+  # ─────────────────────────────────────────────────────────────
+  # DEPLOY — PRODUCTION
+  # ─────────────────────────────────────────────────────────────
   deploy-production:
     name: Deploy to Production
     runs-on: ubuntu-latest
     needs: [deploy-staging]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && secrets.PRODUCTION_HOST != ''
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     environment:
       name: production
       url: ${{ vars.PRODUCTION_URL }}
@@ -254,4 +360,4 @@ jobs:
             docker compose -f docker-compose.prod.yml pull api
             docker compose -f docker-compose.prod.yml up -d api
             docker image prune -f
-            echo "✅ Deployment to production completed at $(date)"
+            echo "✅ Production deployment completed at $(date)"

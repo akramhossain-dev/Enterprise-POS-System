@@ -29,6 +29,7 @@ export const apiConfig = {
     categories: '/categories',
     brands: '/brands',
     units: '/units',
+    customers: '/customers',
   },
 } as const;
 

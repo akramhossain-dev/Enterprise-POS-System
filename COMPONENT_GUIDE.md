@@ -159,3 +159,168 @@ interface CategoryTreeProps {
   onArchive: (id: string) => void;
 }
 ```
+
+---
+
+## 3. Customer Management Components (Phase F5.1)
+
+### CustomerAvatar
+
+`src/components/customer/customer-avatar.tsx`
+
+Displays a customer's profile photo or a deterministic gradient-background initials fallback. Color is derived from the customer's name so it remains consistent.
+
+#### Props
+
+```typescript
+interface CustomerAvatarProps {
+  customer: Pick<Customer, 'fullName' | 'firstName' | 'lastName'> & { avatarUrl?: string | null };
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'; // Default: 'md'
+  className?: string;
+}
+```
+
+#### Example Usage
+
+```tsx
+import { CustomerAvatar } from '@/components/customer/customer-avatar';
+<CustomerAvatar customer={customer} size="lg" />;
+```
+
+---
+
+### CustomerStatusBadge
+
+`src/components/customer/customer-status-badge.tsx`
+
+Renders a coloured status badge for `ACTIVE`, `INACTIVE`, or `ARCHIVED` customer states.
+
+#### Props
+
+```typescript
+interface CustomerStatusBadgeProps {
+  status: CustomerStatus; // 'ACTIVE' | 'INACTIVE' | 'ARCHIVED'
+  className?: string;
+}
+```
+
+---
+
+### CustomerDueBadge
+
+`src/components/customer/customer-due-badge.tsx`
+
+Displays the customer's outstanding balance. Green for zero, amber for moderate amounts, red for high (>10,000).
+
+#### Props
+
+```typescript
+interface CustomerDueBadgeProps {
+  balance: string; // currentBalance as string from API
+  className?: string;
+}
+```
+
+---
+
+### CustomerCard
+
+`src/components/customer/customer-card.tsx`
+
+Compact card view showing avatar, name, customer code, contact info, due badge, and member since date. Suitable for grid layouts.
+
+#### Props
+
+```typescript
+interface CustomerCardProps {
+  customer: Customer;
+  className?: string;
+  onClick?: () => void;
+}
+```
+
+---
+
+### PaymentSummaryCard
+
+`src/components/customer/payment-summary-card.tsx`
+
+Four-metric card showing Total Purchase, Total Paid, Outstanding Due, and Credit Limit with a credit utilisation progress bar.
+
+#### Props
+
+```typescript
+interface PaymentSummaryCardProps {
+  totalPurchase?: number;
+  totalPaid?: number;
+  balance: string;
+  creditLimit: string;
+  className?: string;
+}
+```
+
+---
+
+### TransactionTimeline
+
+`src/components/customer/transaction-timeline.tsx`
+
+Vertical timeline of ledger entries. Each entry shows icon (per type), label, reference, amount with sign, and running balance. Includes an empty state.
+
+#### Props
+
+```typescript
+interface TransactionTimelineProps {
+  entries: CustomerLedgerEntry[];
+  className?: string;
+}
+```
+
+---
+
+### CustomerForm
+
+`src/components/customer/customer-form.tsx`
+
+Full React Hook Form + Zod form for creating or editing a customer. Auto-populates when a `customer` prop is provided. Sections: Basic Info, Contact Info, Account Settings, Profile Photo, Notes.
+
+#### Props
+
+```typescript
+interface CustomerFormProps {
+  customer?: Customer; // Pre-fill for edit mode
+  defaultValues?: Partial<CustomerFormSchema>;
+  onSubmit: (values: CustomerFormSchema) => void;
+  isPending?: boolean;
+  submitLabel?: string;
+  onCancel?: () => void;
+}
+```
+
+---
+
+### CustomerFormSkeleton
+
+`src/components/customer/customer-form-skeleton.tsx`
+
+Skeleton placeholder matching the CustomerForm section layout, used while fetching customer data for edit mode.
+
+---
+
+### CustomerProfileSkeleton
+
+`src/components/customer/customer-profile-skeleton.tsx`
+
+Skeleton placeholder for the full customer profile page — header, metrics, tabs, and timeline rows.
+
+---
+
+## Customer Pages (Phase F5.1)
+
+| Route                 | File                                           | Description                                                                |
+| --------------------- | ---------------------------------------------- | -------------------------------------------------------------------------- |
+| `/customers`          | `app/(dashboard)/customers/page.tsx`           | Enterprise DataTable with server pagination, search, filters, bulk actions |
+| `/customers/new`      | `app/(dashboard)/customers/new/page.tsx`       | Create customer form                                                       |
+| `/customers/:id`      | `app/(dashboard)/customers/[id]/page.tsx`      | Tabbed profile page (Overview, Transactions, Addresses, Notes)             |
+| `/customers/:id/edit` | `app/(dashboard)/customers/[id]/edit/page.tsx` | Edit customer form with pre-filled data                                    |
+| `/customers/archive`  | `app/(dashboard)/customers/archive/page.tsx`   | Archived customers with restore/delete                                     |
