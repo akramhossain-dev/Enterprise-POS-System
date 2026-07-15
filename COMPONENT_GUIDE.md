@@ -810,3 +810,34 @@ Interactive payment dialog listing due totals, cash tender helpers ($10 to $500)
 | `/pos/settings`      | `app/(pos)/pos/settings/page.tsx`      | Configurations for receipt roll dimensions, drawer escape signals, and defaults.        |
 | `/pos/held-orders`   | `app/(pos)/pos/held-orders/page.tsx`   | Lists orders placed on hold, showing customers list and resume triggers.                |
 | `/pos/recent-orders` | `app/(pos)/pos/recent-orders/page.tsx` | Compiles completed sales transactions and cash change logs.                             |
+
+---
+
+## Checkout & Receipt Components (Phase F8.2)
+
+### ReceiptViewer
+
+`apps/web/src/components/pos/receipt-viewer.tsx`
+Self-contained 58mm/80mm thermal receipt compiler and print engine. Focuses date, cashiers details, product summaries, split payments, and mock barcodes.
+
+### InvoiceViewer
+
+`apps/web/src/components/pos/invoice-viewer.tsx`
+A4 Invoice compiler providing corporate logo templates, company registration details, detailed itemized lists, and print actions.
+
+### CashDrawerCard
+
+`apps/web/src/components/pos/cash-drawer-card.tsx`
+Check-in Starting Float setup drawer card. Monitors float details, Cash-In/Out balances, and compiled shift registers logs.
+
+---
+
+## POS Page Routes (Phase F8.2)
+
+| Route               | File                                   | Description                                                                  |
+| ------------------- | -------------------------------------- | ---------------------------------------------------------------------------- |
+| `/pos/payments`     | `app/(pos)/pos/payments/page.tsx`      | Logs completed checkouts, paid amounts, payment splits, and cashier details. |
+| `/pos/receipts`     | `app/(pos)/pos/receipts/page.tsx`      | Receipt copies index log with one-click reprint options.                     |
+| `/pos/cash-drawer`  | `app/(pos)/pos/cash-drawer/page.tsx`   | Cashier shift session balance checks and drawer transactions log.            |
+| `/pos/receipts/:id` | `app/(pos)/pos/receipts/[id]/page.tsx` | Dynamic ticket previewer supporting 58mm/80mm width specs.                   |
+| `/pos/invoices/:id` | `app/(pos)/pos/invoices/[id]/page.tsx` | Dynamic A4 Invoice previewer with printing setups.                           |

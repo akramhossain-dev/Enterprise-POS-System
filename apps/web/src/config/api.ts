@@ -55,6 +55,13 @@ export const apiConfig = {
     purchaseReturns: '/purchase-returns',
     supplierCreditNotes: '/supplier-credit-notes',
     supplierDebitNotes: '/supplier-debit-notes',
+    pos: {
+      checkout: '/pos/checkout',
+      payments: '/pos/payments',
+      receipts: '/pos/receipts',
+      invoices: '/pos/invoices',
+      cashDrawer: '/pos/cash-drawer',
+    },
   },
 } as const;
 

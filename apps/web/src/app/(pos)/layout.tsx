@@ -18,6 +18,9 @@ import {
   User,
   FolderHeart,
   FileText,
+  DollarSign,
+  Printer,
+  Coins,
 } from 'lucide-react';
 import { useAuthStore } from '@/stores/auth.store';
 import { usePOSStore } from '@/stores/pos.store';
@@ -225,6 +228,51 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
               title="Recent Completed Sales"
             >
               <FileText className="h-4.5 w-4.5" />
+            </Button>
+          </Link>
+
+          {/* Payment History link */}
+          <Link href="/pos/payments">
+            <Button
+              variant="ghost"
+              size="icon"
+              className={cn(
+                'text-slate-400 hover:text-slate-100 hover:bg-slate-800 h-8 w-8 rounded-full',
+                pathname === '/pos/payments' && 'bg-slate-800 text-emerald-400',
+              )}
+              title="Payments Ledger Log"
+            >
+              <DollarSign className="h-4.5 w-4.5" />
+            </Button>
+          </Link>
+
+          {/* Receipt Reprint Registry link */}
+          <Link href="/pos/receipts">
+            <Button
+              variant="ghost"
+              size="icon"
+              className={cn(
+                'text-slate-400 hover:text-slate-100 hover:bg-slate-800 h-8 w-8 rounded-full',
+                pathname === '/pos/receipts' && 'bg-slate-800 text-emerald-400',
+              )}
+              title="Receipt Reprint Registry"
+            >
+              <Printer className="h-4.5 w-4.5" />
+            </Button>
+          </Link>
+
+          {/* Cash Drawer Shift link */}
+          <Link href="/pos/cash-drawer">
+            <Button
+              variant="ghost"
+              size="icon"
+              className={cn(
+                'text-slate-400 hover:text-slate-100 hover:bg-slate-800 h-8 w-8 rounded-full',
+                pathname === '/pos/cash-drawer' && 'bg-slate-800 text-emerald-400',
+              )}
+              title="Cash Drawer Shifts"
+            >
+              <Coins className="h-4.5 w-4.5" />
             </Button>
           </Link>
 
