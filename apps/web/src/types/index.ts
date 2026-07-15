@@ -17,3 +17,4 @@ export * from './goods-receive';
 export * from './purchase-return';
 export * from './pos';
 export * from './checkout';
+export * from './sales-return';

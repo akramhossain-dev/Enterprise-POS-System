@@ -61,6 +61,10 @@ export const apiConfig = {
       receipts: '/pos/receipts',
       invoices: '/pos/invoices',
       cashDrawer: '/pos/cash-drawer',
+      returns: '/pos/returns',
+      refunds: '/pos/refunds',
+      exchanges: '/pos/exchanges',
+      orders: '/pos/orders',
     },
   },
 } as const;

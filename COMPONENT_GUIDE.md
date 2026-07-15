@@ -841,3 +841,36 @@ Check-in Starting Float setup drawer card. Monitors float details, Cash-In/Out b
 | `/pos/cash-drawer`  | `app/(pos)/pos/cash-drawer/page.tsx`   | Cashier shift session balance checks and drawer transactions log.            |
 | `/pos/receipts/:id` | `app/(pos)/pos/receipts/[id]/page.tsx` | Dynamic ticket previewer supporting 58mm/80mm width specs.                   |
 | `/pos/invoices/:id` | `app/(pos)/pos/invoices/[id]/page.tsx` | Dynamic A4 Invoice previewer with printing setups.                           |
+
+---
+
+## Sales Return & History Components (Phase F8.3)
+
+### ReturnCard
+
+`apps/web/src/components/pos/return-card.tsx`
+Renders sales return summaries including return values, refund payment modes, date entries, and review status.
+
+### ApprovalTimeline
+
+`apps/web/src/components/pos/approval-timeline.tsx`
+Renders returns pipeline nodes tracking progress: Draft -> Submitted -> Approved -> Cash Refund Settle.
+
+### OrderTimeline
+
+`apps/web/src/components/pos/order-timeline.tsx`
+Traces cashier order lifecycle nodes: Placed -> Paid -> Returns Check -> Complete/Void.
+
+---
+
+## POS Page Routes (Phase F8.3)
+
+| Route                    | File                                       | Description                                                                               |
+| ------------------------ | ------------------------------------------ | ----------------------------------------------------------------------------------------- |
+| `/pos/orders`            | `app/(pos)/pos/orders/page.tsx`            | Logs completed checkout orders with status filters (Paid, Voided, Returned).              |
+| `/pos/orders/:id`        | `app/(pos)/pos/orders/[id]/page.tsx`       | Displays item lists, order summary details, print triggers, and supervisor void overlays. |
+| `/pos/returns`           | `app/(pos)/pos/returns/page.tsx`           | Claims directory displaying active return statuses and supervisor decision buttons.       |
+| `/pos/returns/dashboard` | `app/(pos)/pos/returns/dashboard/page.tsx` | Visual indicators detailing monthly returns count, defective stats, and upsells.          |
+| `/pos/returns/new`       | `app/(pos)/pos/returns/new/page.tsx`       | React Hook Form and Zod return creation page supporting partial swaps and exchanges.      |
+| `/pos/returns/:id`       | `app/(pos)/pos/returns/[id]/page.tsx`      | Displays goods returned, condition indicators, reasons, and cash refund approvals.        |
+| `/pos/refunds`           | `app/(pos)/pos/refunds/page.tsx`           | Chronological cash reversal registry listing settlement statuses.                         |

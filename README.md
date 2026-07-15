@@ -2,7 +2,7 @@
 
 > Production-grade retail management platform built with Fastify, Next.js, PostgreSQL, and Redis.
 
-**Current Status:** Phase B1 — Backend Foundation ✅ | Phase F1 — Frontend Foundation ✅ | Phase F2 — Auth & User Management UI ✅ | Phase F3 — Dashboard Layout & Admin Workspace ✅ | Phase F4.1 — Product Management UI ✅ | Phase F4.2 — Category, Brand & Unit Management UI ✅ | Phase F5.1 — Customer Management UI ✅ | Phase F5.2 — Supplier Management UI ✅ | Phase F5.3 — Administration & RBAC UI ✅ | Phase F6.1 — Warehouse & Branch Management UI ✅ | Phase F6.2 — Inventory & Stock Management UI ✅ | Phase F6.3 — Stock Adjustment & Stock Transfer Management UI ✅ | Phase F7.1 — Purchase Requisition & Purchase Order UI ✅ | Phase F7.2 — Goods Receive (GRN), Supplier Invoice & Purchase Receiving UI ✅ | Phase F7.3 — Purchase Return, Supplier Credit Note & Debit Note Management UI ✅ | **Phase F8.1 — Enterprise POS Terminal UI ✅**
+**Current Status:** Phase B1 — Backend Foundation ✅ | Phase F1 — Frontend Foundation ✅ | Phase F2 — Auth & User Management UI ✅ | Phase F3 — Dashboard Layout & Admin Workspace ✅ | Phase F4.1 — Product Management UI ✅ | Phase F4.2 — Category, Brand & Unit Management UI ✅ | Phase F5.1 — Customer Management UI ✅ | Phase F5.2 — Supplier Management UI ✅ | Phase F5.3 — Administration & RBAC UI ✅ | Phase F6.1 — Warehouse & Branch Management UI ✅ | Phase F6.2 — Inventory & Stock Management UI ✅ | Phase F6.3 — Stock Adjustment & Stock Transfer Management UI ✅ | Phase F7.1 — Purchase Requisition & Purchase Order UI ✅ | Phase F7.2 — Goods Receive (GRN), Supplier Invoice & Purchase Receiving UI ✅ | Phase F7.3 — Purchase Return, Supplier Credit Note & Debit Note Management UI ✅ | Phase F8.1 — Enterprise POS Terminal UI ✅ | Phase F8.2 — Checkout, Payment & Receipt Management UI ✅ | **Phase F8.3 — Sales Return, Refund & Order History Management UI ✅**
 
 ---
 
@@ -12,7 +12,7 @@ Enterprise POS System is a comprehensive retail management solution supporting:
 
 | Module                    | Status                    |
 | ------------------------- | ------------------------- |
-| Point of Sale (POS)       | **Complete (Phase F8.1)** |
+| Point of Sale (POS)       | **Complete (Phase F8.3)** |
 | Inventory Management      | **Complete (Phase F6.3)** |
 | Purchase Management       | **Complete (Phase F7.3)** |
 | Customer Management       | **Complete (Phase F5.1)** |

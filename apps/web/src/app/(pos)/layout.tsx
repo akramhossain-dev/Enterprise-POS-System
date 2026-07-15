@@ -21,6 +21,8 @@ import {
   DollarSign,
   Printer,
   Coins,
+  RefreshCw,
+  History,
 } from 'lucide-react';
 import { useAuthStore } from '@/stores/auth.store';
 import { usePOSStore } from '@/stores/pos.store';
@@ -217,17 +219,48 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
           </Link>
 
           {/* Recent Orders link */}
-          <Link href="/pos/recent-orders">
+          {/* Orders History link */}
+          <Link href="/pos/orders">
             <Button
               variant="ghost"
               size="icon"
               className={cn(
                 'text-slate-400 hover:text-slate-100 hover:bg-slate-800 h-8 w-8 rounded-full',
-                pathname === '/pos/recent-orders' && 'bg-slate-800 text-emerald-400',
+                pathname === '/pos/orders' && 'bg-slate-800 text-emerald-400',
               )}
-              title="Recent Completed Sales"
+              title="Order History Archive"
             >
-              <FileText className="h-4.5 w-4.5" />
+              <History className="h-4.5 w-4.5" />
+            </Button>
+          </Link>
+
+          {/* Sales Returns Directory link */}
+          <Link href="/pos/returns">
+            <Button
+              variant="ghost"
+              size="icon"
+              className={cn(
+                'text-slate-400 hover:text-slate-100 hover:bg-slate-800 h-8 w-8 rounded-full',
+                pathname === '/pos/returns' && 'bg-slate-800 text-emerald-400',
+              )}
+              title="Sales Return Claims"
+            >
+              <RefreshCw className="h-4.5 w-4.5" />
+            </Button>
+          </Link>
+
+          {/* Refund Settlements link */}
+          <Link href="/pos/refunds">
+            <Button
+              variant="ghost"
+              size="icon"
+              className={cn(
+                'text-slate-400 hover:text-slate-100 hover:bg-slate-800 h-8 w-8 rounded-full',
+                pathname === '/pos/refunds' && 'bg-slate-800 text-emerald-400',
+              )}
+              title="Refund Settlements Log"
+            >
+              <Coins className="h-4.5 w-4.5" />
             </Button>
           </Link>
 
