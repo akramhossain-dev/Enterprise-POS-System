@@ -26,6 +26,7 @@ import {
   ClipboardCheck,
   AlertOctagon,
   FileText,
+  Scale,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -177,6 +178,27 @@ export const navigationConfig: NavSection[] = [
             href: '/purchase/orders',
             icon: Truck,
             permission: 'purchase:view',
+          },
+          {
+            id: 'purchase-receive',
+            label: 'Goods Receive (GRN)',
+            href: '/purchase/receive',
+            icon: Truck,
+            permission: 'purchase.receive.view',
+          },
+          {
+            id: 'purchase-invoices',
+            label: 'Supplier Invoices',
+            href: '/purchase/invoices',
+            icon: FileText,
+            permission: 'supplier.invoice.view',
+          },
+          {
+            id: 'purchase-matching',
+            label: 'Invoice Matching',
+            href: '/purchase/matching',
+            icon: Scale,
+            permission: 'supplier.invoice.view',
           },
         ],
       },

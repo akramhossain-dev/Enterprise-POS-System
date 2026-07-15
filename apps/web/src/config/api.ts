@@ -50,6 +50,8 @@ export const apiConfig = {
     stockTakes: '/stock-takes',
     reconciliation: '/reconciliation',
     purchaseOrders: '/purchase-orders',
+    goodsReceive: '/goods-receive',
+    supplierInvoices: '/supplier-invoices',
   },
 } as const;
 

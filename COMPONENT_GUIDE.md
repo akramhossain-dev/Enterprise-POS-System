@@ -653,3 +653,56 @@ interface ApprovalBadgeProps {
 | `/inventory/cycle-count`     | `app/(dashboard)/inventory/cycle-count/page.tsx`      | Active audit sessions directory supporting new session initiation dialogs                 |
 | `/inventory/cycle-count/:id` | `app/(dashboard)/inventory/cycle-count/[id]/page.tsx` | Physical Stock Verification sheet supporting inline edits and reconciliation workflows    |
 | `/inventory/damage-loss`     | `app/(dashboard)/inventory/damage-loss/page.tsx`      | Discrepancies oversight panel displaying breakage/loss writeoffs and inline logging forms |
+
+---
+
+## 5. Purchase Management Components (Phase F7.1)
+
+### RequisitionForm
+
+`apps/web/src/components/purchase/requisition-form.tsx`
+Handles purchase requisition generation, details, item line updates, department selections, and status approvals.
+
+### PurchaseOrderForm
+
+`apps/web/src/components/purchase/purchase-order-form.tsx`
+Configures purchase orders from approved requisitions, matching suppliers, unit pricing, taxes, shipping terms, and payment types.
+
+---
+
+## 6. Goods Receive & Supplier Invoice Components (Phase F7.2)
+
+### GrnCard
+
+`apps/web/src/components/receive/grn-card.tsx`
+KPI dashboard indicator showing total receipts, draft files, and total intake valuation.
+
+### ReceivingTimeline
+
+`apps/web/src/components/receive/receiving-timeline.tsx`
+Tracks step-by-step receiving operations: PO Placed -> Goods Received (GRN Draft) -> Inbound Committed -> Supplier Invoice Audited -> 3-Way Match Verified/Discrepancy Mismatch.
+
+### BatchSelector
+
+`apps/web/src/components/receive/batch-selector.tsx`
+Inline row input providing batch number entries, manufacturing dates, and expiry date configs.
+
+### SerialSelector
+
+`apps/web/src/components/receive/serial-selector.tsx`
+Modal picker listing asset serial codes, checking length constraints against received quantities.
+
+### InvoiceCard
+
+`apps/web/src/components/receive/invoice-card.tsx`
+Detailed dashboard widget parsing vendor invoice subtotal, tax, discount, and grand total.
+
+### VarianceBadge
+
+`apps/web/src/components/receive/variance-badge.tsx`
+Visual tag representing pricing and quantity deviations, indicating active exceptions.
+
+### ReceivingSummaryCard
+
+`apps/web/src/components/receive/receiving-summary-card.tsx`
+Dashboard reconciliation banner outlining discrepancy counts and variance valuations.
