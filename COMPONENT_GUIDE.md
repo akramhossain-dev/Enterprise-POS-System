@@ -874,3 +874,37 @@ Traces cashier order lifecycle nodes: Placed -> Paid -> Returns Check -> Complet
 | `/pos/returns/new`       | `app/(pos)/pos/returns/new/page.tsx`       | React Hook Form and Zod return creation page supporting partial swaps and exchanges.      |
 | `/pos/returns/:id`       | `app/(pos)/pos/returns/[id]/page.tsx`      | Displays goods returned, condition indicators, reasons, and cash refund approvals.        |
 | `/pos/refunds`           | `app/(pos)/pos/refunds/page.tsx`           | Chronological cash reversal registry listing settlement statuses.                         |
+
+---
+
+## Accounting & Finance Components (Phase F9.1)
+
+### FinancialSummaryCard
+
+`apps/web/src/components/accounting/financial-summary-card.tsx`
+Renders corporate accounting financial summary metrics with percentage variances and icon tags.
+
+### AccountTree
+
+`apps/web/src/components/accounting/account-tree.tsx`
+Recursive, collapsible parent-child hierarchy visualizer with indentation grids.
+
+### BalanceBadge
+
+`apps/web/src/components/accounting/balance-badge.tsx`
+Render badges matching balance types (Debit/Credit) and account status flags.
+
+---
+
+## Accounting Page Routes (Phase F9.1)
+
+| Route                           | File                                                     | Description                                                                              |
+| ------------------------------- | -------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `/accounting`                   | `app/(dashboard)/accounting/page.tsx`                    | Accounting dashboard outlining assets, liabilities, income, expenses, and profit ratios. |
+| `/accounting/accounts`          | `app/(dashboard)/accounting/accounts/page.tsx`           | Chart of accounts listing, featuring tree-hierarchies and tables.                        |
+| `/accounting/accounts/new`      | `app/(dashboard)/accounting/accounts/new/page.tsx`       | Zod-validated creation form supporting parent linkages and opening float entries.        |
+| `/accounting/accounts/:id`      | `app/(dashboard)/accounting/accounts/[id]/page.tsx`      | Account details audit and description overview details page.                             |
+| `/accounting/accounts/:id/edit` | `app/(dashboard)/accounting/accounts/[id]/edit/page.tsx` | Form screen allowing updates to account codes, types, and parent nodes.                  |
+| `/accounting/accounts/archived` | `app/(dashboard)/accounting/accounts/archived/page.tsx`  | Registry containing archived accounts with restore utilities.                            |
+| `/accounting/groups`            | `app/(dashboard)/accounting/groups/page.tsx`             | CRUD operations manager to cluster ledger groups.                                        |
+| `/accounting/categories`        | `app/(dashboard)/accounting/categories/page.tsx`         | CRUD operations manager to sub-classify group accounts.                                  |

@@ -66,6 +66,12 @@ export const apiConfig = {
       exchanges: '/pos/exchanges',
       orders: '/pos/orders',
     },
+    accounting: {
+      dashboard: '/accounting/dashboard',
+      accounts: '/accounting/accounts',
+      groups: '/accounting/groups',
+      categories: '/accounting/categories',
+    },
   },
 } as const;
 
