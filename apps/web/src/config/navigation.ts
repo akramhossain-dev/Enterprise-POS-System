@@ -76,9 +76,16 @@ export const navigationConfig: NavSection[] = [
       },
       {
         id: 'inventory',
-        label: 'Inventory',
-        href: '/products',
+        label: 'Inventory & Stock',
+        href: '/inventory',
         icon: Package,
+        permission: 'inventory:view',
+      },
+      {
+        id: 'products',
+        label: 'Products Catalog',
+        href: '/products',
+        icon: Tag,
         permission: 'inventory:view',
       },
       {

@@ -40,6 +40,11 @@ export const apiConfig = {
     warehouses: '/warehouses',
     branches: '/branches',
     storageLocations: '/storage-locations',
+    inventory: '/inventory',
+    batches: '/batches',
+    serials: '/serials',
+    inventoryLedger: '/inventory-ledger',
+    stockAlerts: '/stock-alerts',
   },
 } as const;
 

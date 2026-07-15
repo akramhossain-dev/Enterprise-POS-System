@@ -457,3 +457,101 @@ Premium color-coded utilization gauge: green (<70%), yellow (70-90%), and red (â
 | `/branches/:id`        | `app/(dashboard)/branches/[id]/page.tsx`        | Branch profiles with tabs for assigned staff and linked depots                        |
 | `/branches/:id/edit`   | `app/(dashboard)/branches/[id]/edit/page.tsx`   | Edit form updating storefront name, contacts, and opening date                        |
 | `/storage-locations`   | `app/(dashboard)/storage-locations/page.tsx`    | Central storage bins catalog supporting search by barcode, rack level, and zone       |
+
+---
+
+## 5. Inventory & Stock Management Components (Phase F6.2)
+
+### StockStatusBadge
+
+`src/components/inventory/stock-status-badge.tsx`
+
+The `StockStatusBadge` renders the safety stock level status badge with indicator colors (emerald for safe, amber for low stock alert, and rose for depleted items).
+
+#### Props
+
+```typescript
+interface StockStatusBadgeProps {
+  status?: 'IN_STOCK' | 'LOW_STOCK' | 'OUT_OF_STOCK' | 'ALL';
+  availableQuantity?: number;
+  minimumQuantity?: number;
+  className?: string;
+}
+```
+
+---
+
+### ExpiryBadge
+
+`src/components/inventory/expiry-badge.tsx`
+
+Performs client-side date computations on product batch shelf life, highlighting remaining days or showing expired alerts.
+
+#### Props
+
+```typescript
+interface ExpiryBadgeProps {
+  expiryDate?: string | Date | null;
+  className?: string;
+}
+```
+
+---
+
+### InventoryCard
+
+`src/components/inventory/inventory-card.tsx`
+
+Vibrant KPI widget showing card metrics (e.g. Valuation, low stock counts, alert vectors) with zoom animations and trend signals.
+
+#### Props
+
+```typescript
+interface InventoryCardProps {
+  title: string;
+  value: string | number;
+  description?: string;
+  icon: any;
+  trend?: {
+    value: number;
+    isPositive: boolean;
+    label?: string;
+  };
+  className?: string;
+  variant?: 'default' | 'primary' | 'success' | 'warning' | 'danger' | 'info';
+}
+```
+
+---
+
+### StockTimeline
+
+`src/components/inventory/stock-timeline.tsx`
+
+Renders historic inventory movement transactions (opening stock, purchase inflows, sale depletions, transfers, adjustments) in a vertical responsive timeline.
+
+#### Props
+
+```typescript
+interface StockTimelineProps {
+  movements: StockMovement[] | InventoryLedger[];
+  loading?: boolean;
+}
+```
+
+---
+
+## Inventory & Stock Management Pages (Phase F6.2)
+
+| Route                     | File                                              | Description                                                                           |
+| ------------------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `/inventory`              | `app/(dashboard)/inventory/page.tsx`              | Central dashboard showing stock metrics, warehouse bar chart, and activity logs       |
+| `/inventory/stock`        | `app/(dashboard)/inventory/stock/page.tsx`        | Master stock directory featuring filterable datatables and threshold update modals    |
+| `/inventory/:id`          | `app/(dashboard)/inventory/[id]/page.tsx`         | In-depth inventory details (Valuation card, history ledger, batch list, serial lists) |
+| `/inventory/low-stock`    | `app/(dashboard)/inventory/low-stock/page.tsx`    | Watchlist showing items currently running below safety stock minimums                 |
+| `/inventory/out-of-stock` | `app/(dashboard)/inventory/out-of-stock/page.tsx` | Depletion panel indicating items completely sold out with replenishment badges        |
+| `/inventory/expiring`     | `app/(dashboard)/inventory/expiring/page.tsx`     | Perishable batch listing sorted by expiry timelines                                   |
+| `/inventory/batches`      | `app/(dashboard)/inventory/batches/page.tsx`      | Batch oversight dashboard supporting custom quarantine locks and expiry validations   |
+| `/inventory/serials`      | `app/(dashboard)/inventory/serials/page.tsx`      | Serial numbers catalog supporting single and bulk registrations                       |
+| `/inventory/history`      | `app/(dashboard)/inventory/history/page.tsx`      | Searchable and filterable transaction log table + vertical timeline views             |
+| `/inventory/archived`     | `app/(dashboard)/inventory/archived/page.tsx`     | Searchable discontinued products catalog and decommissioned warehouses                |
