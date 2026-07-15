@@ -49,6 +49,7 @@ export const apiConfig = {
     stockTransfers: '/stock-transfers',
     stockTakes: '/stock-takes',
     reconciliation: '/reconciliation',
+    purchaseOrders: '/purchase-orders',
   },
 } as const;
 

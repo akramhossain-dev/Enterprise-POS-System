@@ -25,6 +25,7 @@ import {
   ArrowLeftRight,
   ClipboardCheck,
   AlertOctagon,
+  FileText,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -155,6 +156,29 @@ export const navigationConfig: NavSection[] = [
         href: '/purchase',
         icon: Truck,
         permission: 'purchase:view',
+        children: [
+          {
+            id: 'purchase-dashboard',
+            label: 'Dashboard',
+            href: '/purchase',
+            icon: LayoutDashboard,
+            permission: 'purchase:view',
+          },
+          {
+            id: 'purchase-requisitions',
+            label: 'Requisitions',
+            href: '/purchase/requisitions',
+            icon: FileText,
+            permission: 'purchase:view',
+          },
+          {
+            id: 'purchase-orders',
+            label: 'Purchase Orders',
+            href: '/purchase/orders',
+            icon: Truck,
+            permission: 'purchase:view',
+          },
+        ],
       },
     ],
   },

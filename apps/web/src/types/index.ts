@@ -12,3 +12,4 @@ export * from './admin-user';
 export * from './role';
 export * from './warehouse';
 export * from './inventory';
+export * from './purchase';
