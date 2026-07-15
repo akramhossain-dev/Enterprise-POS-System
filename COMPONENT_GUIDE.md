@@ -760,3 +760,53 @@ Details subtotal return values, estimated tax adjustments, global discount deduc
 | `/purchase/returns/:id/edit`  | `app/(dashboard)/purchase/returns/[id]/edit/page.tsx` | Claim edit screen allowing operators to update details for returns in DRAFT status.               |
 | `/purchase/credit-notes`      | `app/(dashboard)/purchase/credit-notes/page.tsx`      | Directory displaying all supplier credit note records and print-ready options.                    |
 | `/purchase/debit-notes`       | `app/(dashboard)/purchase/debit-notes/page.tsx`       | Directory listing supplier debit invoice adjustments and charge-back balances.                    |
+
+---
+
+## Point of Sale Components (Phase F8.1)
+
+### CustomerSelector
+
+`apps/web/src/components/pos/customer-selector.tsx`
+Self-contained customer search combobox linked to customer API. Displays loyalty points, credit limit, and current balances dynamically.
+
+### ProductCard
+
+`apps/web/src/components/pos/product-card.tsx`
+Displays product images, SKU, barcode, unit price, stock count indicators, and discount flags. Supports Grid and List views.
+
+### ProductBrowser
+
+`apps/web/src/components/pos/product-browser.tsx`
+Product browser displaying category ribbons, brand selectors, only-in-stock switches, search inputs, and layout view options.
+
+### ShoppingCart
+
+`apps/web/src/components/pos/shopping-cart.tsx`
+Cashier workspace listing items in cart, quantity increment/decrement toggles, inline note editors, and item discounts inputs.
+
+### OrderSummaryPanel
+
+`apps/web/src/components/pos/order-summary-panel.tsx`
+Computes subtotal, tax rate, global discounts, and grand totals. Embeds calculator widgets and checkout overlays.
+
+### CalculatorModal
+
+`apps/web/src/components/pos/calculator-modal.tsx`
+Cashier calculator overlay with numeric keypads supporting numeric entries and keyboard overrides.
+
+### CheckoutModal
+
+`apps/web/src/components/pos/checkout-modal.tsx`
+Interactive payment dialog listing due totals, cash tender helpers ($10 to $500), payment methods, and change due calculations.
+
+---
+
+## POS Page Routes (Phase F8.1)
+
+| Route                | File                                   | Description                                                                             |
+| -------------------- | -------------------------------------- | --------------------------------------------------------------------------------------- |
+| `/pos`               | `app/(pos)/pos/page.tsx`               | Cashier workspace containing catalog lists, shopping cart panels, and scanner handlers. |
+| `/pos/settings`      | `app/(pos)/pos/settings/page.tsx`      | Configurations for receipt roll dimensions, drawer escape signals, and defaults.        |
+| `/pos/held-orders`   | `app/(pos)/pos/held-orders/page.tsx`   | Lists orders placed on hold, showing customers list and resume triggers.                |
+| `/pos/recent-orders` | `app/(pos)/pos/recent-orders/page.tsx` | Compiles completed sales transactions and cash change logs.                             |
