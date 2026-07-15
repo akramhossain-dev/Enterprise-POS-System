@@ -2,7 +2,7 @@
 
 > Production-grade retail management platform built with Fastify, Next.js, PostgreSQL, and Redis.
 
-**Current Status:** Phase B1 — Backend Foundation ✅ | Phase F1 — Frontend Foundation ✅ | Phase F2 — Auth & User Management UI ✅ | Phase F3 — Dashboard Layout & Admin Workspace ✅ | Phase F4.1 — Product Management UI ✅ | Phase F4.2 — Category, Brand & Unit Management UI ✅ | Phase F5.1 — Customer Management UI ✅ | Phase F5.2 — Supplier Management UI ✅ | Phase F5.3 — Administration & RBAC UI ✅ | Phase F6.1 — Warehouse & Branch Management UI ✅ | **Phase F6.2 — Inventory & Stock Management UI ✅**
+**Current Status:** Phase B1 — Backend Foundation ✅ | Phase F1 — Frontend Foundation ✅ | Phase F2 — Auth & User Management UI ✅ | Phase F3 — Dashboard Layout & Admin Workspace ✅ | Phase F4.1 — Product Management UI ✅ | Phase F4.2 — Category, Brand & Unit Management UI ✅ | Phase F5.1 — Customer Management UI ✅ | Phase F5.2 — Supplier Management UI ✅ | Phase F5.3 — Administration & RBAC UI ✅ | Phase F6.1 — Warehouse & Branch Management UI ✅ | Phase F6.2 — Inventory & Stock Management UI ✅ | **Phase F6.3 — Stock Adjustment & Stock Transfer Management UI ✅**
 
 ---
 
@@ -13,7 +13,7 @@ Enterprise POS System is a comprehensive retail management solution supporting:
 | Module                    | Status                    |
 | ------------------------- | ------------------------- |
 | Point of Sale (POS)       | Planned (Phase B8)        |
-| Inventory Management      | **Complete (Phase F6.2)** |
+| Inventory Management      | **Complete (Phase F6.3)** |
 | Purchase Management       | Planned (Phase B7)        |
 | Customer Management       | **Complete (Phase F5.1)** |
 | Supplier Management       | **Complete (Phase F5.2)** |

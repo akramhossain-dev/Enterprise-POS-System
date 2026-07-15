@@ -555,3 +555,101 @@ interface StockTimelineProps {
 | `/inventory/serials`      | `app/(dashboard)/inventory/serials/page.tsx`      | Serial numbers catalog supporting single and bulk registrations                       |
 | `/inventory/history`      | `app/(dashboard)/inventory/history/page.tsx`      | Searchable and filterable transaction log table + vertical timeline views             |
 | `/inventory/archived`     | `app/(dashboard)/inventory/archived/page.tsx`     | Searchable discontinued products catalog and decommissioned warehouses                |
+
+---
+
+## 6. Stock Adjustment & Stock Transfer Components (Phase F6.3)
+
+### WarehouseSelector
+
+`src/components/operations/warehouse-selector.tsx`
+
+Dropdown menu component used to select active warehouse depots. Supports excluding a specific warehouse ID to avoid matching source and destination fields in stock transfer routines.
+
+#### Props
+
+```typescript
+interface WarehouseSelectorProps {
+  value: string;
+  onChange: (id: string) => void;
+  excludeId?: string;
+  placeholder?: string;
+  className?: string;
+  error?: string;
+}
+```
+
+---
+
+### ProductSelector
+
+`src/components/operations/product-selector.tsx`
+
+Searchable autocomplete dropdown for choosing catalog items. If `warehouseId` is provided, limits selections to products currently in stock at that specific facility.
+
+#### Props
+
+```typescript
+interface ProductSelectorProps {
+  warehouseId?: string;
+  onSelect: (product: {
+    id: string;
+    name: string;
+    sku?: string | null;
+    availableQuantity?: number;
+  }) => void;
+  excludeIds?: string[];
+  placeholder?: string;
+}
+```
+
+---
+
+### DifferenceIndicator
+
+`src/components/operations/difference-indicator.tsx`
+
+Quantified delta display mapping count discrepancies. Highlights positive inventory surplus in green and inventory shrinkage losses in red.
+
+#### Props
+
+```typescript
+interface DifferenceIndicatorProps {
+  systemQuantity: number;
+  physicalQuantity: number | null;
+  className?: string;
+}
+```
+
+---
+
+### ApprovalBadge
+
+`src/components/operations/approval-badge.tsx`
+
+Badge component visualizing current states of transfers, reconciliations, and count sessions (Draft, Pending, Approved, Completed, Rejected, Cancelled, In Transit).
+
+#### Props
+
+```typescript
+interface ApprovalBadgeProps {
+  status: string;
+  className?: string;
+}
+```
+
+---
+
+## Stock Adjustment & Stock Transfer Pages (Phase F6.3)
+
+| Route                        | File                                                  | Description                                                                               |
+| ---------------------------- | ----------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `/inventory/adjustments`     | `app/(dashboard)/inventory/adjustments/page.tsx`      | Adjustment registry directory listing all manual adjustments and delta values             |
+| `/inventory/adjustments/new` | `app/(dashboard)/inventory/adjustments/new/page.tsx`  | Zod-validated creation form supporting increase/decrease toggles and reason select lists  |
+| `/inventory/adjustments/:id` | `app/(dashboard)/inventory/adjustments/[id]/page.tsx` | Detailed stock adjustment audit report including impact evaluations                       |
+| `/inventory/transfers`       | `app/(dashboard)/inventory/transfers/page.tsx`        | Transit registry directory displaying transfer requests with bulk approval tools          |
+| `/inventory/transfers/new`   | `app/(dashboard)/inventory/transfers/new/page.tsx`    | Creation wizard with line items table, source stock limits, and duplicate-depot guards    |
+| `/inventory/transfers/:id`   | `app/(dashboard)/inventory/transfers/[id]/page.tsx`   | Timeline and control panels to approve/reject requests or log incoming cargo completion   |
+| `/inventory/cycle-count`     | `app/(dashboard)/inventory/cycle-count/page.tsx`      | Active audit sessions directory supporting new session initiation dialogs                 |
+| `/inventory/cycle-count/:id` | `app/(dashboard)/inventory/cycle-count/[id]/page.tsx` | Physical Stock Verification sheet supporting inline edits and reconciliation workflows    |
+| `/inventory/damage-loss`     | `app/(dashboard)/inventory/damage-loss/page.tsx`      | Discrepancies oversight panel displaying breakage/loss writeoffs and inline logging forms |

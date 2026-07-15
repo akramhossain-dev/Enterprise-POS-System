@@ -21,6 +21,10 @@ import {
   Warehouse,
   Store,
   LayoutGrid,
+  Sliders,
+  ArrowLeftRight,
+  ClipboardCheck,
+  AlertOctagon,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -80,6 +84,42 @@ export const navigationConfig: NavSection[] = [
         href: '/inventory',
         icon: Package,
         permission: 'inventory:view',
+        children: [
+          {
+            id: 'inventory-dashboard',
+            label: 'Dashboard',
+            href: '/inventory',
+            icon: LayoutDashboard,
+          },
+          {
+            id: 'stock-adjustments',
+            label: 'Stock Adjustments',
+            href: '/inventory/adjustments',
+            icon: Sliders,
+            permission: 'stock.view',
+          },
+          {
+            id: 'stock-transfers',
+            label: 'Stock Transfers',
+            href: '/inventory/transfers',
+            icon: ArrowLeftRight,
+            permission: 'stock.view',
+          },
+          {
+            id: 'cycle-count',
+            label: 'Cycle Count',
+            href: '/inventory/cycle-count',
+            icon: ClipboardCheck,
+            permission: 'inventory.stocktake',
+          },
+          {
+            id: 'damage-loss',
+            label: 'Damage & Loss',
+            href: '/inventory/damage-loss',
+            icon: AlertOctagon,
+            permission: 'stock.view',
+          },
+        ],
       },
       {
         id: 'products',

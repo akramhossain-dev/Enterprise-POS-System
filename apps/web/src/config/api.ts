@@ -45,6 +45,10 @@ export const apiConfig = {
     serials: '/serials',
     inventoryLedger: '/inventory-ledger',
     stockAlerts: '/stock-alerts',
+    stockAdjustments: '/stock-adjustments',
+    stockTransfers: '/stock-transfers',
+    stockTakes: '/stock-takes',
+    reconciliation: '/reconciliation',
   },
 } as const;
 

@@ -161,3 +161,127 @@ export interface StockHistoryFilterParams {
   startDate?: string;
   endDate?: string;
 }
+
+// ─────────────────────────────────────────────
+// Operational Module Types — F6.3
+// ─────────────────────────────────────────────
+
+export type AdjustmentType = 'INCREASE' | 'DECREASE' | 'DAMAGE' | 'EXPIRED' | 'LOST';
+
+export interface StockAdjustment {
+  id: string;
+  companyId: string;
+  warehouseId: string;
+  warehouse: Warehouse;
+  productId: string;
+  product: Product;
+  type: AdjustmentType;
+  quantity: number;
+  reason: string;
+  remarks: string | null;
+  approvedBy: string | null;
+  createdBy: string;
+  createdAt: string;
+}
+
+export type TransferStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'COMPLETED';
+
+export interface StockTransferItem {
+  id: string;
+  transferId: string;
+  productId: string;
+  product: Product;
+  quantity: number;
+}
+
+export interface StockTransfer {
+  id: string;
+  companyId: string;
+  fromWarehouseId: string;
+  fromWarehouse: Warehouse;
+  toWarehouseId: string;
+  toWarehouse: Warehouse;
+  status: TransferStatus;
+  remarks: string | null;
+  createdBy: string;
+  approvedBy: string | null;
+  items: StockTransferItem[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type StockTakeStatus = 'DRAFT' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
+
+export interface StockTakeItem {
+  id: string;
+  stockTakeId: string;
+  productId: string;
+  product: Product;
+  systemQuantity: number;
+  physicalQuantity: number | null;
+  variance: number | null;
+  remarks: string | null;
+}
+
+export type ReconciliationStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
+
+export interface Reconciliation {
+  id: string;
+  companyId: string;
+  stockTakeId: string;
+  stockTake?: StockTake | null;
+  status: ReconciliationStatus;
+  notes?: string | null;
+  approvedBy?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface StockTake {
+  id: string;
+  companyId: string;
+  warehouseId: string;
+  warehouse: Warehouse;
+  title: string;
+  status: StockTakeStatus;
+  conductedBy: string | null;
+  createdBy: string;
+  items: StockTakeItem[];
+  reconciliation: Reconciliation | null;
+  completedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// ---- Query Filters ----
+
+export interface StockAdjustmentFilterParams {
+  page?: number;
+  limit?: number;
+  q?: string;
+  warehouseId?: string;
+  type?: AdjustmentType | 'ALL';
+}
+
+export interface StockTransferFilterParams {
+  page?: number;
+  limit?: number;
+  q?: string;
+  fromWarehouseId?: string;
+  toWarehouseId?: string;
+  status?: TransferStatus | 'ALL';
+}
+
+export interface StockTakeFilterParams {
+  page?: number;
+  limit?: number;
+  q?: string;
+  warehouseId?: string;
+  status?: StockTakeStatus | 'ALL';
+}
+
+export interface ReconciliationFilterParams {
+  page?: number;
+  limit?: number;
+  status?: ReconciliationStatus | 'ALL';
+}
