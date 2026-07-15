@@ -42,7 +42,7 @@ export default function GoodsReceiveDashboard() {
   const grns = grnResponse?.data || [];
 
   const metrics = React.useMemo(() => {
-    let totalCount = grns.length;
+    const totalCount = grns.length;
     let draft = 0;
     let completed = 0;
     let cancelled = 0;

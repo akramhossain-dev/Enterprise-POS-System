@@ -706,3 +706,57 @@ Visual tag representing pricing and quantity deviations, indicating active excep
 
 `apps/web/src/components/receive/receiving-summary-card.tsx`
 Dashboard reconciliation banner outlining discrepancy counts and variance valuations.
+
+---
+
+## 7. Purchase Return, Credit Note & Debit Note Components (Phase F7.3)
+
+### ReturnCard
+
+`apps/web/src/components/purchase/return-card.tsx`
+Metric card summarizing return claim volume, counts, valuations, and statuses.
+
+### CreditNoteCard
+
+`apps/web/src/components/purchase/credit-note-card.tsx`
+Stylized, printable supplier credit note showing credit amount, supplier, reference return, and issue dates.
+
+### DebitNoteCard
+
+`apps/web/src/components/purchase/debit-note-card.tsx`
+Charge-back invoice voucher displaying deducted balances, supplier name, and reference return ID.
+
+### ReturnsApprovalTimeline
+
+`apps/web/src/components/purchase/returns-approval-timeline.tsx`
+Step-by-step indicator tracking return workflow stages: Draft -> Submitted (Pending Approval) -> Decision (Approved/Rejected) -> Finalized (Complete/Refund Settle).
+
+### ReturnSummaryCard
+
+`apps/web/src/components/purchase/return-summary-card.tsx`
+Information dashboard grouping supplier contact card, warehouse address details, document reference type, return date, and attachments list.
+
+### ReasonBadge
+
+`apps/web/src/components/purchase/reason-badge.tsx`
+Renders modern, distinct, and high contrast badges matching the return reasons (Damaged, Expired, Quality Issue, etc.).
+
+### ReturnFinancialSummary
+
+`apps/web/src/components/purchase/return-financial-summary.tsx`
+Details subtotal return values, estimated tax adjustments, global discount deductions, grand total settlement values, and payment methods.
+
+---
+
+## Purchase Return Page Routes (Phase F7.3)
+
+| Route                         | File                                                  | Description                                                                                       |
+| ----------------------------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `/purchase/returns`           | `app/(dashboard)/purchase/returns/page.tsx`           | Main active returns claim registry directory featuring searching, filtering, and bulk operations. |
+| `/purchase/returns/dashboard` | `app/(dashboard)/purchase/returns/dashboard/page.tsx` | Metric dashboards detailing total return counts, total claim values, and recharts graphs.         |
+| `/purchase/returns/history`   | `app/(dashboard)/purchase/returns/history/page.tsx`   | Chronological audit ledger mapping all log events, status changes, and operator comments.         |
+| `/purchase/returns/new`       | `app/(dashboard)/purchase/returns/new/page.tsx`       | Return creation form validated via React Hook Form & Zod with dynamic supplier ref pulling.       |
+| `/purchase/returns/:id`       | `app/(dashboard)/purchase/returns/[id]/page.tsx`      | Claims audit dashboard detailing timeline state transitions and approval buttons.                 |
+| `/purchase/returns/:id/edit`  | `app/(dashboard)/purchase/returns/[id]/edit/page.tsx` | Claim edit screen allowing operators to update details for returns in DRAFT status.               |
+| `/purchase/credit-notes`      | `app/(dashboard)/purchase/credit-notes/page.tsx`      | Directory displaying all supplier credit note records and print-ready options.                    |
+| `/purchase/debit-notes`       | `app/(dashboard)/purchase/debit-notes/page.tsx`       | Directory listing supplier debit invoice adjustments and charge-back balances.                    |

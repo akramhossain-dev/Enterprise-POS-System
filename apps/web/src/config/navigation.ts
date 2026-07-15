@@ -27,6 +27,9 @@ import {
   AlertOctagon,
   FileText,
   Scale,
+  Undo2,
+  FileWarning,
+  CreditCard,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -199,6 +202,27 @@ export const navigationConfig: NavSection[] = [
             href: '/purchase/matching',
             icon: Scale,
             permission: 'supplier.invoice.view',
+          },
+          {
+            id: 'purchase-returns',
+            label: 'Purchase Returns',
+            href: '/purchase/returns',
+            icon: Undo2,
+            permission: 'purchase:view',
+          },
+          {
+            id: 'purchase-credit-notes',
+            label: 'Credit Notes',
+            href: '/purchase/credit-notes',
+            icon: FileWarning,
+            permission: 'purchase:view',
+          },
+          {
+            id: 'purchase-debit-notes',
+            label: 'Debit Notes',
+            href: '/purchase/debit-notes',
+            icon: CreditCard,
+            permission: 'purchase:view',
           },
         ],
       },

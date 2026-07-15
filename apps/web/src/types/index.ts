@@ -14,3 +14,4 @@ export * from './warehouse';
 export * from './inventory';
 export * from './purchase';
 export * from './goods-receive';
+export * from './purchase-return';
