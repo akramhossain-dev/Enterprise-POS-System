@@ -198,8 +198,8 @@ jobs:
           NODE_ENV: test
           CI: true
           # API test env vars (ignored by web)
-          JWT_SECRET: ci-test-secret-that-is-at-least-32-characters-long
-          REFRESH_TOKEN_SECRET: ci-test-refresh-secret-that-is-at-least-32-characters
+          JWT_SECRET: ci-test-secret-that-is-at-least-32-characters-long # gitleaks:allow
+          REFRESH_TOKEN_SECRET: ci-test-refresh-secret-that-is-at-least-32-characters # gitleaks:allow
           JWT_EXPIRES_IN: 15m
           REFRESH_TOKEN_EXPIRES_IN: 7d
           FRONTEND_URL: http://localhost:3000
