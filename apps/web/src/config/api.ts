@@ -95,6 +95,13 @@ export const apiConfig = {
       warehouses: '/analytics/warehouses',
       employees: '/analytics/employees',
     },
+    reports: {
+      dashboard: '/reports/dashboard',
+      generate: '/reports/generate',
+      export: '/reports/export',
+      print: '/reports/print',
+      schedule: '/reports/schedule',
+    },
   },
 } as const;
 

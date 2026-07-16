@@ -1053,3 +1053,58 @@ Loading shimmer placeholders for dashboard grids, widgets, and charts.
 | `/analytics/branch`    | `app/(dashboard)/analytics/branch/page.tsx`    | Branch Analytics comparing local branch performance parameters, sales volumes, and profits.        |
 | `/analytics/warehouse` | `app/(dashboard)/analytics/warehouse/page.tsx` | Warehouse Analytics tracing storage occupancy percentages and item volumes.                        |
 | `/analytics/employee`  | `app/(dashboard)/analytics/employee/page.tsx`  | Employee Analytics displaying checkout representative POS sales and logs.                          |
+
+---
+
+## Operational Reports & Export Center Components (Phase F10.2)
+
+### ReportCard
+
+`apps/web/src/components/reports/report-card.tsx`
+Renders quick details of reports, favorite status star icons, and category badges.
+
+### FilterBuilder
+
+`apps/web/src/components/reports/filter-builder.tsx`
+Dynamic filter builder interface managing Date Range, Branch, Warehouse, Supplier, Customer, Employee, Category selectors.
+
+### ExportDialog
+
+`apps/web/src/components/reports/export-dialog.tsx`
+Chooses and triggers downloads in CSV, XLSX, PDF, or JSON layouts.
+
+### PrintDialog
+
+`apps/web/src/components/reports/print-dialog.tsx`
+Printing spool configuration settings (A4 sizing, layout margins).
+
+### ReportViewer
+
+`apps/web/src/components/reports/report-viewer.tsx`
+Unified dashboard wrapper combining filter builder panels, print dialog configs, and tabular grids.
+
+### ReportTable
+
+`apps/web/src/components/reports/report-table.tsx`
+TanStack based virtualized list with paginations, sorting parameters, and quick filters.
+
+---
+
+## Operational Reports Page Routes (Phase F10.2)
+
+| Route                | File                                         | Description                                                                         |
+| -------------------- | -------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `/reports`           | `app/(dashboard)/reports/page.tsx`           | Reports Dashboard listing favorites, generated logs history, and active schedulers. |
+| `/reports/sales`     | `app/(dashboard)/reports/sales/page.tsx`     | Sales Reports details product sales, cashiers, branches, and returns categories.    |
+| `/reports/purchase`  | `app/(dashboard)/reports/purchase/page.tsx`  | Purchase Reports tracks supplier invoices and goods receive requisitions.           |
+| `/reports/inventory` | `app/(dashboard)/reports/inventory/page.tsx` | Inventory Reports valuation metrics, low stock indicators, and expirations.         |
+| `/reports/customer`  | `app/(dashboard)/reports/customer/page.tsx`  | Customer Reports lists outstanding debts and customer summaries.                    |
+| `/reports/supplier`  | `app/(dashboard)/reports/supplier/page.tsx`  | Supplier Reports maps outstanding vendor dues and payables.                         |
+| `/reports/employee`  | `app/(dashboard)/reports/employee/page.tsx`  | Employee Reports logs cashier checkout sales and POS performance.                   |
+| `/reports/payments`  | `app/(dashboard)/reports/payments/page.tsx`  | Payment Reports breakdowns payment forms (Cash, Card, Wallet).                      |
+| `/reports/tax`       | `app/(dashboard)/reports/tax/page.tsx`       | Tax Reports details output vs input VAT/GST offsets.                                |
+| `/reports/audit`     | `app/(dashboard)/reports/audit/page.tsx`     | Audit Reports tracks security trails and lock authorization histories.              |
+| `/reports/custom`    | `app/(dashboard)/reports/custom/page.tsx`    | Custom Report Builder maps columns selections and templates.                        |
+| `/reports/export`    | `app/(dashboard)/reports/export/page.tsx`    | Export Center lists completed file downloads.                                       |
+| `/reports/print`     | `app/(dashboard)/reports/print/page.tsx`     | Print Center lists completed physical printed spools.                               |
+| `/reports/scheduled` | `app/(dashboard)/reports/scheduled/page.tsx` | Scheduled Reports schedules Daily/Weekly/Monthly email triggers.                    |

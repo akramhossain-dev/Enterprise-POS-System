@@ -1,0 +1,178 @@
+'use client';
+
+import React, { useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { ChevronLeft, ChevronRight, Search } from 'lucide-react';
+
+interface ReportTableProps {
+  columns: string[];
+  rows: any[];
+  isLoading?: boolean;
+}
+
+export function ReportTable({ columns, rows, isLoading = false }: ReportTableProps) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [sortColumn, setSortColumn] = useState<string | null>(null);
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [filterQuery, setFilterQuery] = useState('');
+
+  const handleSort = (col: string) => {
+    if (sortColumn === col) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortColumn(col);
+      setSortDirection('asc');
+    }
+  };
+
+  // 1. Filter rows
+  const filteredRows = rows.filter((row) =>
+    columns.some((col) =>
+      String(row[col] ?? '')
+        .toLowerCase()
+        .includes(filterQuery.toLowerCase()),
+    ),
+  );
+
+  // 2. Sort rows
+  const sortedRows = [...filteredRows];
+  if (sortColumn) {
+    sortedRows.sort((a, b) => {
+      const valA = a[sortColumn];
+      const valB = b[sortColumn];
+      if (typeof valA === 'number' && typeof valB === 'number') {
+        return sortDirection === 'asc' ? valA - valB : valB - valA;
+      }
+      const strA = String(valA).toLowerCase();
+      const strB = String(valB).toLowerCase();
+      if (strA < strB) return sortDirection === 'asc' ? -1 : 1;
+      if (strA > strB) return sortDirection === 'asc' ? 1 : -1;
+      return 0;
+    });
+  }
+
+  // 3. Paginate rows
+  const totalItems = sortedRows.length;
+  const totalPages = Math.ceil(totalItems / pageSize) || 1;
+  const paginatedRows = sortedRows.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+  return (
+    <Card className="bg-[#0c1220] border-slate-800 text-slate-100 select-none text-left print:border-none print:shadow-none print:bg-white print:text-black">
+      {/* Top search controls */}
+      <div className="p-3 border-b border-slate-900 flex flex-col sm:flex-row items-center gap-3 print:hidden">
+        <div className="relative flex-1">
+          <Search className="absolute left-2.5 top-2 h-3.5 w-3.5 text-slate-500" />
+          <input
+            type="text"
+            placeholder="Quick search active records..."
+            value={filterQuery}
+            onChange={(e) => {
+              setFilterQuery(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="w-full h-8 pl-8 bg-slate-950 border border-slate-855 rounded text-xs text-slate-100 focus:outline-none focus:border-emerald-500"
+          />
+        </div>
+
+        <div className="flex items-center gap-1.5 text-xs text-slate-500 font-bold">
+          <span>Show:</span>
+          <select
+            value={pageSize}
+            onChange={(e) => {
+              setPageSize(Number(e.target.value));
+              setCurrentPage(1);
+            }}
+            className="bg-[#0c1220] border border-slate-850 rounded p-1 text-[10px]"
+          >
+            <option value={5}>5 Rows</option>
+            <option value={10}>10 Rows</option>
+            <option value={20}>20 Rows</option>
+            <option value={50}>50 Rows</option>
+          </select>
+        </div>
+      </div>
+
+      <CardContent className="p-0">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse text-xs font-mono">
+            <thead>
+              <tr className="border-b border-slate-900 bg-slate-950/20 text-slate-500 font-bold uppercase tracking-wider text-[10px] print:border-black">
+                {columns.map((col) => (
+                  <th
+                    key={col}
+                    onClick={() => handleSort(col)}
+                    className="py-2.5 px-4 cursor-pointer hover:bg-slate-900/40 select-none transition-colors"
+                  >
+                    <div className="flex items-center gap-1">
+                      <span>{col}</span>
+                      {sortColumn === col && (
+                        <span className="text-[9px] text-indigo-400">
+                          {sortDirection === 'asc' ? '▲' : '▼'}
+                        </span>
+                      )}
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-900/40 text-slate-350 print:text-black print:divide-gray-300">
+              {isLoading ? (
+                <tr>
+                  <td colSpan={columns.length} className="text-center py-8 text-slate-500">
+                    Loading records data...
+                  </td>
+                </tr>
+              ) : paginatedRows.length > 0 ? (
+                paginatedRows.map((row, idx) => (
+                  <tr key={idx} className="hover:bg-slate-950/10">
+                    {columns.map((col) => (
+                      <td key={col} className="py-2.5 px-4 text-slate-200 print:text-black">
+                        {row[col] ?? ''}
+                      </td>
+                    ))}
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={columns.length} className="text-center py-8 text-slate-500">
+                    No matching records found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Pagination controls */}
+        <div className="p-3 border-t border-slate-900 flex justify-between items-center text-xs text-slate-500 font-mono print:hidden">
+          <span>
+            Page {currentPage} of {totalPages} ({totalItems} items)
+          </span>
+
+          <div className="flex gap-1.5">
+            <Button
+              size="icon"
+              variant="ghost"
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage(currentPage - 1)}
+              className="h-7 w-7 border border-slate-900 text-slate-400 hover:text-slate-200"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <Button
+              size="icon"
+              variant="ghost"
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage(currentPage + 1)}
+              className="h-7 w-7 border border-slate-900 text-slate-400 hover:text-slate-200"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
