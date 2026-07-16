@@ -1,41 +1,35 @@
-name: CI/CD — Enterprise POS System
+name: CI — Quality Gate
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main, develop, 'feature/**', 'hotfix/**']
   pull_request:
     branches: [main, develop]
 
-env:
-  NODE_VERSION: '24'
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}/api
-
-# Cancel in-progress runs on the same branch (saves CI minutes)
+# Cancel in-progress runs on the same branch to save CI minutes
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ci-${{ github.ref }}
   cancel-in-progress: true
 
-# ──────────────────────────────────────────────────────────────
-# Shared step definitions (YAML anchors)
-# Each job is self-contained: corepack → restore store → install
-# This avoids fragile cross-job node_modules caching and the
-# pnpm/action-setup Node 24 incompatibility.
-# ──────────────────────────────────────────────────────────────
+env:
+  NODE_VERSION: '20'
+
+# ─────────────────────────────────────────────────────────────────────────────
+# REUSABLE SETUP STEPS
+# Each job self-installs — avoids fragile cross-job node_modules cache sharing.
+# ─────────────────────────────────────────────────────────────────────────────
 
 jobs:
-  # ─────────────────────────────────────────────────────────────
-  # LINT
-  # ─────────────────────────────────────────────────────────────
+  # ───────────────────────────────────────────────────────────────────────────
+  # JOB 1: LINT (ESLint + Prettier)
+  # ───────────────────────────────────────────────────────────────────────────
   lint:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
@@ -46,8 +40,7 @@ jobs:
         id: pnpm-cache
         run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
 
-      - name: Restore pnpm store cache
-        uses: actions/cache@v4
+      - uses: actions/cache@v4
         with:
           path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
           key: pnpm-store-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -70,18 +63,16 @@ jobs:
       - name: Lint Web (ESLint / Next.js)
         run: pnpm --filter @enterprise-pos/web lint:check
 
-  # ─────────────────────────────────────────────────────────────
-  # TYPE CHECK
-  # ─────────────────────────────────────────────────────────────
+  # ───────────────────────────────────────────────────────────────────────────
+  # JOB 2: TYPE CHECK
+  # ───────────────────────────────────────────────────────────────────────────
   type-check:
     name: Type Check
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
@@ -92,8 +83,7 @@ jobs:
         id: pnpm-cache
         run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
 
-      - name: Restore pnpm store cache
-        uses: actions/cache@v4
+      - uses: actions/cache@v4
         with:
           path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
           key: pnpm-store-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -113,18 +103,16 @@ jobs:
       - name: Type check Web
         run: pnpm --filter @enterprise-pos/web type-check
 
-  # ─────────────────────────────────────────────────────────────
-  # UNIT TESTS (Vitest — no real DB/Redis needed)
-  # ─────────────────────────────────────────────────────────────
-  test:
-    name: Tests
+  # ───────────────────────────────────────────────────────────────────────────
+  # JOB 3: SECURITY — Dependency Audit
+  # ───────────────────────────────────────────────────────────────────────────
+  security:
+    name: Security Audit
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
@@ -135,8 +123,7 @@ jobs:
         id: pnpm-cache
         run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
 
-      - name: Restore pnpm store cache
-        uses: actions/cache@v4
+      - uses: actions/cache@v4
         with:
           path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
           key: pnpm-store-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -145,15 +132,73 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Generate Prisma client
+      # Fail on HIGH or CRITICAL vulnerabilities in production deps
+      - name: Audit API dependencies
+        run: pnpm --filter @enterprise-pos/api audit --audit-level=high --prod
+        continue-on-error: false
+
+      - name: Audit Web dependencies
+        run: pnpm --filter @enterprise-pos/web audit --audit-level=high --prod
+        continue-on-error: false
+
+      # Detect accidentally committed secrets
+      - name: Secret detection (Gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }} # optional for public repos
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # JOB 4: TESTS (API + Web — run in parallel matrix)
+  # ───────────────────────────────────────────────────────────────────────────
+  test:
+    name: Tests (${{ matrix.app }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - app: api
+            filter: '@enterprise-pos/api'
+            coverage-path: apps/api/coverage/
+          - app: web
+            filter: '@enterprise-pos/web'
+            coverage-path: apps/web/coverage/
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Enable pnpm via Corepack
+        run: corepack enable pnpm
+
+      - name: Get pnpm store path
+        id: pnpm-cache
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: pnpm-store-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: pnpm-store-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client (API only)
+        if: matrix.app == 'api'
         run: pnpm --filter @enterprise-pos/api prisma:generate
         env:
           DATABASE_URL: postgresql://test:test@localhost:5432/test
 
       - name: Run tests with coverage
-        run: pnpm --filter @enterprise-pos/api test:coverage
+        run: pnpm --filter ${{ matrix.filter }} test:coverage
         env:
           NODE_ENV: test
+          CI: true
+          # API test env vars (ignored by web)
           JWT_SECRET: ci-test-secret-that-is-at-least-32-characters-long
           REFRESH_TOKEN_SECRET: ci-test-refresh-secret-that-is-at-least-32-characters
           JWT_EXPIRES_IN: 15m
@@ -162,27 +207,37 @@ jobs:
           DATABASE_URL: postgresql://test:test@localhost:5432/test
           REDIS_URL: redis://localhost:6379
 
-      - name: Upload test coverage
+      - name: Upload coverage report
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: test-coverage
-          path: apps/api/coverage/
+          name: coverage-${{ matrix.app }}
+          path: ${{ matrix.coverage-path }}
           retention-days: 14
 
-  # ─────────────────────────────────────────────────────────────
-  # BUILD (API + Web)
-  # ─────────────────────────────────────────────────────────────
+  # ───────────────────────────────────────────────────────────────────────────
+  # JOB 5: BUILD (waits for all quality gates)
+  # ───────────────────────────────────────────────────────────────────────────
   build:
-    name: Build
+    name: Build (${{ matrix.app }})
     runs-on: ubuntu-latest
-    needs: [lint, type-check, test]
+    needs: [lint, type-check, test, security]
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - app: api
+            filter: '@enterprise-pos/api'
+            artifact-name: api-build
+            artifact-path: apps/api/dist/
+          - app: web
+            filter: '@enterprise-pos/web'
+            artifact-name: web-build
+            artifact-path: apps/web/.next/
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
 
@@ -193,8 +248,7 @@ jobs:
         id: pnpm-cache
         run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
 
-      - name: Restore pnpm store cache
-        uses: actions/cache@v4
+      - uses: actions/cache@v4
         with:
           path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
           key: pnpm-store-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -203,130 +257,21 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Generate Prisma client
+      - name: Generate Prisma client (API only)
+        if: matrix.app == 'api'
         run: pnpm --filter @enterprise-pos/api prisma:generate
         env:
           DATABASE_URL: postgresql://test:test@localhost:5432/test
 
-      - name: Build API
-        run: pnpm --filter @enterprise-pos/api build
-
-      - name: Build Web
-        run: pnpm --filter @enterprise-pos/web build
+      - name: Build ${{ matrix.app }}
+        run: pnpm --filter ${{ matrix.filter }} build
         env:
+          # Used by Next.js build — falls back to localhost for CI
           NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL || 'http://localhost:4000' }}
 
-      - name: Upload API build artifact
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: api-build
-          path: apps/api/dist/
+          name: ${{ matrix.artifact-name }}
+          path: ${{ matrix.artifact-path }}
           retention-days: 7
-
-      - name: Upload Web build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: web-build
-          path: apps/web/.next/
-          retention-days: 7
-
-  # ─────────────────────────────────────────────────────────────
-  # DOCKER BUILD & PUSH (main branch only)
-  # ─────────────────────────────────────────────────────────────
-  docker:
-    name: Docker Build & Push
-    runs-on: ubuntu-latest
-    needs: [build]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Extract Docker metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=ref,event=branch
-            type=sha,prefix=sha-
-            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: Dockerfile
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          target: production
-          provenance: true
-          sbom: true
-
-  # ─────────────────────────────────────────────────────────────
-  # DEPLOY — STAGING
-  # ─────────────────────────────────────────────────────────────
-  deploy-staging:
-    name: Deploy to Staging
-    runs-on: ubuntu-latest
-    needs: [docker]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && secrets.STAGING_HOST != ''
-    environment:
-      name: staging
-      url: ${{ vars.STAGING_URL }}
-    steps:
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.STAGING_HOST }}
-          username: ${{ secrets.STAGING_USER }}
-          key: ${{ secrets.STAGING_SSH_KEY }}
-          script: |
-            cd /opt/enterprise-pos
-            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-            docker compose -f docker-compose.prod.yml pull api
-            docker compose -f docker-compose.prod.yml up -d api
-            docker image prune -f
-            echo "✅ Staging deployment completed at $(date)"
-
-  # ─────────────────────────────────────────────────────────────
-  # DEPLOY — PRODUCTION
-  # ─────────────────────────────────────────────────────────────
-  deploy-production:
-    name: Deploy to Production
-    runs-on: ubuntu-latest
-    needs: [deploy-staging]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && secrets.PRODUCTION_HOST != ''
-    environment:
-      name: production
-      url: ${{ vars.PRODUCTION_URL }}
-    steps:
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.PRODUCTION_HOST }}
-          username: ${{ secrets.PRODUCTION_USER }}
-          key: ${{ secrets.PRODUCTION_SSH_KEY }}
-          script: |
-            cd /opt/enterprise-pos
-            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-            docker compose -f docker-compose.prod.yml pull api
-            docker compose -f docker-compose.prod.yml up -d api
-            docker image prune -f
-            echo "✅ Production deployment completed at $(date)"

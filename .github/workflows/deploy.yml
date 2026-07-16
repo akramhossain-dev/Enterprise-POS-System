@@ -1,0 +1,290 @@
+name: Deploy — Staging & Production
+
+on:
+  workflow_run:
+    workflows: ['Docker — Build & Push Images']
+    types: [completed]
+    branches: [main]
+  # Manual deployment (e.g. hotfix or rollback)
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        type: choice
+        options: [staging, production]
+      image_tag:
+        description: 'Image tag to deploy (e.g. sha-abc1234 or latest)'
+        required: false
+        default: 'latest'
+
+concurrency:
+  group: deploy-${{ github.event.inputs.environment || 'staging' }}
+  cancel-in-progress: false
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  # ───────────────────────────────────────────────────────────────────────────
+  # Only deploy if Docker build passed
+  # ───────────────────────────────────────────────────────────────────────────
+  check-docker:
+    name: Check Docker Build Result
+    runs-on: ubuntu-latest
+    outputs:
+      should-deploy: ${{ steps.check.outputs.should-deploy }}
+      image-tag: ${{ steps.check.outputs.image-tag }}
+    steps:
+      - name: Determine deploy eligibility
+        id: check
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "should-deploy=true" >> $GITHUB_OUTPUT
+            echo "image-tag=${{ github.event.inputs.image_tag }}" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event.workflow_run.conclusion }}" == "success" ]]; then
+            echo "should-deploy=true" >> $GITHUB_OUTPUT
+            echo "image-tag=sha-$(echo '${{ github.event.workflow_run.head_sha }}' | cut -c1-7)" >> $GITHUB_OUTPUT
+          else
+            echo "should-deploy=false" >> $GITHUB_OUTPUT
+            echo "image-tag=latest" >> $GITHUB_OUTPUT
+          fi
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # DEPLOY STAGING
+  # ───────────────────────────────────────────────────────────────────────────
+  deploy-staging:
+    name: Deploy → Staging
+    runs-on: ubuntu-latest
+    needs: check-docker
+    if: |
+      needs.check-docker.outputs.should-deploy == 'true' &&
+      secrets.STAGING_HOST != '' &&
+      (github.event_name != 'workflow_dispatch' || github.event.inputs.environment == 'staging')
+    environment:
+      name: staging
+      url: ${{ vars.STAGING_URL }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to staging with rollback support
+        uses: appleboy/ssh-action@v1
+        env:
+          IMAGE_TAG: ${{ needs.check-docker.outputs.image-tag }}
+          REGISTRY: ${{ env.REGISTRY }}
+          REPO: ${{ github.repository }}
+          GH_ACTOR: ${{ github.actor }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          host: ${{ secrets.STAGING_HOST }}
+          username: ${{ secrets.STAGING_USER }}
+          key: ${{ secrets.STAGING_SSH_KEY }}
+          envs: IMAGE_TAG,REGISTRY,REPO,GH_ACTOR,GH_TOKEN
+          script_stop: false # We handle errors ourselves for rollback
+          script: |
+            set -euo pipefail
+            APP_DIR=/opt/enterprise-pos
+            COMPOSE="docker compose -f $APP_DIR/docker-compose.prod.yml"
+
+            echo "🔐 Logging in to GHCR..."
+            echo "$GH_TOKEN" | docker login "$REGISTRY" -u "$GH_ACTOR" --password-stdin
+
+            # Record current running tags for rollback
+            API_ROLLBACK=$(docker inspect --format='{{index .Config.Image}}' enterprise-pos-api-prod 2>/dev/null || echo "none")
+            WEB_ROLLBACK=$(docker inspect --format='{{index .Config.Image}}' enterprise-pos-web-prod 2>/dev/null || echo "none")
+            echo "📌 Rollback API tag: $API_ROLLBACK"
+            echo "📌 Rollback Web tag: $WEB_ROLLBACK"
+
+            echo "📥 Pulling new images (tag: $IMAGE_TAG)..."
+            docker pull "$REGISTRY/$REPO/api:$IMAGE_TAG"
+            docker pull "$REGISTRY/$REPO/web:$IMAGE_TAG"
+
+            # Update image references in the env file
+            sed -i "s|API_IMAGE=.*|API_IMAGE=$REGISTRY/$REPO/api:$IMAGE_TAG|" "$APP_DIR/.env.prod" || true
+            sed -i "s|WEB_IMAGE=.*|WEB_IMAGE=$REGISTRY/$REPO/web:$IMAGE_TAG|" "$APP_DIR/.env.prod" || true
+
+            echo "🗄️  Running database migrations..."
+            docker run --rm \
+              --env-file "$APP_DIR/.env.prod" \
+              --network enterprise-pos_pos-internal \
+              "$REGISTRY/$REPO/api:$IMAGE_TAG" \
+              node -e "const { exec } = require('child_process'); exec('npx prisma migrate deploy', { cwd: '/app/apps/api' }, (err, out, stderr) => { if (err) { console.error(stderr); process.exit(1); } console.log(out); });"
+
+            echo "🚀 Deploying new containers..."
+            API_IMAGE="$REGISTRY/$REPO/api:$IMAGE_TAG" \
+            WEB_IMAGE="$REGISTRY/$REPO/web:$IMAGE_TAG" \
+            $COMPOSE up -d --no-deps api web
+
+            echo "🏥 Running health checks..."
+            RETRIES=10
+            INTERVAL=8
+            success=false
+            for i in $(seq 1 $RETRIES); do
+              echo "  Attempt $i/$RETRIES..."
+              API_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:4000/api/v1/health || echo "000")
+              WEB_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000 || echo "000")
+              if [[ "$API_STATUS" == "200" && ("$WEB_STATUS" == "200" || "$WEB_STATUS" == "307") ]]; then
+                success=true
+                echo "  ✅ Health checks passed (API: $API_STATUS, Web: $WEB_STATUS)"
+                break
+              fi
+              echo "  ⏳ Not ready (API: $API_STATUS, Web: $WEB_STATUS) — waiting ${INTERVAL}s..."
+              sleep $INTERVAL
+            done
+
+            if [[ "$success" == "false" ]]; then
+              echo "❌ Health checks FAILED — rolling back..."
+              if [[ "$API_ROLLBACK" != "none" ]]; then
+                docker pull "$API_ROLLBACK" || true
+                API_IMAGE="$API_ROLLBACK" $COMPOSE up -d --no-deps api || true
+              fi
+              if [[ "$WEB_ROLLBACK" != "none" ]]; then
+                docker pull "$WEB_ROLLBACK" || true
+                WEB_IMAGE="$WEB_ROLLBACK" $COMPOSE up -d --no-deps web || true
+              fi
+              echo "🔄 Rollback complete"
+              exit 1
+            fi
+
+            echo "🧹 Pruning old images..."
+            docker image prune -f
+
+            echo "✅ Staging deployment completed at $(date)"
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # DEPLOY PRODUCTION (requires manual approval via GitHub Environment)
+  # ───────────────────────────────────────────────────────────────────────────
+  deploy-production:
+    name: Deploy → Production
+    runs-on: ubuntu-latest
+    needs: [check-docker, deploy-staging]
+    if: |
+      needs.check-docker.outputs.should-deploy == 'true' &&
+      secrets.PRODUCTION_HOST != '' &&
+      (github.event_name != 'workflow_dispatch' || github.event.inputs.environment == 'production')
+    environment:
+      name: production
+      url: ${{ vars.PRODUCTION_URL }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to production with rollback support
+        uses: appleboy/ssh-action@v1
+        env:
+          IMAGE_TAG: ${{ needs.check-docker.outputs.image-tag }}
+          REGISTRY: ${{ env.REGISTRY }}
+          REPO: ${{ github.repository }}
+          GH_ACTOR: ${{ github.actor }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          host: ${{ secrets.PRODUCTION_HOST }}
+          username: ${{ secrets.PRODUCTION_USER }}
+          key: ${{ secrets.PRODUCTION_SSH_KEY }}
+          envs: IMAGE_TAG,REGISTRY,REPO,GH_ACTOR,GH_TOKEN
+          script_stop: false
+          script: |
+            set -euo pipefail
+            APP_DIR=/opt/enterprise-pos
+            COMPOSE="docker compose -f $APP_DIR/docker-compose.prod.yml"
+
+            echo "🔐 Logging in to GHCR..."
+            echo "$GH_TOKEN" | docker login "$REGISTRY" -u "$GH_ACTOR" --password-stdin
+
+            # Record current running tags for rollback
+            API_ROLLBACK=$(docker inspect --format='{{index .Config.Image}}' enterprise-pos-api-prod 2>/dev/null || echo "none")
+            WEB_ROLLBACK=$(docker inspect --format='{{index .Config.Image}}' enterprise-pos-web-prod 2>/dev/null || echo "none")
+            echo "📌 Rollback API tag: $API_ROLLBACK"
+            echo "📌 Rollback Web tag: $WEB_ROLLBACK"
+
+            echo "📥 Pulling new images (tag: $IMAGE_TAG)..."
+            docker pull "$REGISTRY/$REPO/api:$IMAGE_TAG"
+            docker pull "$REGISTRY/$REPO/web:$IMAGE_TAG"
+
+            echo "🗄️  Running database migrations..."
+            docker run --rm \
+              --env-file "$APP_DIR/.env.prod" \
+              --network enterprise-pos_pos-internal \
+              "$REGISTRY/$REPO/api:$IMAGE_TAG" \
+              node -e "const { exec } = require('child_process'); exec('npx prisma migrate deploy', { cwd: '/app/apps/api' }, (err, out, stderr) => { if (err) { console.error(stderr); process.exit(1); } console.log(out); });"
+
+            echo "🚀 Deploying new containers (zero-downtime rolling)..."
+            API_IMAGE="$REGISTRY/$REPO/api:$IMAGE_TAG" \
+            WEB_IMAGE="$REGISTRY/$REPO/web:$IMAGE_TAG" \
+            $COMPOSE up -d --no-deps api web
+
+            echo "🏥 Running production health checks..."
+            RETRIES=12
+            INTERVAL=10
+            success=false
+            for i in $(seq 1 $RETRIES); do
+              echo "  Attempt $i/$RETRIES..."
+              API_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:4000/api/v1/health || echo "000")
+              WEB_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000 || echo "000")
+              if [[ "$API_STATUS" == "200" && ("$WEB_STATUS" == "200" || "$WEB_STATUS" == "307") ]]; then
+                success=true
+                echo "  ✅ Health checks passed"
+                break
+              fi
+              echo "  ⏳ Not ready (API: $API_STATUS, Web: $WEB_STATUS) — waiting ${INTERVAL}s..."
+              sleep $INTERVAL
+            done
+
+            if [[ "$success" == "false" ]]; then
+              echo "❌ PRODUCTION health checks FAILED — executing rollback..."
+              if [[ "$API_ROLLBACK" != "none" ]]; then
+                docker pull "$API_ROLLBACK" || true
+                API_IMAGE="$API_ROLLBACK" $COMPOSE up -d --no-deps api || true
+              fi
+              if [[ "$WEB_ROLLBACK" != "none" ]]; then
+                docker pull "$WEB_ROLLBACK" || true
+                WEB_IMAGE="$WEB_ROLLBACK" $COMPOSE up -d --no-deps web || true
+              fi
+              echo "🔄 ROLLBACK complete — previous version restored"
+              exit 1
+            fi
+
+            echo "🧹 Pruning old images..."
+            docker image prune -f
+
+            echo "✅ PRODUCTION deployment completed at $(date)"
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # NOTIFICATIONS
+  # ───────────────────────────────────────────────────────────────────────────
+  notify-success:
+    name: Notify Deployment Success
+    runs-on: ubuntu-latest
+    needs: [deploy-staging, deploy-production]
+    if: success() && vars.DISCORD_WEBHOOK_URL != ''
+    steps:
+      - name: Notify Discord — Success
+        run: |
+          curl -s -X POST "${{ vars.DISCORD_WEBHOOK_URL }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "embeds": [{
+                "title": "✅ Deployment Successful",
+                "description": "**${{ github.repository }}** deployed to **production**\n\nCommit: `${{ github.sha }}`\nTag: `${{ needs.check-docker.outputs.image-tag }}`",
+                "color": 3066993,
+                "url": "${{ vars.PRODUCTION_URL }}"
+              }]
+            }'
+
+  notify-failure:
+    name: Notify Deployment Failure
+    runs-on: ubuntu-latest
+    needs: [deploy-staging, deploy-production]
+    if: failure() && vars.DISCORD_WEBHOOK_URL != ''
+    steps:
+      - name: Notify Discord — Failure / Rollback
+        run: |
+          curl -s -X POST "${{ vars.DISCORD_WEBHOOK_URL }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "embeds": [{
+                "title": "❌ Deployment FAILED — Rollback Executed",
+                "description": "**${{ github.repository }}** failed to deploy\n\nPrevious version has been restored automatically.\n\nCommit: `${{ github.sha }}`",
+                "color": 15158332,
+                "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+              }]
+            }'

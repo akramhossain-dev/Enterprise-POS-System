@@ -2,6 +2,8 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  // Required for the minimal Docker production image (docker/web.Dockerfile)
+  output: 'standalone',
   experimental: {
     optimizePackageImports: [
       'lucide-react',
