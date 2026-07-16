@@ -90,7 +90,8 @@ export function slugify(str: string): string {
     .replace(/\s+/g, '-')
     .replace(/[^\w-]+/g, '')
     .replace(/--+/g, '-')
-    .trim();
+    .trim()
+    .replace(/^-+|-+$/g, ''); // strip any leading/trailing hyphens from converted spaces
 }
 
 // ---- File Formatters ----
