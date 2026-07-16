@@ -236,6 +236,86 @@ export default function AccountingDashboardPage() {
             </div>
           </div>
 
+          {/* Financial Reporting & Period Closures Links grid */}
+          <div className="space-y-3 mt-6">
+            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest text-left">
+              Financial Reporting & Period Closures
+            </h3>
+            <div className="grid gap-4 grid-cols-2 md:grid-cols-4 lg:grid-cols-8">
+              <Link href="/accounting/statements/profit-loss" className="group">
+                <Card className="bg-[#0c1220] border-slate-800 group-hover:border-slate-700 p-3 text-center cursor-pointer space-y-1.5 h-22 flex flex-col justify-center">
+                  <p className="text-[11px] font-black text-slate-200 group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
+                    Profit & Loss
+                  </p>
+                  <p className="text-[8px] text-slate-500">Revenue & net margin</p>
+                </Card>
+              </Link>
+
+              <Link href="/accounting/statements/balance-sheet" className="group">
+                <Card className="bg-[#0c1220] border-slate-800 group-hover:border-slate-700 p-3 text-center cursor-pointer space-y-1.5 h-22 flex flex-col justify-center">
+                  <p className="text-[11px] font-black text-slate-200 group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
+                    Balance Sheet
+                  </p>
+                  <p className="text-[8px] text-slate-500">Assets & equity position</p>
+                </Card>
+              </Link>
+
+              <Link href="/accounting/statements/cash-flow" className="group">
+                <Card className="bg-[#0c1220] border-slate-800 group-hover:border-slate-700 p-3 text-center cursor-pointer space-y-1.5 h-22 flex flex-col justify-center">
+                  <p className="text-[11px] font-black text-slate-200 group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
+                    Cash Flow
+                  </p>
+                  <p className="text-[8px] text-slate-500">Trace liquid inflows</p>
+                </Card>
+              </Link>
+
+              <Link href="/accounting/statements/trial-balance" className="group">
+                <Card className="bg-[#0c1220] border-slate-800 group-hover:border-slate-700 p-3 text-center cursor-pointer space-y-1.5 h-22 flex flex-col justify-center">
+                  <p className="text-[11px] font-black text-slate-200 group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
+                    Trial Balance
+                  </p>
+                  <p className="text-[8px] text-slate-500">Double-entry balancing</p>
+                </Card>
+              </Link>
+
+              <Link href="/accounting/tax" className="group">
+                <Card className="bg-[#0c1220] border-slate-800 group-hover:border-slate-700 p-3 text-center cursor-pointer space-y-1.5 h-22 flex flex-col justify-center">
+                  <p className="text-[11px] font-black text-slate-200 group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
+                    Tax Desk
+                  </p>
+                  <p className="text-[8px] text-slate-500">VAT/GST management</p>
+                </Card>
+              </Link>
+
+              <Link href="/accounting/periods" className="group">
+                <Card className="bg-[#0c1220] border-slate-800 group-hover:border-slate-700 p-3 text-center cursor-pointer space-y-1.5 h-22 flex flex-col justify-center">
+                  <p className="text-[11px] font-black text-slate-200 group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
+                    Periods Setup
+                  </p>
+                  <p className="text-[8px] text-slate-500">Fiscal year calendars</p>
+                </Card>
+              </Link>
+
+              <Link href="/accounting/closing" className="group">
+                <Card className="bg-[#0c1220] border-slate-800 group-hover:border-slate-700 p-3 text-center cursor-pointer space-y-1.5 h-22 flex flex-col justify-center">
+                  <p className="text-[11px] font-black text-slate-200 group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
+                    Period Close
+                  </p>
+                  <p className="text-[8px] text-slate-500">Month-end lock checklists</p>
+                </Card>
+              </Link>
+
+              <Link href="/accounting/audit" className="group">
+                <Card className="bg-[#0c1220] border-slate-800 group-hover:border-slate-700 p-3 text-center cursor-pointer space-y-1.5 h-22 flex flex-col justify-center">
+                  <p className="text-[11px] font-black text-slate-200 group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
+                    Audit Trail
+                  </p>
+                  <p className="text-[8px] text-slate-500">Compliance activity logs</p>
+                </Card>
+              </Link>
+            </div>
+          </div>
+
           <div className="grid gap-6 md:grid-cols-3">
             {/* Visual chart placeholder */}
             <Card className="md:col-span-2 bg-[#0c1220] border-slate-800 text-slate-100 flex flex-col justify-between">

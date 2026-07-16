@@ -159,3 +159,128 @@ export interface ReceiptVoucher {
   notes?: string;
   createdAt: string;
 }
+
+// ----------------------------------------------------
+// FINANCIAL STATEMENTS & TAX TYPES (Phase F9.3)
+// ----------------------------------------------------
+
+export interface ProfitLossStatement {
+  revenue: { code: string; name: string; balance: number }[];
+  cogs: { code: string; name: string; balance: number }[];
+  grossProfit: number;
+  expenses: { code: string; name: string; balance: number }[];
+  operatingProfit: number;
+  netProfit: number;
+}
+
+export interface BalanceSheet {
+  assets: { code: string; name: string; balance: number }[];
+  liabilities: { code: string; name: string; balance: number }[];
+  equity: { code: string; name: string; balance: number }[];
+  totalAssets: number;
+  totalLiabilities: number;
+  totalEquity: number;
+}
+
+export interface CashFlowStatement {
+  operating: { name: string; balance: number }[];
+  investing: { name: string; balance: number }[];
+  financing: { name: string; balance: number }[];
+  netCashFlow: number;
+}
+
+export interface TrialBalanceItem {
+  accountId: string;
+  code: string;
+  name: string;
+  debit: number;
+  credit: number;
+}
+
+export interface TrialBalance {
+  items: TrialBalanceItem[];
+  totalDebit: number;
+  totalCredit: number;
+  difference: number;
+}
+
+export interface TaxRate {
+  id: string;
+  name: string;
+  rate: number; // percentage, e.g. 15 for 15%
+  type: 'VAT' | 'GST' | 'SALES' | 'PURCHASE';
+  notes?: string;
+  status: 'ACTIVE' | 'INACTIVE';
+  createdAt: string;
+}
+
+export interface TaxGroup {
+  id: string;
+  name: string;
+  rates: string[]; // list of tax rate IDs
+  status: 'ACTIVE' | 'INACTIVE';
+  createdAt: string;
+}
+
+export interface TaxCategory {
+  id: string;
+  name: string;
+  code: string;
+  taxRateId: string;
+  notes?: string;
+}
+
+export interface TaxTransaction {
+  id: string;
+  date: string;
+  reference: string;
+  type: 'SALES' | 'PURCHASE';
+  amount: number;
+  taxAmount: number;
+  taxRate: number;
+  taxRateName: string;
+}
+
+export interface TaxReport {
+  transactions: TaxTransaction[];
+  totalSalesTax: number;
+  totalPurchaseTax: number;
+  netLiability: number;
+}
+
+export interface AccountingPeriod {
+  id: string;
+  name: string; // e.g. "January 2026"
+  startDate: string;
+  endDate: string;
+  status: 'OPEN' | 'CLOSED' | 'LOCKED';
+}
+
+export interface FiscalYear {
+  id: string;
+  year: number; // e.g. 2026
+  startDate: string;
+  endDate: string;
+  status: 'OPEN' | 'CLOSED';
+  periods: AccountingPeriod[];
+}
+
+export interface ClosingChecklistItem {
+  id: string;
+  task: string;
+  description: string;
+  checked: boolean;
+  checkedBy?: string;
+  checkedAt?: string;
+}
+
+export interface AuditLog {
+  id: string;
+  userId: string;
+  userName: string;
+  action: string;
+  module: string;
+  description: string;
+  timestamp: string;
+  ipAddress?: string;
+}

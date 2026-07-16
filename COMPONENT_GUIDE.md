@@ -961,3 +961,54 @@ Provides loading shimmer screens for tables, ledgers, and forms.
 | `/accounting/bank-book`         | `app/(dashboard)/accounting/bank-book/page.tsx`          | Bank deposits/withdrawals statement registry.                                     |
 | `/accounting/payment-vouchers`  | `app/(dashboard)/accounting/payment-vouchers/page.tsx`   | Outbound payment voucher management and printable layouts.                        |
 | `/accounting/receipt-vouchers`  | `app/(dashboard)/accounting/receipt-vouchers/page.tsx`   | Inward receipt voucher management and printable receipt slips.                    |
+
+---
+
+## Accounting & Finance Components (Phase F9.3)
+
+### FinancialKpiCard
+
+`apps/web/src/components/accounting/financial-kpi-card.tsx`
+Renders financial KPIs, including revenue trends, operating expenses, and net margin outcomes, with sparkline charts and variance tags.
+
+### StatementViewer
+
+`apps/web/src/components/accounting/statement-viewer.tsx`
+A template to render standard double-column spreadsheet reports with subtotal styles, printable layouts, and CSV export callbacks.
+
+### TaxSummaryCard
+
+`apps/web/src/components/accounting/tax-summary-card.tsx`
+Displays sales tax collections, purchase tax offset offset assets, and calculated net tax liability dues.
+
+### ClosingChecklist
+
+`apps/web/src/components/accounting/closing-checklist.tsx`
+Interactive closing desk checklist mapping bank reconciliations, trial balance checks, and final ledger freeze signature controls.
+
+### FiscalCalendar
+
+`apps/web/src/components/accounting/fiscal-calendar.tsx`
+An interactive period lock manager listing accounting periods and open/closed/locked toggles.
+
+### AuditTimeline
+
+`apps/web/src/components/accounting/audit-timeline.tsx`
+A timeline tracking compliance audit trails, userName actions, timestamps, and IP addresses.
+
+---
+
+## Accounting Page Routes (Phase F9.3)
+
+| Route                                  | File                                                           | Description                                                                    |
+| -------------------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| `/accounting/statements/profit-loss`   | `app/(dashboard)/accounting/statements/profit-loss/page.tsx`   | Profit & Loss statement detailing revenue, COGS, opex, and net profit.         |
+| `/accounting/statements/balance-sheet` | `app/(dashboard)/accounting/statements/balance-sheet/page.tsx` | Balance Sheet outlining assets, liabilities, and owner equity calculations.    |
+| `/accounting/statements/cash-flow`     | `app/(dashboard)/accounting/statements/cash-flow/page.tsx`     | Cash Flow statement tracking operating, investing, and financing liquid moves. |
+| `/accounting/statements/trial-balance` | `app/(dashboard)/accounting/statements/trial-balance/page.tsx` | Trial Balance sheet checking double-entry equality with error indicators.      |
+| `/accounting/tax`                      | `app/(dashboard)/accounting/tax/page.tsx`                      | Tax Dashboard mapping Collected vs Paid allocations alongside trend graphs.    |
+| `/accounting/tax/rates`                | `app/(dashboard)/accounting/tax/rates/page.tsx`                | Setup screen for tax rate thresholds (VAT/GST/Sales/Purchase) and groups.      |
+| `/accounting/tax/reports`              | `app/(dashboard)/accounting/tax/reports/page.tsx`              | Tax transactions ledger reports with print layouts and CSV downloads.          |
+| `/accounting/periods`                  | `app/(dashboard)/accounting/periods/page.tsx`                  | Period lock setups and fiscal year calendar controls.                          |
+| `/accounting/closing`                  | `app/(dashboard)/accounting/closing/page.tsx`                  | Month-end, quarter, and year-end closing controls and checklists.              |
+| `/accounting/audit`                    | `app/(dashboard)/accounting/audit/page.tsx`                    | Security audit trails and compliance activity log registries.                  |

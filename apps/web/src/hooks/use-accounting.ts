@@ -468,3 +468,182 @@ export function useCancelVoucher() {
     },
   });
 }
+
+// ----------------------------------------------------
+// FINANCIAL STATEMENTS HOOKS (Phase F9.3)
+// ----------------------------------------------------
+export const PROFIT_LOSS_KEY = ['accounting-profit-loss'] as const;
+export const BALANCE_SHEET_KEY = ['accounting-balance-sheet'] as const;
+export const CASH_FLOW_KEY = ['accounting-cash-flow'] as const;
+export const TRIAL_BALANCE_KEY = ['accounting-trial-balance'] as const;
+
+export function useProfitLoss(params?: Parameters<typeof accountingService.getProfitLoss>[0]) {
+  return useQuery({
+    queryKey: [...PROFIT_LOSS_KEY, params],
+    queryFn: () => accountingService.getProfitLoss(params),
+  });
+}
+
+export function useBalanceSheet(params?: Parameters<typeof accountingService.getBalanceSheet>[0]) {
+  return useQuery({
+    queryKey: [...BALANCE_SHEET_KEY, params],
+    queryFn: () => accountingService.getBalanceSheet(params),
+  });
+}
+
+export function useCashFlow(params?: Parameters<typeof accountingService.getCashFlow>[0]) {
+  return useQuery({
+    queryKey: [...CASH_FLOW_KEY, params],
+    queryFn: () => accountingService.getCashFlow(params),
+  });
+}
+
+export function useTrialBalance() {
+  return useQuery({
+    queryKey: TRIAL_BALANCE_KEY,
+    queryFn: () => accountingService.getTrialBalance(),
+  });
+}
+
+// ----------------------------------------------------
+// TAX MANAGEMENT HOOKS (Phase F9.3)
+// ----------------------------------------------------
+export const TAX_RATES_KEY = ['accounting-tax-rates'] as const;
+export const TAX_GROUPS_KEY = ['accounting-tax-groups'] as const;
+export const TAX_REPORTS_KEY = ['accounting-tax-reports'] as const;
+
+export function useTaxRates() {
+  return useQuery({
+    queryKey: TAX_RATES_KEY,
+    queryFn: () => accountingService.getTaxRates(),
+  });
+}
+
+export function useCreateTaxRate() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: any) => accountingService.createTaxRate(payload),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: TAX_RATES_KEY });
+      toast.success('Tax rate defined successfully.');
+    },
+    onError: () => {
+      toast.error('Failed to define tax rate.');
+    },
+  });
+}
+
+export function useTaxGroups() {
+  return useQuery({
+    queryKey: TAX_GROUPS_KEY,
+    queryFn: () => accountingService.getTaxGroups(),
+  });
+}
+
+export function useTaxReports(params?: Parameters<typeof accountingService.getTaxReport>[0]) {
+  return useQuery({
+    queryKey: [...TAX_REPORTS_KEY, params],
+    queryFn: () => accountingService.getTaxReport(params),
+  });
+}
+
+// ----------------------------------------------------
+// FISCAL PERIODS & CLOSING HOOKS (Phase F9.3)
+// ----------------------------------------------------
+export const FISCAL_YEARS_KEY = ['accounting-fiscal-years'] as const;
+export const CLOSING_CHECKLIST_KEY = ['accounting-closing-checklist'] as const;
+
+export function useFiscalYears() {
+  return useQuery({
+    queryKey: FISCAL_YEARS_KEY,
+    queryFn: () => accountingService.getFiscalYears(),
+  });
+}
+
+export function useCreateFiscalYear() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: any) => accountingService.createFiscalYear(payload),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: FISCAL_YEARS_KEY });
+      toast.success('Fiscal year initialized successfully.');
+    },
+    onError: () => {
+      toast.error('Failed to initialize fiscal year.');
+    },
+  });
+}
+
+export function useTogglePeriodState() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      yearId,
+      periodId,
+      status,
+    }: {
+      yearId: string;
+      periodId: string;
+      status: 'OPEN' | 'CLOSED' | 'LOCKED';
+    }) => accountingService.togglePeriodStatus(yearId, periodId, status),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: FISCAL_YEARS_KEY });
+      toast.success('Accounting period state updated.');
+    },
+    onError: () => {
+      toast.error('Failed to update period state.');
+    },
+  });
+}
+
+export function useClosingChecklist(periodId: string) {
+  return useQuery({
+    queryKey: [...CLOSING_CHECKLIST_KEY, periodId],
+    queryFn: () => accountingService.getClosingChecklist(periodId),
+    enabled: !!periodId,
+  });
+}
+
+export function useCheckoffChecklistItem() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ periodId, itemId }: { periodId: string; itemId: string }) =>
+      accountingService.toggleChecklistItem(periodId, itemId),
+    onSuccess: (_, variables) => {
+      void queryClient.invalidateQueries({
+        queryKey: [...CLOSING_CHECKLIST_KEY, variables.periodId],
+      });
+      toast.success('Closing check state updated.');
+    },
+    onError: () => {
+      toast.error('Failed to update checklist item state.');
+    },
+  });
+}
+
+export function useRunClosing() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (periodId: string) => accountingService.performClosing(periodId),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: FISCAL_YEARS_KEY });
+      toast.success('Closing procedures finalized successfully.');
+    },
+    onError: () => {
+      toast.error('Failed to execute period closing procedures.');
+    },
+  });
+}
+
+// ----------------------------------------------------
+// AUDIT TRAIL HOOKS (Phase F9.3)
+// ----------------------------------------------------
+export const AUDIT_TRAIL_KEY = ['accounting-audit-trail'] as const;
+
+export function useAuditTrail(params?: Parameters<typeof accountingService.getAuditTrail>[0]) {
+  return useQuery({
+    queryKey: [...AUDIT_TRAIL_KEY, params],
+    queryFn: () => accountingService.getAuditTrail(params),
+    placeholderData: (previousData) => previousData,
+  });
+}

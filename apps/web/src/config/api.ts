@@ -78,6 +78,11 @@ export const apiConfig = {
       cash: '/accounting/cash',
       bank: '/accounting/bank',
       vouchers: '/accounting/vouchers',
+      statements: '/accounting/statements',
+      tax: '/accounting/tax',
+      periods: '/accounting/periods',
+      closing: '/accounting/closing',
+      audit: '/accounting/audit',
     },
   },
 } as const;

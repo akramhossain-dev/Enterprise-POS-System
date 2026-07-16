@@ -25,6 +25,12 @@ const JOURNALS_KEY = 'epos_simulated_journals';
 const INCOMES_KEY = 'epos_simulated_incomes';
 const EXPENSES_KEY = 'epos_simulated_expenses';
 const VOUCHERS_KEY = 'epos_simulated_vouchers';
+const TAX_RATES_KEY = 'epos_simulated_tax_rates';
+const TAX_GROUPS_KEY = 'epos_simulated_tax_groups';
+const FISCAL_YEARS_KEY = 'epos_simulated_fiscal_years';
+const CLOSING_CHECKLIST_KEY = 'epos_simulated_closing_checklist';
+const AUDIT_LOG_KEY = 'epos_simulated_audit_logs';
+const TAX_TRANSACTIONS_KEY = 'epos_simulated_tax_transactions';
 
 class AccountingService extends ApiClient {
   // Preload Mock Accounts (GAAP Hierarchy Structure)
@@ -1939,6 +1945,760 @@ class AccountingService extends ApiClient {
       items[idx] = v;
       localStorage.setItem(VOUCHERS_KEY, JSON.stringify(items));
       return v;
+    }
+  }
+
+  // ----------------------------------------------------
+  // FINANCIAL STATEMENTS & TAX METHODS (Phase F9.3)
+  // ----------------------------------------------------
+  private getMockTaxRates(): TaxRate[] {
+    if (typeof window === 'undefined') return [];
+    const stored = localStorage.getItem(TAX_RATES_KEY);
+    if (stored) {
+      try {
+        return JSON.parse(stored);
+      } catch {
+        return [];
+      }
+    }
+    const defaultRates: TaxRate[] = [
+      {
+        id: 'tr-1',
+        name: 'Standard VAT (15%)',
+        rate: 15,
+        type: 'VAT',
+        status: 'ACTIVE',
+        createdAt: new Date().toISOString(),
+      },
+      {
+        id: 'tr-2',
+        name: 'Zero-Rated GST (0%)',
+        rate: 0,
+        type: 'GST',
+        status: 'ACTIVE',
+        createdAt: new Date().toISOString(),
+      },
+      {
+        id: 'tr-3',
+        name: 'Sales Tax (8%)',
+        rate: 8,
+        type: 'SALES',
+        status: 'ACTIVE',
+        createdAt: new Date().toISOString(),
+      },
+      {
+        id: 'tr-4',
+        name: 'Purchase Tax (5%)',
+        rate: 5,
+        type: 'PURCHASE',
+        status: 'ACTIVE',
+        createdAt: new Date().toISOString(),
+      },
+    ];
+    localStorage.setItem(TAX_RATES_KEY, JSON.stringify(defaultRates));
+    return defaultRates;
+  }
+
+  private getMockTaxGroups(): TaxGroup[] {
+    if (typeof window === 'undefined') return [];
+    const stored = localStorage.getItem(TAX_GROUPS_KEY);
+    if (stored) {
+      try {
+        return JSON.parse(stored);
+      } catch {
+        return [];
+      }
+    }
+    const defaultGroups: TaxGroup[] = [
+      {
+        id: 'tg-1',
+        name: 'Standard VAT Group',
+        rates: ['tr-1'],
+        status: 'ACTIVE',
+        createdAt: new Date().toISOString(),
+      },
+      {
+        id: 'tg-2',
+        name: 'Combined State & Federal',
+        rates: ['tr-3', 'tr-4'],
+        status: 'ACTIVE',
+        createdAt: new Date().toISOString(),
+      },
+    ];
+    localStorage.setItem(TAX_GROUPS_KEY, JSON.stringify(defaultGroups));
+    return defaultGroups;
+  }
+
+  private getMockTaxTransactions(): TaxTransaction[] {
+    if (typeof window === 'undefined') return [];
+    const stored = localStorage.getItem(TAX_TRANSACTIONS_KEY);
+    if (stored) {
+      try {
+        return JSON.parse(stored);
+      } catch {
+        return [];
+      }
+    }
+    const defaultTx: TaxTransaction[] = [
+      {
+        id: 'tt-1',
+        date: '2026-07-01T10:00:00Z',
+        reference: 'INV-2026-001',
+        type: 'SALES',
+        amount: 5000,
+        taxAmount: 750,
+        taxRate: 15,
+        taxRateName: 'Standard VAT (15%)',
+      },
+      {
+        id: 'tt-2',
+        date: '2026-07-03T11:30:00Z',
+        reference: 'BILL-2026-002',
+        type: 'PURCHASE',
+        amount: 2000,
+        taxAmount: 100,
+        taxRate: 5,
+        taxRateName: 'Purchase Tax (5%)',
+      },
+      {
+        id: 'tt-3',
+        date: '2026-07-05T14:15:00Z',
+        reference: 'INV-2026-002',
+        type: 'SALES',
+        amount: 1500,
+        taxAmount: 120,
+        taxRate: 8,
+        taxRateName: 'Sales Tax (8%)',
+      },
+      {
+        id: 'tt-4',
+        date: '2026-07-07T16:45:00Z',
+        reference: 'BILL-2026-004',
+        type: 'PURCHASE',
+        amount: 1200,
+        taxAmount: 60,
+        taxRate: 5,
+        taxRateName: 'Purchase Tax (5%)',
+      },
+    ];
+    localStorage.setItem(TAX_TRANSACTIONS_KEY, JSON.stringify(defaultTx));
+    return defaultTx;
+  }
+
+  private getMockFiscalYears(): FiscalYear[] {
+    if (typeof window === 'undefined') return [];
+    const stored = localStorage.getItem(FISCAL_YEARS_KEY);
+    if (stored) {
+      try {
+        return JSON.parse(stored);
+      } catch {
+        return [];
+      }
+    }
+    const defaultYears: FiscalYear[] = [
+      {
+        id: 'fy-2026',
+        year: 2026,
+        startDate: '2026-01-01',
+        endDate: '2026-12-31',
+        status: 'OPEN',
+        periods: [
+          {
+            id: 'p-1',
+            name: 'Q1 - Jan-Mar',
+            startDate: '2026-01-01',
+            endDate: '2026-03-31',
+            status: 'CLOSED',
+          },
+          {
+            id: 'p-2',
+            name: 'Q2 - Apr-Jun',
+            startDate: '2026-04-01',
+            endDate: '2026-06-30',
+            status: 'CLOSED',
+          },
+          {
+            id: 'p-3',
+            name: 'July 2026',
+            startDate: '2026-07-01',
+            endDate: '2026-07-31',
+            status: 'OPEN',
+          },
+          {
+            id: 'p-4',
+            name: 'August 2026',
+            startDate: '2026-08-01',
+            endDate: '2026-08-31',
+            status: 'OPEN',
+          },
+          {
+            id: 'p-5',
+            name: 'September 2026',
+            startDate: '2026-09-01',
+            endDate: '2026-09-31',
+            status: 'OPEN',
+          },
+          {
+            id: 'p-6',
+            name: 'Q4 - Oct-Dec',
+            startDate: '2026-10-01',
+            endDate: '2026-12-31',
+            status: 'OPEN',
+          },
+        ],
+      },
+    ];
+    localStorage.setItem(FISCAL_YEARS_KEY, JSON.stringify(defaultYears));
+    return defaultYears;
+  }
+
+  private getMockClosingChecklist(periodId: string): ClosingChecklistItem[] {
+    if (typeof window === 'undefined') return [];
+    const key = `${CLOSING_CHECKLIST_KEY}_${periodId}`;
+    const stored = localStorage.getItem(key);
+    if (stored) {
+      try {
+        return JSON.parse(stored);
+      } catch {
+        return [];
+      }
+    }
+    const defaultChecklist: ClosingChecklistItem[] = [
+      {
+        id: 'cc-1',
+        task: 'Reconcile Cash Registers',
+        description: 'Count physical petty cash float and match against cash book balance.',
+        checked: true,
+        checkedBy: 'Akram Hossain',
+        checkedAt: new Date().toISOString(),
+      },
+      {
+        id: 'cc-2',
+        task: 'Reconcile Bank Accounts',
+        description: 'Import bank statement feed and check off outstanding deposits/checks.',
+        checked: false,
+      },
+      {
+        id: 'cc-3',
+        task: 'Verify Accounts Receivable',
+        description: 'Review outstanding customer invoices and confirm matching payments.',
+        checked: false,
+      },
+      {
+        id: 'cc-4',
+        task: 'Verify Accounts Payable',
+        description: 'Review supplier unpaid invoices and verify voucher matching.',
+        checked: false,
+      },
+      {
+        id: 'cc-5',
+        task: 'Approve Pending Journal Entries',
+        description: 'Ensure all adjustment journals in DRAFT state are posted or voided.',
+        checked: true,
+        checkedBy: 'Akram Hossain',
+        checkedAt: new Date().toISOString(),
+      },
+      {
+        id: 'cc-6',
+        task: 'Verify Trial Balance Equals Zero',
+        description: 'Perform double-entry ledger balance check.',
+        checked: false,
+      },
+    ];
+    localStorage.setItem(key, JSON.stringify(defaultChecklist));
+    return defaultChecklist;
+  }
+
+  private getMockAuditLogs(): AuditLog[] {
+    if (typeof window === 'undefined') return [];
+    const stored = localStorage.getItem(AUDIT_LOG_KEY);
+    if (stored) {
+      try {
+        return JSON.parse(stored);
+      } catch {
+        return [];
+      }
+    }
+    const defaultLogs: AuditLog[] = [
+      {
+        id: 'al-1',
+        userId: 'usr-1',
+        userName: 'Akram Hossain',
+        action: 'CREATE_JOURNAL',
+        module: 'JOURNAL',
+        description: 'Created journal entry JV-2026-0041 for inventory adjustment.',
+        timestamp: '2026-07-16T10:15:00Z',
+        ipAddress: '192.168.1.55',
+      },
+      {
+        id: 'al-2',
+        userId: 'usr-1',
+        userName: 'Akram Hossain',
+        action: 'POST_JOURNAL',
+        module: 'JOURNAL',
+        description: 'Posted journal entry JV-2026-0041 to account ledger.',
+        timestamp: '2026-07-16T10:20:00Z',
+        ipAddress: '192.168.1.55',
+      },
+      {
+        id: 'al-3',
+        userId: 'usr-2',
+        userName: 'S. Cashier',
+        action: 'RECORD_INCOME',
+        module: 'INCOME',
+        description: 'Logged cash sales receipt of $150.00 from POS Terminal.',
+        timestamp: '2026-07-16T12:45:00Z',
+        ipAddress: '192.168.1.100',
+      },
+      {
+        id: 'al-4',
+        userId: 'usr-1',
+        userName: 'Akram Hossain',
+        action: 'APPROVE_VOUCHER',
+        module: 'VOUCHER',
+        description: 'Approved Payment Voucher PV-2026-8941 for vendor payout.',
+        timestamp: '2026-07-16T14:30:00Z',
+        ipAddress: '192.168.1.55',
+      },
+    ];
+    localStorage.setItem(AUDIT_LOG_KEY, JSON.stringify(defaultLogs));
+    return defaultLogs;
+  }
+
+  async logAuditEvent(action: string, module: string, description: string): Promise<void> {
+    const logs = this.getMockAuditLogs();
+    const newLog: AuditLog = {
+      id: `al-${Date.now()}`,
+      userId: 'usr-1',
+      userName: 'Akram Hossain',
+      action,
+      module,
+      description,
+      timestamp: new Date().toISOString(),
+      ipAddress: '127.0.0.1',
+    };
+    logs.unshift(newLog);
+    localStorage.setItem(AUDIT_LOG_KEY, JSON.stringify(logs));
+  }
+
+  async getProfitLoss(params?: {
+    startDate?: string;
+    endDate?: string;
+  }): Promise<ProfitLossStatement> {
+    try {
+      const response = await this.get<ProfitLossStatement>(
+        `${apiConfig.endpoints.accounting.statements}/profit-loss`,
+        params,
+      );
+      return response.data;
+    } catch {
+      const accounts = this.getMockAccounts();
+      const revenue = accounts
+        .filter((a) => a.type === 'INCOME')
+        .map((a) => ({ code: a.code, name: a.name, balance: a.balance }));
+
+      const expenseList = accounts.filter((a) => a.type === 'EXPENSE');
+
+      const cogsAccs = expenseList.filter(
+        (a) =>
+          a.code.startsWith('50') ||
+          a.name.toLowerCase().includes('cogs') ||
+          a.name.toLowerCase().includes('cost of goods'),
+      );
+      const cogs = cogsAccs.map((a) => ({ code: a.code, name: a.name, balance: a.balance }));
+
+      const expenses = expenseList
+        .filter((a) => !cogsAccs.some((c) => c.id === a.id))
+        .map((a) => ({ code: a.code, name: a.name, balance: a.balance }));
+
+      const totalRevenue = revenue.reduce((sum, r) => sum + r.balance, 0);
+      const totalCOGS = cogs.reduce((sum, c) => sum + c.balance, 0);
+      const grossProfit = totalRevenue - totalCOGS;
+      const totalExpenses = expenses.reduce((sum, e) => sum + e.balance, 0);
+      const operatingProfit = grossProfit - totalExpenses;
+      const netProfit = operatingProfit;
+
+      return {
+        revenue,
+        cogs,
+        grossProfit,
+        expenses,
+        operatingProfit,
+        netProfit,
+      };
+    }
+  }
+
+  async getBalanceSheet(params?: { date?: string }): Promise<BalanceSheet> {
+    try {
+      const response = await this.get<BalanceSheet>(
+        `${apiConfig.endpoints.accounting.statements}/balance-sheet`,
+        params,
+      );
+      return response.data;
+    } catch {
+      const accounts = this.getMockAccounts();
+      const assets = accounts
+        .filter((a) => a.type === 'ASSETS')
+        .map((a) => ({ code: a.code, name: a.name, balance: a.balance }));
+      const liabilities = accounts
+        .filter((a) => a.type === 'LIABILITIES')
+        .map((a) => ({ code: a.code, name: a.name, balance: a.balance }));
+      const equity = accounts
+        .filter((a) => a.type === 'EQUITY')
+        .map((a) => ({ code: a.code, name: a.name, balance: a.balance }));
+
+      const totalAssets = assets.reduce((sum, a) => sum + a.balance, 0);
+      const totalLiabilities = liabilities.reduce((sum, l) => sum + l.balance, 0);
+      const totalEquity = equity.reduce((sum, e) => sum + e.balance, 0);
+
+      return {
+        assets,
+        liabilities,
+        equity,
+        totalAssets,
+        totalLiabilities,
+        totalEquity,
+      };
+    }
+  }
+
+  async getCashFlow(params?: { startDate?: string; endDate?: string }): Promise<CashFlowStatement> {
+    try {
+      const response = await this.get<CashFlowStatement>(
+        `${apiConfig.endpoints.accounting.statements}/cash-flow`,
+        params,
+      );
+      return response.data;
+    } catch {
+      const operating = [
+        { name: 'Operating Net Profit', balance: 12500 },
+        { name: 'Accounts Receivable Adjustment', balance: -1500 },
+        { name: 'Accounts Payable Adjustment', balance: 2200 },
+        { name: 'Inventory Asset Valuation Offset', balance: -3000 },
+      ];
+      const investing = [
+        { name: 'Purchase of POS Terminal hardware', balance: -1800 },
+        { name: 'Warehouse Equipment Setup', balance: -2500 },
+      ];
+      const financing = [
+        { name: 'Owner Equity Capital Cash Deposit', balance: 10000 },
+        { name: 'Payment of Long-term Loan Debt', balance: -2000 },
+      ];
+
+      const opTotal = operating.reduce((sum, o) => sum + o.balance, 0);
+      const invTotal = investing.reduce((sum, i) => sum + i.balance, 0);
+      const finTotal = financing.reduce((sum, f) => sum + f.balance, 0);
+      const netCashFlow = opTotal + invTotal + finTotal;
+
+      return {
+        operating,
+        investing,
+        financing,
+        netCashFlow,
+      };
+    }
+  }
+
+  async getTrialBalance(): Promise<TrialBalance> {
+    try {
+      const response = await this.get<TrialBalance>(
+        `${apiConfig.endpoints.accounting.statements}/trial-balance`,
+      );
+      return response.data;
+    } catch {
+      const accounts = this.getMockAccounts();
+      const items = accounts.map((a) => {
+        const isDebitAccount = a.type === 'ASSETS' || a.type === 'EXPENSE';
+        return {
+          accountId: a.id,
+          code: a.code,
+          name: a.name,
+          debit: isDebitAccount ? a.balance : 0,
+          credit: !isDebitAccount ? a.balance : 0,
+        };
+      });
+
+      const totalDebit = items.reduce((sum, i) => sum + i.debit, 0);
+      const totalCredit = items.reduce((sum, i) => sum + i.credit, 0);
+      const difference = Math.abs(totalDebit - totalCredit);
+
+      return {
+        items,
+        totalDebit,
+        totalCredit,
+        difference,
+      };
+    }
+  }
+
+  async getTaxRates(): Promise<TaxRate[]> {
+    try {
+      const response = await this.get<TaxRate[]>(`${apiConfig.endpoints.accounting.tax}/rates`);
+      return response.data;
+    } catch {
+      return this.getMockTaxRates();
+    }
+  }
+
+  async createTaxRate(payload: any): Promise<TaxRate> {
+    try {
+      const response = await this.post<TaxRate>(
+        `${apiConfig.endpoints.accounting.tax}/rates`,
+        payload,
+      );
+      return response.data;
+    } catch {
+      const rates = this.getMockTaxRates();
+      const newRate: TaxRate = {
+        id: `tr-${Date.now()}`,
+        name: payload.name,
+        rate: Number(payload.rate),
+        type: payload.type || 'VAT',
+        notes: payload.notes || '',
+        status: 'ACTIVE',
+        createdAt: new Date().toISOString(),
+      };
+      rates.push(newRate);
+      localStorage.setItem(TAX_RATES_KEY, JSON.stringify(rates));
+      void this.logAuditEvent(
+        'CREATE_TAX_RATE',
+        'TAX',
+        `Created tax rate: ${newRate.name} (${newRate.rate}%)`,
+      );
+      return newRate;
+    }
+  }
+
+  async getTaxGroups(): Promise<TaxGroup[]> {
+    try {
+      const response = await this.get<TaxGroup[]>(`${apiConfig.endpoints.accounting.tax}/groups`);
+      return response.data;
+    } catch {
+      return this.getMockTaxGroups();
+    }
+  }
+
+  async getTaxReport(params?: { startDate?: string; endDate?: string }): Promise<TaxReport> {
+    try {
+      const response = await this.get<TaxReport>(
+        `${apiConfig.endpoints.accounting.tax}/report`,
+        params,
+      );
+      return response.data;
+    } catch {
+      const txs = this.getMockTaxTransactions();
+      const totalSalesTax = txs
+        .filter((t) => t.type === 'SALES')
+        .reduce((sum, t) => sum + t.taxAmount, 0);
+      const totalPurchaseTax = txs
+        .filter((t) => t.type === 'PURCHASE')
+        .reduce((sum, t) => sum + t.taxAmount, 0);
+      const netLiability = totalSalesTax - totalPurchaseTax;
+
+      return {
+        transactions: txs,
+        totalSalesTax,
+        totalPurchaseTax,
+        netLiability,
+      };
+    }
+  }
+
+  async getFiscalYears(): Promise<FiscalYear[]> {
+    try {
+      const response = await this.get<FiscalYear[]>(
+        `${apiConfig.endpoints.accounting.periods}/years`,
+      );
+      return response.data;
+    } catch {
+      return this.getMockFiscalYears();
+    }
+  }
+
+  async createFiscalYear(payload: any): Promise<FiscalYear> {
+    try {
+      const response = await this.post<FiscalYear>(
+        `${apiConfig.endpoints.accounting.periods}/years`,
+        payload,
+      );
+      return response.data;
+    } catch {
+      const years = this.getMockFiscalYears();
+      const yearInt = Number(payload.year) || 2026;
+      const newYear: FiscalYear = {
+        id: `fy-${yearInt}`,
+        year: yearInt,
+        startDate: `${yearInt}-01-01`,
+        endDate: `${yearInt}-12-31`,
+        status: 'OPEN',
+        periods: [
+          {
+            id: `p-${yearInt}-1`,
+            name: 'Q1 - Jan-Mar',
+            startDate: `${yearInt}-01-01`,
+            endDate: `${yearInt}-03-31`,
+            status: 'OPEN',
+          },
+          {
+            id: `p-${yearInt}-2`,
+            name: 'Q2 - Apr-Jun',
+            startDate: `${yearInt}-04-01`,
+            endDate: `${yearInt}-06-30`,
+            status: 'OPEN',
+          },
+          {
+            id: `p-${yearInt}-3`,
+            name: 'Q3 - Jul-Sep',
+            startDate: `${yearInt}-07-01`,
+            endDate: `${yearInt}-09-30`,
+            status: 'OPEN',
+          },
+          {
+            id: `p-${yearInt}-4`,
+            name: 'Q4 - Oct-Dec',
+            startDate: `${yearInt}-10-01`,
+            endDate: `${yearInt}-12-31`,
+            status: 'OPEN',
+          },
+        ],
+      };
+      years.push(newYear);
+      localStorage.setItem(FISCAL_YEARS_KEY, JSON.stringify(years));
+      void this.logAuditEvent('CREATE_FISCAL_YEAR', 'PERIOD', `Opened fiscal year ${yearInt}`);
+      return newYear;
+    }
+  }
+
+  async togglePeriodStatus(
+    yearId: string,
+    periodId: string,
+    status: 'OPEN' | 'CLOSED' | 'LOCKED',
+  ): Promise<AccountingPeriod> {
+    try {
+      const response = await this.post<AccountingPeriod>(
+        `${apiConfig.endpoints.accounting.periods}/years/${yearId}/periods/${periodId}/status`,
+        { status },
+      );
+      return response.data;
+    } catch {
+      const years = this.getMockFiscalYears();
+      const yearIdx = years.findIndex((y) => y.id === yearId);
+      if (yearIdx === -1) throw new Error('Fiscal year not found.');
+
+      const pIdx = years[yearIdx]!.periods.findIndex((p) => p.id === periodId);
+      if (pIdx === -1) throw new Error('Period not found.');
+
+      years[yearIdx]!.periods[pIdx]!.status = status;
+      localStorage.setItem(FISCAL_YEARS_KEY, JSON.stringify(years));
+
+      void this.logAuditEvent(
+        'TOGGLE_PERIOD_STATUS',
+        'PERIOD',
+        `Toggled period ${years[yearIdx]!.periods[pIdx]!.name} to status: ${status}`,
+      );
+
+      return years[yearIdx]!.periods[pIdx]!;
+    }
+  }
+
+  async getClosingChecklist(periodId: string): Promise<ClosingChecklistItem[]> {
+    try {
+      const response = await this.get<ClosingChecklistItem[]>(
+        `${apiConfig.endpoints.accounting.closing}/checklist`,
+        { params: { periodId } },
+      );
+      return response.data;
+    } catch {
+      return this.getMockClosingChecklist(periodId);
+    }
+  }
+
+  async toggleChecklistItem(periodId: string, itemId: string): Promise<ClosingChecklistItem> {
+    try {
+      const response = await this.post<ClosingChecklistItem>(
+        `${apiConfig.endpoints.accounting.closing}/checklist/${itemId}/toggle`,
+        { periodId },
+      );
+      return response.data;
+    } catch {
+      const items = this.getMockClosingChecklist(periodId);
+      const idx = items.findIndex((i) => i.id === itemId);
+      if (idx === -1) throw new Error('Checklist item not found.');
+
+      items[idx]!.checked = !items[idx]!.checked;
+      items[idx]!.checkedBy = items[idx]!.checked ? 'Akram Hossain' : undefined;
+      items[idx]!.checkedAt = items[idx]!.checked ? new Date().toISOString() : undefined;
+
+      const key = `${CLOSING_CHECKLIST_KEY}_${periodId}`;
+      localStorage.setItem(key, JSON.stringify(items));
+
+      void this.logAuditEvent(
+        'TOGGLE_CHECKLIST_ITEM',
+        'CLOSING',
+        `Checklist item: "${items[idx]!.task}" updated in closing board.`,
+      );
+
+      return items[idx]!;
+    }
+  }
+
+  async performClosing(periodId: string): Promise<void> {
+    try {
+      await this.post(`${apiConfig.endpoints.accounting.closing}/close`, { periodId });
+    } catch {
+      void this.logAuditEvent(
+        'CLOSE_PERIOD',
+        'CLOSING',
+        `Executed fiscal period close settlement for period ID ${periodId}`,
+      );
+    }
+  }
+
+  async getAuditTrail(params?: {
+    q?: string;
+    module?: string;
+    page?: number;
+    limit?: number;
+  }): Promise<PaginatedResponse<AuditLog>> {
+    try {
+      const response = await this.get<PaginatedResponse<AuditLog>>(
+        `${apiConfig.endpoints.accounting.audit}/trail`,
+        params,
+      );
+      return response.data;
+    } catch {
+      let filtered = this.getMockAuditLogs();
+      if (params?.q) {
+        const q = params.q.toLowerCase();
+        filtered = filtered.filter(
+          (l) =>
+            l.userName.toLowerCase().includes(q) ||
+            l.description.toLowerCase().includes(q) ||
+            l.action.toLowerCase().includes(q),
+        );
+      }
+      if (params?.module && params.module !== 'ALL') {
+        filtered = filtered.filter((l) => l.module === params.module);
+      }
+
+      const page = params?.page ?? 1;
+      const limit = params?.limit ?? 15;
+      const total = filtered.length;
+      const totalPages = Math.ceil(total / limit);
+      const paginated = filtered.slice((page - 1) * limit, page * limit);
+
+      return {
+        data: paginated,
+        meta: {
+          page,
+          pageSize: limit,
+          total,
+          totalPages,
+          hasNextPage: page < totalPages,
+          hasPrevPage: page > 1,
+        },
+      };
     }
   }
 }
