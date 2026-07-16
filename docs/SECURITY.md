@@ -29,7 +29,7 @@ The application enforces a fine-grained permission-based control model:
 
 ## 3. Cryptography & Password Hardening
 
-- **Password Hashing:** Passwords are encrypted before database persistence using the **Argon2id** key derivation function.
+- **Password Hashing:** Passwords are encrypted before database persistence using the **bcrypt** algorithm.
 - **Validation Rules:** User registration or password changes check candidate strings against a strict validation layout requiring a minimum of 8 characters, capital/lowercase letters, digits, and special characters.
 
 ---
