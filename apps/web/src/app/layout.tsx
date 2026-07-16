@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import { Providers } from '@/providers';
 import '@/styles/globals.css';
 import { appConfig } from '@/config/app';
+import { SkipLink } from '@/components/layout/skip-link';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -32,7 +33,7 @@ export const metadata: Metadata = {
     creator: appConfig.seo.twitterHandle,
   },
   robots: {
-    index: false, // enterprise app — no public indexing
+    index: false,
     follow: false,
   },
   icons: {
@@ -56,6 +57,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} antialiased`}>
+        <SkipLink />
         <Providers>{children}</Providers>
       </body>
     </html>

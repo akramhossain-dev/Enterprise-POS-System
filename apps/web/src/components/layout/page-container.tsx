@@ -8,5 +8,13 @@ interface PageContainerProps {
 }
 
 export function PageContainer({ children, className, narrow }: PageContainerProps) {
-  return <div className={cn('space-y-6', narrow && 'max-w-4xl', className)}>{children}</div>;
+  return (
+    <main
+      id="main-content"
+      tabIndex={-1}
+      className={cn('space-y-6 outline-none', narrow && 'max-w-4xl', className)}
+    >
+      {children}
+    </main>
+  );
 }
