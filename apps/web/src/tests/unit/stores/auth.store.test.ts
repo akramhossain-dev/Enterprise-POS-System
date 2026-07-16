@@ -5,11 +5,16 @@ import type { User } from '@/types/auth';
 const mockUser: User = {
   id: '1',
   email: 'test@example.com',
+  firstName: 'Test',
+  lastName: 'User',
   fullName: 'Test User',
   role: 'admin',
   roles: ['admin', 'manager'],
   permissions: ['pos:access', 'reports:read'],
+  status: 'active',
   workspaceId: 'ws_123',
+  createdAt: '2026-07-16T17:00:00Z',
+  updatedAt: '2026-07-16T17:00:00Z',
 };
 
 describe('useAuthStore (zustand)', () => {
