@@ -15,44 +15,21 @@ The application is structured as a TypeScript monorepo utilizing high-efficiency
 
 ---
 
-## Monorepo Project Structure
-
-```
-Enterprise-POS-System/
-├── apps/
-│   ├── api/                  # Fastify 5 Backend API
-│   │   ├── prisma/           # Prisma DB schema and migrations
-│   │   └── src/              # API controllers, modules, and services
-│   └── web/                  # Next.js 16 Frontend Client
-│       ├── src/
-│       │   ├── app/          # App Router dashboard and public pages
-│       │   ├── components/   # Reusable UI/POS components
-│       │   ├── hooks/        # Stateful hooks and data query hooks
-│       │   ├── services/     # API Service classes (axios clients)
-│       │   └── stores/       # Zustand global stores (auth, pos, ui)
-├── docker/                   # Production Nginx and Dockerfile scripts
-├── docker-compose.yml        # Development Docker Compose file
-├── docker-compose.prod.yml   # Production Docker Compose file
-└── turbo.json                # Turborepo task pipeline config
-```
-
----
-
 ## Documentation Index
 
-Explore the comprehensive manuals to set up, operate, and contribute to this repository:
+Explore the detailed manuals inside the `docs/` directory to configure, deploy, and maintain the repository:
 
-1.  [**Architecture Guide (`ARCHITECTURE.md`)**](./ARCHITECTURE.md) — Monorepo design, data flow, authentication, session sync, security layers, and data structure relationships.
-2.  [**Developer Onboarding Guide (`DEVELOPMENT.md`)**](./DEVELOPMENT.md) — Prerequisites, local environment setup, configuration variables, database migrations, and testing workflows.
-3.  [**API Reference Specification (`API.md`)**](./API.md) — API contract conventions, payload schemas, errors, and endpoints.
-4.  [**Production Deployment Guide (`DEPLOYMENT.md`)**](./DEPLOYMENT.md) — Multi-container docker compose stack, Nginx proxy setup, health checks, automatic rollbacks, and backup routines.
-5.  [**Contribution Guidelines (`CONTRIBUTING.md`)**](./CONTRIBUTING.md) — Branch naming standards, commit message format, code style, and Pull Request review checks.
+1.  [**Architecture Guide (`docs/ARCHITECTURE.md`)**](./docs/ARCHITECTURE.md) — System designs, client state structures, token lifecycles, and database relationship structures.
+2.  [**Developer Onboarding Guide (`docs/DEVELOPMENT.md`)**](./docs/DEVELOPMENT.md) — Local environments setup, configuration variables, migration commands, and test runners.
+3.  [**API Reference Specification (`docs/API.md`)**](./docs/API.md) — Service base URLs, headers, payloads, standard error codes, and endpoint routing specs.
+4.  [**Production Deployment Guide (`docs/DEPLOYMENT.md`)**](./docs/DEPLOYMENT.md) — Multi-container docker orchestration, post-deployment health validations, auto-rollback processes, and database backup scripts.
+5.  [**Security Architecture Guide (`docs/SECURITY.md`)**](./docs/SECURITY.md) — Authorization model, cookie security, request validations, rate limiting, and container vulnerability scans.
+6.  [**Project Codebase Directory Map (`docs/PROJECT_STRUCTURE.md`)**](./docs/PROJECT_STRUCTURE.md) — Directory hierarchies of the backend modules and frontend client workspaces.
+7.  [**Contribution Guidelines (`docs/CONTRIBUTING.md`)**](./docs/CONTRIBUTING.md) — Git branching rules, Conventional Commit formats, and PR validation checks.
 
 ---
 
-## Getting Started (Quick Run)
-
-For detailed instructions, refer to the [Developer Onboarding Guide](./DEVELOPMENT.md).
+## Quick Start (Local Run)
 
 ```bash
 # 1. Install workspace dependencies
