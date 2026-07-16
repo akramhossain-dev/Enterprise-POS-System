@@ -157,7 +157,7 @@ export default function ReturnHistoryPage() {
                       {log.notes && (
                         <div className="flex items-center gap-1">
                           <MessageSquare className="w-3 h-3" />
-                          <span className="italic">"{log.notes}"</span>
+                          <span className="italic">&quot;{log.notes}&quot;</span>
                         </div>
                       )}
                     </div>

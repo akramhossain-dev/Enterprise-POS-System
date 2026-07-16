@@ -11,12 +11,13 @@ const WARNING_TIMEOUT_MS = 14 * 60 * 1000; // 14 minutes
 
 export function useSessionTimeout() {
   const router = useRouter();
-  const lastActivityRef = useRef<number>(Date.now());
+  const lastActivityRef = useRef<number>(0);
   const warnToastShownRef = useRef<boolean>(false);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
+    lastActivityRef.current = Date.now();
     const channel = new BroadcastChannel('epos-session');
 
     const handleSessionMessage = (event: MessageEvent) => {

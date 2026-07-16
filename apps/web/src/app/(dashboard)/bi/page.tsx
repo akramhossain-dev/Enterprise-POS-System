@@ -36,6 +36,8 @@ interface LayoutWidget {
   value?: number;
 }
 
+const generateWidgetId = (): string => `wi-${Date.now()}`;
+
 export default function ExecutiveBiDashboardPage() {
   const [isBuilderOpen, setIsBuilderOpen] = useState(false);
   const [widgets, setWidgets] = useState<LayoutWidget[]>([
@@ -62,7 +64,7 @@ export default function ExecutiveBiDashboardPage() {
 
   const handleSaveKpi = (newKpi: { name: string; formula: string; color: string }) => {
     const newWidget: LayoutWidget = {
-      id: `wi-${Date.now()}`,
+      id: generateWidgetId(),
       name: newKpi.name,
       type: 'kpi',
       width: 'half',
@@ -80,7 +82,7 @@ export default function ExecutiveBiDashboardPage() {
       ...widgets,
       {
         ...match,
-        id: `wi-${Date.now()}`,
+        id: generateWidgetId(),
         name: `${match.name} (Copy)`,
       },
     ]);

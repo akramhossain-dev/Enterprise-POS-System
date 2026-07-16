@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
 
-const BASE = 'http://localhost:4000/api';
+const BASE = 'http://localhost:4000/api/v1';
 
 export const handlers = [
   // ── Auth ──────────────────────────────────────────────────────────────────
@@ -8,7 +8,9 @@ export const handlers = [
     HttpResponse.json({
       success: true,
       data: {
-        accessToken: 'mock-access-token',
+        tokens: {
+          accessToken: 'mock-access-token',
+        },
         user: { id: '1', email: 'admin@test.com', role: 'admin', roles: [], permissions: [] },
       },
     }),

@@ -258,7 +258,8 @@ export default function PurchaseDashboard() {
               {orders.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="p-6 text-center text-muted-foreground italic">
-                    No purchase orders found. Initiate order requests using "Create PO" button.
+                    No purchase orders found. Initiate order requests using &quot;Create PO&quot;
+                    button.
                   </td>
                 </tr>
               ) : (

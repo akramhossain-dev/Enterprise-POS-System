@@ -111,7 +111,9 @@ export default function POSHeldOrdersPage() {
                     </div>
 
                     {held.notes && (
-                      <p className="text-[11px] text-slate-400 italic">Notes: "{held.notes}"</p>
+                      <p className="text-[11px] text-slate-400 italic">
+                        Notes: &quot;{held.notes}&quot;
+                      </p>
                     )}
                   </div>
 

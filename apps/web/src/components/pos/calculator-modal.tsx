@@ -14,6 +14,33 @@ export function CalculatorModal({ open, onOpenChange }: CalculatorModalProps) {
   const [expr, setExpr] = useState('');
   const [result, setResult] = useState('');
 
+  const calculateExpr = () => {
+    try {
+      // Evaluate basic mathematical operations safely (avoid eval where possible, or replace sanitised operations)
+      const sanitized = expr.replace(/[^0-9\+\-\*\/\.\%]/g, '');
+      if (!sanitized) return;
+      // Use Function constructor instead of eval for isolated execution
+      const fn = new Function(`return (${sanitized})`);
+      const val = fn();
+      setResult(Number(val).toLocaleString(undefined, { maximumFractionDigits: 4 }));
+    } catch {
+      setResult('Error');
+    }
+  };
+
+  const handleKeyPress = (val: string) => {
+    setExpr((prev) => prev + val);
+  };
+
+  const clearAll = () => {
+    setExpr('');
+    setResult('');
+  };
+
+  const deleteLast = () => {
+    setExpr((prev) => prev.slice(0, -1));
+  };
+
   // Handle keyboard inputs when modal is active
   useEffect(() => {
     if (!open) return;
@@ -37,33 +64,6 @@ export function CalculatorModal({ open, onOpenChange }: CalculatorModalProps) {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [open, expr]);
-
-  const handleKeyPress = (val: string) => {
-    setExpr((prev) => prev + val);
-  };
-
-  const clearAll = () => {
-    setExpr('');
-    setResult('');
-  };
-
-  const deleteLast = () => {
-    setExpr((prev) => prev.slice(0, -1));
-  };
-
-  const calculateExpr = () => {
-    try {
-      // Evaluate basic mathematical operations safely (avoid eval where possible, or replace sanitised operations)
-      const sanitized = expr.replace(/[^0-9\+\-\*\/\.\%]/g, '');
-      if (!sanitized) return;
-      // Use Function constructor instead of eval for isolated execution
-      const fn = new Function(`return (${sanitized})`);
-      const val = fn();
-      setResult(Number(val).toLocaleString(undefined, { maximumFractionDigits: 4 }));
-    } catch {
-      setResult('Error');
-    }
-  };
 
   const keys = [
     ['C', 'del', '%', '/'],

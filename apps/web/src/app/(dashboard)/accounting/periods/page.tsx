@@ -133,7 +133,7 @@ export default function FiscalPeriodsPage() {
           ))
         ) : (
           <div className="text-center py-20 border border-dashed border-slate-850 rounded-2xl text-slate-500 text-xs">
-            No active fiscal years defined. Click "New Fiscal Year" above to start.
+            No active fiscal years defined. Click &quot;New Fiscal Year&quot; above to start.
           </div>
         )}
       </div>
