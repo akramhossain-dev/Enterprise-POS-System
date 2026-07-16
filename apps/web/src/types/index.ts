@@ -19,3 +19,4 @@ export * from './pos';
 export * from './checkout';
 export * from './sales-return';
 export * from './accounting';
+export * from './analytics';

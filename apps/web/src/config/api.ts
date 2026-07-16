@@ -84,6 +84,17 @@ export const apiConfig = {
       closing: '/accounting/closing',
       audit: '/accounting/audit',
     },
+    analytics: {
+      dashboard: '/analytics/dashboard',
+      sales: '/analytics/sales',
+      purchase: '/analytics/purchase',
+      inventory: '/analytics/inventory',
+      customers: '/analytics/customers',
+      suppliers: '/analytics/suppliers',
+      branches: '/analytics/branches',
+      warehouses: '/analytics/warehouses',
+      employees: '/analytics/employees',
+    },
   },
 } as const;
 

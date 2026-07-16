@@ -1012,3 +1012,44 @@ A timeline tracking compliance audit trails, userName actions, timestamps, and I
 | `/accounting/periods`                  | `app/(dashboard)/accounting/periods/page.tsx`                  | Period lock setups and fiscal year calendar controls.                          |
 | `/accounting/closing`                  | `app/(dashboard)/accounting/closing/page.tsx`                  | Month-end, quarter, and year-end closing controls and checklists.              |
 | `/accounting/audit`                    | `app/(dashboard)/accounting/audit/page.tsx`                    | Security audit trails and compliance activity log registries.                  |
+
+---
+
+## Business Analytics & Executive Components (Phase F10.1)
+
+### ChartCard
+
+`apps/web/src/components/analytics/chart-card.tsx`
+Unified Recharts adapter card displaying responsive Area, Bar, Line, or Pie graphs. Includes timeframe selectors and CSV export handlers.
+
+### LeaderboardCard
+
+`apps/web/src/components/analytics/leaderboard-card.tsx`
+Progress bar rankings list mapping top products, customer tiers, and top suppliers.
+
+### StatisticsCard
+
+`apps/web/src/components/analytics/statistics-card.tsx`
+Ratios metrics tracking block illustrating average order sizes, conversion rates, and turnover speeds.
+
+### Skeletons
+
+`apps/web/src/components/analytics/analytics-skeletons.tsx`
+Loading shimmer placeholders for dashboard grids, widgets, and charts.
+
+---
+
+## Business Analytics Page Routes (Phase F10.1)
+
+| Route                  | File                                           | Description                                                                                        |
+| ---------------------- | ---------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `/analytics/dashboard` | `app/(dashboard)/analytics/dashboard/page.tsx` | Executive Dashboard with drag & drop customize layouts and real-time auto sync.                    |
+| `/analytics/overview`  | `app/(dashboard)/analytics/overview/page.tsx`  | Central Business Overview charting margins, conversion ratios, and procurement trends.             |
+| `/analytics/sales`     | `app/(dashboard)/analytics/sales/page.tsx`     | Sales Analytics tracking product categories, popular brands, and payment methods.                  |
+| `/analytics/purchase`  | `app/(dashboard)/analytics/purchase/page.tsx`  | Purchase Analytics monitoring supplier invoice values, outstanding credit limits, and debit notes. |
+| `/analytics/inventory` | `app/(dashboard)/analytics/inventory/page.tsx` | Inventory Analytics mapping storage asset value values, turnover velocities, and low stock lists.  |
+| `/analytics/customer`  | `app/(dashboard)/analytics/customer/page.tsx`  | Customer Analytics charting database cohort growths, loyalty points, and active segments.          |
+| `/analytics/supplier`  | `app/(dashboard)/analytics/supplier/page.tsx`  | Supplier Analytics highlighting vendor deliveries, lead delays, and purchase shares.               |
+| `/analytics/branch`    | `app/(dashboard)/analytics/branch/page.tsx`    | Branch Analytics comparing local branch performance parameters, sales volumes, and profits.        |
+| `/analytics/warehouse` | `app/(dashboard)/analytics/warehouse/page.tsx` | Warehouse Analytics tracing storage occupancy percentages and item volumes.                        |
+| `/analytics/employee`  | `app/(dashboard)/analytics/employee/page.tsx`  | Employee Analytics displaying checkout representative POS sales and logs.                          |
