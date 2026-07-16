@@ -1,165 +1,100 @@
 # Architecture Guide — Enterprise POS System
 
-## Monorepo Structure
+This guide outlines the system design, communication protocols, state management, security boundaries, and data architectures of the monorepo application.
+
+---
+
+## System Overview
+
+The Enterprise POS System is built as a split-architecture monorepo separating a stateless, RESTful API backend server from a server-side rendered (SSR) frontend user portal.
+
+```mermaid
+graph TD
+    Client[Next.js Web Client :3000] -->|HTTP REST| Nginx[Nginx Reverse Proxy :80/:443]
+    Nginx -->|Proxy pass /api/*| Fastify[Fastify API Server :4000]
+    Nginx -->|Proxy pass /| Client
+    Fastify -->|Read/Write SQL| Postgres[(PostgreSQL 16)]
+    Fastify -->|Cache & Session| Redis[(Redis 7)]
+```
+
+---
+
+## Monorepo Division
+
+The codebase is unified using `pnpm` workspaces and `Turborepo` to orchestrate build pipelines, cached execution, and cross-package references.
 
 ```
 Enterprise-POS-System/
 ├── apps/
-│   ├── web/          # Next.js 16 frontend application
-│   └── api/          # Fastify 5 backend API
-├── docs/             # Extended documentation
-├── docker/           # Docker configurations
-└── turbo.json        # Turborepo pipeline config
+│   ├── api/                  # Node.js API Service (Fastify 5)
+│   └── web/                  # Next.js 16 Client Portal
+└── packages/                 # Shared types, lint configs (if applicable)
 ```
 
 ---
 
-## Frontend Architecture (`apps/web`)
+## Frontend Architecture
 
-### Technology Stack
+The client application runs on **Next.js 16** with React 19.
 
-| Layer         | Technology                | Purpose                             |
-| ------------- | ------------------------- | ----------------------------------- |
-| Framework     | Next.js 16 (App Router)   | SSR, routing, API routes            |
-| Language      | TypeScript 5 (strict)     | Type safety                         |
-| Styling       | Tailwind CSS v4           | Utility-first CSS                   |
-| UI Library    | shadcn/ui + Radix UI      | Accessible component primitives     |
-| State         | Zustand v5                | Client-side global state            |
-| Data Fetching | TanStack Query v5         | Server state, caching, mutations    |
-| HTTP Client   | Axios                     | API communication with interceptors |
-| Forms         | React Hook Form + Zod     | Form state and validation           |
-| Animation     | Framer Motion             | UI transitions                      |
-| Charts        | Recharts                  | Data visualization                  |
-| Testing       | Vitest + RTL + Playwright | Unit, component, E2E                |
+- **Page Routing:** Managed server-side and client-side using the Next.js App Router directory structure.
+- **State Management:**
+  - _Server State:_ Fetched, cached, and updated using **TanStack Query**.
+  - _Client state:_ Global stores (such as UI collapse toggles, POS cart items, active cashier sessions) are held in **Zustand** stores.
+- **API Client Layer:** Components never request endpoints directly. Instead, they interact via unified custom react hooks that query domain-specific `ApiClient` service instances (under `src/services/*`) initialized with configured axios intercepts.
 
-### Directory Layout
+---
 
-```
-src/
-├── app/                  # Next.js App Router pages
-│   ├── (auth)/           # Public auth pages (login, forgot-password, etc.)
-│   ├── (dashboard)/      # Protected dashboard pages
-│   └── layout.tsx        # Root layout with providers
-├── components/           # Reusable UI components
-│   ├── accounting/       # Accounting-specific components
-│   ├── analytics/        # Analytics and chart components
-│   ├── bi/               # Business intelligence widgets
-│   ├── common/           # Shared security components (ErrorBoundary, PermissionGuard)
-│   ├── dashboard/        # Dashboard cards and charts
-│   ├── layout/           # Sidebar, TopNavbar, PageContainer, etc.
-│   ├── pos/              # POS terminal components
-│   ├── reports/          # Report table and filter components
-│   └── ui/               # shadcn/ui primitives
-├── config/               # App, API, auth, navigation config
-├── constants/            # Application-wide constants
-├── hooks/                # TanStack Query hooks (one per domain)
-├── lib/                  # Axios instance, QueryClient factory
-├── providers/            # React context providers (Auth, Query, Theme, Toast)
-├── services/             # API service classes (one per domain)
-├── stores/               # Zustand stores (auth, ui, pos)
-├── tests/                # Test infrastructure
-│   ├── msw/              # MSW API mock handlers and server
-│   └── unit/             # Unit and component tests
-├── types/                # TypeScript type definitions (one per domain)
-└── utils/                # Pure utility functions (format, error, validators, cn)
+## Backend Architecture
+
+The backend API server is built on **Fastify 5** for top-tier HTTP parsing throughput and minimal execution overhead.
+
+- **Structure:** Modules are separated into controller, service, validator, and schema definitions.
+- **Database Interface:** Object relation mapping is driven by **Prisma 6**, compiling schemas into type-safe client APIs.
+- **Input Validation:** Powered by Zod schemas, checking request headers, parameters, and bodies at the middleware stage.
+
+---
+
+## Database Architecture
+
+A relational **PostgreSQL 16** database manages core transactional records, product catalogs, branch logs, and audit histories.
+
+### Key Data Relations
+
+```mermaid
+erDiagram
+    COMPANIES ||--o{ BRANCHES : "owns"
+    BRANCHES ||--o{ WAREHOUSES : "contains"
+    COMPANIES ||--o{ USERS : "employs"
+    PRODUCTS }o--|| COMPANIES : "catalogued_under"
+    INVENTORY }o--|| PRODUCTS : "stocks"
+    INVENTORY }o--|| WAREHOUSES : "located_in"
+    ORDERS }o--|| CUSTOMERS : "purchased_by"
+    ORDERS }o--|| USERS : "processed_by"
+    ORDER_ITEMS }o--|| ORDERS : "contains"
+    ORDER_ITEMS }o--|| PRODUCTS : "references"
 ```
 
 ---
 
-## Data Flow
+## Authentication & Authorization Flow
 
-```
-User Action
-    │
-    ▼
-React Component
-    │
-    ▼
-TanStack Query Hook  (e.g., useCreateProduct)
-    │
-    ▼
-Service Class         (e.g., ProductService.create)
-    │
-    ▼
-Axios Instance        (with auth interceptor, retry, refresh)
-    │
-    ▼
-Backend API           (Fastify REST)
-    │
-    ▼
-TanStack Query Cache  (invalidated on mutation success)
-    │
-    ▼
-UI Re-renders
-```
+The application implements a stateless JSON Web Token (JWT) workflow with a stateful session blacklist cache inside Redis:
+
+1.  **Credentials Submission:** Client posts credentials to `/auth/login`.
+2.  **Tokens Issuance:** Backend returns:
+    - An `accessToken` (in-memory only, short-lived: 15 minutes).
+    - A `refreshToken` sent as a secure, `httpOnly`, `sameSite: strict` cookie (long-lived: 7 days).
+3.  **Authentication Guarding:** Every request places the access token inside the `Authorization: Bearer <token>` header. If the token expires (yielding a `401 Unauthorized`), the Axios response interceptor pauses active requests, requests a refresh token exchange at `/auth/refresh`, and retries the original request.
+4.  **Multi-Tab Session Sync:** The frontend employs a `BroadcastChannel` instance to broadcast logout events across all open browser tabs, securing sessions instantly upon user termination or idle timeouts (15 minutes of inactivity).
+5.  **Role-Based Access Control (RBAC):** Users hold specific roles (`admin`, `manager`, `cashier`) and permission arrays. Client-side rendering is gated by the `<PermissionGuard>` component, checking roles and permissions against the active Zustand store.
 
 ---
 
-## Authentication Flow
+## Caching Strategy (Redis 7)
 
-1. User submits login form → `AuthService.login()` → access token stored in **memory** (`tokenManager`)
-2. `httpOnly` refresh cookie stored by the browser automatically
-3. Every request: Axios request interceptor appends `Authorization: Bearer <token>`
-4. On 401 response: Axios response interceptor calls `refreshAccessToken()` once (singleton promise)
-5. On refresh failure: `tokenManager.clearTokens()` + redirect to `/login`
-6. Session idle timeout (15 min): `useSessionTimeout` hook detects inactivity, BroadcastChannel syncs logout to all tabs
+Redis is deployed for:
 
----
-
-## Permission System
-
-- Roles and permissions stored on the `User` object in `auth.store`
-- `useAuthStore().hasPermission(key)` — checks a specific permission string
-- `useAuthStore().hasRole(role)` — checks a single role
-- `useAuthStore().hasAnyRole(roles[])` — checks against multiple roles
-- `<PermissionGuard permission="X">` — conditionally renders UI elements
-- Middleware (`middleware.ts`) enforces route-level auth server-side
-
----
-
-## State Management
-
-| Store        | Purpose                                        |
-| ------------ | ---------------------------------------------- |
-| `auth.store` | User, authentication state, permission helpers |
-| `ui.store`   | Sidebar collapsed state, modal states, theme   |
-| `pos.store`  | Active POS session, cart, held orders          |
-
-All stores use Zustand with `devtools` and `persist` middleware where appropriate.
-
----
-
-## Security Model
-
-| Layer            | Implementation                                             |
-| ---------------- | ---------------------------------------------------------- |
-| Token storage    | Access token in-memory only (never localStorage)           |
-| Refresh token    | httpOnly cookie (XSS-proof)                                |
-| Route protection | Next.js middleware + client-side auth guards               |
-| Permission gates | `<PermissionGuard>` + `hasPermission()`                    |
-| Session timeout  | 15-min idle detection with BroadcastChannel multi-tab sync |
-| Error boundaries | React ErrorBoundary (class) + Next.js `error.tsx`          |
-| Offline handling | `<OfflineBanner>` with connection event listeners          |
-
----
-
-## API Layer
-
-- All API calls go through typed service classes extending `ApiClient`
-- `ApiClient` provides typed `get`, `post`, `put`, `patch`, `delete` methods
-- Axios instance has request interceptor (auth header) and response interceptor (token refresh + error normalization)
-- Errors are normalized via `normalizeError()` into a consistent `ApiError` shape
-- Some services include simulator fallbacks for demo/staging environments when the backend is unavailable
-
----
-
-## Testing Architecture
-
-| Layer       | Tool                | Location          |
-| ----------- | ------------------- | ----------------- |
-| Unit tests  | Vitest + RTL        | `src/tests/unit/` |
-| API mocking | MSW 2.x             | `src/tests/msw/`  |
-| E2E tests   | Playwright          | `e2e/`            |
-| Coverage    | @vitest/coverage-v8 | `coverage/`       |
-
-Run `pnpm --filter web test` — 100 tests, 0 failures.
+- **JWT Revocation Lists:** Storing blacklisted tokens on user logouts until expiration.
+- **Rate Limiting:** Guarding sensitive endpoints from brute force and denial of service.
+- **Session Management:** Caching active session metadata for immediate validity checks.

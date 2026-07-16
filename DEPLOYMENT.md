@@ -1,220 +1,189 @@
-# Deployment Guide — Enterprise POS System
+# Production Deployment Guide — Enterprise POS System
 
-## Overview
-
-The Enterprise POS System is a monorepo containing:
-
-- `apps/web` — Next.js 16 frontend
-- `apps/api` — Fastify 5 backend API
-
-This guide covers production deployment for the frontend application.
+This guide outlines server requirements, environment setups, Docker configurations, reverse proxy maps, and rollback procedures for production servers.
 
 ---
 
-## Environment Variables
+## Production Architecture
 
-Create `apps/web/.env.production` with the following:
+The production environment runs on a secure multi-container stack orchestrated via Docker Compose:
+
+```
+                  Internet (HTTPS :443)
+                            │
+                            ▼
+              ┌───────────────────────────┐
+              │ Nginx Reverse Proxy (SSL) │
+              └─────────────┬─────────────┘
+                            │ (Proxy pass :3000 / :4000)
+                            ▼
+           ┌────────────────────────────────┐
+           │ Docker Bridge (pos-internal)   │
+           │                                │
+           │  ┌───────┐          ┌───────┐  │
+           │  │ Web   │          │ API   │  │
+           │  │ Port  │          │ Port  │  │
+           │  │ 3000  │          │ 4000  │  │
+           │  └───┬───┘          └───┬───┘  │
+           │      │                  │      │
+           │      └──────┬───────────┘      │
+           │             ▼                  │
+           │     ┌──────────────┐           │
+           │     │ Redis Cache  │           │
+           │     └──────┬───────┘           │
+           │            ▼                   │
+           │     ┌──────────────┐           │
+           │     │ PostgreSQL   │           │
+           │     │ Database     │           │
+           │     └──────────────┘           │
+           └────────────────────────────────┘
+```
+
+---
+
+## Server Requirements
+
+- **Operating System:** Ubuntu 22.04 / 24.04 LTS
+- **Virtual Machine Specs:**
+  - _Minimum:_ 2 vCPU, 4 GB RAM, 40 GB SSD.
+  - _Recommended (Scale):_ 4 vCPU, 8 GB RAM, 100 GB SSD.
+- **Engine Versions:** Docker 24+, Docker Compose v2.20+.
+
+---
+
+## Environment Setup
+
+Create the production config file `/opt/enterprise-pos/.env.prod` on the host server:
 
 ```env
-# Backend API base URL
-NEXT_PUBLIC_API_URL=https://api.your-domain.com
+# Docker Image Tags (updated by GitHub Actions CI/CD)
+API_IMAGE=ghcr.io/akramhossain-dev/enterprise-pos-system/api:latest
+WEB_IMAGE=ghcr.io/akramhossain-dev/enterprise-pos-system/web:latest
 
-# Application settings
-NEXT_PUBLIC_APP_NAME="Enterprise POS"
-NEXT_PUBLIC_APP_URL=https://your-domain.com
-
-# Environment flag
 NODE_ENV=production
+PORT=4000
+FRONTEND_URL=https://your-domain.com
+NEXT_PUBLIC_API_URL=https://your-domain.com/api/v1
+
+# Postgres Configuration
+DATABASE_URL=postgresql://pos_user:SECURE_PG_PASS@postgres:5432/enterprise_pos
+POSTGRES_USER=pos_user
+POSTGRES_PASSWORD=SECURE_PG_PASS
+POSTGRES_DB=enterprise_pos
+
+# Redis Cache Configuration
+REDIS_URL=redis://:SECURE_REDIS_PASS@redis:6379
+REDIS_PASSWORD=SECURE_REDIS_PASS
+
+# JWT Crypto Secrets (Generate secure strings using crypto.randomBytes)
+JWT_SECRET=GENERATE_48_CHAR_HEX_STRING_FOR_JWT
+REFRESH_TOKEN_SECRET=GENERATE_ANOTHER_48_CHAR_HEX_STRING
 ```
 
-> [!CAUTION]
-> Never commit `.env.production` to version control. Use your CI/CD secrets manager.
-
----
-
-## Prerequisites
-
-| Tool    | Version        |
-| ------- | -------------- |
-| Node.js | 20+            |
-| pnpm    | 9+             |
-| Docker  | 24+ (optional) |
-
----
-
-## Production Build
-
-### Standard (Node.js)
+Restrict permissions immediately:
 
 ```bash
-# Install dependencies (CI mode — no lockfile mutation)
-pnpm install --frozen-lockfile
-
-# Type check
-pnpm --filter web type-check
-
-# Run tests
-pnpm --filter web test
-
-# Build
-pnpm --filter web build
-
-# Start
-pnpm --filter web start
-```
-
-The server listens on **port 3000** by default. Set `PORT` env to override.
-
-### Docker
-
-```bash
-# Build the frontend image
-docker build -t enterprise-pos-web -f docker/web.Dockerfile .
-
-# Run
-docker run -p 3000:3000 \
-  -e NEXT_PUBLIC_API_URL=https://api.your-domain.com \
-  enterprise-pos-web
-```
-
-### Docker Compose (full stack)
-
-```bash
-# Production stack
-docker-compose -f docker-compose.prod.yml up -d
-
-# View logs
-docker-compose -f docker-compose.prod.yml logs -f web
+chmod 600 /opt/enterprise-pos/.env.prod
 ```
 
 ---
 
-## Reverse Proxy (Nginx)
+## Deployment Steps
+
+### 1. Initialize Containers
+
+Copy `docker-compose.prod.yml` and the Nginx folder configuration to `/opt/enterprise-pos/`:
+
+```bash
+cd /opt/enterprise-pos
+
+# Run Postgres and Redis cache servers
+docker compose -f docker-compose.prod.yml --env-file .env.prod up -d postgres redis
+```
+
+### 2. Apply Database Migrations
+
+Run schema migrations inside the container before launching the application services:
+
+```bash
+docker run --rm \
+  --env-file .env.prod \
+  --network enterprise-pos_pos-internal \
+  ghcr.io/akramhossain-dev/enterprise-pos-system/api:latest \
+  sh -c "cd /app/apps/api && npx prisma migrate deploy"
+```
+
+### 3. Launch Application Services
+
+Start the remaining application containers:
+
+```bash
+docker compose -f docker-compose.prod.yml --env-file .env.prod up -d api web nginx
+```
+
+Check statuses and log outputs:
+
+```bash
+docker compose -f docker-compose.prod.yml ps
+docker compose -f docker-compose.prod.yml logs -f api web
+```
+
+---
+
+## Health Verification & Rollback
+
+### Automated Deployment Verification
+
+The CD pipeline verifies deployment health after starting the containers by issuing HTTP requests to the check routes:
+
+- **Web Portal status:** `curl -s -o /dev/null -w "%{http_code}" http://localhost:3000` (must yield `200` or redirects).
+- **API status:** `curl -s -o /dev/null -w "%{http_code}" http://localhost:4000/api/v1/health` (must yield `200`).
+
+### Rollback Process
+
+If the checks fail, the pipeline immediately triggers an automatic rollback on the host by restoring the previously tagged images:
+
+```bash
+# Manual Rollback commands
+cd /opt/enterprise-pos
+
+# 1. Update image tags to last known stable tag in .env.prod
+# 2. Re-create containers
+docker compose -f docker-compose.prod.yml --env-file .env.prod up -d api web
+```
+
+---
+
+## Reverse Proxy configuration
+
+The proxy routing is handled by the Nginx image (`nginx.prod.conf`):
 
 ```nginx
 server {
     listen 80;
     server_name your-domain.com;
-    return 301 https://$host$request_uri;
-}
 
-server {
-    listen 443 ssl http2;
-    server_name your-domain.com;
-
-    ssl_certificate     /etc/ssl/certs/your-domain.crt;
-    ssl_certificate_key /etc/ssl/private/your-domain.key;
-
-    location / {
-        proxy_pass         http://localhost:3000;
-        proxy_http_version 1.1;
-        proxy_set_header   Upgrade $http_upgrade;
-        proxy_set_header   Connection 'upgrade';
+    location /api/ {
+        proxy_pass         http://api_upstream;
         proxy_set_header   Host $host;
         proxy_set_header   X-Real-IP $remote_addr;
-        proxy_cache_bypass $http_upgrade;
+    }
+
+    location / {
+        proxy_pass         http://web_upstream;
+        proxy_set_header   Host $host;
     }
 }
 ```
 
 ---
 
-## Health Check
+## Backup Strategy
 
-The application exposes the following health indicators:
+Run a cron task daily to dump database states:
 
-| Endpoint      | Type    | Description                                |
-| ------------- | ------- | ------------------------------------------ |
-| `/`           | Static  | Root page — indicates server is responding |
-| `/api/health` | Backend | Full backend health check                  |
-
-For container orchestration (Kubernetes/ECS), configure:
-
-```yaml
-livenessProbe:
-  httpGet:
-    path: /
-    port: 3000
-  initialDelaySeconds: 30
-  periodSeconds: 10
+```bash
+# Database Dump
+docker exec enterprise-pos-postgres-prod \
+  pg_dump -U pos_user enterprise_pos | gzip > /opt/enterprise-pos/backups/db_$(date +%Y%m%d).sql.gz
 ```
-
----
-
-## Content Security Policy
-
-The application is built CSP-compatible:
-
-- No `dangerouslySetInnerHTML` usage
-- No inline scripts
-- External fonts loaded from Google Fonts (add to CSP `font-src`)
-- All API calls go to your configured `NEXT_PUBLIC_API_URL`
-
-Recommended CSP header:
-
-```
-Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src 'self' fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://api.your-domain.com;
-```
-
----
-
-## Performance Recommendations
-
-| Setting     | Recommendation                                                       |
-| ----------- | -------------------------------------------------------------------- |
-| CDN         | Serve `/public/` assets through a CDN                                |
-| Caching     | Set `Cache-Control: max-age=31536000, immutable` on `/_next/static/` |
-| Compression | Enable gzip/brotli at the reverse proxy level                        |
-| HTTPS       | Always use HTTPS in production                                       |
-
----
-
-## CI/CD Pipeline (GitHub Actions Example)
-
-```yaml
-name: Production Deploy
-
-on:
-  push:
-    branches: [main]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 9
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: pnpm
-
-      - run: pnpm install --frozen-lockfile
-
-      - run: pnpm --filter web type-check
-
-      - run: pnpm --filter web test
-
-      - run: pnpm --filter web build
-
-      - name: Deploy to server
-        run: |
-          # Your deployment command here
-          ssh user@your-server "cd /app && git pull && pnpm install && pnpm --filter web build && pm2 restart web"
-```
-
----
-
-## Monitoring
-
-The frontend includes hooks ready for monitoring integration:
-
-- **Error Boundary** (`components/common/error-boundary.tsx`) — catches and logs render errors
-- **Next.js `app/error.tsx`** — captures route-level errors with `error.digest` ID
-- **Session timeout** (`hooks/use-session-timeout.ts`) — logs idle timeouts
-
-Connect to your APM tool (Sentry, Datadog, etc.) by extending `componentDidCatch` in the ErrorBoundary and the `useEffect` in `app/error.tsx`.
