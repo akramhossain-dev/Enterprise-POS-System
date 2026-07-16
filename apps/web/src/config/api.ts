@@ -102,6 +102,12 @@ export const apiConfig = {
       print: '/reports/print',
       schedule: '/reports/schedule',
     },
+    bi: {
+      dashboard: '/bi/dashboard',
+      forecast: '/bi/forecast',
+      analytics: '/bi/analytics',
+      widgets: '/bi/widgets',
+    },
   },
 } as const;
 

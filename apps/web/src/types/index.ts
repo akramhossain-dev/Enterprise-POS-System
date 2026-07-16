@@ -21,3 +21,4 @@ export * from './sales-return';
 export * from './accounting';
 export * from './analytics';
 export * from './reports';
+export * from './bi';

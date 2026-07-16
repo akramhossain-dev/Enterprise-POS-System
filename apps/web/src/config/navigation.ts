@@ -508,6 +508,63 @@ export const navigationConfig: NavSection[] = [
           },
         ],
       },
+      {
+        id: 'bi',
+        label: 'Executive BI',
+        href: '/bi',
+        icon: Scale,
+        permission: 'reports:view',
+        children: [
+          {
+            id: 'bi-dashboard',
+            label: 'BI Dashboard',
+            href: '/bi',
+            icon: LayoutDashboard,
+          },
+          {
+            id: 'bi-analytics',
+            label: 'Advanced Analytics',
+            href: '/bi/analytics',
+            icon: SlidersHorizontal,
+          },
+          {
+            id: 'bi-forecast',
+            label: 'Projections Forecast',
+            href: '/bi/forecast',
+            icon: Calendar,
+          },
+          {
+            id: 'bi-customer-insights',
+            label: 'Customer Insights',
+            href: '/bi/insights/customer',
+            icon: Users,
+          },
+          {
+            id: 'bi-supplier-insights',
+            label: 'Supplier Insights',
+            href: '/bi/insights/supplier',
+            icon: Building2,
+          },
+          {
+            id: 'bi-trends',
+            label: 'Business Trends',
+            href: '/bi/trends',
+            icon: BarChart3,
+          },
+          {
+            id: 'bi-saved',
+            label: 'Saved Layouts',
+            href: '/bi/saved',
+            icon: LayoutDashboard,
+          },
+          {
+            id: 'bi-widgets',
+            label: 'Widget Library',
+            href: '/bi/widgets',
+            icon: Settings,
+          },
+        ],
+      },
     ],
   },
   {

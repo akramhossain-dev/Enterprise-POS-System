@@ -1108,3 +1108,42 @@ TanStack based virtualized list with paginations, sorting parameters, and quick 
 | `/reports/export`    | `app/(dashboard)/reports/export/page.tsx`    | Export Center lists completed file downloads.                                       |
 | `/reports/print`     | `app/(dashboard)/reports/print/page.tsx`     | Print Center lists completed physical printed spools.                               |
 | `/reports/scheduled` | `app/(dashboard)/reports/scheduled/page.tsx` | Scheduled Reports schedules Daily/Weekly/Monthly email triggers.                    |
+
+---
+
+## Business Intelligence (BI) & Advanced Analytics Components (Phase F10.3)
+
+### KpiBuilderDialog
+
+`apps/web/src/components/bi/kpi-builder-dialog.tsx`
+Custom formula compiler Dialog mapping parameters (Revenue, Profit, COGS) and arithmetic operators.
+
+### ForecastChart
+
+`apps/web/src/components/bi/forecast-chart.tsx`
+Renders double-line (solid historical vs. dashed projected) trend charts.
+
+### HeatmapCard
+
+`apps/web/src/components/bi/heatmap-card.tsx`
+Density card comparing checkout frequencies across weekday hours.
+
+### DrilldownCard
+
+`apps/web/src/components/bi/drilldown-card.tsx`
+Connected tabular view supporting drilldown paths (Category > Subcategory > Product).
+
+---
+
+## Executive BI Page Routes (Phase F10.3)
+
+| Route                   | File                                            | Description                                                                                       |
+| ----------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `/bi`                   | `app/(dashboard)/bi/page.tsx`                   | Executive Dashboard containing health scores, custom formula widgets, and layout duplicate tools. |
+| `/bi/analytics`         | `app/(dashboard)/bi/analytics/page.tsx`         | Advanced Analytics outlining click-to-drill linked category trees and weekday sales heatmaps.     |
+| `/bi/forecast`          | `app/(dashboard)/bi/forecast/page.tsx`          | Projections Forecast Dashboard mapping historical vs projected sales and purchases.               |
+| `/bi/insights/customer` | `app/(dashboard)/bi/insights/customer/page.tsx` | Customer Insights charting cohort retention indices and customer lifetime values (LTV).           |
+| `/bi/insights/supplier` | `app/(dashboard)/bi/insights/supplier/page.tsx` | Supplier Insights tracking delivery accuracy levels and response lead times.                      |
+| `/bi/trends`            | `app/(dashboard)/bi/trends/page.tsx`            | Business Trends tracking period comparison indices (WoW, MoM, YoY).                               |
+| `/bi/saved`             | `app/(dashboard)/bi/saved/page.tsx`             | Saved Layouts lists saved custom executive views.                                                 |
+| `/bi/widgets`           | `app/(dashboard)/bi/widgets/page.tsx`           | Widget Library listing active formulas registries.                                                |
