@@ -5,8 +5,26 @@ import Link from 'next/link';
 import { useHeatmapQuery } from '@/hooks/use-bi';
 import { PageContainer } from '@/components/layout/page-container';
 import { PageHeader } from '@/components/layout/page-header';
-import { DrilldownCard } from '@/components/bi/drilldown-card';
-import { HeatmapCard } from '@/components/bi/heatmap-card';
+import dynamic from 'next/dynamic';
+
+const DrilldownCard = dynamic(
+  () => import('@/components/bi/drilldown-card').then((mod) => mod.DrilldownCard),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-64 animate-pulse bg-slate-950/40 rounded-xl border border-slate-900" />
+    ),
+  },
+);
+const HeatmapCard = dynamic(
+  () => import('@/components/bi/heatmap-card').then((mod) => mod.HeatmapCard),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-64 animate-pulse bg-slate-950/40 rounded-xl border border-slate-900" />
+    ),
+  },
+);
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import { AnalyticsDashboardSkeleton } from '@/components/analytics/analytics-skeletons';

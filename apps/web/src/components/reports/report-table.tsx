@@ -27,36 +27,42 @@ export function ReportTable({ columns, rows, isLoading = false }: ReportTablePro
     }
   };
 
-  // 1. Filter rows
-  const filteredRows = rows.filter((row) =>
-    columns.some((col) =>
-      String(row[col] ?? '')
-        .toLowerCase()
-        .includes(filterQuery.toLowerCase()),
-    ),
-  );
+  // 1. Filter, Sort, and Paginate rows
+  const { paginatedRows, totalPages, totalItems } = React.useMemo(() => {
+    const filtered = rows.filter((row) =>
+      columns.some((col) =>
+        String(row[col] ?? '')
+          .toLowerCase()
+          .includes(filterQuery.toLowerCase()),
+      ),
+    );
 
-  // 2. Sort rows
-  const sortedRows = [...filteredRows];
-  if (sortColumn) {
-    sortedRows.sort((a, b) => {
-      const valA = a[sortColumn];
-      const valB = b[sortColumn];
-      if (typeof valA === 'number' && typeof valB === 'number') {
-        return sortDirection === 'asc' ? valA - valB : valB - valA;
-      }
-      const strA = String(valA).toLowerCase();
-      const strB = String(valB).toLowerCase();
-      if (strA < strB) return sortDirection === 'asc' ? -1 : 1;
-      if (strA > strB) return sortDirection === 'asc' ? 1 : -1;
-      return 0;
-    });
-  }
+    const sorted = [...filtered];
+    if (sortColumn) {
+      sorted.sort((a, b) => {
+        const valA = a[sortColumn];
+        const valB = b[sortColumn];
+        if (typeof valA === 'number' && typeof valB === 'number') {
+          return sortDirection === 'asc' ? valA - valB : valB - valA;
+        }
+        const strA = String(valA).toLowerCase();
+        const strB = String(valB).toLowerCase();
+        if (strA < strB) return sortDirection === 'asc' ? -1 : 1;
+        if (strA > strB) return sortDirection === 'asc' ? 1 : -1;
+        return 0;
+      });
+    }
 
-  // 3. Paginate rows
-  const totalItems = sortedRows.length;
-  const totalPages = Math.ceil(totalItems / pageSize) || 1;
-  const paginatedRows = sortedRows.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+    const total = sorted.length;
+    const pages = Math.ceil(total / pageSize) || 1;
+    const paginated = sorted.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+    return {
+      paginatedRows: paginated,
+      totalPages: pages,
+      totalItems: total,
+    };
+  }, [rows, columns, filterQuery, sortColumn, sortDirection, currentPage, pageSize]);
 
   return (
     <Card className="bg-[#0c1220] border-slate-800 text-slate-100 select-none text-left print:border-none print:shadow-none print:bg-white print:text-black">

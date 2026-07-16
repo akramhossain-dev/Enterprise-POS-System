@@ -5,7 +5,17 @@ import Link from 'next/link';
 import { useForecastQuery } from '@/hooks/use-bi';
 import { PageContainer } from '@/components/layout/page-container';
 import { PageHeader } from '@/components/layout/page-header';
-import { ForecastChart } from '@/components/bi/forecast-chart';
+import dynamic from 'next/dynamic';
+
+const ForecastChart = dynamic(
+  () => import('@/components/bi/forecast-chart').then((mod) => mod.ForecastChart),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-64 animate-pulse bg-slate-950/40 rounded-xl border border-slate-900" />
+    ),
+  },
+);
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Sparkles } from 'lucide-react';
 import { AnalyticsDashboardSkeleton } from '@/components/analytics/analytics-skeletons';

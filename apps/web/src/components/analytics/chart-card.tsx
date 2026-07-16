@@ -3,10 +3,36 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { AppAreaChart } from '@/components/dashboard/charts/area-chart';
-import { AppBarChart } from '@/components/dashboard/charts/bar-chart';
-import { AppLineChart } from '@/components/dashboard/charts/line-chart';
-import { AppPieChart } from '@/components/dashboard/charts/pie-chart';
+import dynamic from 'next/dynamic';
+
+const AppAreaChart = dynamic(
+  () => import('@/components/dashboard/charts/area-chart').then((mod) => mod.AppAreaChart),
+  {
+    ssr: false,
+    loading: () => <div className="h-[250px] animate-pulse bg-slate-900/40 rounded-xl" />,
+  },
+);
+const AppBarChart = dynamic(
+  () => import('@/components/dashboard/charts/bar-chart').then((mod) => mod.AppBarChart),
+  {
+    ssr: false,
+    loading: () => <div className="h-[250px] animate-pulse bg-slate-900/40 rounded-xl" />,
+  },
+);
+const AppLineChart = dynamic(
+  () => import('@/components/dashboard/charts/line-chart').then((mod) => mod.AppLineChart),
+  {
+    ssr: false,
+    loading: () => <div className="h-[250px] animate-pulse bg-slate-900/40 rounded-xl" />,
+  },
+);
+const AppPieChart = dynamic(
+  () => import('@/components/dashboard/charts/pie-chart').then((mod) => mod.AppPieChart),
+  {
+    ssr: false,
+    loading: () => <div className="h-[250px] animate-pulse bg-slate-900/40 rounded-xl" />,
+  },
+);
 import { FileDown, Printer, HelpCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
