@@ -21,13 +21,18 @@ export default function TrialBalancePage() {
   const handleExportCSV = () => {
     if (!report) return;
     const headers = ['Account Code', 'Account Name', 'Debit Balance ($)', 'Credit Balance ($)'];
-    const rows = report.items.map((i) => [i.code, i.name.replace(/,/g, ' '), i.debit, i.credit]);
+    const rows = report.items.map((i: any) => [
+      i.code,
+      i.name.replace(/,/g, ' '),
+      i.debit,
+      i.credit,
+    ]);
     rows.push(['', 'Total Balanced', report.totalDebit.toString(), report.totalCredit.toString()]);
     rows.push(['', 'Discrepancy Difference', report.difference.toString(), '']);
 
     const csvContent =
       'data:text/csv;charset=utf-8,' +
-      [headers.join(','), ...rows.map((e) => e.join(','))].join('\n');
+      [headers.join(','), ...rows.map((e: any) => e.join(','))].join('\n');
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
@@ -147,7 +152,7 @@ export default function TrialBalancePage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-900/60 font-medium text-slate-350 font-mono print:divide-gray-200">
-                  {report.items.map((item) => (
+                  {report.items.map((item: any) => (
                     <tr key={item.accountId} className="hover:bg-slate-900/20">
                       <td className="py-2.5 px-4 text-slate-500">{item.code}</td>
                       <td className="py-2.5 px-4 font-sans text-slate-200 print:text-black font-bold">

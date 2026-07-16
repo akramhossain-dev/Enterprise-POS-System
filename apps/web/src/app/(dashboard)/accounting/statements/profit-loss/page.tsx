@@ -34,29 +34,28 @@ export default function ProfitAndLossPage() {
       items: report.revenue,
       showTotal: true,
       totalLabel: 'Total Revenue',
-      totalValue: report.revenue.reduce((sum, r) => sum + r.balance, 0),
+      totalValue: report.revenue.reduce((sum: number, r: any) => sum + r.balance, 0),
     },
     {
       title: 'Cost of Goods Sold (COGS)',
       items: report.cogs,
       showTotal: true,
       totalLabel: 'Total COGS',
-      totalValue: report.cogs.reduce((sum, c) => sum + c.balance, 0),
+      totalValue: report.cogs.reduce((sum: number, c: any) => sum + c.balance, 0),
     },
     {
       title: 'Operating Expenditures (OPEX)',
       items: report.expenses,
       showTotal: true,
       totalLabel: 'Total Expenses',
-      totalValue: report.expenses.reduce((sum, e) => sum + e.balance, 0),
+      totalValue: report.expenses.reduce((sum: number, e: any) => sum + e.balance, 0),
     },
   ];
 
   const dateHeading =
-    (startDate &&
-      endDate *
-        `From ${new Date(startDate).toLocaleDateString()} to ${new Date(endDate).toLocaleDateString()}`) ||
-    'Cumulative Current Fiscal Year Statement';
+    startDate && endDate
+      ? `From ${new Date(startDate).toLocaleDateString()} to ${new Date(endDate).toLocaleDateString()}`
+      : 'Cumulative Current Fiscal Year Statement';
 
   return (
     <PageContainer className="text-slate-100 select-none text-left print:bg-white print:text-black">

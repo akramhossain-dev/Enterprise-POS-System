@@ -46,7 +46,7 @@ export default function TaxRatesPage() {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isPending },
+    formState: { errors },
   } = useForm<TaxRateFormValues>({
     resolver: zodResolver(taxRateFormSchema),
     defaultValues: {
@@ -167,8 +167,8 @@ export default function TaxRatesPage() {
                       Included Rates:
                     </span>
                     <div className="flex flex-wrap gap-1">
-                      {group.rates.map((rateId) => {
-                        const matchingRate = rates.find((r) => r.id === rateId);
+                      {group.rates.map((rateId: any) => {
+                        const matchingRate = rates.find((r: any) => r.id === rateId);
                         return (
                           <span
                             key={rateId}
@@ -273,10 +273,10 @@ export default function TaxRatesPage() {
               </DialogClose>
               <Button
                 type="submit"
-                disabled={isPending}
+                disabled={createMutation.isPending}
                 className="h-9 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold uppercase text-xs"
               >
-                {isPending ? 'CREATING...' : 'DEFINE TAX'}
+                {createMutation.isPending ? 'CREATING...' : 'DEFINE TAX'}
               </Button>
             </DialogFooter>
           </form>

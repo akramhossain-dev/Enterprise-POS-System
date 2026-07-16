@@ -3,10 +3,10 @@
 import React from 'react';
 import { cn } from '@/utils/cn';
 import { ShieldCheck, User, Clock, Terminal, AlertTriangle } from 'lucide-react';
-import type { AuditLog } from '@/types/accounting';
+import type { AccountingAuditLog } from '@/types/accounting';
 
 interface AuditTimelineProps {
-  logs: AuditLog[];
+  logs: AccountingAuditLog[];
   loading?: boolean;
 }
 

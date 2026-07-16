@@ -25,7 +25,7 @@ export default function TaxReportsPage() {
   });
 
   const transactions = report?.transactions || [];
-  const filteredTx = transactions.filter((t) => {
+  const filteredTx = transactions.filter((t: any) => {
     if (taxType === 'ALL') return true;
     return t.type === taxType;
   });
@@ -45,7 +45,7 @@ export default function TaxReportsPage() {
       'Tax Code',
       'Tax Collected ($)',
     ];
-    const rows = filteredTx.map((t) => [
+    const rows = filteredTx.map((t: any) => [
       new Date(t.date).toLocaleDateString(),
       t.reference,
       t.type,
@@ -57,7 +57,7 @@ export default function TaxReportsPage() {
 
     const csvContent =
       'data:text/csv;charset=utf-8,' +
-      [headers.join(','), ...rows.map((e) => e.join(','))].join('\n');
+      [headers.join(','), ...rows.map((e: any) => e.join(','))].join('\n');
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
@@ -186,7 +186,7 @@ export default function TaxReportsPage() {
                   </thead>
                   <tbody className="divide-y divide-slate-900/60 font-medium text-slate-350 font-mono print:divide-gray-200">
                     {filteredTx.length > 0 ? (
-                      filteredTx.map((tx) => (
+                      filteredTx.map((tx: any) => (
                         <tr key={tx.id} className="hover:bg-slate-900/20">
                           <td className="py-2.5 px-4 text-slate-500">
                             {new Date(tx.date).toLocaleDateString()}

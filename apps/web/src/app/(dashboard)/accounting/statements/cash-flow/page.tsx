@@ -31,32 +31,31 @@ export default function CashFlowPage() {
   const sections = [
     {
       title: 'Operating Activities',
-      items: report.operating.map((o) => ({ code: 'OP', name: o.name, balance: o.balance })),
+      items: report.operating.map((o: any) => ({ code: 'OP', name: o.name, balance: o.balance })),
       showTotal: true,
       totalLabel: 'Net Cash from Operating Activities',
-      totalValue: report.operating.reduce((sum, o) => sum + o.balance, 0),
+      totalValue: report.operating.reduce((sum: number, o: any) => sum + o.balance, 0),
     },
     {
       title: 'Investing Activities',
-      items: report.investing.map((i) => ({ code: 'INV', name: i.name, balance: i.balance })),
+      items: report.investing.map((i: any) => ({ code: 'INV', name: i.name, balance: i.balance })),
       showTotal: true,
       totalLabel: 'Net Cash used in Investing Activities',
-      totalValue: report.investing.reduce((sum, i) => sum + i.balance, 0),
+      totalValue: report.investing.reduce((sum: number, i: any) => sum + i.balance, 0),
     },
     {
       title: 'Financing Activities',
-      items: report.financing.map((f) => ({ code: 'FIN', name: f.name, balance: f.balance })),
+      items: report.financing.map((f: any) => ({ code: 'FIN', name: f.name, balance: f.balance })),
       showTotal: true,
       totalLabel: 'Net Cash from Financing Activities',
-      totalValue: report.financing.reduce((sum, f) => sum + f.balance, 0),
+      totalValue: report.financing.reduce((sum: number, f: any) => sum + f.balance, 0),
     },
   ];
 
   const dateHeading =
-    (startDate &&
-      endDate *
-        `From ${new Date(startDate).toLocaleDateString()} to ${new Date(endDate).toLocaleDateString()}`) ||
-    'Cumulative Current Cash Flow Ledger';
+    startDate && endDate
+      ? `From ${new Date(startDate).toLocaleDateString()} to ${new Date(endDate).toLocaleDateString()}`
+      : 'Cumulative Current Cash Flow Ledger';
 
   return (
     <PageContainer className="text-slate-100 select-none text-left print:bg-white print:text-black">

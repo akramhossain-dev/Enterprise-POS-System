@@ -3,7 +3,6 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/utils/cn';
 import { FileCheck, ShieldAlert, UserCheck } from 'lucide-react';
 import type { ClosingChecklistItem } from '@/types/accounting';
@@ -68,12 +67,13 @@ export function ClosingChecklist({
                   : 'border-slate-850 bg-slate-950/20 hover:border-slate-800',
               )}
             >
-              <Checkbox
+              <input
+                type="checkbox"
                 id={item.id}
                 checked={item.checked}
                 disabled={isClosed || isCheckoffPending}
-                onCheckedChange={() => onCheckoff(item.id)}
-                className="mt-0.5 border-slate-700 data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500 focus-visible:ring-emerald-500"
+                onChange={() => onCheckoff(item.id)}
+                className="mt-1 h-3.5 w-3.5 border-slate-700 accent-emerald-500 rounded cursor-pointer shrink-0"
               />
               <div className="flex-1 space-y-1">
                 <label

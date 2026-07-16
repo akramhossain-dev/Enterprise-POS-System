@@ -40,7 +40,7 @@ export default function FiscalPeriodsPage() {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isPending },
+    formState: { errors },
   } = useForm<FiscalYearFormValues>({
     resolver: zodResolver(fiscalYearSchema),
     defaultValues: {
@@ -179,10 +179,10 @@ export default function FiscalPeriodsPage() {
               </DialogClose>
               <Button
                 type="submit"
-                disabled={isPending}
+                disabled={createMutation.isPending}
                 className="h-9 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold uppercase text-xs"
               >
-                {isPending ? 'INITIALIZING...' : 'OPEN FISCAL YEAR'}
+                {createMutation.isPending ? 'INITIALIZING...' : 'OPEN FISCAL YEAR'}
               </Button>
             </DialogFooter>
           </form>

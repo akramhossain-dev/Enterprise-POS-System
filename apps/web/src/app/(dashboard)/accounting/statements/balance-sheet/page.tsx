@@ -50,9 +50,9 @@ export default function BalanceSheetPage() {
     },
   ];
 
-  const dateHeading =
-    date * `Statement Position as of ${new Date(date).toLocaleDateString()}` ||
-    'Cumulative Balance Sheet Statement';
+  const dateHeading = date
+    ? `Statement Position as of ${new Date(date).toLocaleDateString()}`
+    : 'Cumulative Balance Sheet Statement';
 
   // In double entry, Assets must equal Liabilities + Equity
   const matchingDifference = report.totalAssets - (report.totalLiabilities + report.totalEquity);

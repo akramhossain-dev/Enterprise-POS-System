@@ -274,7 +274,7 @@ export interface ClosingChecklistItem {
   checkedAt?: string;
 }
 
-export interface AuditLog {
+export interface AccountingAuditLog {
   id: string;
   userId: string;
   userName: string;

@@ -31,7 +31,7 @@ export default function AccountingClosingPage() {
   const checkoffMutation = useCheckoffChecklistItem();
   const closeMutation = useRunClosing();
 
-  const activePeriod = periods.find((p) => p.id === selectedPeriodId) || {
+  const activePeriod = periods.find((p: any) => p.id === selectedPeriodId) || {
     name: 'July 2026',
     status: 'OPEN',
   };
@@ -86,7 +86,7 @@ export default function AccountingClosingPage() {
             onChange={(e) => setSelectedPeriodId(e.target.value)}
             className="bg-[#0c1220] border border-slate-855 text-slate-350 rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[200px] font-bold"
           >
-            {periods.map((p) => (
+            {periods.map((p: any) => (
               <option key={p.id} value={p.id}>
                 {p.name} ({p.status})
               </option>

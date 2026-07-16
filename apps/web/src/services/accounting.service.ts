@@ -15,6 +15,19 @@ import type {
   BankTransaction,
   PaymentVoucher,
   ReceiptVoucher,
+  ProfitLossStatement,
+  BalanceSheet,
+  CashFlowStatement,
+  TrialBalance,
+  TaxRate,
+  TaxGroup,
+  TaxCategory,
+  TaxTransaction,
+  TaxReport,
+  AccountingPeriod,
+  FiscalYear,
+  ClosingChecklistItem,
+  AccountingAuditLog,
 } from '@/types/accounting';
 
 const ACCOUNTS_KEY = 'epos_simulated_chart_accounts';
@@ -2209,7 +2222,7 @@ class AccountingService extends ApiClient {
     return defaultChecklist;
   }
 
-  private getMockAuditLogs(): AuditLog[] {
+  private getMockAuditLogs(): AccountingAuditLog[] {
     if (typeof window === 'undefined') return [];
     const stored = localStorage.getItem(AUDIT_LOG_KEY);
     if (stored) {
@@ -2219,7 +2232,7 @@ class AccountingService extends ApiClient {
         return [];
       }
     }
-    const defaultLogs: AuditLog[] = [
+    const defaultLogs: AccountingAuditLog[] = [
       {
         id: 'al-1',
         userId: 'usr-1',
@@ -2267,7 +2280,7 @@ class AccountingService extends ApiClient {
 
   async logAuditEvent(action: string, module: string, description: string): Promise<void> {
     const logs = this.getMockAuditLogs();
-    const newLog: AuditLog = {
+    const newLog: AccountingAuditLog = {
       id: `al-${Date.now()}`,
       userId: 'usr-1',
       userName: 'Akram Hossain',
@@ -2660,9 +2673,9 @@ class AccountingService extends ApiClient {
     module?: string;
     page?: number;
     limit?: number;
-  }): Promise<PaginatedResponse<AuditLog>> {
+  }): Promise<PaginatedResponse<AccountingAuditLog>> {
     try {
-      const response = await this.get<PaginatedResponse<AuditLog>>(
+      const response = await this.get<PaginatedResponse<AccountingAuditLog>>(
         `${apiConfig.endpoints.accounting.audit}/trail`,
         params,
       );
