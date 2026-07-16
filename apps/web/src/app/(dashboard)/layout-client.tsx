@@ -7,6 +7,9 @@ import { DashboardFooter } from '@/components/layout/dashboard-footer';
 import { CommandPalette } from '@/components/layout/command-palette';
 import { useUIStore } from '@/stores/ui.store';
 import { cn } from '@/utils/cn';
+import { useSessionTimeout } from '@/hooks/use-session-timeout';
+import { OfflineBanner } from '@/components/common/offline-banner';
+import { ErrorBoundary } from '@/components/common/error-boundary';
 
 interface DashboardLayoutClientProps {
   children: ReactNode;
@@ -14,6 +17,8 @@ interface DashboardLayoutClientProps {
 
 export function DashboardLayoutClient({ children }: DashboardLayoutClientProps) {
   const { sidebarCollapsed } = useUIStore();
+
+  useSessionTimeout();
 
   return (
     <div className="min-h-dvh bg-background flex">
@@ -28,6 +33,7 @@ export function DashboardLayoutClient({ children }: DashboardLayoutClientProps) 
           'max-[768px]:ml-0',
         )}
       >
+        <OfflineBanner />
         <TopNavbar />
         <main
           id="main-content"
@@ -35,7 +41,7 @@ export function DashboardLayoutClient({ children }: DashboardLayoutClientProps) 
           role="main"
           aria-label="Main content"
         >
-          {children}
+          <ErrorBoundary>{children}</ErrorBoundary>
         </main>
         <DashboardFooter />
       </div>
