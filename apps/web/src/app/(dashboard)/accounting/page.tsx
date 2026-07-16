@@ -91,82 +91,156 @@ export default function AccountingDashboardPage() {
               value={stats.totalIncome}
               change="+18.5% pos sales"
               icon={TrendingUp}
-              color="text-emerald-450"
+              color="text-emerald-400"
             />
             <FinancialSummaryCard
               label="Total Expenses"
               value={stats.totalExpenses}
-              change="+5.1% warehouse"
+              change="+5.1% operating"
               isPositiveChange={false}
               icon={TrendingDown}
-              color="text-rose-400"
+              color="text-rose-455"
             />
           </div>
 
           {/* Cash/Bank Receivables row */}
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <Card className="bg-[#0c1220] border-slate-800">
-              <CardHeader className="py-3 border-b border-slate-900">
-                <CardTitle className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                  Cash Balance
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="py-3">
-                <p className="text-lg font-black font-mono text-emerald-400">
-                  ${stats.cashBalance.toFixed(2)}
-                </p>
-                <p className="text-[9px] text-slate-500 mt-0.5">Petty Cash registers</p>
-              </CardContent>
-            </Card>
+            <Link href="/accounting/cash-book" className="hover:scale-[1.01] transition-transform">
+              <Card className="bg-[#0c1220] border-slate-800 hover:border-slate-700">
+                <CardHeader className="py-3 border-b border-slate-900 flex flex-row justify-between items-center space-y-0">
+                  <CardTitle className="text-[10px] font-bold text-slate-450 uppercase tracking-wider">
+                    Cash Book Balance
+                  </CardTitle>
+                  <Wallet2 className="h-3.5 w-3.5 text-emerald-400" />
+                </CardHeader>
+                <CardContent className="py-3">
+                  <p className="text-lg font-black font-mono text-emerald-400">
+                    ${stats.cashBalance.toFixed(2)}
+                  </p>
+                  <p className="text-[9px] text-slate-500 mt-0.5">
+                    Petty Cash registers (View Book)
+                  </p>
+                </CardContent>
+              </Card>
+            </Link>
+
+            <Link href="/accounting/bank-book" className="hover:scale-[1.01] transition-transform">
+              <Card className="bg-[#0c1220] border-slate-800 hover:border-slate-700">
+                <CardHeader className="py-3 border-b border-slate-900 flex flex-row justify-between items-center space-y-0">
+                  <CardTitle className="text-[10px] font-bold text-slate-455 uppercase tracking-wider">
+                    Bank Book Balance
+                  </CardTitle>
+                  <Building className="h-3.5 w-3.5 text-emerald-400" />
+                </CardHeader>
+                <CardContent className="py-3">
+                  <p className="text-lg font-black font-mono text-emerald-400">
+                    ${stats.bankBalance.toFixed(2)}
+                  </p>
+                  <p className="text-[9px] text-slate-500 mt-0.5">
+                    Operating bank accounts (View Book)
+                  </p>
+                </CardContent>
+              </Card>
+            </Link>
 
             <Card className="bg-[#0c1220] border-slate-800">
-              <CardHeader className="py-3 border-b border-slate-900">
-                <CardTitle className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                  Bank Balance
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="py-3">
-                <p className="text-lg font-black font-mono text-emerald-400">
-                  ${stats.bankBalance.toFixed(2)}
-                </p>
-                <p className="text-[9px] text-slate-500 mt-0.5">Central operating deposits</p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-[#0c1220] border-slate-800">
-              <CardHeader className="py-3 border-b border-slate-900">
+              <CardHeader className="py-3 border-b border-slate-900 flex flex-row justify-between items-center space-y-0">
                 <CardTitle className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                   Receivables Due
                 </CardTitle>
+                <Users className="h-3.5 w-3.5 text-amber-450" />
               </CardHeader>
               <CardContent className="py-3">
                 <p className="text-lg font-black font-mono text-amber-400">
                   ${stats.receivableAmount.toFixed(2)}
                 </p>
-                <p className="text-[9px] text-slate-500 mt-0.5">Customer outstanding ledger</p>
+                <p className="text-[9px] text-slate-500 mt-0.5">Outstanding customer ledger</p>
               </CardContent>
             </Card>
 
             <Card className="bg-[#0c1220] border-slate-800">
-              <CardHeader className="py-3 border-b border-slate-900">
+              <CardHeader className="py-3 border-b border-slate-900 flex flex-row justify-between items-center space-y-0">
                 <CardTitle className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                   Payables Due
                 </CardTitle>
+                <Building className="h-3.5 w-3.5 text-rose-455" />
               </CardHeader>
               <CardContent className="py-3">
                 <p className="text-lg font-black font-mono text-rose-455">
                   ${stats.payableAmount.toFixed(2)}
                 </p>
-                <p className="text-[9px] text-slate-500 mt-0.5">Supplier pending checks</p>
+                <p className="text-[9px] text-slate-500 mt-0.5">Outstanding vendor invoices</p>
               </CardContent>
             </Card>
+          </div>
+
+          {/* Quick Books Links grid */}
+          <div className="space-y-3">
+            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest text-left">
+              Operating Ledgers & Cashbooks
+            </h3>
+            <div className="grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
+              <Link href="/accounting/journals" className="group">
+                <Card className="bg-[#0c1220] border-slate-800 group-hover:border-slate-700 p-4 text-center cursor-pointer space-y-2 h-24 flex flex-col justify-center">
+                  <p className="text-xs font-black text-slate-200 group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
+                    Journals
+                  </p>
+                  <p className="text-[9px] text-slate-500">Record adjusting entries</p>
+                </Card>
+              </Link>
+
+              <Link href="/accounting/general-ledger" className="group">
+                <Card className="bg-[#0c1220] border-slate-800 group-hover:border-slate-700 p-4 text-center cursor-pointer space-y-2 h-24 flex flex-col justify-center">
+                  <p className="text-xs font-black text-slate-200 group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
+                    General Ledger
+                  </p>
+                  <p className="text-[9px] text-slate-500">Aggregate ledger sheets</p>
+                </Card>
+              </Link>
+
+              <Link href="/accounting/account-ledger" className="group">
+                <Card className="bg-[#0c1220] border-slate-800 group-hover:border-slate-700 p-4 text-center cursor-pointer space-y-2 h-24 flex flex-col justify-center">
+                  <p className="text-xs font-black text-slate-200 group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
+                    Account Ledger
+                  </p>
+                  <p className="text-[9px] text-slate-500">Detailed account statements</p>
+                </Card>
+              </Link>
+
+              <Link href="/accounting/income" className="group">
+                <Card className="bg-[#0c1220] border-slate-800 group-hover:border-slate-700 p-4 text-center cursor-pointer space-y-2 h-24 flex flex-col justify-center">
+                  <p className="text-xs font-black text-slate-200 group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
+                    Income Book
+                  </p>
+                  <p className="text-[9px] text-slate-500">Track miscellaneous revenue</p>
+                </Card>
+              </Link>
+
+              <Link href="/accounting/expense" className="group">
+                <Card className="bg-[#0c1220] border-slate-800 group-hover:border-slate-700 p-4 text-center cursor-pointer space-y-2 h-24 flex flex-col justify-center">
+                  <p className="text-xs font-black text-slate-200 group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
+                    Expense Book
+                  </p>
+                  <p className="text-[9px] text-slate-500">Log company expenditures</p>
+                </Card>
+              </Link>
+
+              <Link href="/accounting/payment-vouchers" className="group">
+                <Card className="bg-[#0c1220] border-slate-800 group-hover:border-slate-700 p-4 text-center cursor-pointer space-y-2 h-24 flex flex-col justify-center">
+                  <p className="text-xs font-black text-slate-200 group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
+                    Vouchers
+                  </p>
+                  <p className="text-[9px] text-slate-500">Process receipts/payments</p>
+                </Card>
+              </Link>
+            </div>
           </div>
 
           <div className="grid gap-6 md:grid-cols-3">
             {/* Visual chart placeholder */}
             <Card className="md:col-span-2 bg-[#0c1220] border-slate-800 text-slate-100 flex flex-col justify-between">
               <CardHeader className="pb-3 border-b border-slate-900">
-                <CardTitle className="text-sm font-bold text-slate-350">
+                <CardTitle className="text-sm font-bold text-slate-300">
                   Monthly Profitability Overview
                 </CardTitle>
                 <CardDescription className="text-slate-500 text-xs">
@@ -178,7 +252,7 @@ export default function AccountingDashboardPage() {
                 {/* Visual bar grids */}
                 <div className="flex flex-col items-center gap-2">
                   <div className="w-12 bg-emerald-500/10 border border-emerald-500/20 rounded-t-lg h-32 relative flex items-end justify-center">
-                    <div className="bg-emerald-450 w-full rounded-t h-2/3" />
+                    <div className="bg-emerald-400 w-full rounded-t h-2/3" />
                   </div>
                   <span className="text-[10px] text-slate-500">Income</span>
                 </div>

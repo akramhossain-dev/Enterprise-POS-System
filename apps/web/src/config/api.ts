@@ -71,6 +71,13 @@ export const apiConfig = {
       accounts: '/accounting/accounts',
       groups: '/accounting/groups',
       categories: '/accounting/categories',
+      journals: '/accounting/journals',
+      ledger: '/accounting/ledger',
+      income: '/accounting/income',
+      expenses: '/accounting/expenses',
+      cash: '/accounting/cash',
+      bank: '/accounting/bank',
+      vouchers: '/accounting/vouchers',
     },
   },
 } as const;

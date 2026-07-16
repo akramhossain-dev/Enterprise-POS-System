@@ -6,12 +6,25 @@ import type {
   AccountGroup,
   AccountCategory,
   AccountingDashboardStats,
+  JournalEntry,
+  JournalLine,
+  LedgerTransaction,
+  IncomeTransaction,
+  ExpenseTransaction,
+  CashTransaction,
+  BankTransaction,
+  PaymentVoucher,
+  ReceiptVoucher,
 } from '@/types/accounting';
 
 const ACCOUNTS_KEY = 'epos_simulated_chart_accounts';
 const GROUPS_KEY = 'epos_simulated_account_groups';
 const CATEGORIES_KEY = 'epos_simulated_account_categories';
 const DASHBOARD_KEY = 'epos_simulated_accounting_dashboard';
+const JOURNALS_KEY = 'epos_simulated_journals';
+const INCOMES_KEY = 'epos_simulated_incomes';
+const EXPENSES_KEY = 'epos_simulated_expenses';
+const VOUCHERS_KEY = 'epos_simulated_vouchers';
 
 class AccountingService extends ApiClient {
   // Preload Mock Accounts (GAAP Hierarchy Structure)
@@ -562,6 +575,1370 @@ class AccountingService extends ApiClient {
       const items = this.getMockCategories();
       const filtered = items.filter((c) => c.id !== id);
       localStorage.setItem(CATEGORIES_KEY, JSON.stringify(filtered));
+    }
+  }
+
+  // ----------------------------------------------------
+  // JOURNAL ENTRIES METHODS
+  // ----------------------------------------------------
+  private getMockJournals(): JournalEntry[] {
+    if (typeof window === 'undefined') return [];
+    const stored = localStorage.getItem(JOURNALS_KEY);
+    if (stored) {
+      try {
+        return JSON.parse(stored);
+      } catch {
+        return [];
+      }
+    }
+
+    const defaultJournals: JournalEntry[] = [
+      {
+        id: 'j-1',
+        referenceNumber: 'JV-2026-0001',
+        date: '2026-07-01T10:00:00.000Z',
+        description: 'Initial Opening Balance Alignment',
+        status: 'POSTED',
+        notes: 'Setup core assets and liabilities floats.',
+        lines: [
+          {
+            id: 'jl-1',
+            accountId: 'acc-3',
+            accountCode: '1110',
+            accountName: 'Petty Cash Register',
+            debitAmount: 15000,
+            creditAmount: 0,
+            description: 'Cash float in safety drawer',
+          },
+          {
+            id: 'jl-2',
+            accountId: 'acc-4',
+            accountCode: '1200',
+            accountName: 'Cash at Bank',
+            debitAmount: 80000,
+            creditAmount: 0,
+            description: 'Operating bank deposits',
+          },
+          {
+            id: 'jl-3',
+            accountId: 'acc-6',
+            accountCode: '2100',
+            accountName: 'Accounts Payable',
+            debitAmount: 0,
+            creditAmount: 45000,
+            description: 'Accrued supplier payables',
+          },
+          {
+            id: 'jl-4',
+            accountId: 'acc-7',
+            accountCode: '3000',
+            accountName: 'Equity',
+            debitAmount: 0,
+            creditAmount: 50000,
+            description: 'Retained equity setup balance',
+          },
+        ],
+        createdAt: '2026-07-01T10:00:00.000Z',
+      },
+      {
+        id: 'j-2',
+        referenceNumber: 'JV-2026-0002',
+        date: '2026-07-12T14:30:00.000Z',
+        description: 'Office Rent Accrual Provision',
+        status: 'DRAFT',
+        notes: 'Awaiting formal tax invoice details.',
+        lines: [
+          {
+            id: 'jl-5',
+            accountId: 'acc-9',
+            accountCode: '5000',
+            accountName: 'Expenses',
+            debitAmount: 2500,
+            creditAmount: 0,
+            description: 'Accrued office space rent',
+          },
+          {
+            id: 'jl-6',
+            accountId: 'acc-6',
+            accountCode: '2100',
+            accountName: 'Accounts Payable',
+            debitAmount: 0,
+            creditAmount: 2500,
+            description: 'Accrued rent payable liability',
+          },
+        ],
+        createdAt: '2026-07-12T14:30:00.000Z',
+      },
+    ];
+
+    localStorage.setItem(JOURNALS_KEY, JSON.stringify(defaultJournals));
+    return defaultJournals;
+  }
+
+  async getJournals(params?: {
+    q?: string;
+    status?: string;
+    page?: number;
+    limit?: number;
+  }): Promise<PaginatedResponse<JournalEntry>> {
+    try {
+      const response = await this.get<any>(apiConfig.endpoints.accounting.journals, params);
+      return {
+        data: response.data.journals ?? [],
+        meta: response.meta || {
+          page: 1,
+          pageSize: params?.limit || 15,
+          total: 0,
+          totalPages: 0,
+          hasNextPage: false,
+          hasPrevPage: false,
+        },
+      };
+    } catch {
+      let items = this.getMockJournals();
+
+      if (params?.q) {
+        const query = params.q.toLowerCase();
+        items = items.filter(
+          (j) =>
+            j.referenceNumber.toLowerCase().includes(query) ||
+            j.description.toLowerCase().includes(query),
+        );
+      }
+
+      if (params?.status && params.status !== 'ALL') {
+        items = items.filter((j) => j.status === params.status);
+      }
+
+      // Sort newest first
+      items.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+      const page = params?.page ?? 1;
+      const limit = params?.limit ?? 15;
+      const total = items.length;
+      const totalPages = Math.ceil(total / limit);
+      const paginated = items.slice((page - 1) * limit, page * limit);
+
+      return {
+        data: paginated,
+        meta: {
+          page,
+          pageSize: limit,
+          total,
+          totalPages,
+          hasNextPage: page < totalPages,
+          hasPrevPage: page > 1,
+        },
+      };
+    }
+  }
+
+  async getJournal(id: string): Promise<JournalEntry> {
+    try {
+      const response = await this.get<JournalEntry>(
+        `${apiConfig.endpoints.accounting.journals}/${id}`,
+      );
+      return response.data;
+    } catch {
+      const items = this.getMockJournals();
+      const found = items.find((j) => j.id === id);
+      if (!found) throw new Error('Journal entry not found.');
+      return found;
+    }
+  }
+
+  async createJournal(payload: any): Promise<JournalEntry> {
+    try {
+      const response = await this.post<JournalEntry>(
+        apiConfig.endpoints.accounting.journals,
+        payload,
+      );
+      return response.data;
+    } catch {
+      const items = this.getMockJournals();
+      const newEntry: JournalEntry = {
+        id: `j-${Date.now()}`,
+        referenceNumber:
+          payload.referenceNumber || `JV-2026-${Math.floor(1000 + Math.random() * 9000)}`,
+        date: payload.date || new Date().toISOString(),
+        description: payload.description,
+        status: payload.status || 'DRAFT',
+        notes: payload.notes || '',
+        attachmentUrl: payload.attachmentUrl || '',
+        lines: payload.lines.map((l: any, idx: number) => ({
+          id: `jl-${Date.now()}-${idx}`,
+          accountId: l.accountId,
+          accountCode: l.accountCode,
+          accountName: l.accountName,
+          description: l.description || '',
+          debitAmount: Number(l.debitAmount || 0),
+          creditAmount: Number(l.creditAmount || 0),
+        })),
+        createdAt: new Date().toISOString(),
+      };
+
+      items.push(newEntry);
+      localStorage.setItem(JOURNALS_KEY, JSON.stringify(items));
+
+      if (newEntry.status === 'POSTED') {
+        // Automatically apply balances updates
+        newEntry.lines.forEach((l) => {
+          if (l.debitAmount > 0) this.updateAccountBalance(l.accountId, l.debitAmount, 'DEBIT');
+          if (l.creditAmount > 0) this.updateAccountBalance(l.accountId, l.creditAmount, 'CREDIT');
+        });
+      }
+
+      return newEntry;
+    }
+  }
+
+  async updateJournal(id: string, payload: any): Promise<JournalEntry> {
+    try {
+      const response = await this.put<JournalEntry>(
+        `${apiConfig.endpoints.accounting.journals}/${id}`,
+        payload,
+      );
+      return response.data;
+    } catch {
+      const items = this.getMockJournals();
+      const idx = items.findIndex((j) => j.id === id);
+      if (idx === -1) throw new Error('Journal entry not found.');
+
+      const updated: JournalEntry = {
+        ...items[idx]!,
+        ...payload,
+        lines: payload.lines
+          ? payload.lines.map((l: any, lIdx: number) => ({
+              id: l.id || `jl-${Date.now()}-${lIdx}`,
+              accountId: l.accountId,
+              accountCode: l.accountCode,
+              accountName: l.accountName,
+              description: l.description || '',
+              debitAmount: Number(l.debitAmount || 0),
+              creditAmount: Number(l.creditAmount || 0),
+            }))
+          : items[idx]!.lines,
+      };
+
+      items[idx] = updated;
+      localStorage.setItem(JOURNALS_KEY, JSON.stringify(items));
+      return updated;
+    }
+  }
+
+  async deleteJournal(id: string): Promise<void> {
+    try {
+      await this.delete(`${apiConfig.endpoints.accounting.journals}/${id}`);
+    } catch {
+      const items = this.getMockJournals();
+      const filtered = items.filter((j) => j.id !== id);
+      localStorage.setItem(JOURNALS_KEY, JSON.stringify(filtered));
+    }
+  }
+
+  async postJournal(id: string): Promise<JournalEntry> {
+    try {
+      const response = await this.post<JournalEntry>(
+        `${apiConfig.endpoints.accounting.journals}/${id}/post`,
+        {},
+      );
+      return response.data;
+    } catch {
+      const items = this.getMockJournals();
+      const idx = items.findIndex((j) => j.id === id);
+      if (idx === -1) throw new Error('Journal not found.');
+
+      const entry = items[idx]!;
+      if (entry.status === 'POSTED') return entry;
+
+      entry.status = 'POSTED';
+      items[idx] = entry;
+      localStorage.setItem(JOURNALS_KEY, JSON.stringify(items));
+
+      // Post ledgers updating account balances
+      entry.lines.forEach((l) => {
+        if (l.debitAmount > 0) this.updateAccountBalance(l.accountId, l.debitAmount, 'DEBIT');
+        if (l.creditAmount > 0) this.updateAccountBalance(l.accountId, l.creditAmount, 'CREDIT');
+      });
+
+      return entry;
+    }
+  }
+
+  async approveJournal(id: string): Promise<JournalEntry> {
+    try {
+      const response = await this.post<JournalEntry>(
+        `${apiConfig.endpoints.accounting.journals}/${id}/approve`,
+        {},
+      );
+      return response.data;
+    } catch {
+      return this.updateJournal(id, { status: 'APPROVED' });
+    }
+  }
+
+  async cancelJournal(id: string): Promise<JournalEntry> {
+    try {
+      const response = await this.post<JournalEntry>(
+        `${apiConfig.endpoints.accounting.journals}/${id}/cancel`,
+        {},
+      );
+      return response.data;
+    } catch {
+      return this.updateJournal(id, { status: 'CANCELLED' });
+    }
+  }
+
+  async reverseJournal(id: string): Promise<JournalEntry> {
+    try {
+      const response = await this.post<JournalEntry>(
+        `${apiConfig.endpoints.accounting.journals}/${id}/reverse`,
+        {},
+      );
+      return response.data;
+    } catch {
+      const entry = await this.getJournal(id);
+      if (entry.status !== 'POSTED') throw new Error('Only posted journals can be reversed.');
+
+      // Create counter entry
+      const reversedLines = entry.lines.map((l) => ({
+        accountId: l.accountId,
+        accountCode: l.accountCode,
+        accountName: l.accountName,
+        description: `Reversal of ${entry.referenceNumber}: ${l.description || ''}`,
+        debitAmount: l.creditAmount, // Swap debit/credit
+        creditAmount: l.debitAmount,
+      }));
+
+      const newJournal = await this.createJournal({
+        referenceNumber: `REV-${entry.referenceNumber}`,
+        date: new Date().toISOString(),
+        description: `Reversal entry for ${entry.referenceNumber}`,
+        status: 'POSTED',
+        notes: `Automatically generated to reverse Journal entry ID: ${entry.id}`,
+        lines: reversedLines,
+      });
+
+      return newJournal;
+    }
+  }
+
+  // ----------------------------------------------------
+  // LEDGER & DOUBLE-ENTRY ENGINE
+  // ----------------------------------------------------
+  private updateAccountBalance(accountId: string, amount: number, actionType: 'DEBIT' | 'CREDIT') {
+    const accounts = this.getMockAccounts();
+    const idx = accounts.findIndex((a) => a.id === accountId || a.code === accountId);
+    if (idx !== -1) {
+      const acc = accounts[idx]!;
+      const isDebitAcc = acc.type === 'ASSETS' || acc.type === 'EXPENSE';
+
+      let delta = 0;
+      if (actionType === 'DEBIT') {
+        delta = isDebitAcc ? amount : -amount;
+      } else {
+        delta = isDebitAcc ? -amount : amount;
+      }
+
+      acc.balance += delta;
+      accounts[idx] = acc;
+      localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
+    }
+  }
+
+  private compileAllTransactions(): LedgerTransaction[] {
+    const transactions: LedgerTransaction[] = [];
+
+    // 1. Compile Posted Journals
+    const journals = this.getMockJournals().filter((j) => j.status === 'POSTED');
+    journals.forEach((j) => {
+      j.lines.forEach((l) => {
+        transactions.push({
+          id: `${j.id}-${l.id}`,
+          referenceNumber: j.referenceNumber,
+          date: j.date,
+          description: l.description || j.description,
+          accountCode: l.accountCode,
+          accountName: l.accountName,
+          debitAmount: l.debitAmount,
+          creditAmount: l.creditAmount,
+          balance: 0,
+          runningBalance: 0,
+          transactionType: 'JOURNAL',
+        });
+      });
+    });
+
+    // 2. Compile Income Transactions
+    const incomes = this.getMockIncomes();
+    incomes.forEach((inc) => {
+      // Line A: Credit Income account
+      transactions.push({
+        id: `inc-cr-${inc.id}`,
+        referenceNumber: inc.reference,
+        date: inc.date,
+        description: inc.notes || `Recorded Income: ${inc.accountName}`,
+        accountCode: inc.accountCode,
+        accountName: inc.accountName,
+        debitAmount: 0,
+        creditAmount: inc.amount,
+        balance: 0,
+        runningBalance: 0,
+        transactionType: 'INCOME',
+      });
+      // Line B: Debit Cash/Bank Assets account
+      const isCash = inc.paymentMethod === 'CASH';
+      transactions.push({
+        id: `inc-dr-${inc.id}`,
+        referenceNumber: inc.reference,
+        date: inc.date,
+        description: inc.notes || `Cash/Bank deposit from Income`,
+        accountCode: isCash ? '1110' : '1200',
+        accountName: isCash ? 'Petty Cash Register' : 'Cash at Bank',
+        debitAmount: inc.amount,
+        creditAmount: 0,
+        balance: 0,
+        runningBalance: 0,
+        transactionType: 'INCOME',
+      });
+    });
+
+    // 3. Compile Expense Transactions
+    const expenses = this.getMockExpenses();
+    expenses.forEach((exp) => {
+      // Line A: Debit Expense account
+      transactions.push({
+        id: `exp-dr-${exp.id}`,
+        referenceNumber: exp.reference,
+        date: exp.date,
+        description: exp.notes || `Recorded Expense: ${exp.accountName}`,
+        accountCode: exp.accountCode,
+        accountName: exp.accountName,
+        debitAmount: exp.amount,
+        creditAmount: 0,
+        balance: 0,
+        runningBalance: 0,
+        transactionType: 'EXPENSE',
+      });
+      // Line B: Credit Cash/Bank Assets account
+      const isCash = exp.paymentMethod === 'CASH';
+      transactions.push({
+        id: `exp-cr-${exp.id}`,
+        referenceNumber: exp.reference,
+        date: exp.date,
+        description: exp.notes || `Cash/Bank payout for Expense`,
+        accountCode: isCash ? '1110' : '1200',
+        accountName: isCash ? 'Petty Cash Register' : 'Cash at Bank',
+        debitAmount: 0,
+        creditAmount: exp.amount,
+        balance: 0,
+        runningBalance: 0,
+        transactionType: 'EXPENSE',
+      });
+    });
+
+    // 4. Compile Vouchers
+    const vouchers = this.getMockVouchers();
+    vouchers.forEach((v) => {
+      if ('voucherNumber' in v) {
+        // Payment Voucher (APPROVED only)
+        if (v.approvalStatus !== 'APPROVED') return;
+        // Debit: generic Expense account / Credit: cash/bank asset
+        transactions.push({
+          id: `pv-dr-${v.id}`,
+          referenceNumber: v.voucherNumber,
+          date: v.date,
+          description: v.notes || `Voucher Payment to ${v.payee}`,
+          accountCode: '5000',
+          accountName: 'Expenses',
+          debitAmount: v.amount,
+          creditAmount: 0,
+          balance: 0,
+          runningBalance: 0,
+          transactionType: 'VOUCHER',
+        });
+
+        const isCash = v.paymentMethod === 'CASH';
+        transactions.push({
+          id: `pv-cr-${v.id}`,
+          referenceNumber: v.voucherNumber,
+          date: v.date,
+          description: v.notes || `Payment payout to ${v.payee}`,
+          accountCode: isCash ? '1110' : '1200',
+          accountName: isCash ? 'Petty Cash Register' : 'Cash at Bank',
+          debitAmount: 0,
+          creditAmount: v.amount,
+          balance: 0,
+          runningBalance: 0,
+          transactionType: 'VOUCHER',
+        });
+      } else if ('receiptNumber' in v) {
+        // Receipt Voucher (Inward)
+        // Debit: cash/bank asset / Credit: generic Income account
+        const isCash = v.paymentMethod === 'CASH';
+        transactions.push({
+          id: `rv-dr-${v.id}`,
+          referenceNumber: v.receiptNumber,
+          date: v.date,
+          description: v.notes || `Voucher Receipt from ${v.receivedFrom}`,
+          accountCode: isCash ? '1110' : '1200',
+          accountName: isCash ? 'Petty Cash Register' : 'Cash at Bank',
+          debitAmount: v.amount,
+          creditAmount: 0,
+          balance: 0,
+          runningBalance: 0,
+          transactionType: 'VOUCHER',
+        });
+
+        transactions.push({
+          id: `rv-cr-${v.id}`,
+          referenceNumber: v.receiptNumber,
+          date: v.date,
+          description: v.notes || `Receipt inflow from ${v.receivedFrom}`,
+          accountCode: '4000',
+          accountName: 'Revenue',
+          debitAmount: 0,
+          creditAmount: v.amount,
+          balance: 0,
+          runningBalance: 0,
+          transactionType: 'VOUCHER',
+        });
+      }
+    });
+
+    // Sort chronologically ascending
+    transactions.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    return transactions;
+  }
+
+  async getGeneralLedger(params?: {
+    q?: string;
+    startDate?: string;
+    endDate?: string;
+    type?: string;
+  }): Promise<LedgerTransaction[]> {
+    try {
+      const response = await this.get<any>(apiConfig.endpoints.accounting.ledger, params);
+      return response.data;
+    } catch {
+      const allTx = this.compileAllTransactions();
+      const accounts = this.getMockAccounts();
+
+      let filtered = [...allTx];
+
+      if (params?.startDate) {
+        const start = new Date(params.startDate).getTime();
+        filtered = filtered.filter((t) => new Date(t.date).getTime() >= start);
+      }
+
+      if (params?.endDate) {
+        const end = new Date(params.endDate).getTime();
+        filtered = filtered.filter((t) => new Date(t.date).getTime() <= end);
+      }
+
+      if (params?.q) {
+        const query = params.q.toLowerCase();
+        filtered = filtered.filter(
+          (t) =>
+            t.accountName.toLowerCase().includes(query) ||
+            t.accountCode.includes(query) ||
+            t.referenceNumber.toLowerCase().includes(query),
+        );
+      }
+
+      // Calculate running balances per account
+      const accountRunning: Record<string, number> = {};
+      accounts.forEach((a) => {
+        accountRunning[a.code] = a.openingBalance;
+      });
+
+      filtered.forEach((t) => {
+        const acc = accounts.find((a) => a.code === t.accountCode);
+        const opening = accountRunning[t.accountCode] || 0;
+
+        let delta = 0;
+        if (acc) {
+          const isDebitType = acc.type === 'ASSETS' || acc.type === 'EXPENSE';
+          if (isDebitType) {
+            delta = t.debitAmount - t.creditAmount;
+          } else {
+            delta = t.creditAmount - t.debitAmount;
+          }
+        } else {
+          delta = t.debitAmount - t.creditAmount; // default
+        }
+
+        const newBal = opening + delta;
+        t.balance = newBal;
+        t.runningBalance = newBal;
+        accountRunning[t.accountCode] = newBal;
+      });
+
+      return filtered;
+    }
+  }
+
+  async getAccountLedger(
+    accountId: string,
+    params?: { startDate?: string; endDate?: string; type?: string },
+  ): Promise<{
+    transactions: LedgerTransaction[];
+    summary: {
+      openingBalance: number;
+      totalDebit: number;
+      totalCredit: number;
+      closingBalance: number;
+    };
+  }> {
+    try {
+      const response = await this.get<any>(
+        `${apiConfig.endpoints.accounting.ledger}/${accountId}`,
+        params,
+      );
+      return response.data;
+    } catch {
+      const account = await this.getAccount(accountId);
+      const allTx = this.compileAllTransactions();
+      const code = account.code;
+
+      let filtered = allTx.filter((t) => t.accountCode === code);
+
+      if (params?.startDate) {
+        const start = new Date(params.startDate).getTime();
+        filtered = filtered.filter((t) => new Date(t.date).getTime() >= start);
+      }
+
+      if (params?.endDate) {
+        const end = new Date(params.endDate).getTime();
+        filtered = filtered.filter((t) => new Date(t.date).getTime() <= end);
+      }
+
+      if (params?.type && params.type !== 'ALL') {
+        filtered = filtered.filter((t) => t.transactionType === params.type);
+      }
+
+      // Compute running balance chronologically
+      let running = account.openingBalance;
+      let totalDebit = 0;
+      let totalCredit = 0;
+
+      const isDebitType = account.type === 'ASSETS' || account.type === 'EXPENSE';
+
+      filtered.forEach((t) => {
+        totalDebit += t.debitAmount;
+        totalCredit += t.creditAmount;
+
+        let delta = 0;
+        if (isDebitType) {
+          delta = t.debitAmount - t.creditAmount;
+        } else {
+          delta = t.creditAmount - t.debitAmount;
+        }
+        running += delta;
+        t.runningBalance = running;
+      });
+
+      return {
+        transactions: filtered,
+        summary: {
+          openingBalance: account.openingBalance,
+          totalDebit,
+          totalCredit,
+          closingBalance: running,
+        },
+      };
+    }
+  }
+
+  // ----------------------------------------------------
+  // INCOME MANAGEMENT METHODS
+  // ----------------------------------------------------
+  private getMockIncomes(): IncomeTransaction[] {
+    if (typeof window === 'undefined') return [];
+    const stored = localStorage.getItem(INCOMES_KEY);
+    if (stored) {
+      try {
+        return JSON.parse(stored);
+      } catch {
+        return [];
+      }
+    }
+
+    const defaultIncomes: IncomeTransaction[] = [
+      {
+        id: 'inc-1',
+        accountId: 'acc-8',
+        accountCode: '4000',
+        accountName: 'Revenue',
+        amount: 3500,
+        paymentMethod: 'CASH',
+        reference: 'POS-SALE-2026-9021',
+        date: '2026-07-02T11:00:00.000Z',
+        notes: 'End of day cash registers consolidation',
+        createdAt: '2026-07-02T11:00:00.000Z',
+      },
+      {
+        id: 'inc-2',
+        accountId: 'acc-8',
+        accountCode: '4000',
+        accountName: 'Revenue',
+        amount: 12000,
+        paymentMethod: 'BANK',
+        reference: 'B2B-INV-00921',
+        date: '2026-07-08T15:20:00.000Z',
+        notes: 'Corporate client bank invoice settlement',
+        createdAt: '2026-07-08T15:20:00.000Z',
+      },
+    ];
+
+    localStorage.setItem(INCOMES_KEY, JSON.stringify(defaultIncomes));
+    return defaultIncomes;
+  }
+
+  async getIncomes(params?: {
+    q?: string;
+    categoryId?: string;
+    paymentMethod?: string;
+    page?: number;
+    limit?: number;
+  }): Promise<PaginatedResponse<IncomeTransaction>> {
+    try {
+      const response = await this.get<any>(apiConfig.endpoints.accounting.income, params);
+      return {
+        data: response.data.incomes ?? [],
+        meta: response.meta || {
+          page: 1,
+          pageSize: params?.limit || 15,
+          total: 0,
+          totalPages: 0,
+          hasNextPage: false,
+          hasPrevPage: false,
+        },
+      };
+    } catch {
+      let items = this.getMockIncomes();
+
+      if (params?.q) {
+        const query = params.q.toLowerCase();
+        items = items.filter(
+          (i) =>
+            i.reference.toLowerCase().includes(query) ||
+            (i.notes && i.notes.toLowerCase().includes(query)),
+        );
+      }
+
+      if (params?.categoryId && params.categoryId !== 'ALL') {
+        items = items.filter((i) => i.accountId === params.categoryId);
+      }
+
+      if (params?.paymentMethod && params.paymentMethod !== 'ALL') {
+        items = items.filter((i) => i.paymentMethod === params.paymentMethod);
+      }
+
+      items.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+      const page = params?.page ?? 1;
+      const limit = params?.limit ?? 15;
+      const total = items.length;
+      const totalPages = Math.ceil(total / limit);
+      const paginated = items.slice((page - 1) * limit, page * limit);
+
+      return {
+        data: paginated,
+        meta: {
+          page,
+          pageSize: limit,
+          total,
+          totalPages,
+          hasNextPage: page < totalPages,
+          hasPrevPage: page > 1,
+        },
+      };
+    }
+  }
+
+  async createIncome(payload: any): Promise<IncomeTransaction> {
+    try {
+      const response = await this.post<IncomeTransaction>(
+        apiConfig.endpoints.accounting.income,
+        payload,
+      );
+      return response.data;
+    } catch {
+      const items = this.getMockIncomes();
+      const accounts = this.getMockAccounts();
+      const cat = accounts.find((a) => a.id === payload.accountId);
+
+      const newIncome: IncomeTransaction = {
+        id: `inc-${Date.now()}`,
+        accountId: payload.accountId,
+        accountCode: cat?.code || '4000',
+        accountName: cat?.name || 'Revenue',
+        amount: Number(payload.amount),
+        paymentMethod: payload.paymentMethod || 'CASH',
+        reference: payload.reference || `INC-${Date.now()}`,
+        date: payload.date || new Date().toISOString(),
+        notes: payload.notes || '',
+        createdAt: new Date().toISOString(),
+      };
+
+      items.push(newIncome);
+      localStorage.setItem(INCOMES_KEY, JSON.stringify(items));
+
+      // Update balances double-entry style
+      // Credit selected income category account
+      this.updateAccountBalance(payload.accountId, newIncome.amount, 'CREDIT');
+      // Debit Asset (Petty Cash: acc-3/1110, or Bank: acc-4/1200)
+      const assetAccId = newIncome.paymentMethod === 'CASH' ? 'acc-3' : 'acc-4';
+      this.updateAccountBalance(assetAccId, newIncome.amount, 'DEBIT');
+
+      return newIncome;
+    }
+  }
+
+  // ----------------------------------------------------
+  // EXPENSE MANAGEMENT METHODS
+  // ----------------------------------------------------
+  private getMockExpenses(): ExpenseTransaction[] {
+    if (typeof window === 'undefined') return [];
+    const stored = localStorage.getItem(EXPENSES_KEY);
+    if (stored) {
+      try {
+        return JSON.parse(stored);
+      } catch {
+        return [];
+      }
+    }
+
+    const defaultExpenses: ExpenseTransaction[] = [
+      {
+        id: 'exp-1',
+        accountId: 'acc-9',
+        accountCode: '5000',
+        accountName: 'Expenses',
+        amount: 850,
+        paymentMethod: 'CASH',
+        reference: 'EXP-90021-STAT',
+        date: '2026-07-03T10:00:00.000Z',
+        notes: 'Office stationeries and cleaning detergents',
+        createdAt: '2026-07-03T10:00:00.000Z',
+      },
+      {
+        id: 'exp-2',
+        accountId: 'acc-9',
+        accountCode: '5000',
+        accountName: 'Expenses',
+        amount: 4500,
+        paymentMethod: 'BANK',
+        reference: 'EXP-90022-ELEC',
+        date: '2026-07-07T16:45:00.000Z',
+        notes: 'Warehouse monthly electric utilities',
+        createdAt: '2026-07-07T16:45:00.000Z',
+      },
+    ];
+
+    localStorage.setItem(EXPENSES_KEY, JSON.stringify(defaultExpenses));
+    return defaultExpenses;
+  }
+
+  async getExpenses(params?: {
+    q?: string;
+    categoryId?: string;
+    paymentMethod?: string;
+    page?: number;
+    limit?: number;
+  }): Promise<PaginatedResponse<ExpenseTransaction>> {
+    try {
+      const response = await this.get<any>(apiConfig.endpoints.accounting.expenses, params);
+      return {
+        data: response.data.expenses ?? [],
+        meta: response.meta || {
+          page: 1,
+          pageSize: params?.limit || 15,
+          total: 0,
+          totalPages: 0,
+          hasNextPage: false,
+          hasPrevPage: false,
+        },
+      };
+    } catch {
+      let items = this.getMockExpenses();
+
+      if (params?.q) {
+        const query = params.q.toLowerCase();
+        items = items.filter(
+          (e) =>
+            e.reference.toLowerCase().includes(query) ||
+            (e.notes && e.notes.toLowerCase().includes(query)),
+        );
+      }
+
+      if (params?.categoryId && params.categoryId !== 'ALL') {
+        items = items.filter((e) => e.accountId === params.categoryId);
+      }
+
+      if (params?.paymentMethod && params.paymentMethod !== 'ALL') {
+        items = items.filter((e) => e.paymentMethod === params.paymentMethod);
+      }
+
+      items.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+      const page = params?.page ?? 1;
+      const limit = params?.limit ?? 15;
+      const total = items.length;
+      const totalPages = Math.ceil(total / limit);
+      const paginated = items.slice((page - 1) * limit, page * limit);
+
+      return {
+        data: paginated,
+        meta: {
+          page,
+          pageSize: limit,
+          total,
+          totalPages,
+          hasNextPage: page < totalPages,
+          hasPrevPage: page > 1,
+        },
+      };
+    }
+  }
+
+  async createExpense(payload: any): Promise<ExpenseTransaction> {
+    try {
+      const response = await this.post<ExpenseTransaction>(
+        apiConfig.endpoints.accounting.expenses,
+        payload,
+      );
+      return response.data;
+    } catch {
+      const items = this.getMockExpenses();
+      const accounts = this.getMockAccounts();
+      const cat = accounts.find((a) => a.id === payload.accountId);
+
+      const newExpense: ExpenseTransaction = {
+        id: `exp-${Date.now()}`,
+        accountId: payload.accountId,
+        accountCode: cat?.code || '5000',
+        accountName: cat?.name || 'Expenses',
+        amount: Number(payload.amount),
+        paymentMethod: payload.paymentMethod || 'CASH',
+        reference: payload.reference || `EXP-${Date.now()}`,
+        date: payload.date || new Date().toISOString(),
+        notes: payload.notes || '',
+        createdAt: new Date().toISOString(),
+      };
+
+      items.push(newExpense);
+      localStorage.setItem(EXPENSES_KEY, JSON.stringify(items));
+
+      // Update balances double-entry style
+      // Debit selected expense category account
+      this.updateAccountBalance(payload.accountId, newExpense.amount, 'DEBIT');
+      // Credit Asset (Petty Cash: acc-3/1110, or Bank: acc-4/1200)
+      const assetAccId = newExpense.paymentMethod === 'CASH' ? 'acc-3' : 'acc-4';
+      this.updateAccountBalance(assetAccId, newExpense.amount, 'CREDIT');
+
+      return newExpense;
+    }
+  }
+
+  // ----------------------------------------------------
+  // CASH BOOK METHODS
+  // ----------------------------------------------------
+  async getCashBook(params?: { startDate?: string; endDate?: string }): Promise<{
+    transactions: CashTransaction[];
+    summary: {
+      openingBalance: number;
+      totalCashIn: number;
+      totalCashOut: number;
+      currentBalance: number;
+    };
+  }> {
+    try {
+      const response = await this.get<any>(apiConfig.endpoints.accounting.cash, params);
+      return response.data;
+    } catch {
+      const allTx = this.compileAllTransactions();
+      const cashAccount = await this.getAccount('acc-3'); // 1110 Petty Cash
+
+      // Filter transactions matching Petty Cash code
+      let cashTx = allTx.filter((t) => t.accountCode === '1110');
+
+      if (params?.startDate) {
+        const start = new Date(params.startDate).getTime();
+        cashTx = cashTx.filter((t) => new Date(t.date).getTime() >= start);
+      }
+
+      if (params?.endDate) {
+        const end = new Date(params.endDate).getTime();
+        cashTx = cashTx.filter((t) => new Date(t.date).getTime() <= end);
+      }
+
+      let running = cashAccount.openingBalance;
+      let totalCashIn = 0;
+      let totalCashOut = 0;
+
+      const results: CashTransaction[] = cashTx.map((t) => {
+        // Petty cash is Asset (Debit increases, Credit decreases)
+        const cashIn = t.debitAmount;
+        const cashOut = t.creditAmount;
+
+        totalCashIn += cashIn;
+        totalCashOut += cashOut;
+        running += cashIn - cashOut;
+
+        return {
+          id: t.id,
+          date: t.date,
+          description: t.description,
+          reference: t.referenceNumber,
+          cashIn,
+          cashOut,
+          runningBalance: running,
+          createdAt: t.date,
+        };
+      });
+
+      // Reverse order to show latest first in transactions log
+      results.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+      return {
+        transactions: results,
+        summary: {
+          openingBalance: cashAccount.openingBalance,
+          totalCashIn,
+          totalCashOut,
+          currentBalance: running,
+        },
+      };
+    }
+  }
+
+  // ----------------------------------------------------
+  // BANK BOOK METHODS
+  // ----------------------------------------------------
+  async getBankBook(params?: { startDate?: string; endDate?: string }): Promise<{
+    transactions: BankTransaction[];
+    summary: {
+      openingBalance: number;
+      totalDeposits: number;
+      totalWithdrawals: number;
+      currentBalance: number;
+    };
+  }> {
+    try {
+      const response = await this.get<any>(apiConfig.endpoints.accounting.bank, params);
+      return response.data;
+    } catch {
+      const allTx = this.compileAllTransactions();
+      const bankAccount = await this.getAccount('acc-4'); // 1200 Cash at Bank
+
+      let bankTx = allTx.filter((t) => t.accountCode === '1200');
+
+      if (params?.startDate) {
+        const start = new Date(params.startDate).getTime();
+        bankTx = bankTx.filter((t) => new Date(t.date).getTime() >= start);
+      }
+
+      if (params?.endDate) {
+        const end = new Date(params.endDate).getTime();
+        bankTx = bankTx.filter((t) => new Date(t.date).getTime() <= end);
+      }
+
+      let running = bankAccount.openingBalance;
+      let totalDeposits = 0;
+      let totalWithdrawals = 0;
+
+      const results: BankTransaction[] = bankTx.map((t) => {
+        const deposits = t.debitAmount;
+        const withdrawals = t.creditAmount;
+
+        totalDeposits += deposits;
+        totalWithdrawals += withdrawals;
+        running += deposits - withdrawals;
+
+        return {
+          id: t.id,
+          date: t.date,
+          description: t.description,
+          reference: t.referenceNumber,
+          deposits,
+          withdrawals,
+          runningBalance: running,
+          createdAt: t.date,
+        };
+      });
+
+      results.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+      return {
+        transactions: results,
+        summary: {
+          openingBalance: bankAccount.openingBalance,
+          totalDeposits,
+          totalWithdrawals,
+          currentBalance: running,
+        },
+      };
+    }
+  }
+
+  // ----------------------------------------------------
+  // VOUCHER METHODS
+  // ----------------------------------------------------
+  private getMockVouchers(): (PaymentVoucher | ReceiptVoucher)[] {
+    if (typeof window === 'undefined') return [];
+    const stored = localStorage.getItem(VOUCHERS_KEY);
+    if (stored) {
+      try {
+        return JSON.parse(stored);
+      } catch {
+        return [];
+      }
+    }
+
+    const defaultVouchers: (PaymentVoucher | ReceiptVoucher)[] = [
+      {
+        id: 'v-1',
+        voucherNumber: 'PV-2026-0001',
+        payee: 'Apex Wholesale Suppliers',
+        amount: 15000,
+        paymentMethod: 'BANK',
+        reference: 'SUP-INV-891',
+        date: '2026-07-04T09:00:00.000Z',
+        approvalStatus: 'APPROVED',
+        notes: 'Settlement for invoice #SUP-INV-891 inventory deliveries.',
+        createdAt: '2026-07-04T09:00:00.000Z',
+      },
+      {
+        id: 'v-2',
+        receiptNumber: 'RV-2026-0001',
+        receivedFrom: 'Global Retailers Ltd',
+        amount: 8500,
+        paymentMethod: 'BANK',
+        reference: 'ADV-SALES-21',
+        date: '2026-07-06T14:15:00.000Z',
+        notes: 'Advance booking float deposit for custom bulk orders.',
+        createdAt: '2026-07-06T14:15:00.000Z',
+      },
+      {
+        id: 'v-3',
+        voucherNumber: 'PV-2026-0002',
+        payee: 'City Rent Estates',
+        amount: 2500,
+        paymentMethod: 'CASH',
+        reference: 'RENT-JULY',
+        date: '2026-07-10T11:00:00.000Z',
+        approvalStatus: 'DRAFT',
+        notes: 'Monthly retail outlet rental fee.',
+        createdAt: '2026-07-10T11:00:00.000Z',
+      },
+    ];
+
+    localStorage.setItem(VOUCHERS_KEY, JSON.stringify(defaultVouchers));
+    return defaultVouchers;
+  }
+
+  async getVouchers(params?: {
+    q?: string;
+    type?: 'PAYMENT' | 'RECEIPT';
+    status?: string;
+    page?: number;
+    limit?: number;
+  }): Promise<PaginatedResponse<PaymentVoucher | ReceiptVoucher>> {
+    try {
+      const response = await this.get<any>(apiConfig.endpoints.accounting.vouchers, params);
+      return {
+        data: response.data.vouchers ?? [],
+        meta: response.meta || {
+          page: 1,
+          pageSize: params?.limit || 15,
+          total: 0,
+          totalPages: 0,
+          hasNextPage: false,
+          hasPrevPage: false,
+        },
+      };
+    } catch {
+      const items = this.getMockVouchers();
+      let filtered = [...items];
+
+      if (params?.type) {
+        if (params.type === 'PAYMENT') {
+          filtered = filtered.filter((v) => 'voucherNumber' in v);
+        } else {
+          filtered = filtered.filter((v) => 'receiptNumber' in v);
+        }
+      }
+
+      if (params?.status && params.status !== 'ALL') {
+        filtered = filtered.filter((v) => {
+          if ('approvalStatus' in v) {
+            return v.approvalStatus === params.status;
+          }
+          return true; // Receipts do not have approval status in the simplified checklist
+        });
+      }
+
+      if (params?.q) {
+        const query = params.q.toLowerCase();
+        filtered = filtered.filter((v) => {
+          if ('voucherNumber' in v) {
+            return (
+              v.voucherNumber.toLowerCase().includes(query) ||
+              v.payee.toLowerCase().includes(query) ||
+              v.reference.toLowerCase().includes(query)
+            );
+          } else {
+            return (
+              v.receiptNumber.toLowerCase().includes(query) ||
+              v.receivedFrom.toLowerCase().includes(query) ||
+              v.reference.toLowerCase().includes(query)
+            );
+          }
+        });
+      }
+
+      filtered.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+      const page = params?.page ?? 1;
+      const limit = params?.limit ?? 15;
+      const total = filtered.length;
+      const totalPages = Math.ceil(total / limit);
+      const paginated = filtered.slice((page - 1) * limit, page * limit);
+
+      return {
+        data: paginated,
+        meta: {
+          page,
+          pageSize: limit,
+          total,
+          totalPages,
+          hasNextPage: page < totalPages,
+          hasPrevPage: page > 1,
+        },
+      };
+    }
+  }
+
+  async createPaymentVoucher(payload: any): Promise<PaymentVoucher> {
+    try {
+      const response = await this.post<PaymentVoucher>(
+        `${apiConfig.endpoints.accounting.vouchers}/payment`,
+        payload,
+      );
+      return response.data;
+    } catch {
+      const items = this.getMockVouchers();
+      const newVoucher: PaymentVoucher = {
+        id: `pv-${Date.now()}`,
+        voucherNumber:
+          payload.voucherNumber || `PV-2026-${Math.floor(1000 + Math.random() * 9000)}`,
+        payee: payload.payee,
+        amount: Number(payload.amount),
+        paymentMethod: payload.paymentMethod || 'CASH',
+        reference: payload.reference || `REF-${Date.now()}`,
+        date: payload.date || new Date().toISOString(),
+        approvalStatus: payload.approvalStatus || 'DRAFT',
+        notes: payload.notes || '',
+        createdAt: new Date().toISOString(),
+      };
+
+      items.push(newVoucher);
+      localStorage.setItem(VOUCHERS_KEY, JSON.stringify(items));
+
+      if (newVoucher.approvalStatus === 'APPROVED') {
+        // Automatically deduct asset balance
+        const assetAccId = newVoucher.paymentMethod === 'CASH' ? 'acc-3' : 'acc-4';
+        this.updateAccountBalance(assetAccId, newVoucher.amount, 'CREDIT');
+        // Increase Expense balance
+        this.updateAccountBalance('acc-9', newVoucher.amount, 'DEBIT');
+      }
+
+      return newVoucher;
+    }
+  }
+
+  async createReceiptVoucher(payload: any): Promise<ReceiptVoucher> {
+    try {
+      const response = await this.post<ReceiptVoucher>(
+        `${apiConfig.endpoints.accounting.vouchers}/receipt`,
+        payload,
+      );
+      return response.data;
+    } catch {
+      const items = this.getMockVouchers();
+      const newVoucher: ReceiptVoucher = {
+        id: `rv-${Date.now()}`,
+        receiptNumber:
+          payload.receiptNumber || `RV-2026-${Math.floor(1000 + Math.random() * 9000)}`,
+        receivedFrom: payload.receivedFrom,
+        amount: Number(payload.amount),
+        paymentMethod: payload.paymentMethod || 'CASH',
+        reference: payload.reference || `REF-${Date.now()}`,
+        date: payload.date || new Date().toISOString(),
+        notes: payload.notes || '',
+        createdAt: new Date().toISOString(),
+      };
+
+      items.push(newVoucher);
+      localStorage.setItem(VOUCHERS_KEY, JSON.stringify(items));
+
+      // Receipt vouchers are automatically posting inflows
+      const assetAccId = newVoucher.paymentMethod === 'CASH' ? 'acc-3' : 'acc-4';
+      this.updateAccountBalance(assetAccId, newVoucher.amount, 'DEBIT');
+      // Increase Income account
+      this.updateAccountBalance('acc-8', newVoucher.amount, 'CREDIT');
+
+      return newVoucher;
+    }
+  }
+
+  async approveVoucher(id: string): Promise<PaymentVoucher> {
+    try {
+      const response = await this.post<PaymentVoucher>(
+        `${apiConfig.endpoints.accounting.vouchers}/${id}/approve`,
+        {},
+      );
+      return response.data;
+    } catch {
+      const items = this.getMockVouchers();
+      const idx = items.findIndex((v) => v.id === id);
+      if (idx === -1) throw new Error('Voucher not found.');
+
+      const v = items[idx]! as PaymentVoucher;
+      if (v.approvalStatus === 'APPROVED') return v;
+
+      v.approvalStatus = 'APPROVED';
+      items[idx] = v;
+      localStorage.setItem(VOUCHERS_KEY, JSON.stringify(items));
+
+      // Payout ledger deducts asset and increases expense
+      const assetAccId = v.paymentMethod === 'CASH' ? 'acc-3' : 'acc-4';
+      this.updateAccountBalance(assetAccId, v.amount, 'CREDIT');
+      this.updateAccountBalance('acc-9', v.amount, 'DEBIT');
+
+      return v;
+    }
+  }
+
+  async cancelVoucher(id: string): Promise<PaymentVoucher> {
+    try {
+      const response = await this.post<PaymentVoucher>(
+        `${apiConfig.endpoints.accounting.vouchers}/${id}/cancel`,
+        {},
+      );
+      return response.data;
+    } catch {
+      const items = this.getMockVouchers();
+      const idx = items.findIndex((v) => v.id === id);
+      if (idx === -1) throw new Error('Voucher not found.');
+
+      const v = items[idx]! as PaymentVoucher;
+      v.approvalStatus = 'CANCELLED';
+      items[idx] = v;
+      localStorage.setItem(VOUCHERS_KEY, JSON.stringify(items));
+      return v;
     }
   }
 }

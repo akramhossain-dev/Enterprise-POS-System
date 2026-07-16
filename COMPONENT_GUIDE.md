@@ -908,3 +908,56 @@ Render badges matching balance types (Debit/Credit) and account status flags.
 | `/accounting/accounts/archived` | `app/(dashboard)/accounting/accounts/archived/page.tsx`  | Registry containing archived accounts with restore utilities.                            |
 | `/accounting/groups`            | `app/(dashboard)/accounting/groups/page.tsx`             | CRUD operations manager to cluster ledger groups.                                        |
 | `/accounting/categories`        | `app/(dashboard)/accounting/categories/page.tsx`         | CRUD operations manager to sub-classify group accounts.                                  |
+
+---
+
+## Accounting & Finance Components (Phase F9.2)
+
+### DebitCreditEntry
+
+`apps/web/src/components/accounting/debit-credit-entry.tsx`
+Renders the double-entry journal line-items editor. Features dynamic row injection, account selectors, debit and credit input filters, and real-time balancing difference indicators.
+
+### LedgerTable
+
+`apps/web/src/components/accounting/ledger-table.tsx`
+A high-performance grid table optimized for General Ledger and Account Ledger datasets. Features sorting, pagination helpers, transaction-type badge indicators, and CSV export callbacks.
+
+### TransactionTimeline
+
+`apps/web/src/components/accounting/transaction-timeline.tsx`
+Displays a vertical visual timeline tracing account ledger movements with customized icon badges representing source transaction types.
+
+### VoucherCard
+
+`apps/web/src/components/accounting/voucher-card.tsx`
+A grid card widget summarizing payment or receipt vouchers. Focuses payees, received-from metadata, payment methods, references, dates, approval actions, and printable sheet triggers.
+
+### BalanceSummary
+
+`apps/web/src/components/accounting/balance-summary.tsx`
+A four-metric summary banner showing Opening Balance, Total Inflows, Total Outflows, and Closing Balances.
+
+### Skeletons
+
+`apps/web/src/components/accounting/accounting-skeletons.tsx`
+Provides loading shimmer screens for tables, ledgers, and forms.
+
+---
+
+## Accounting Page Routes (Phase F9.2)
+
+| Route                           | File                                                     | Description                                                                       |
+| ------------------------------- | -------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `/accounting/journals`          | `app/(dashboard)/accounting/journals/page.tsx`           | Index of journal entries, featuring status filters, searching, and bulk actions.  |
+| `/accounting/journals/new`      | `app/(dashboard)/accounting/journals/new/page.tsx`       | Double-entry journal wizard with real-time balance validation checks.             |
+| `/accounting/journals/:id`      | `app/(dashboard)/accounting/journals/[id]/page.tsx`      | Sheet previewing journal entries lines with Post/Approve/Cancel/Reverse controls. |
+| `/accounting/journals/:id/edit` | `app/(dashboard)/accounting/journals/[id]/edit/page.tsx` | Form screen to edit entries currently in DRAFT status.                            |
+| `/accounting/general-ledger`    | `app/(dashboard)/accounting/general-ledger/page.tsx`     | Merged ledger sheet outlining all transactions across accounts.                   |
+| `/accounting/account-ledger`    | `app/(dashboard)/accounting/account-ledger/page.tsx`     | Detail view tracing timelines and balances for single accounts.                   |
+| `/accounting/income`            | `app/(dashboard)/accounting/income/page.tsx`             | Log operational revenue receipts and categorise inflows.                          |
+| `/accounting/expense`           | `app/(dashboard)/accounting/expense/page.tsx`            | Log operational expenses and process payouts.                                     |
+| `/accounting/cash-book`         | `app/(dashboard)/accounting/cash-book/page.tsx`          | Petty Cash registers book showing daily safes inflows/outflows.                   |
+| `/accounting/bank-book`         | `app/(dashboard)/accounting/bank-book/page.tsx`          | Bank deposits/withdrawals statement registry.                                     |
+| `/accounting/payment-vouchers`  | `app/(dashboard)/accounting/payment-vouchers/page.tsx`   | Outbound payment voucher management and printable layouts.                        |
+| `/accounting/receipt-vouchers`  | `app/(dashboard)/accounting/receipt-vouchers/page.tsx`   | Inward receipt voucher management and printable receipt slips.                    |
