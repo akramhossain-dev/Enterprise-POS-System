@@ -9,6 +9,7 @@ import { useAuthStore } from '@/stores/auth.store';
 import { ChevronLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { toast } from 'sonner';
 
 export default function NewProductPage() {
   const router = useRouter();
@@ -17,7 +18,7 @@ export default function NewProductPage() {
 
   const onSubmit = (values: ProductFormValues) => {
     if (!user?.workspaceId) {
-      console.error('No workspace ID found for the user');
+      toast.error('Unable to create product: workspace not found. Please log in again.');
       return;
     }
 

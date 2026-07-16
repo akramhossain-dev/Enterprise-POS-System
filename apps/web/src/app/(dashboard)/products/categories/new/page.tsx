@@ -9,6 +9,7 @@ import { useAuthStore } from '@/stores/auth.store';
 import { ChevronLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { toast } from 'sonner';
 
 export default function NewCategoryPage() {
   const router = useRouter();
@@ -20,7 +21,7 @@ export default function NewCategoryPage() {
 
   const onSubmit = (values: CategoryFormValues) => {
     if (!user?.workspaceId) {
-      console.error('No workspace ID found for the user');
+      toast.error('Unable to create item: workspace not found. Please log in again.');
       return;
     }
 

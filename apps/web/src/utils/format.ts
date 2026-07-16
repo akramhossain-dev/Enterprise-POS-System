@@ -5,7 +5,7 @@ import { appConfig } from '@/config/app';
 
 export function formatDate(
   date: string | Date | null | undefined,
-  pattern = appConfig.dateFormat,
+  pattern: string = appConfig.dateFormat,
 ): string {
   if (!date) return '—';
   const d = typeof date === 'string' ? parseISO(date) : date;
