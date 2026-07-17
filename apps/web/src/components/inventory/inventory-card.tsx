@@ -3,13 +3,13 @@
 import type { ReactNode } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/utils/cn';
-import { TrendingUp, TrendingDown } from 'lucide-react';
+import { TrendingUp, TrendingDown, LucideIcon } from 'lucide-react';
 
 interface InventoryCardProps {
   title: string;
   value: string | number;
   description?: string;
-  icon: any;
+  icon: LucideIcon;
   trend?: {
     value: number;
     isPositive: boolean;

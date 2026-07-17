@@ -215,12 +215,68 @@ jobs:
           retention-days: 14
 
   # ───────────────────────────────────────────────────────────────────────────
+  # JOB 4.5: DATABASE VALIDATION
+  # ───────────────────────────────────────────────────────────────────────────
+  db-validate:
+    name: Database Schema Validation
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: test
+          POSTGRES_DB: test
+          POSTGRES_PASSWORD: test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Enable pnpm via Corepack
+        run: corepack enable pnpm
+
+      - name: Get pnpm store path
+        id: pnpm-cache
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: pnpm-store-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: pnpm-store-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate Prisma Schema
+        run: pnpm --filter @enterprise-pos/api exec prisma validate
+
+      - name: Deploy Migrations to Test DB
+        run: pnpm --filter @enterprise-pos/api exec prisma migrate deploy
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/test
+
+      - name: Check for Schema Drift
+        run: pnpm --filter @enterprise-pos/api exec prisma migrate diff --from-schema-datasource prisma/schema.prisma --to-schema-datamodel prisma/schema.prisma --exit-code
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/test
+
+  # ───────────────────────────────────────────────────────────────────────────
   # JOB 5: BUILD (waits for all quality gates)
   # ───────────────────────────────────────────────────────────────────────────
   build:
     name: Build (${{ matrix.app }})
     runs-on: ubuntu-latest
-    needs: [lint, type-check, test, security]
+    needs: [lint, type-check, test, security, db-validate]
     strategy:
       fail-fast: false
       matrix:

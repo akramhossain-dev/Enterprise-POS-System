@@ -67,11 +67,16 @@ describe('Password Utils', () => {
 describe('Refresh Token Expiry Parsing', () => {
   function parseExpiry(str: string): Date {
     const result = new Date();
-    const match = /^(\d+)([dhms])$/.exec(str);
-    if (match) {
-      const value = parseInt(match[1], 10);
+    let hasMatch = false;
+    const regex = /(\d+)([wdhms])/g;
+    let match;
+    while ((match = regex.exec(str)) !== null) {
+      hasMatch = true;
+      const value = parseInt(match[1] ?? '0', 10);
       const unit = match[2];
-      if (unit === 'd') {
+      if (unit === 'w') {
+        result.setDate(result.getDate() + value * 7);
+      } else if (unit === 'd') {
         result.setDate(result.getDate() + value);
       } else if (unit === 'h') {
         result.setHours(result.getHours() + value);
@@ -80,6 +85,9 @@ describe('Refresh Token Expiry Parsing', () => {
       } else if (unit === 's') {
         result.setSeconds(result.getSeconds() + value);
       }
+    }
+    if (!hasMatch) {
+      result.setDate(result.getDate() + 7);
     }
     return result;
   }
@@ -103,6 +111,21 @@ describe('Refresh Token Expiry Parsing', () => {
     const result = parseExpiry('1h');
     const diffHours = Math.round((result.getTime() - now.getTime()) / (1000 * 60 * 60));
     expect(diffHours).toBe(1);
+  });
+
+  it('should parse 2w to 14 days from now', () => {
+    const now = new Date();
+    const result = parseExpiry('2w');
+    const diffDays = Math.round((result.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+    expect(diffDays).toBe(14);
+  });
+
+  it('should parse compound format 2w 1d 5h from now', () => {
+    const now = new Date();
+    const result = parseExpiry('2w 1d 5h');
+    const diffHours = Math.round((result.getTime() - now.getTime()) / (1000 * 60 * 60));
+    // 14 days + 1 day = 15 days = 360 hours + 5 hours = 365 hours
+    expect(diffHours).toBe(365);
   });
 });
 

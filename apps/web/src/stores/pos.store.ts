@@ -300,7 +300,7 @@ export const usePOSStore = create<POSState>()(
                 ? {
                     ...c,
                     customerId: customer ? customer.id : 'walk-in',
-                    customer: customer ? (customer as any) : null,
+                    customer: customer || null,
                   }
                 : c,
             ),

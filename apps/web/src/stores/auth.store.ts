@@ -19,6 +19,29 @@ interface AuthState {
   hasAnyRole: (roles: string[]) => boolean;
 }
 
+interface RawUser {
+  id: string;
+  email: string;
+  name?: string | null;
+  firstName?: string;
+  lastName?: string;
+  fullName?: string;
+  phone?: string | null;
+  role?: string | { name: string } | null;
+  roles?: string[];
+  permissions?: string[];
+  status?: string;
+  avatar?: string | null;
+  bio?: string | null;
+  timezone?: string | null;
+  emailVerified?: boolean;
+  twoFactorEnabled?: boolean;
+  workspaceId?: string | null;
+  lastLoginAt?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export const useAuthStore = create<AuthState>()(
   devtools(
     persist(
@@ -28,17 +51,17 @@ export const useAuthStore = create<AuthState>()(
         isLoading: false,
         isInitialized: false,
 
-        setUser: (user: any) => {
+        setUser: (user: RawUser | null) => {
           if (!user) {
             set({ user: null, isAuthenticated: false }, false, 'auth/setUser');
             return;
           }
 
-          // Parse name into firstName and lastName
+          // Parse name into firstName and lastName, or keep existing ones
           const nameParts = (user.name || '').trim().split(/\s+/);
-          const firstName = nameParts[0] || '';
-          const lastName = nameParts.slice(1).join(' ') || '';
-          const fullName = user.name || '';
+          const firstName = user.firstName || nameParts[0] || '';
+          const lastName = user.lastName || nameParts.slice(1).join(' ') || '';
+          const fullName = user.fullName || user.name || '';
 
           // Normalize role
           let roleName = '';
@@ -47,7 +70,11 @@ export const useAuthStore = create<AuthState>()(
           } else if (typeof user.role === 'string') {
             roleName = user.role;
           }
-          const role = roleName.toLowerCase() as any;
+          const role = roleName.toLowerCase() as User['role'];
+          const roles =
+            user.roles && user.roles.length > 0
+              ? (user.roles.map((r) => r.toLowerCase()) as User['role'][])
+              : [role];
 
           const mappedUser: User = {
             id: user.id,
@@ -55,13 +82,13 @@ export const useAuthStore = create<AuthState>()(
             firstName,
             lastName,
             fullName,
-            phone: user.phone,
+            phone: user.phone || null,
             role,
-            roles: [role],
+            roles,
             permissions: user.permissions || [],
-            status: (user.status || 'active').toLowerCase() as any,
-            avatar: user.avatar,
-            bio: user.bio,
+            status: (user.status || 'active').toLowerCase() as User['status'],
+            avatar: user.avatar || null,
+            bio: user.bio || null,
             timezone: user.timezone,
             emailVerified: user.emailVerified ?? true,
             twoFactorEnabled: user.twoFactorEnabled ?? false,

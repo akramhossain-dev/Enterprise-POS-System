@@ -103,6 +103,11 @@ export async function checkoutCart(
     });
     const available = Number(inv?.availableQuantity ?? 0);
     const requested = Number(item.quantity);
+    if (requested <= 0) {
+      throw new BadRequestError(
+        `Invalid quantity for product "${item.product.name}": must be greater than 0`,
+      );
+    }
     if (available < requested) {
       throw new BadRequestError(
         `Insufficient stock for product "${item.product.name}" in warehouse. Available: ${available.toString()}, Requested: ${requested.toString()}`,

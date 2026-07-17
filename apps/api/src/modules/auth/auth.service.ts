@@ -50,14 +50,19 @@ async function createRefreshToken(userId: string): Promise<string> {
   const rawToken = crypto.randomBytes(32).toString('hex');
   const hashed = hashToken(rawToken);
 
-  // Parse REFRESH_TOKEN_EXPIRES_IN (supports: 7d, 30d, 1d, etc.)
+  // Parse REFRESH_TOKEN_EXPIRES_IN (supports compound formats: 2w 1d 5h, 7d, etc.)
   const expiresAt = new Date();
   const expiresInStr = env.REFRESH_TOKEN_EXPIRES_IN; // Has Zod .default('7d')
-  const match = /^(\d+)([dhms])$/.exec(expiresInStr);
-  if (match) {
-    const [, rawValue, unit] = match;
-    const value = parseInt(rawValue ?? '7', 10);
-    if (unit === 'd') {
+  let hasMatch = false;
+  const regex = /(\d+)([wdhms])/g;
+  let match;
+  while ((match = regex.exec(expiresInStr)) !== null) {
+    hasMatch = true;
+    const value = parseInt(match[1] ?? '0', 10);
+    const unit = match[2];
+    if (unit === 'w') {
+      expiresAt.setDate(expiresAt.getDate() + value * 7);
+    } else if (unit === 'd') {
       expiresAt.setDate(expiresAt.getDate() + value);
     } else if (unit === 'h') {
       expiresAt.setHours(expiresAt.getHours() + value);
@@ -66,7 +71,8 @@ async function createRefreshToken(userId: string): Promise<string> {
     } else if (unit === 's') {
       expiresAt.setSeconds(expiresAt.getSeconds() + value);
     }
-  } else {
+  }
+  if (!hasMatch) {
     // Fallback: 7 days
     expiresAt.setDate(expiresAt.getDate() + 7);
   }

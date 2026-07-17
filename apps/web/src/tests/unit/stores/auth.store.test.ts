@@ -38,7 +38,7 @@ describe('useAuthStore (zustand)', () => {
   it('should setUser and update isAuthenticated', () => {
     useAuthStore.getState().setUser(mockUser);
     const state = useAuthStore.getState();
-    expect(state.user).toEqual(mockUser);
+    expect(state.user).toEqual(expect.objectContaining(mockUser));
     expect(state.isAuthenticated).toBe(true);
 
     useAuthStore.getState().setUser(null);

@@ -5,6 +5,9 @@ import {
   supplierDebitNoteQuerySchema,
   createSupplierDebitNoteSchema,
   updateSupplierDebitNoteSchema,
+  type SupplierDebitNoteQuery,
+  type CreateSupplierDebitNoteBody,
+  type UpdateSupplierDebitNoteBody,
 } from './supplier-debit-note.schema';
 import {
   listSupplierDebitNotes,
@@ -18,7 +21,7 @@ export async function handleListSupplierDebitNotes(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const query = validateQuery(supplierDebitNoteQuerySchema, request.query);
+  const query = validateQuery<SupplierDebitNoteQuery>(supplierDebitNoteQuerySchema, request.query);
   const result = await listSupplierDebitNotes(query);
   reply.status(200).send(
     sendSuccess({
@@ -49,7 +52,10 @@ export async function handleCreateSupplierDebitNote(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const body = validateBody(createSupplierDebitNoteSchema, request.body);
+  const body = validateBody<CreateSupplierDebitNoteBody>(
+    createSupplierDebitNoteSchema,
+    request.body,
+  );
   const created = await createSupplierDebitNote(body);
   reply.status(201).send(
     sendSuccess({
@@ -64,7 +70,10 @@ export async function handleUpdateSupplierDebitNote(
   reply: FastifyReply,
 ): Promise<void> {
   const { id } = request.params as { id: string };
-  const body = validateBody(updateSupplierDebitNoteSchema, request.body);
+  const body = validateBody<UpdateSupplierDebitNoteBody>(
+    updateSupplierDebitNoteSchema,
+    request.body,
+  );
   const updated = await updateSupplierDebitNote(id, body);
   reply.status(200).send(
     sendSuccess({

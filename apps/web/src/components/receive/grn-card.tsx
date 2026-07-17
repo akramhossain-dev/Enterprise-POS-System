@@ -9,7 +9,7 @@ interface GrnCardProps {
   title: string;
   value: string | number;
   description?: string;
-  icon: any;
+  icon: React.ComponentType<{ className?: string }>;
   className?: string;
   variant?: 'default' | 'primary' | 'success' | 'warning' | 'danger' | 'info';
 }

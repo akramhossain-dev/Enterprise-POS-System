@@ -3,6 +3,7 @@
 import type { InventoryLedger, StockMovement } from '@/types/inventory';
 import { cn } from '@/utils/cn';
 import {
+  LucideIcon,
   ArrowDownLeft,
   ArrowUpRight,
   RefreshCw,
@@ -61,7 +62,7 @@ export function StockTimeline({ movements, loading = false }: StockTimelineProps
       bg: string;
       text: string;
       border: string;
-      icon: any;
+      icon: LucideIcon;
       label: string;
       isPositive: boolean;
     }

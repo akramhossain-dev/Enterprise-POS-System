@@ -1,5 +1,5 @@
 import { prisma } from '../../lib/prisma';
-import { Prisma } from '@prisma/client';
+import { Prisma, LoginStatus } from '@prisma/client';
 import { FastifyRequest } from 'fastify';
 import { parseUserAgent } from '../audit/audit.service';
 
@@ -76,7 +76,7 @@ export async function listLoginHistories(
   }
 
   if (filters.status) {
-    where.status = filters.status;
+    where.status = filters.status as LoginStatus;
   }
 
   if (filters.ipAddress) {

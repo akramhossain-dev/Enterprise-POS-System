@@ -5,6 +5,9 @@ import {
   supplierCreditNoteQuerySchema,
   createSupplierCreditNoteSchema,
   updateSupplierCreditNoteSchema,
+  type SupplierCreditNoteQuery,
+  type CreateSupplierCreditNoteBody,
+  type UpdateSupplierCreditNoteBody,
 } from './supplier-credit-note.schema';
 import {
   listSupplierCreditNotes,
@@ -18,7 +21,10 @@ export async function handleListSupplierCreditNotes(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const query = validateQuery(supplierCreditNoteQuerySchema, request.query);
+  const query = validateQuery<SupplierCreditNoteQuery>(
+    supplierCreditNoteQuerySchema,
+    request.query,
+  );
   const result = await listSupplierCreditNotes(query);
   reply.status(200).send(
     sendSuccess({
@@ -49,7 +55,10 @@ export async function handleCreateSupplierCreditNote(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const body = validateBody(createSupplierCreditNoteSchema, request.body);
+  const body = validateBody<CreateSupplierCreditNoteBody>(
+    createSupplierCreditNoteSchema,
+    request.body,
+  );
   const created = await createSupplierCreditNote(body);
   reply.status(201).send(
     sendSuccess({
@@ -64,7 +73,10 @@ export async function handleUpdateSupplierCreditNote(
   reply: FastifyReply,
 ): Promise<void> {
   const { id } = request.params as { id: string };
-  const body = validateBody(updateSupplierCreditNoteSchema, request.body);
+  const body = validateBody<UpdateSupplierCreditNoteBody>(
+    updateSupplierCreditNoteSchema,
+    request.body,
+  );
   const updated = await updateSupplierCreditNote(id, body);
   reply.status(200).send(
     sendSuccess({
