@@ -98,6 +98,13 @@ model User {
   incomes                 Income[]                 @relation("IncomeCreator")
   paymentReceipts         PaymentReceipt[]         @relation("ReceiptCreator")
   paymentVouchers         PaymentVoucher[]         @relation("VoucherCreator")
+  isEmailVerified         Boolean                  @default(false) @map("is_email_verified")
+  emailVerificationToken  String?                  @map("email_verification_token") @db.VarChar(255)
+  passwordResetToken      String?                  @map("password_reset_token") @db.VarChar(255)
+  passwordResetExpires    DateTime?                @map("password_reset_expires") @db.Timestamptz
+  twoFactorSecret         String?                  @map("two_factor_secret") @db.VarChar(255)
+  twoFactorEnabled        Boolean                  @default(false) @map("two_factor_enabled")
+  twoFactorTempToken      String?                  @map("two_factor_temp_token") @db.VarChar(255)
   createdAt               DateTime                 @default(now()) @map("created_at") @db.Timestamptz
   updatedAt               DateTime                 @updatedAt @map("updated_at") @db.Timestamptz
   notifications           Notification[]
@@ -213,6 +220,10 @@ model Company {
   incomes               Income[]
   paymentReceipts       PaymentReceipt[]
   paymentVouchers       PaymentVoucher[]
+  departments           Department[]
+  designations          Designation[]
+  storageLocations      StorageLocation[]
+  purchaseRequisitions  PurchaseRequisition[]
   createdAt             DateTime               @default(now()) @map("created_at") @db.Timestamptz
   updatedAt             DateTime               @updatedAt @map("updated_at") @db.Timestamptz
   notifications         Notification[]
@@ -404,6 +415,7 @@ model Product {
   cartItems           CartItem[]
   saleItems           SaleItem[]
   returnItems         SalesReturnItem[]
+  purchaseRequisitionItems PurchaseRequisitionItem[]
   createdAt           DateTime             @default(now()) @map("created_at") @db.Timestamptz
   updatedAt           DateTime             @updatedAt @map("updated_at") @db.Timestamptz
 
@@ -523,6 +535,7 @@ model Supplier {
   supplierPayments SupplierPayment[]
   ledgerEntries    SupplierLedgerEntry[]
   paymentReceipts  PaymentReceipt[]
+  purchaseRequisitions PurchaseRequisition[]
   createdAt        DateTime              @default(now()) @map("created_at") @db.Timestamptz
   updatedAt        DateTime              @updatedAt @map("updated_at") @db.Timestamptz
   deletedAt        DateTime?             @map("deleted_at") @db.Timestamptz
@@ -593,6 +606,8 @@ model Warehouse {
   posSessions      POSSession[]
   sales            Sale[]
   salesReturns     SalesReturn[]
+  storageLocations StorageLocation[]
+  purchaseRequisitions PurchaseRequisition[]
   createdAt        DateTime          @default(now()) @map("created_at") @db.Timestamptz
   updatedAt        DateTime          @updatedAt @map("updated_at") @db.Timestamptz
   deletedAt        DateTime?         @map("deleted_at") @db.Timestamptz
@@ -1981,4 +1996,116 @@ model SystemSetting {
   @@unique([companyId, key])
   @@index([category])
   @@map("system_settings")
+}
+
+enum PurchaseRequisitionStatus {
+  DRAFT
+  PENDING_APPROVAL
+  APPROVED
+  REJECTED
+  CANCELLED
+  CONVERTED
+}
+
+enum PurchaseRequisitionPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+model Department {
+  id           String        @id @default(uuid()) @db.Uuid
+  companyId    String        @map("company_id") @db.Uuid
+  company      Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  name         String        @db.VarChar(100)
+  description  String?       @db.Text
+  status       Status        @default(ACTIVE)
+  designations Designation[]
+  createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime      @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@unique([companyId, name])
+  @@index([companyId])
+  @@map("departments")
+}
+
+model Designation {
+  id           String     @id @default(uuid()) @db.Uuid
+  companyId    String     @map("company_id") @db.Uuid
+  company      Company    @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  name         String     @db.VarChar(100)
+  departmentId String     @map("department_id") @db.Uuid
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  description  String?    @db.Text
+  status       Status     @default(ACTIVE)
+  createdAt    DateTime   @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime   @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@unique([companyId, name])
+  @@index([companyId])
+  @@index([departmentId])
+  @@map("designations")
+}
+
+model StorageLocation {
+  id          String    @id @default(uuid()) @db.Uuid
+  companyId   String    @map("company_id") @db.Uuid
+  company     Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  warehouseId String    @map("warehouse_id") @db.Uuid
+  warehouse   Warehouse @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+  zone        String    @db.VarChar(100)
+  rack        String    @db.VarChar(100)
+  shelf       String    @db.VarChar(100)
+  bin         String    @db.VarChar(100)
+  barcode     String    @unique @db.VarChar(100)
+  status      Status    @default(ACTIVE)
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@index([companyId])
+  @@index([warehouseId])
+  @@map("storage_locations")
+}
+
+model PurchaseRequisition {
+  id                   String                      @id @default(uuid()) @db.Uuid
+  companyId            String                      @map("company_id") @db.Uuid
+  company              Company                     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  title                String                      @db.VarChar(255)
+  requestedBy          String                      @db.VarChar(100)
+  department           String                      @db.VarChar(100)
+  requiredDate         DateTime                    @map("required_date") @db.Date
+  priority             PurchaseRequisitionPriority @default(MEDIUM)
+  status               PurchaseRequisitionStatus   @default(DRAFT)
+  supplierId           String                      @map("supplier_id") @db.Uuid
+  supplier             Supplier                    @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  warehouseId          String                      @map("warehouse_id") @db.Uuid
+  warehouse            Warehouse                   @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+  subtotal             Decimal                     @db.Decimal(15, 4)
+  notes                String?                     @db.Text
+  convertedPoId        String?                     @map("converted_po_id") @db.Uuid
+  items                PurchaseRequisitionItem[]
+  createdAt            DateTime                    @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt            DateTime                    @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@index([companyId])
+  @@index([supplierId])
+  @@index([warehouseId])
+  @@map("purchase_requisitions")
+}
+
+model PurchaseRequisitionItem {
+  id                     String              @id @default(uuid()) @db.Uuid
+  purchaseRequisitionId  String              @map("purchase_requisition_id") @db.Uuid
+  purchaseRequisition    PurchaseRequisition @relation(fields: [purchaseRequisitionId], references: [id], onDelete: Cascade)
+  productId              String              @map("product_id") @db.Uuid
+  product                Product             @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity               Decimal             @db.Decimal(15, 4)
+  unitPrice              Decimal             @map("unit_price") @db.Decimal(15, 4)
+  subtotal               Decimal             @db.Decimal(15, 4)
+
+  @@index([purchaseRequisitionId])
+  @@index([productId])
+  @@map("purchase_requisition_items")
 }

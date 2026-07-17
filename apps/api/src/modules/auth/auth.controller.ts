@@ -1,10 +1,28 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { prisma } from '../../lib/prisma';
-import { registerUser, loginUser, rotateRefreshToken, logoutUser } from './auth.service';
+import {
+  registerUser,
+  loginUser,
+  rotateRefreshToken,
+  logoutUser,
+  handleForgotPassword,
+  handleResetPassword,
+  handleVerifyEmail,
+  handleResendVerification,
+  handleVerifyTwoFactor,
+} from './auth.service';
 import { sendSuccess } from '../../common/responses/success';
 import { UnauthorizedError } from '../../common/errors/AppError';
 import { validateBody } from '../../common/utils/validate';
-import { registerBodySchema, loginBodySchema } from './auth.schema';
+import {
+  registerBodySchema,
+  loginBodySchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
+  verifyEmailSchema,
+  resendVerificationSchema,
+  twoFactorVerifySchema,
+} from './auth.schema';
 
 const COOKIE_NAME = 'refreshToken';
 
@@ -133,6 +151,67 @@ export async function me(request: FastifyRequest, reply: FastifyReply) {
     sendSuccess({
       message: 'User profile fetched successfully',
       data: responseData,
+    }),
+  );
+}
+
+export async function forgotPassword(request: FastifyRequest, reply: FastifyReply) {
+  const body = validateBody(forgotPasswordSchema, request.body);
+  await handleForgotPassword(body.email);
+  return reply.status(200).send(
+    sendSuccess({
+      message: 'Password reset email sent if user exists',
+      data: {},
+    }),
+  );
+}
+
+export async function resetPassword(request: FastifyRequest, reply: FastifyReply) {
+  const body = validateBody(resetPasswordSchema, request.body);
+  await handleResetPassword(body.token, body.password);
+  return reply.status(200).send(
+    sendSuccess({
+      message: 'Password has been reset successfully',
+      data: {},
+    }),
+  );
+}
+
+export async function verifyEmail(request: FastifyRequest, reply: FastifyReply) {
+  const body = validateBody(verifyEmailSchema, request.body);
+  const user = await handleVerifyEmail(body.token);
+  return reply.status(200).send(
+    sendSuccess({
+      message: 'Email verified successfully',
+      data: { user },
+    }),
+  );
+}
+
+export async function resendVerification(request: FastifyRequest, reply: FastifyReply) {
+  const body = validateBody(resendVerificationSchema, request.body);
+  await handleResendVerification(body.email);
+  return reply.status(200).send(
+    sendSuccess({
+      message: 'Verification email resent if user is unverified',
+      data: {},
+    }),
+  );
+}
+
+export async function verifyTwoFactor(request: FastifyRequest, reply: FastifyReply) {
+  const body = validateBody(twoFactorVerifySchema, request.body);
+  const { accessToken, refreshToken, user } = await handleVerifyTwoFactor(
+    body.code,
+    body.sessionToken,
+  );
+
+  void reply.setCookie(COOKIE_NAME, refreshToken, COOKIE_OPTIONS);
+
+  return reply.status(200).send(
+    sendSuccess({
+      message: 'Two-factor authentication successful',
+      data: { accessToken, user },
     }),
   );
 }

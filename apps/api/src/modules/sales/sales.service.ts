@@ -45,6 +45,10 @@ export async function checkoutCart(
     throw new BadRequestError('No active POS session found for cashier. Open a session first.');
   }
 
+  if (session.cashierId !== cashierId) {
+    throw new ForbiddenError('You do not have permission to checkout on this POS session.');
+  }
+
   // 2. Fetch and validate cart
   const cart = await prisma.cart.findUnique({
     where: { id: payload.cartId },

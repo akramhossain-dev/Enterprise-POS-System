@@ -1,3 +1,5 @@
+import { ApiClient } from './api-client';
+import { apiConfig } from '@/config/api';
 import type { StorageLocation } from '@/types/warehouse';
 
 const STORAGE_KEY = 'pos_storage_locations';
@@ -70,7 +72,7 @@ const DEFAULT_LOCATIONS: StorageLocation[] = [
   },
 ];
 
-class StorageLocationService {
+class StorageLocationService extends ApiClient {
   private getStorageLocations(): StorageLocation[] {
     if (typeof window === 'undefined') return DEFAULT_LOCATIONS;
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -87,54 +89,73 @@ class StorageLocationService {
   }
 
   async listLocations(warehouseId?: string): Promise<StorageLocation[]> {
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    const all = this.getStorageLocations();
-    if (warehouseId) {
-      return all.filter((l) => l.warehouseId === warehouseId);
+    try {
+      const response = await this.get<StorageLocation[]>('/storage-locations', { warehouseId });
+      return response.data;
+    } catch {
+      const all = this.getStorageLocations();
+      if (warehouseId) {
+        return all.filter((l) => l.warehouseId === warehouseId);
+      }
+      return all;
     }
-    return all;
   }
 
   async createLocation(
     payload: Omit<StorageLocation, 'id' | 'createdAt' | 'updatedAt'>,
   ): Promise<StorageLocation> {
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    const all = this.getStorageLocations();
-    const newLoc: StorageLocation = {
-      ...payload,
-      id: `loc-${Math.random().toString(36).substr(2, 9)}`,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-    all.push(newLoc);
-    this.saveLocations(all);
-    return newLoc;
+    try {
+      const companyId = (payload as any).companyId || 'company-id-placeholder';
+      const response = await this.post<StorageLocation>('/storage-locations', {
+        ...payload,
+        companyId,
+      });
+      return response.data;
+    } catch {
+      const all = this.getStorageLocations();
+      const newLoc: StorageLocation = {
+        ...payload,
+        id: `loc-${Math.random().toString(36).substr(2, 9)}`,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      all.push(newLoc);
+      this.saveLocations(all);
+      return newLoc;
+    }
   }
 
   async updateLocation(
     id: string,
     payload: Partial<Omit<StorageLocation, 'id' | 'createdAt' | 'updatedAt'>>,
   ): Promise<StorageLocation> {
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    const all = this.getStorageLocations();
-    const index = all.findIndex((l) => l.id === id);
-    if (index === -1) throw new Error('Storage location not found');
+    try {
+      const response = await this.put<StorageLocation>(`/storage-locations/${id}`, payload);
+      return response.data;
+    } catch {
+      const all = this.getStorageLocations();
+      const index = all.findIndex((l) => l.id === id);
+      if (index === -1) throw new Error('Storage location not found');
 
-    const updated: StorageLocation = {
-      ...all[index]!,
-      ...payload,
-      updatedAt: new Date().toISOString(),
-    };
-    all[index] = updated;
-    this.saveLocations(all);
-    return updated;
+      const updated: StorageLocation = {
+        ...all[index]!,
+        ...payload,
+        updatedAt: new Date().toISOString(),
+      };
+      all[index] = updated;
+      this.saveLocations(all);
+      return updated;
+    }
   }
 
   async deleteLocation(id: string): Promise<void> {
-    await new Promise((resolve) => setTimeout(resolve, 200));
-    const all = this.getStorageLocations();
-    const updated = all.filter((l) => l.id !== id);
-    this.saveLocations(updated);
+    try {
+      await this.delete<void>(`/storage-locations/${id}`);
+    } catch {
+      const all = this.getStorageLocations();
+      const updated = all.filter((l) => l.id !== id);
+      this.saveLocations(updated);
+    }
   }
 }
 

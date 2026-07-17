@@ -25,3 +25,10 @@ export const updateCartItemSchema = z.object({
 });
 
 export type UpdateCartItemBody = z.infer<typeof updateCartItemSchema>;
+
+export const updateCartSchema = z.object({
+  customerId: z.string().uuid('customerId must be a valid UUID').optional().nullable(),
+  status: z.enum(['ACTIVE', 'COMPLETED', 'CANCELLED', 'HOLD']).optional(),
+});
+
+export type UpdateCartBody = z.infer<typeof updateCartSchema>;

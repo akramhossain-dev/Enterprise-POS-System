@@ -21,7 +21,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setUser(user);
       setAuthenticated(true);
     } catch {
-      // Not authenticated or token expired
+      // Not authenticated or token expired — clear session cookies on backend
+      try {
+        await authService.logout();
+      } catch {
+        // ignore
+      }
       logout();
       setAuthenticated(false);
     } finally {

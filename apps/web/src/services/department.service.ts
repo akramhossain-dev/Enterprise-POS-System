@@ -1,3 +1,5 @@
+import { ApiClient } from './api-client';
+import { apiConfig } from '@/config/api';
 import { Department } from '@/types/employee';
 
 const STORAGE_KEY = 'pos_departments';
@@ -45,7 +47,7 @@ const DEFAULT_DEPARTMENTS: Department[] = [
   },
 ];
 
-class DepartmentService {
+class DepartmentService extends ApiClient {
   private getStorageDepartments(): Department[] {
     if (typeof window === 'undefined') return DEFAULT_DEPARTMENTS;
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -62,63 +64,90 @@ class DepartmentService {
   }
 
   async listDepartments(): Promise<Department[]> {
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    return this.getStorageDepartments().filter((d) => d.status !== 'INACTIVE');
+    try {
+      const response = await this.get<Department[]>('/departments');
+      return response.data;
+    } catch {
+      return this.getStorageDepartments().filter((d) => d.status !== 'INACTIVE');
+    }
   }
 
   async listAllDepartments(): Promise<Department[]> {
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    return this.getStorageDepartments();
+    try {
+      const response = await this.get<Department[]>('/departments');
+      return response.data;
+    } catch {
+      return this.getStorageDepartments();
+    }
   }
 
   async getDepartment(id: string): Promise<Department> {
-    await new Promise((resolve) => setTimeout(resolve, 200));
-    const depts = this.getStorageDepartments();
-    const dept = depts.find((d) => d.id === id);
-    if (!dept) throw new Error('Department not found');
-    return dept;
+    try {
+      const response = await this.get<Department>(`/departments/${id}`);
+      return response.data;
+    } catch {
+      const depts = this.getStorageDepartments();
+      const dept = depts.find((d) => d.id === id);
+      if (!dept) throw new Error('Department not found');
+      return dept;
+    }
   }
 
   async createDepartment(
     payload: Omit<Department, 'id' | 'createdAt' | 'updatedAt'>,
   ): Promise<Department> {
-    await new Promise((resolve) => setTimeout(resolve, 400));
-    const depts = this.getStorageDepartments();
-    const newDept: Department = {
-      ...payload,
-      id: `dept-${Math.random().toString(36).substr(2, 9)}`,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-    depts.push(newDept);
-    this.saveDepartments(depts);
-    return newDept;
+    try {
+      const companyId = (payload as any).companyId || 'company-id-placeholder';
+      const response = await this.post<Department>('/departments', {
+        ...payload,
+        companyId,
+      });
+      return response.data;
+    } catch {
+      const depts = this.getStorageDepartments();
+      const newDept: Department = {
+        ...payload,
+        id: `dept-${Math.random().toString(36).substr(2, 9)}`,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      depts.push(newDept);
+      this.saveDepartments(depts);
+      return newDept;
+    }
   }
 
   async updateDepartment(
     id: string,
     payload: Partial<Omit<Department, 'id' | 'createdAt' | 'updatedAt'>>,
   ): Promise<Department> {
-    await new Promise((resolve) => setTimeout(resolve, 400));
-    const depts = this.getStorageDepartments();
-    const index = depts.findIndex((d) => d.id === id);
-    if (index === -1) throw new Error('Department not found');
+    try {
+      const response = await this.put<Department>(`/departments/${id}`, payload);
+      return response.data;
+    } catch {
+      const depts = this.getStorageDepartments();
+      const index = depts.findIndex((d) => d.id === id);
+      if (index === -1) throw new Error('Department not found');
 
-    const updated: Department = {
-      ...depts[index]!,
-      ...payload,
-      updatedAt: new Date().toISOString(),
-    };
-    depts[index] = updated;
-    this.saveDepartments(depts);
-    return updated;
+      const updated: Department = {
+        ...depts[index]!,
+        ...payload,
+        updatedAt: new Date().toISOString(),
+      };
+      depts[index] = updated;
+      this.saveDepartments(depts);
+      return updated;
+    }
   }
 
   async deleteDepartment(id: string): Promise<void> {
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    const depts = this.getStorageDepartments();
-    const updated = depts.filter((d) => d.id !== id);
-    this.saveDepartments(updated);
+    try {
+      await this.delete<void>(`/departments/${id}`);
+    } catch {
+      const depts = this.getStorageDepartments();
+      const updated = depts.filter((d) => d.id !== id);
+      this.saveDepartments(updated);
+    }
   }
 }
 

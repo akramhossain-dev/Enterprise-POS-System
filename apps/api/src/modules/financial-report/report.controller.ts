@@ -6,6 +6,7 @@ import {
   getAccountStatementReport,
   getTrialBalanceReport,
   getFinancialSummaryReport,
+  getProfitLossReport,
 } from './report.service';
 
 export async function getGeneralLedgerHandler(req: FastifyRequest, reply: FastifyReply) {
@@ -60,4 +61,17 @@ export async function getFinancialSummaryHandler(req: FastifyRequest, reply: Fas
   reply
     .status(200)
     .send(sendSuccess({ message: 'Financial Summary generated successfully', data }));
+}
+
+export async function getProfitLossHandler(req: FastifyRequest, reply: FastifyReply) {
+  const actor = req.user as { id: string };
+  const { startDate, endDate } = req.query as { startDate?: string; endDate?: string };
+
+  const sDate = startDate ? new Date(startDate) : undefined;
+  const eDate = endDate ? new Date(endDate) : undefined;
+
+  const data = await getProfitLossReport(actor.id, sDate, eDate);
+  reply
+    .status(200)
+    .send(sendSuccess({ message: 'Profit & Loss report generated successfully', data }));
 }

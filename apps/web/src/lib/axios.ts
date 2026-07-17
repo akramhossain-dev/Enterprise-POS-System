@@ -54,8 +54,12 @@ axiosInstance.interceptors.response.use(
     ).config;
     const status = (error as { response?: { status: number } }).response?.status;
 
-    // Auto-refresh on 401
-    if (status === 401 && originalRequest && !originalRequest._retry) {
+    // Auto-refresh on 401 (skip for login and refresh endpoints to prevent deadlock/loops)
+    const isAuthRoute =
+      originalRequest?.url?.includes(apiConfig.endpoints.auth.login) ||
+      originalRequest?.url?.includes(apiConfig.endpoints.auth.refresh);
+
+    if (status === 401 && originalRequest && !originalRequest._retry && !isAuthRoute) {
       originalRequest._retry = true;
 
       try {

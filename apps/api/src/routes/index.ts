@@ -63,6 +63,19 @@ export async function routes(fastify: FastifyInstance): Promise<void> {
   await fastify.register(branchRoutes, { prefix: '/branches' });
   await fastify.register(employeeRoutes, { prefix: '/employees' });
 
+  // ── HR, Warehouse & Procurement Modules ───────────────
+  const { departmentRoutes } = await import('../modules/department/department.routes');
+  const { designationRoutes } = await import('../modules/designation/designation.routes');
+  const { storageLocationRoutes } =
+    await import('../modules/storage-location/storage-location.routes');
+  const { purchaseRequisitionRoutes } =
+    await import('../modules/purchase-requisition/purchase-requisition.routes');
+
+  await fastify.register(departmentRoutes, { prefix: '/departments' });
+  await fastify.register(designationRoutes, { prefix: '/designations' });
+  await fastify.register(storageLocationRoutes, { prefix: '/storage-locations' });
+  await fastify.register(purchaseRequisitionRoutes, { prefix: '/purchase-requisitions' });
+
   // ── Product Catalog Management ────────────────────────
   const { categoryRoutes } = await import('../modules/category/category.routes');
   const { brandRoutes } = await import('../modules/brand/brand.routes');
@@ -169,17 +182,20 @@ export async function routes(fastify: FastifyInstance): Promise<void> {
 
   // ── Accounting Foundation (B10.1) ──────────────────────────────────────────
   const { accountRoutes } = await import('../modules/account/account.routes');
-  await fastify.register(accountRoutes);
+  await fastify.register(accountRoutes, { prefix: '/accounting' });
 
   const { journalRoutes } = await import('../modules/journal/journal.routes');
-  await fastify.register(journalRoutes, { prefix: '/journals' });
+  await fastify.register(journalRoutes, { prefix: '/accounting/journals' });
+
+  const { reportRoutes } = await import('../modules/financial-report/report.routes');
+  await fastify.register(reportRoutes, { prefix: '/accounting' });
 
   // ── Income & Expense Management (B10.2) ────────────────────────────────────
   const { expenseRoutes } = await import('../modules/expense/expense.routes');
-  await fastify.register(expenseRoutes);
+  await fastify.register(expenseRoutes, { prefix: '/accounting' });
 
   const { incomeRoutes } = await import('../modules/income/income.routes');
-  await fastify.register(incomeRoutes);
+  await fastify.register(incomeRoutes, { prefix: '/accounting' });
 
   // ── Financial Transactions & Reports (B10.3) ────────────────────────────────
   const { transactionRoutes } = await import('../modules/financial-transaction/transaction.routes');

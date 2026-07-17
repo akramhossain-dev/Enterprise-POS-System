@@ -7,6 +7,10 @@ import {
   handleUpdateCartItem,
   handleRemoveCartItem,
   handleClearCart,
+  handleListCarts,
+  handleListHeldCarts,
+  handleUpdateCart,
+  handleDeleteCart,
 } from './cart.controller';
 
 const guard = (p: string) => [authGuard, permissionGuard(p)];
@@ -24,12 +28,48 @@ export async function cartRoutes(fastify: FastifyInstance): Promise<void> {
   );
 
   fastify.get(
+    '/',
+    {
+      preHandler: guard('pos.cart.view'),
+      schema: { tags: ['Cart'], summary: 'List all carts for cashier session' },
+    },
+    handleListCarts,
+  );
+
+  fastify.get(
+    '/held',
+    {
+      preHandler: guard('pos.cart.view'),
+      schema: { tags: ['Cart'], summary: 'List held carts for cashier session' },
+    },
+    handleListHeldCarts,
+  );
+
+  fastify.get(
     '/:id',
     {
       preHandler: guard('pos.cart.update'),
       schema: { tags: ['Cart'], summary: 'Get POS cart by ID with items' },
     },
     handleGetCart,
+  );
+
+  fastify.put(
+    '/:id',
+    {
+      preHandler: guard('pos.cart.update'),
+      schema: { tags: ['Cart'], summary: 'Update cart status or customer' },
+    },
+    handleUpdateCart,
+  );
+
+  fastify.delete(
+    '/:id',
+    {
+      preHandler: guard('pos.cart.delete'),
+      schema: { tags: ['Cart'], summary: 'Delete a cart' },
+    },
+    handleDeleteCart,
   );
 
   fastify.post(

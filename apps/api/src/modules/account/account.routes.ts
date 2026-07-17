@@ -26,8 +26,26 @@ export async function accountRoutes(fastify: FastifyInstance): Promise<void> {
     handleCreateAccountCategory,
   );
 
+  fastify.post(
+    '/categories',
+    {
+      preHandler: guard('account.create'),
+      schema: { tags: ['Accounts'], summary: 'Create a new account category' },
+    },
+    handleCreateAccountCategory,
+  );
+
   fastify.get(
     '/account-categories',
+    {
+      preHandler: guard('account.view'),
+      schema: { tags: ['Accounts'], summary: 'List all account categories' },
+    },
+    handleListAccountCategories,
+  );
+
+  fastify.get(
+    '/categories',
     {
       preHandler: guard('account.view'),
       schema: { tags: ['Accounts'], summary: 'List all account categories' },

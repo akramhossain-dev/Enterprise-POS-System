@@ -1,10 +1,7 @@
+import { ApiClient } from './api-client';
+import { apiConfig } from '@/config/api';
 import type { PaginatedResponse } from '@/types/api';
-import type {
-  PurchaseRequisition,
-  PurchaseRequisitionFilterParams,
-  PurchaseRequisitionPriority,
-  PurchaseRequisitionStatus,
-} from '@/types/purchase';
+import type { PurchaseRequisition, PurchaseRequisitionFilterParams } from '@/types/purchase';
 
 const STORAGE_KEY = 'enterprise_pos_purchase_requisitions';
 
@@ -17,7 +14,7 @@ const INITIAL_MOCKS: PurchaseRequisition[] = [
     requiredDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] || '',
     priority: 'HIGH',
     status: 'PENDING_APPROVAL',
-    supplierId: '11111111-1111-1111-1111-111111111111', // Assuming a mock supplier UUID exists
+    supplierId: '11111111-1111-1111-1111-111111111111',
     supplierName: 'Global Tech Solutions',
     warehouseId: '11111111-1111-1111-1111-111111111111',
     warehouseName: 'Central Tech Depot',
@@ -107,7 +104,7 @@ const INITIAL_MOCKS: PurchaseRequisition[] = [
   },
 ];
 
-class PurchaseRequisitionService {
+class PurchaseRequisitionService extends ApiClient {
   private load(): PurchaseRequisition[] {
     if (typeof window === 'undefined') return INITIAL_MOCKS;
     const data = localStorage.getItem(STORAGE_KEY);
@@ -131,56 +128,68 @@ class PurchaseRequisitionService {
   async getRequisitions(
     params?: PurchaseRequisitionFilterParams,
   ): Promise<PaginatedResponse<PurchaseRequisition>> {
-    const list = this.load();
-    let filtered = [...list];
-
-    if (params?.q) {
-      const q = params.q.toLowerCase();
-      filtered = filtered.filter(
-        (r) =>
-          r.title.toLowerCase().includes(q) ||
-          r.requestedBy.toLowerCase().includes(q) ||
-          r.supplierName.toLowerCase().includes(q) ||
-          r.id.toLowerCase().includes(q),
+    try {
+      const response = await this.get<PaginatedResponse<PurchaseRequisition>>(
+        '/purchase-requisitions',
+        params,
       );
+      return response.data;
+    } catch {
+      const list = this.load();
+      let filtered = [...list];
+
+      if (params?.q) {
+        const q = params.q.toLowerCase();
+        filtered = filtered.filter(
+          (r) =>
+            r.title.toLowerCase().includes(q) ||
+            r.requestedBy.toLowerCase().includes(q) ||
+            r.supplierName.toLowerCase().includes(q) ||
+            r.id.toLowerCase().includes(q),
+        );
+      }
+
+      if (params?.priority && params.priority !== 'ALL') {
+        filtered = filtered.filter((r) => r.priority === params.priority);
+      }
+
+      if (params?.status && params.status !== 'ALL') {
+        filtered = filtered.filter((r) => r.status === params.status);
+      }
+
+      filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+      const page = params?.page ?? 1;
+      const limit = params?.limit ?? 10;
+      const total = filtered.length;
+      const totalPages = Math.ceil(total / limit);
+      const start = (page - 1) * limit;
+      const paginatedData = filtered.slice(start, start + limit);
+
+      return {
+        data: paginatedData,
+        meta: {
+          page,
+          pageSize: limit,
+          total,
+          totalPages,
+          hasNextPage: page < totalPages,
+          hasPrevPage: page > 1,
+        },
+      };
     }
-
-    if (params?.priority && params.priority !== 'ALL') {
-      filtered = filtered.filter((r) => r.priority === params.priority);
-    }
-
-    if (params?.status && params.status !== 'ALL') {
-      filtered = filtered.filter((r) => r.status === params.status);
-    }
-
-    // Sort by descending date
-    filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-
-    const page = params?.page ?? 1;
-    const limit = params?.limit ?? 10;
-    const total = filtered.length;
-    const totalPages = Math.ceil(total / limit);
-    const start = (page - 1) * limit;
-    const paginatedData = filtered.slice(start, start + limit);
-
-    return {
-      data: paginatedData,
-      meta: {
-        page,
-        pageSize: limit,
-        total,
-        totalPages,
-        hasNextPage: page < totalPages,
-        hasPrevPage: page > 1,
-      },
-    };
   }
 
   async getRequisition(id: string): Promise<PurchaseRequisition> {
-    const list = this.load();
-    const item = list.find((r) => r.id === id);
-    if (!item) throw new Error('Purchase requisition not found');
-    return item;
+    try {
+      const response = await this.get<PurchaseRequisition>(`/purchase-requisitions/${id}`);
+      return response.data;
+    } catch {
+      const list = this.load();
+      const item = list.find((r) => r.id === id);
+      if (!item) throw new Error('Purchase requisition not found');
+      return item;
+    }
   }
 
   async createRequisition(
@@ -189,38 +198,77 @@ class PurchaseRequisitionService {
       'id' | 'status' | 'convertedPoId' | 'createdAt' | 'updatedAt'
     >,
   ): Promise<PurchaseRequisition> {
-    const list = this.load();
-    const newPr: PurchaseRequisition = {
-      ...payload,
-      id: `pr-${crypto.randomUUID()}`,
-      status: 'DRAFT',
-      convertedPoId: null,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
+    try {
+      const companyId = (payload as any).companyId || 'company-id-placeholder';
+      const items = payload.items.map((it) => ({
+        productId: it.productId,
+        quantity: it.quantity,
+        unitPrice: it.unitPrice,
+      }));
+      // Map requiredDate to full datetime ISO string for backend Zod schema
+      const requiredDate = payload.requiredDate
+        ? new Date(payload.requiredDate).toISOString()
+        : new Date().toISOString();
+      const response = await this.post<PurchaseRequisition>('/purchase-requisitions', {
+        ...payload,
+        companyId,
+        requiredDate,
+        items,
+      });
+      return response.data;
+    } catch {
+      const list = this.load();
+      const newPr: PurchaseRequisition = {
+        ...payload,
+        id: `pr-${Math.random().toString(36).substr(2, 9)}`,
+        status: 'DRAFT',
+        convertedPoId: null,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
 
-    list.push(newPr);
-    this.save(list);
-    return newPr;
+      list.push(newPr);
+      this.save(list);
+      return newPr;
+    }
   }
 
   async updateRequisition(
     id: string,
     payload: Partial<Omit<PurchaseRequisition, 'id' | 'createdAt' | 'updatedAt'>>,
   ): Promise<PurchaseRequisition> {
-    const list = this.load();
-    const index = list.findIndex((r) => r.id === id);
-    if (index === -1) throw new Error('Purchase requisition not found');
+    try {
+      const formattedDate = payload.requiredDate
+        ? new Date(payload.requiredDate).toISOString()
+        : undefined;
+      const items = payload.items
+        ? payload.items.map((it) => ({
+            productId: it.productId,
+            quantity: it.quantity,
+            unitPrice: it.unitPrice,
+          }))
+        : undefined;
+      const response = await this.put<PurchaseRequisition>(`/purchase-requisitions/${id}`, {
+        ...payload,
+        ...(formattedDate ? { requiredDate: formattedDate } : {}),
+        ...(items ? { items } : {}),
+      });
+      return response.data;
+    } catch {
+      const list = this.load();
+      const index = list.findIndex((r) => r.id === id);
+      if (index === -1) throw new Error('Purchase requisition not found');
 
-    const updated = {
-      ...list[index],
-      ...payload,
-      updatedAt: new Date().toISOString(),
-    } as PurchaseRequisition;
+      const updated = {
+        ...list[index],
+        ...payload,
+        updatedAt: new Date().toISOString(),
+      } as PurchaseRequisition;
 
-    list[index] = updated;
-    this.save(list);
-    return updated;
+      list[index] = updated;
+      this.save(list);
+      return updated;
+    }
   }
 
   async submitRequisition(id: string): Promise<PurchaseRequisition> {
@@ -240,9 +288,13 @@ class PurchaseRequisitionService {
   }
 
   async deleteRequisition(id: string): Promise<void> {
-    const list = this.load();
-    const filtered = list.filter((r) => r.id !== id);
-    this.save(filtered);
+    try {
+      await this.delete<void>(`/purchase-requisitions/${id}`);
+    } catch {
+      const list = this.load();
+      const filtered = list.filter((r) => r.id !== id);
+      this.save(filtered);
+    }
   }
 
   async markConverted(id: string, poId: string): Promise<PurchaseRequisition> {

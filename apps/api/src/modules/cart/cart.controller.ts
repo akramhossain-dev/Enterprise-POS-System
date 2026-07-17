@@ -1,7 +1,12 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { sendSuccess } from '../../common/responses/success';
 import { validateBody } from '../../common/utils/validate';
-import { createCartSchema, addCartItemSchema, updateCartItemSchema } from './cart.schema';
+import {
+  createCartSchema,
+  addCartItemSchema,
+  updateCartItemSchema,
+  updateCartSchema,
+} from './cart.schema';
 import {
   createNewCart,
   getCartById,
@@ -9,6 +14,10 @@ import {
   updateCartProduct,
   removeCartProduct,
   clearCartProducts,
+  listCartsForSession,
+  listHeldCartsForSession,
+  updateCartDetails,
+  deleteCartRecord,
 } from './cart.service';
 
 export async function handleCreateCart(req: FastifyRequest, reply: FastifyReply): Promise<void> {
@@ -59,4 +68,31 @@ export async function handleClearCart(req: FastifyRequest, reply: FastifyReply):
   const { id } = req.params as { id: string };
   const data = await clearCartProducts(id, actor.id);
   reply.status(200).send(sendSuccess({ message: 'Cart items cleared successfully', data }));
+}
+
+export async function handleListCarts(req: FastifyRequest, reply: FastifyReply): Promise<void> {
+  const actor = req.user as { id: string };
+  const data = await listCartsForSession(actor.id);
+  reply.status(200).send(sendSuccess({ message: 'Active carts retrieved successfully', data }));
+}
+
+export async function handleListHeldCarts(req: FastifyRequest, reply: FastifyReply): Promise<void> {
+  const actor = req.user as { id: string };
+  const data = await listHeldCartsForSession(actor.id);
+  reply.status(200).send(sendSuccess({ message: 'Held carts retrieved successfully', data }));
+}
+
+export async function handleUpdateCart(req: FastifyRequest, reply: FastifyReply): Promise<void> {
+  const actor = req.user as { id: string };
+  const { id } = req.params as { id: string };
+  const body = validateBody(updateCartSchema, req.body);
+  const data = await updateCartDetails(id, body, actor.id);
+  reply.status(200).send(sendSuccess({ message: 'Cart updated successfully', data }));
+}
+
+export async function handleDeleteCart(req: FastifyRequest, reply: FastifyReply): Promise<void> {
+  const actor = req.user as { id: string };
+  const { id } = req.params as { id: string };
+  await deleteCartRecord(id, actor.id);
+  reply.status(200).send(sendSuccess({ message: 'Cart deleted successfully', data: {} }));
 }

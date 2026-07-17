@@ -9,7 +9,8 @@ import {
   clearCartItems,
   PrismaCartWithItems,
 } from './cart.repository';
-import { AddCartItemBody, UpdateCartItemBody } from './cart.schema';
+import { AddCartItemBody, UpdateCartItemBody, UpdateCartBody } from './cart.schema';
+import { findActiveSession } from '../pos/pos.repository';
 
 export interface MappedCartItem {
   id: string;
@@ -254,4 +255,83 @@ export async function clearCartProducts(cartId: string, cashierId: string): Prom
   }
   console.warn(`[AUDIT] Cart Updated: ${cartId} (Cart cleared)`);
   return mapCart(updatedCart);
+}
+
+export async function listCartsForSession(cashierId: string): Promise<MappedCart[]> {
+  const activeSession = await findActiveSession(cashierId);
+  if (!activeSession) {
+    throw new BadRequestError('No active POS session found for this cashier');
+  }
+
+  const carts = await prisma.cart.findMany({
+    where: {
+      sessionId: activeSession.id,
+      status: 'ACTIVE',
+    },
+    include: {
+      items: {
+        include: {
+          product: { select: { name: true, sku: true, barcode: true } },
+        },
+      },
+    },
+  });
+
+  return carts.map(mapCart);
+}
+
+export async function listHeldCartsForSession(cashierId: string): Promise<MappedCart[]> {
+  const activeSession = await findActiveSession(cashierId);
+  if (!activeSession) {
+    throw new BadRequestError('No active POS session found for this cashier');
+  }
+
+  const carts = await prisma.cart.findMany({
+    where: {
+      sessionId: activeSession.id,
+      status: 'HOLD',
+    },
+    include: {
+      items: {
+        include: {
+          product: { select: { name: true, sku: true, barcode: true } },
+        },
+      },
+    },
+  });
+
+  return carts.map(mapCart);
+}
+
+export async function updateCartDetails(
+  cartId: string,
+  body: UpdateCartBody,
+  cashierId: string,
+): Promise<MappedCart> {
+  await validateCartAndSession(cartId, cashierId);
+
+  const updated = await prisma.cart.update({
+    where: { id: cartId },
+    data: {
+      ...(body.customerId !== undefined ? { customerId: body.customerId } : {}),
+      ...(body.status !== undefined ? { status: body.status } : {}),
+    },
+    include: {
+      items: {
+        include: {
+          product: { select: { name: true, sku: true, barcode: true } },
+        },
+      },
+    },
+  });
+
+  return mapCart(updated);
+}
+
+export async function deleteCartRecord(cartId: string, cashierId: string): Promise<void> {
+  await validateCartAndSession(cartId, cashierId);
+
+  await prisma.cart.delete({
+    where: { id: cartId },
+  });
 }

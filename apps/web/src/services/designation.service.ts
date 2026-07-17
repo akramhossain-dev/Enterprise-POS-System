@@ -1,3 +1,5 @@
+import { ApiClient } from './api-client';
+import { apiConfig } from '@/config/api';
 import { Designation } from '@/types/employee';
 
 const STORAGE_KEY = 'pos_designations';
@@ -85,7 +87,7 @@ const DEFAULT_DESIGNATIONS: Designation[] = [
   },
 ];
 
-class DesignationService {
+class DesignationService extends ApiClient {
   private getStorageDesignations(): Designation[] {
     if (typeof window === 'undefined') return DEFAULT_DESIGNATIONS;
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -102,63 +104,90 @@ class DesignationService {
   }
 
   async listDesignations(): Promise<Designation[]> {
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    return this.getStorageDesignations().filter((d) => d.status !== 'INACTIVE');
+    try {
+      const response = await this.get<Designation[]>('/designations');
+      return response.data;
+    } catch {
+      return this.getStorageDesignations().filter((d) => d.status !== 'INACTIVE');
+    }
   }
 
   async listAllDesignations(): Promise<Designation[]> {
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    return this.getStorageDesignations();
+    try {
+      const response = await this.get<Designation[]>('/designations');
+      return response.data;
+    } catch {
+      return this.getStorageDesignations();
+    }
   }
 
   async getDesignation(id: string): Promise<Designation> {
-    await new Promise((resolve) => setTimeout(resolve, 200));
-    const desigs = this.getStorageDesignations();
-    const desig = desigs.find((d) => d.id === id);
-    if (!desig) throw new Error('Designation not found');
-    return desig;
+    try {
+      const response = await this.get<Designation>(`/designations/${id}`);
+      return response.data;
+    } catch {
+      const desigs = this.getStorageDesignations();
+      const desig = desigs.find((d) => d.id === id);
+      if (!desig) throw new Error('Designation not found');
+      return desig;
+    }
   }
 
   async createDesignation(
     payload: Omit<Designation, 'id' | 'createdAt' | 'updatedAt'>,
   ): Promise<Designation> {
-    await new Promise((resolve) => setTimeout(resolve, 400));
-    const desigs = this.getStorageDesignations();
-    const newDesig: Designation = {
-      ...payload,
-      id: `desig-${Math.random().toString(36).substr(2, 9)}`,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-    desigs.push(newDesig);
-    this.saveDesignations(desigs);
-    return newDesig;
+    try {
+      const companyId = (payload as any).companyId || 'company-id-placeholder';
+      const response = await this.post<Designation>('/designations', {
+        ...payload,
+        companyId,
+      });
+      return response.data;
+    } catch {
+      const desigs = this.getStorageDesignations();
+      const newDesig: Designation = {
+        ...payload,
+        id: `desig-${Math.random().toString(36).substr(2, 9)}`,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      desigs.push(newDesig);
+      this.saveDesignations(desigs);
+      return newDesig;
+    }
   }
 
   async updateDesignation(
     id: string,
     payload: Partial<Omit<Designation, 'id' | 'createdAt' | 'updatedAt'>>,
   ): Promise<Designation> {
-    await new Promise((resolve) => setTimeout(resolve, 400));
-    const desigs = this.getStorageDesignations();
-    const index = desigs.findIndex((d) => d.id === id);
-    if (index === -1) throw new Error('Designation not found');
+    try {
+      const response = await this.put<Designation>(`/designations/${id}`, payload);
+      return response.data;
+    } catch {
+      const desigs = this.getStorageDesignations();
+      const index = desigs.findIndex((d) => d.id === id);
+      if (index === -1) throw new Error('Designation not found');
 
-    const updated: Designation = {
-      ...desigs[index]!,
-      ...payload,
-      updatedAt: new Date().toISOString(),
-    };
-    desigs[index] = updated;
-    this.saveDesignations(desigs);
-    return updated;
+      const updated: Designation = {
+        ...desigs[index]!,
+        ...payload,
+        updatedAt: new Date().toISOString(),
+      };
+      desigs[index] = updated;
+      this.saveDesignations(desigs);
+      return updated;
+    }
   }
 
   async deleteDesignation(id: string): Promise<void> {
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    const desigs = this.getStorageDesignations();
-    const updated = desigs.filter((d) => d.id !== id);
-    this.saveDesignations(updated);
+    try {
+      await this.delete<void>(`/designations/${id}`);
+    } catch {
+      const desigs = this.getStorageDesignations();
+      const updated = desigs.filter((d) => d.id !== id);
+      this.saveDesignations(updated);
+    }
   }
 }
 

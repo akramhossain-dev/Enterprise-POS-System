@@ -3,6 +3,8 @@ import fp from 'fastify-plugin';
 import { prometheusRegistry } from '../lib/monitoring';
 import { createLogger } from '../lib/logger';
 
+import { env } from '../config/env';
+
 const log = createLogger('metrics-plugin');
 
 /**
@@ -26,10 +28,10 @@ function metricsPlugin(fastify: FastifyInstance) {
       // In production, restrict access to internal requests or require an API key
       const isProduction = process.env.NODE_ENV === 'production';
       if (isProduction) {
-        const metricsKey = process.env.METRICS_SECRET_KEY;
+        const metricsKey = env.METRICS_SECRET_KEY;
         const providedKey = request.headers['x-metrics-key'] as string | undefined;
 
-        if (metricsKey && providedKey !== metricsKey) {
+        if (!metricsKey || providedKey !== metricsKey) {
           return reply.status(401).send({ error: 'Unauthorized' });
         }
       }

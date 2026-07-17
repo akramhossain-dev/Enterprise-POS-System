@@ -5,6 +5,7 @@ import {
   getAccountStatementHandler,
   getTrialBalanceHandler,
   getFinancialSummaryHandler,
+  getProfitLossHandler,
 } from './report.controller';
 
 const guard = (p: string) => [authGuard, permissionGuard(p)];
@@ -12,9 +13,9 @@ const guard = (p: string) => [authGuard, permissionGuard(p)];
 export async function reportRoutes(fastify: FastifyInstance): Promise<void> {
   await Promise.resolve();
 
-  // ── Financial Reports ──────────────────────────────────────────────────────
+  // Align general ledger and statements with frontend config under /accounting prefix
   fastify.get(
-    '/reports/general-ledger',
+    '/ledger',
     {
       preHandler: guard('financial.report.view'),
       schema: { tags: ['Reports'], summary: 'Get General Ledger transactions' },
@@ -23,7 +24,7 @@ export async function reportRoutes(fastify: FastifyInstance): Promise<void> {
   );
 
   fastify.get(
-    '/reports/account-statement/:accountId',
+    '/account-statement/:accountId',
     {
       preHandler: guard('financial.report.view'),
       schema: { tags: ['Reports'], summary: 'Get Account Statement' },
@@ -32,7 +33,7 @@ export async function reportRoutes(fastify: FastifyInstance): Promise<void> {
   );
 
   fastify.get(
-    '/reports/trial-balance',
+    '/statements/trial-balance',
     {
       preHandler: guard('financial.report.view'),
       schema: { tags: ['Reports'], summary: 'Get Trial Balance report' },
@@ -41,7 +42,34 @@ export async function reportRoutes(fastify: FastifyInstance): Promise<void> {
   );
 
   fastify.get(
-    '/reports/financial-summary',
+    '/statements/profit-loss',
+    {
+      preHandler: guard('financial.report.view'),
+      schema: { tags: ['Reports'], summary: 'Get Profit & Loss report' },
+    },
+    getProfitLossHandler,
+  );
+
+  fastify.get(
+    '/statements/balance-sheet',
+    {
+      preHandler: guard('financial.report.view'),
+      schema: { tags: ['Reports'], summary: 'Get Balance Sheet' },
+    },
+    getFinancialSummaryHandler, // Fallback to financial summary
+  );
+
+  fastify.get(
+    '/statements/cash-flow',
+    {
+      preHandler: guard('financial.report.view'),
+      schema: { tags: ['Reports'], summary: 'Get Cash Flow Statement' },
+    },
+    getFinancialSummaryHandler, // Fallback to financial summary
+  );
+
+  fastify.get(
+    '/dashboard',
     {
       preHandler: guard('financial.report.view'),
       schema: { tags: ['Reports'], summary: 'Get Financial Summary report' },

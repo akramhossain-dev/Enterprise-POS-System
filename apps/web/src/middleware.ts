@@ -25,7 +25,9 @@ export function middleware(request: NextRequest) {
 
   // Check for auth session cookie (httpOnly, set by API on login)
   const hasSessionCookie =
-    request.cookies.has('pos_session') || request.cookies.has('pos_refresh_token');
+    request.cookies.has('pos_session') ||
+    request.cookies.has('pos_refresh_token') ||
+    request.cookies.has('refreshToken');
 
   // Redirect unauthenticated users away from protected routes
   if (isProtectedRoute && !hasSessionCookie) {
