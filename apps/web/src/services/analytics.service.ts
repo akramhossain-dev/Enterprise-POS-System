@@ -7,527 +7,162 @@ import type {
   InventoryAnalyticsData,
   CustomerAnalyticsData,
   SupplierAnalyticsData,
-  EmployeeAnalyticsData,
   BranchPerformance,
   WarehousePerformance,
+  EmployeeAnalyticsData,
   TimeSeriesPoint,
 } from '@/types/analytics';
 
 export interface AnalyticsFilterParams {
-  [key: string]: string | number | undefined;
+  [key: string]: string | number | boolean | undefined;
   startDate?: string;
   endDate?: string;
   branchId?: string;
   warehouseId?: string;
   categoryId?: string;
-  supplierId?: string;
-  customerId?: string;
 }
 
 class AnalyticsService extends ApiClient {
-  private getMockSalesTrend(): TimeSeriesPoint[] {
-    return [
-      { date: '2026-07-10', value: 12400 },
-      { date: '2026-07-11', value: 14500 },
-      { date: '2026-07-12', value: 13200 },
-      { date: '2026-07-13', value: 18900 },
-      { date: '2026-07-14', value: 22400 },
-      { date: '2026-07-15', value: 21100 },
-      { date: '2026-07-16', value: 24500 },
-    ];
-  }
-
-  private getMockPurchaseTrend(): TimeSeriesPoint[] {
-    return [
-      { date: '2026-07-10', value: 8400 },
-      { date: '2026-07-11', value: 9200 },
-      { date: '2026-07-12', value: 10500 },
-      { date: '2026-07-13', value: 6800 },
-      { date: '2026-07-14', value: 11400 },
-      { date: '2026-07-15', value: 9500 },
-      { date: '2026-07-16', value: 12100 },
-    ];
-  }
-
   async getExecutiveKpis(filters?: AnalyticsFilterParams): Promise<ExecutiveKpiSummary> {
-    try {
-      const response = await this.get<any>('/dashboard/overview', filters);
-      const data = response.data;
-      return {
-        revenue: parseFloat(data.totalRevenue),
-        revenueChange: 12.4,
-        grossProfit: parseFloat(data.totalRevenue) - parseFloat(data.totalExpense),
-        grossProfitChange: 9.8,
-        netProfit: parseFloat(data.netProfit),
-        netProfitChange: 14.5,
-        avgOrderValue: parseFloat(data.totalSales) > 0 ? parseFloat(data.totalSales) / 10 : 185.5,
-        avgOrderValueChange: 4.2,
-        conversionRate: 2.38,
-        conversionRateChange: 0.5,
-        customerGrowth: 5.7,
-        customerGrowthChange: 1.2,
-        inventoryTurnover: 8.4,
-        inventoryTurnoverChange: 0.8,
-        purchaseCost: parseFloat(data.totalPurchase),
-        purchaseCostChange: -2.5,
-      };
-    } catch {
-      // Simulate rich corporate parameters
-      return {
-        revenue: 1248400,
-        revenueChange: 12.4,
-        grossProfit: 852900,
-        grossProfitChange: 9.8,
-        netProfit: 452400,
-        netProfitChange: 14.5,
-        avgOrderValue: 185.5,
-        avgOrderValueChange: 4.2,
-        conversionRate: 2.38,
-        conversionRateChange: 0.5,
-        customerGrowth: 5.7,
-        customerGrowthChange: 1.2,
-        inventoryTurnover: 8.4,
-        inventoryTurnoverChange: 0.8,
-        purchaseCost: 395500,
-        purchaseCostChange: -2.5,
-      };
-    }
+    const response = await this.get<any>('/dashboard/overview', filters);
+    const data = response.data;
+
+    return {
+      revenue: parseFloat(data.totalRevenue || '0'),
+      revenueChange: 0,
+      grossProfit: parseFloat(data.totalRevenue || '0') - parseFloat(data.totalExpense || '0'),
+      grossProfitChange: 0,
+      netProfit: parseFloat(data.netProfit || '0'),
+      netProfitChange: 0,
+      avgOrderValue:
+        parseFloat(data.totalSales || '0') > 0
+          ? parseFloat(data.totalRevenue || '0') / parseFloat(data.totalSales || '1')
+          : 0,
+      avgOrderValueChange: 0,
+      conversionRate: 0,
+      conversionRateChange: 0,
+      customerGrowth: 0,
+      customerGrowthChange: 0,
+      inventoryTurnover: 0,
+      inventoryTurnoverChange: 0,
+      purchaseCost: parseFloat(data.totalPurchase || '0'),
+      purchaseCostChange: 0,
+    };
   }
 
   async getSalesAnalytics(filters?: AnalyticsFilterParams): Promise<SalesAnalyticsData> {
-    try {
-      const summaryRes = await this.get<any>('/dashboard/sales-summary', filters);
-      const trendRes = await this.get<any>('/dashboard/sales-trend', filters);
-      
-      const sData = summaryRes.data;
-      const tData = trendRes.data || [];
-      
-      const salesTrend: TimeSeriesPoint[] = tData.map((t: any) => ({
-        date: t.date,
-        value: parseFloat(t.salesAmount),
-      }));
+    const summaryRes = await this.get<any>('/dashboard/sales-summary', filters);
+    const trendRes = await this.get<any>('/dashboard/sales-trend', filters);
 
-      return {
-        totalSales: parseFloat(sData.thisMonthSales),
-        salesGrowth: 12.4,
-        salesTrend: salesTrend.length > 0 ? salesTrend : this.getMockSalesTrend(),
-        salesByCategory: [
-          { name: 'Apparel & Fashion', value: 345000 },
-          { name: 'Consumer Electronics', value: 489000 },
-          { name: 'Home & Kitchen', value: 212000 },
-          { name: 'Groceries & Foods', value: 154400 },
-          { name: 'Beauty & Personal Care', value: 48000 },
-        ],
-        salesByBrand: [
-          { name: 'Nike', value: 185000 },
-          { name: 'Apple', value: 310000 },
-          { name: 'Samsung', value: 179000 },
-          { name: 'Sony', value: 98000 },
-          { name: 'Other Brands', value: 476400 },
-        ],
-        salesByPaymentMethod: [
-          { name: 'Credit/Debit Cards', value: 745000 },
-          { name: 'Digital Wallets', value: 298000 },
-          { name: 'Cash', value: 185400 },
-          { name: 'Bank Transfer', value: 20000 },
-        ],
-        salesByBranch: [
-          { name: 'Dhaka Central (HQ)', value: 580000 },
-          { name: 'Chittagong Port', value: 340000 },
-          { name: 'Sylhet Valley', value: 210000 },
-          { name: 'Rajshahi Express', value: 118400 },
-        ],
-        mostReturnedProducts: [
-          {
-            id: 'p-101',
-            name: 'Premium Leather Boots',
-            secondaryInfo: 'Size mismatch',
-            quantity: 24,
-            amount: 2880,
-          },
-          {
-            id: 'p-105',
-            name: 'Wireless Bluetooth Buds',
-            secondaryInfo: 'Connection drop',
-            quantity: 18,
-            amount: 1620,
-          },
-          {
-            id: 'p-110',
-            name: 'USB-C Fast Charger Plug',
-            secondaryInfo: 'Defective pins',
-            quantity: 35,
-            amount: 875,
-          },
-        ],
-      };
-    } catch {
-      return {
-        totalSales: 1248400,
-        salesGrowth: 12.4,
-        salesTrend: this.getMockSalesTrend(),
-        salesByCategory: [
-          { name: 'Apparel & Fashion', value: 345000 },
-          { name: 'Consumer Electronics', value: 489000 },
-          { name: 'Home & Kitchen', value: 212000 },
-          { name: 'Groceries & Foods', value: 154400 },
-          { name: 'Beauty & Personal Care', value: 48000 },
-        ],
-        salesByBrand: [
-          { name: 'Nike', value: 185000 },
-          { name: 'Apple', value: 310000 },
-          { name: 'Samsung', value: 179000 },
-          { name: 'Sony', value: 98000 },
-          { name: 'Other Brands', value: 476400 },
-        ],
-        salesByPaymentMethod: [
-          { name: 'Credit/Debit Cards', value: 745000 },
-          { name: 'Digital Wallets', value: 298000 },
-          { name: 'Cash', value: 185400 },
-          { name: 'Bank Transfer', value: 20000 },
-        ],
-        salesByBranch: [
-          { name: 'Dhaka Central (HQ)', value: 580000 },
-          { name: 'Chittagong Port', value: 340000 },
-          { name: 'Sylhet Valley', value: 210000 },
-          { name: 'Rajshahi Express', value: 118400 },
-        ],
-        mostReturnedProducts: [
-          {
-            id: 'p-101',
-            name: 'Premium Leather Boots',
-            secondaryInfo: 'Size mismatch',
-            quantity: 24,
-            amount: 2880,
-          },
-          {
-            id: 'p-105',
-            name: 'Wireless Bluetooth Buds',
-            secondaryInfo: 'Connection drop',
-            quantity: 18,
-            amount: 1620,
-          },
-          {
-            id: 'p-110',
-            name: 'USB-C Fast Charger Plug',
-            secondaryInfo: 'Defective pins',
-            quantity: 35,
-            amount: 875,
-          },
-        ],
-      };
-    }
+    const sData = summaryRes.data;
+    const tData = trendRes.data || [];
+
+    const salesTrend: TimeSeriesPoint[] = tData.map((t: any) => ({
+      date: t.date,
+      value: parseFloat(t.salesAmount || '0'),
+    }));
+
+    return {
+      totalSales: parseFloat(sData.thisMonthSales || '0'),
+      salesGrowth: 0,
+      salesTrend: salesTrend,
+      salesByCategory: (sData.salesByCategory || []).map((c: any) => ({
+        name: c.categoryName,
+        value: parseFloat(c.salesAmount || '0'),
+      })),
+      salesByBrand: [],
+      salesByPaymentMethod: [],
+      salesByBranch: [],
+      mostReturnedProducts: [],
+    };
   }
 
   async getPurchaseAnalytics(filters?: AnalyticsFilterParams): Promise<PurchaseAnalyticsData> {
-    try {
-      const response = await this.get<any>('/dashboard/purchase-summary', filters);
-      const data = response.data;
-      return {
-        totalPurchases: parseFloat(data.purchaseAmount),
-        purchaseGrowth: -2.5,
-        purchaseTrend: this.getMockPurchaseTrend(),
-        purchaseBySupplier: [
-          { name: 'Global Importers Inc.', value: 185000 },
-          { name: 'Elite Distributors Ltd', value: 112000 },
-          { name: 'Direct Tech Wholesale', value: 74000 },
-          { name: 'Apex Foods & Supplies', value: 24500 },
-        ],
-        supplierCredits: 142000,
-        debitNotesCount: 14,
-      };
-    } catch {
-      return {
-        totalPurchases: 395500,
-        purchaseGrowth: -2.5,
-        purchaseTrend: this.getMockPurchaseTrend(),
-        purchaseBySupplier: [
-          { name: 'Global Importers Inc.', value: 185000 },
-          { name: 'Elite Distributors Ltd', value: 112000 },
-          { name: 'Direct Tech Wholesale', value: 74000 },
-          { name: 'Apex Foods & Supplies', value: 24500 },
-        ],
-        supplierCredits: 142000,
-        debitNotesCount: 14,
-      };
-    }
+    const response = await this.get<any>('/dashboard/purchase-summary', filters);
+    const data = response.data;
+
+    return {
+      totalPurchases: parseFloat(data.purchaseAmount || '0'),
+      purchaseGrowth: 0,
+      purchaseTrend: [],
+      purchaseBySupplier: [],
+      supplierCredits: 0,
+      debitNotesCount: 0,
+    };
   }
 
   async getInventoryAnalytics(filters?: AnalyticsFilterParams): Promise<InventoryAnalyticsData> {
-    try {
-      const response = await this.get<any>('/dashboard/inventory-summary', filters);
-      const data = response.data;
-      const warehouseStock = (data.warehouseWiseStock || []).map((w: any) => ({
-        name: w.warehouseName,
-        value: parseFloat(w.totalStock),
-      }));
+    const response = await this.get<any>('/dashboard/inventory-summary', filters);
+    const data = response.data;
+    const warehouseStock = (data.warehouseWiseStock || []).map((w: any) => ({
+      name: w.warehouseName,
+      value: parseFloat(w.totalStock || '0'),
+    }));
 
-      return {
-        totalStockValue: parseFloat(data.totalStockValue),
-        lowStockItemsCount: data.lowStockCount,
-        inventoryTrend: [
-          { date: '2026-07-10', value: 830000 },
-          { date: '2026-07-11', value: 838000 },
-          { date: '2026-07-12', value: 841000 },
-          { date: '2026-07-13', value: 835000 },
-          { date: '2026-07-14', value: 849000 },
-          { date: '2026-07-15', value: 844000 },
-          { date: '2026-07-16', value: parseFloat(data.totalStockValue) },
-        ],
-        inventoryByWarehouse: warehouseStock.length > 0 ? warehouseStock : [
-          { name: 'Main Hub Warehouse A', value: 485000 },
-          { name: 'Transit Depot B', value: 215000 },
-          { name: 'Retail Storefront Shelf', value: 145200 },
-        ],
-        turnoverRatio: 8.4,
-      };
-    } catch {
-      return {
-        totalStockValue: 845200,
-        lowStockItemsCount: 24,
-        inventoryTrend: [
-          { date: '2026-07-10', value: 830000 },
-          { date: '2026-07-11', value: 838000 },
-          { date: '2026-07-12', value: 841000 },
-          { date: '2026-07-13', value: 835000 },
-          { date: '2026-07-14', value: 849000 },
-          { date: '2026-07-15', value: 844000 },
-          { date: '2026-07-16', value: 845200 },
-        ],
-        inventoryByWarehouse: [
-          { name: 'Main Hub Warehouse A', value: 485000 },
-          { name: 'Transit Depot B', value: 215000 },
-          { name: 'Retail Storefront Shelf', value: 145200 },
-        ],
-        turnoverRatio: 8.4,
-      };
-    }
+    return {
+      totalStockValue: parseFloat(data.totalStockValue || '0'),
+      lowStockItemsCount: data.lowStockCount || 0,
+      inventoryTrend: [],
+      inventoryByWarehouse: warehouseStock,
+      turnoverRatio: 0,
+    };
   }
 
   async getCustomerAnalytics(filters?: AnalyticsFilterParams): Promise<CustomerAnalyticsData> {
-    try {
-      const response = await this.get<any>('/dashboard/customer-summary', filters);
-      const data = response.data;
-      const topCust = (data.topCustomers || []).map((c: any) => ({
-        id: c.customerId,
-        name: c.customerName,
-        amount: parseFloat(c.totalPurchase),
-      }));
+    const response = await this.get<any>('/dashboard/customer-summary', filters);
+    const data = response.data;
+    const topCust = (data.topCustomers || []).map((c: any) => ({
+      id: c.customerId,
+      name: c.customerName,
+      amount: parseFloat(c.totalPurchase || '0'),
+    }));
 
-      return {
-        totalCustomers: data.totalCustomers,
-        customerGrowthTrend: [
-          { date: '2026-07-10', value: 3180 },
-          { date: '2026-07-11', value: 3195 },
-          { date: '2026-07-12', value: 3208 },
-          { date: '2026-07-13', value: 3218 },
-          { date: '2026-07-14', value: 3225 },
-          { date: '2026-07-15', value: 3233 },
-          { date: '2026-07-16', value: data.totalCustomers },
-        ],
-        customerSegmentation: [
-          { name: 'VIP Champions', value: 324 },
-          { name: 'Loyal Regulars', value: 1245 },
-          { name: 'New Signups', value: 648 },
-          { name: 'Hibernating / Risk', value: 1024 },
-        ],
-        topCustomers: topCust.length > 0 ? topCust : [
-          { id: 'c-451', name: 'Zayn Malik', secondaryInfo: 'VIP Platinum', amount: 8450 },
-          { id: 'c-459', name: 'Alia Bhatt', secondaryInfo: 'Loyal Champion', amount: 6920 },
-          { id: 'c-462', name: 'Ranbir Kapoor', secondaryInfo: 'Active Shopper', amount: 5120 },
-        ],
-      };
-    } catch {
-      return {
-        totalCustomers: 3241,
-        customerGrowthTrend: [
-          { date: '2026-07-10', value: 3180 },
-          { date: '2026-07-11', value: 3195 },
-          { date: '2026-07-12', value: 3208 },
-          { date: '2026-07-13', value: 3218 },
-          { date: '2026-07-14', value: 3225 },
-          { date: '2026-07-15', value: 3233 },
-          { date: '2026-07-16', value: 3241 },
-        ],
-        customerSegmentation: [
-          { name: 'VIP Champions', value: 324 },
-          { name: 'Loyal Regulars', value: 1245 },
-          { name: 'New Signups', value: 648 },
-          { name: 'Hibernating / Risk', value: 1024 },
-        ],
-        topCustomers: [
-          { id: 'c-451', name: 'Zayn Malik', secondaryInfo: 'VIP Platinum', amount: 8450 },
-          { id: 'c-459', name: 'Alia Bhatt', secondaryInfo: 'Loyal Champion', amount: 6920 },
-          { id: 'c-462', name: 'Ranbir Kapoor', secondaryInfo: 'Active Shopper', amount: 5120 },
-        ],
-      };
-    }
+    return {
+      totalCustomers: data.totalCustomers || 0,
+      customerGrowthTrend: [],
+      customerSegmentation: [],
+      topCustomers: topCust,
+    };
   }
 
   async getSupplierAnalytics(filters?: AnalyticsFilterParams): Promise<SupplierAnalyticsData> {
-    try {
-      const response = await this.get<any>('/dashboard/supplier-summary', filters);
-      const data = response.data;
-      const topSupp = (data.topSuppliers || []).map((s: any) => ({
-        id: s.supplierId,
-        name: s.companyName,
-        amount: parseFloat(s.totalPurchase),
-      }));
+    const response = await this.get<any>('/dashboard/supplier-summary', filters);
+    const data = response.data;
+    const topSupp = (data.topSuppliers || []).map((s: any) => ({
+      id: s.supplierId,
+      name: s.companyName,
+      amount: parseFloat(s.totalPurchase || '0'),
+    }));
 
-      return {
-        totalSuppliers: data.totalSuppliers,
-        topSuppliers: topSupp.length > 0 ? topSupp : [
-          {
-            id: 's-201',
-            name: 'Global Importers Inc.',
-            secondaryInfo: 'Lead: 4 days',
-            amount: 185000,
-          },
-          {
-            id: 's-205',
-            name: 'Elite Distributors Ltd',
-            secondaryInfo: 'Lead: 6 days',
-            amount: 112000,
-          },
-          {
-            id: 's-210',
-            name: 'Direct Tech Wholesale',
-            secondaryInfo: 'Lead: 3 days',
-            amount: 74000,
-          },
-        ],
-        purchaseBySupplier: topSupp.length > 0 ? topSupp.map((s: any) => ({ name: s.name, value: s.amount })) : [
-          { name: 'Global Importers Inc.', value: 185000 },
-          { name: 'Elite Distributors Ltd', value: 112000 },
-          { name: 'Direct Tech Wholesale', value: 74000 },
-          { name: 'Apex Foods & Supplies', value: 24500 },
-        ],
-      };
-    } catch {
-      return {
-        totalSuppliers: 84,
-        topSuppliers: [
-          {
-            id: 's-201',
-            name: 'Global Importers Inc.',
-            secondaryInfo: 'Lead: 4 days',
-            amount: 185000,
-          },
-          {
-            id: 's-205',
-            name: 'Elite Distributors Ltd',
-            secondaryInfo: 'Lead: 6 days',
-            amount: 112000,
-          },
-          {
-            id: 's-210',
-            name: 'Direct Tech Wholesale',
-            secondaryInfo: 'Lead: 3 days',
-            amount: 74000,
-          },
-        ],
-        purchaseBySupplier: [
-          { name: 'Global Importers Inc.', value: 185000 },
-          { name: 'Elite Distributors Ltd', value: 112000 },
-          { name: 'Direct Tech Wholesale', value: 74000 },
-          { name: 'Apex Foods & Supplies', value: 24500 },
-        ],
-      };
-    }
+    return {
+      totalSuppliers: data.totalSuppliers || 0,
+      topSuppliers: topSupp,
+      purchaseBySupplier: topSupp.map((s: any) => ({ name: s.name, value: s.amount })),
+    };
   }
 
   async getBranchPerformance(filters?: AnalyticsFilterParams): Promise<BranchPerformance[]> {
-    try {
-      const response = await this.get<BranchPerformance[]>(
-        apiConfig.endpoints.analytics.branches,
-        filters,
-      );
-      return response.data;
-    } catch {
-      return [
-        {
-          branchId: 'b-1',
-          branchName: 'Dhaka Central (HQ)',
-          revenue: 580000,
-          salesCount: 3100,
-          profit: 215000,
-        },
-        {
-          branchId: 'b-2',
-          branchName: 'Chittagong Port',
-          revenue: 340000,
-          salesCount: 1850,
-          profit: 120000,
-        },
-        {
-          branchId: 'b-3',
-          branchName: 'Sylhet Valley',
-          revenue: 210000,
-          salesCount: 1100,
-          profit: 78000,
-        },
-        {
-          branchId: 'b-4',
-          branchName: 'Rajshahi Express',
-          revenue: 118400,
-          salesCount: 650,
-          profit: 39400,
-        },
-      ];
-    }
+    const response = await this.get<BranchPerformance[]>(
+      apiConfig.endpoints.analytics.branches,
+      filters,
+    );
+    return response.data;
   }
 
   async getWarehousePerformance(filters?: AnalyticsFilterParams): Promise<WarehousePerformance[]> {
-    try {
-      const response = await this.get<WarehousePerformance[]>(
-        apiConfig.endpoints.analytics.warehouses,
-        filters,
-      );
-      return response.data;
-    } catch {
-      return [
-        {
-          warehouseId: 'w-1',
-          warehouseName: 'Main Hub Warehouse A',
-          stockValue: 485000,
-          itemCount: 12500,
-          occupancyPercentage: 78.4,
-        },
-        {
-          warehouseId: 'w-2',
-          warehouseName: 'Transit Depot B',
-          stockValue: 215000,
-          itemCount: 6800,
-          occupancyPercentage: 45.2,
-        },
-        {
-          warehouseId: 'w-3',
-          warehouseName: 'Retail Storefront Shelf',
-          stockValue: 145200,
-          itemCount: 2900,
-          occupancyPercentage: 88.9,
-        },
-      ];
-    }
+    const response = await this.get<WarehousePerformance[]>(
+      apiConfig.endpoints.analytics.warehouses,
+      filters,
+    );
+    return response.data;
   }
 
   async getEmployeeAnalytics(filters?: AnalyticsFilterParams): Promise<EmployeeAnalyticsData> {
-    try {
-      const response = await this.get<EmployeeAnalyticsData>(
-        apiConfig.endpoints.analytics.employees,
-        filters,
-      );
-      return response.data;
-    } catch {
-      return {
-        totalEmployees: 48,
-        topEmployees: [
-          { id: 'emp-101', name: 'Tanvir Hossain', secondaryInfo: 'Dhaka Central', amount: 85400 },
-          { id: 'emp-105', name: 'Nabila Rahman', secondaryInfo: 'Chittagong Port', amount: 69200 },
-          { id: 'emp-112', name: 'Arif Ahmed', secondaryInfo: 'Sylhet Valley', amount: 54100 },
-        ],
-      };
-    }
+    const response = await this.get<EmployeeAnalyticsData>(
+      apiConfig.endpoints.analytics.employees,
+      filters,
+    );
+    return response.data;
   }
 }
 

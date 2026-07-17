@@ -12,17 +12,14 @@ class UnitService extends ApiClient {
     sortBy?: string;
     sortOrder?: 'asc' | 'desc';
   }): Promise<PaginatedResponse<Unit>> {
-    const response = await this.get<{
-      units: Unit[];
-      meta: PaginatedResponse<Unit>['meta'];
-    }>(apiConfig.endpoints.units, params);
+    const response = await this.get<Unit[]>(apiConfig.endpoints.units, params);
 
     return {
-      data: response.data.units ?? [],
+      data: response.data ?? [],
       meta: response.meta ?? {
         page: params?.page ?? 1,
         pageSize: params?.limit ?? 20,
-        total: (response.data.units ?? []).length,
+        total: (response.data ?? []).length,
         totalPages: 1,
         hasNextPage: false,
         hasPrevPage: false,

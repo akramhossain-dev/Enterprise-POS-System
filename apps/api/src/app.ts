@@ -14,7 +14,6 @@ import rateLimitPlugin from './plugins/rate-limit';
 import prismaPlugin from './plugins/prisma';
 import redisPlugin from './plugins/redis';
 import fastifyCompress from '@fastify/compress';
-import fastifyEtag from '@fastify/etag';
 
 import { routes } from './routes';
 import { initScheduler } from './jobs/scheduler';
@@ -52,7 +51,6 @@ export async function buildApp(): Promise<FastifyInstance> {
 
   // ── Performance optimization plugins ───────
   await fastify.register(fastifyCompress);
-  await fastify.register(fastifyEtag);
 
   // ── Documentation ──────────────────────────
   await fastify.register(swaggerPlugin);

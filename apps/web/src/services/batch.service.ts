@@ -17,22 +17,18 @@ class BatchService extends ApiClient {
       queryParams['expiryStatus'] = params.expiryStatus;
     }
 
-    const response = await this.get<{
-      batches: Batch[];
-      meta: PaginatedResponse<Batch>['meta'];
-    }>(apiConfig.endpoints.batches, queryParams);
+    const response = await this.get<Batch[]>(apiConfig.endpoints.batches, queryParams);
 
     return {
-      data: response.data.batches ?? [],
-      meta: response.meta ||
-        response.data.meta || {
-          page: params?.page ?? 1,
-          pageSize: params?.limit ?? 20,
-          total: (response.data.batches ?? []).length,
-          totalPages: 1,
-          hasNextPage: false,
-          hasPrevPage: false,
-        },
+      data: response.data ?? [],
+      meta: response.meta || {
+        page: params?.page ?? 1,
+        pageSize: params?.limit ?? 20,
+        total: (response.data ?? []).length,
+        totalPages: 1,
+        hasNextPage: false,
+        hasPrevPage: false,
+      },
     };
   }
 

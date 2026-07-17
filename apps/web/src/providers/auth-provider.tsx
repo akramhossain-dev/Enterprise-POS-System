@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useCallback, type ReactNode } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useAuthStore } from '@/stores/auth.store';
 import { authService } from '@/services/auth.service';
 import { authConfig } from '@/config/auth';
@@ -12,6 +12,7 @@ interface AuthProviderProps {
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const { setUser, setAuthenticated, setLoading, setInitialized, logout } = useAuthStore();
 
   const initializeAuth = useCallback(async () => {
@@ -29,11 +30,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
       }
       logout();
       setAuthenticated(false);
+
+      const isProtectedRoute = authConfig.protectedRoutes.some(
+        (route) => pathname === route || pathname.startsWith(route + '/'),
+      );
+      if (isProtectedRoute) {
+        router.push(authConfig.routes.login);
+      }
     } finally {
       setLoading(false);
       setInitialized(true);
     }
-  }, [setUser, setAuthenticated, setLoading, setInitialized, logout]);
+  }, [setUser, setAuthenticated, setLoading, setInitialized, logout, pathname, router]);
 
   useEffect(() => {
     void initializeAuth();

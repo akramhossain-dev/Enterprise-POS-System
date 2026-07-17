@@ -61,7 +61,7 @@ export default function POSCreateReturnPage() {
       setFetchedOrder(order);
       // Initialize return lines with zero quantity
       setReturnItems(
-        order.items.map((it) => ({
+        order.items.map((it: any) => ({
           productId: it.productId,
           productName: it.productName,
           sku: 'SKU-' + it.productId.toUpperCase(),

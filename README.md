@@ -38,12 +38,21 @@ pnpm install
 # 2. Run local databases (PostgreSQL & Redis)
 docker compose up -d postgres redis
 
-# 3. Apply database schema and seed data
-pnpm --filter @enterprise-pos/api db:migrate
+# 3. Synchronize schema, apply migrations, and run seed data
+pnpm --filter @enterprise-pos/api exec prisma migrate dev
+pnpm --filter @enterprise-pos/api run db:seed
 
 # 4. Start the development environment
 pnpm dev
 ```
+
+### Seeded Credentials
+
+Use these default user accounts to log in and test different system permission tiers:
+
+- **System Admin:** `admin@enterprise-pos.com` / `admin123`
+- **System Manager:** `manager@enterprise-pos.com` / `manager123`
+- **Jane Cashier:** `cashier@enterprise-pos.com` / `cashier123`
 
 The frontend will start on `http://localhost:3000` and the API backend on `http://localhost:4000`.
 

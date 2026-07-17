@@ -41,22 +41,18 @@ class InventoryService extends ApiClient {
     if (params?.sortBy) queryParams['sortBy'] = params.sortBy;
     if (params?.sortOrder) queryParams['sortOrder'] = params.sortOrder;
 
-    const response = await this.get<{
-      inventories: Inventory[];
-      meta: PaginatedResponse<Inventory>['meta'];
-    }>(apiConfig.endpoints.inventory, queryParams);
+    const response = await this.get<Inventory[]>(apiConfig.endpoints.inventory, queryParams);
 
     return {
-      data: response.data.inventories ?? [],
-      meta: response.meta ||
-        response.data.meta || {
-          page: params?.page ?? 1,
-          pageSize: params?.limit ?? 20,
-          total: (response.data.inventories ?? []).length,
-          totalPages: 1,
-          hasNextPage: false,
-          hasPrevPage: false,
-        },
+      data: response.data ?? [],
+      meta: response.meta || {
+        page: params?.page ?? 1,
+        pageSize: params?.limit ?? 20,
+        total: (response.data ?? []).length,
+        totalPages: 1,
+        hasNextPage: false,
+        hasPrevPage: false,
+      },
     };
   }
 
@@ -133,22 +129,18 @@ class InventoryService extends ApiClient {
     alertType?: string;
     status?: string;
   }): Promise<PaginatedResponse<StockAlert>> {
-    const response = await this.get<{
-      alerts: StockAlert[];
-      meta: PaginatedResponse<StockAlert>['meta'];
-    }>(apiConfig.endpoints.stockAlerts, params);
+    const response = await this.get<StockAlert[]>(apiConfig.endpoints.stockAlerts, params);
 
     return {
-      data: response.data.alerts ?? [],
-      meta: response.meta ||
-        response.data.meta || {
-          page: params?.page ?? 1,
-          pageSize: params?.limit ?? 20,
-          total: (response.data.alerts ?? []).length,
-          totalPages: 1,
-          hasNextPage: false,
-          hasPrevPage: false,
-        },
+      data: response.data ?? [],
+      meta: response.meta || {
+        page: params?.page ?? 1,
+        pageSize: params?.limit ?? 20,
+        total: (response.data ?? []).length,
+        totalPages: 1,
+        hasNextPage: false,
+        hasPrevPage: false,
+      },
     };
   }
 
@@ -194,26 +186,21 @@ class InventoryService extends ApiClient {
     if (params?.startDate) queryParams['startDate'] = params.startDate;
     if (params?.endDate) queryParams['endDate'] = params.endDate;
 
-    const response = await this.get<{
-      ledgers?: InventoryLedger[];
-      ledger?: InventoryLedger[];
-      data?: InventoryLedger[];
-      meta: PaginatedResponse<InventoryLedger>['meta'];
-    }>(apiConfig.endpoints.inventoryLedger, queryParams);
-
-    const list = response.data.ledgers || response.data.ledger || response.data.data || [];
+    const response = await this.get<InventoryLedger[]>(
+      apiConfig.endpoints.inventoryLedger,
+      queryParams,
+    );
 
     return {
-      data: list,
-      meta: response.meta ||
-        response.data.meta || {
-          page: params?.page ?? 1,
-          pageSize: params?.limit ?? 20,
-          total: list.length,
-          totalPages: 1,
-          hasNextPage: false,
-          hasPrevPage: false,
-        },
+      data: response.data ?? [],
+      meta: response.meta || {
+        page: params?.page ?? 1,
+        pageSize: params?.limit ?? 20,
+        total: (response.data ?? []).length,
+        totalPages: 1,
+        hasNextPage: false,
+        hasPrevPage: false,
+      },
     };
   }
 

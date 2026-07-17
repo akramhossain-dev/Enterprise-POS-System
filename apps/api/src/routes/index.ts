@@ -7,6 +7,14 @@ import { sendSuccess } from '../common/responses/success';
 
 export async function routes(fastify: FastifyInstance): Promise<void> {
   await Promise.resolve();
+
+  // Force no-cache headers on all API responses to bypass 304 caching issues
+  fastify.addHook('onSend', async (request, reply, payload) => {
+    reply.header('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    reply.header('Pragma', 'no-cache');
+    reply.header('Expires', '0');
+    return payload;
+  });
   /**
    * GET /
    * Root endpoint — confirms the API is running.

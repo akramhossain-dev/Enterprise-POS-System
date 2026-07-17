@@ -13,17 +13,14 @@ class CategoryService extends ApiClient {
     sortBy?: string;
     sortOrder?: 'asc' | 'desc';
   }): Promise<PaginatedResponse<Category>> {
-    const response = await this.get<{
-      categories: Category[];
-      meta: PaginatedResponse<Category>['meta'];
-    }>(apiConfig.endpoints.categories, params);
+    const response = await this.get<Category[]>(apiConfig.endpoints.categories, params);
 
     return {
-      data: response.data.categories ?? [],
+      data: response.data ?? [],
       meta: response.meta ?? {
         page: params?.page ?? 1,
         pageSize: params?.limit ?? 20,
-        total: (response.data.categories ?? []).length,
+        total: (response.data ?? []).length,
         totalPages: 1,
         hasNextPage: false,
         hasPrevPage: false,

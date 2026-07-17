@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { Sun, Moon, Monitor, ChevronDown } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
@@ -13,8 +14,13 @@ const themes = [
 
 export function ThemeSwitcher() {
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
-  const currentTheme = themes.find((t) => t.value === theme) ?? themes[2];
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const currentTheme = mounted ? (themes.find((t) => t.value === theme) ?? themes[2]) : themes[2];
   const Icon = currentTheme.icon;
 
   return (

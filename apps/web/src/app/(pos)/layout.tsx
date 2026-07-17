@@ -112,7 +112,7 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <div className="flex flex-col h-screen w-screen overflow-hidden bg-[#070b13] text-foreground font-sans selection:bg-primary selection:text-white">
+    <div className="flex flex-col h-screen w-screen overflow-hidden bg-backgroundackground text-foreground font-sans selection:bg-primary selection:text-white">
       {/* POS Topbar Bar Header */}
       <header className="flex items-center justify-between px-4 py-2 border-b border-border bg-card/90 backdrop-blur-md shadow-lg z-30 select-none">
         {/* Left Actions & Logo */}
@@ -126,7 +126,7 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
             variant="ghost"
             size="sm"
             onClick={handleExitPOS}
-            className="text-muted-foreground hover:text-foreground hover:bg-slate-800 text-xs gap-1.5 h-8 px-2.5"
+            className="text-muted-foreground hover:text-foreground hover:bg-accent text-xs gap-1.5 h-8 px-2.5"
           >
             <LayoutDashboard className="h-4.5 w-4.5" />
             <span>Dashboard</span>
@@ -152,7 +152,7 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
             <span className="font-mono text-emerald-400 tracking-wider font-semibold">{time}</span>
           </div>
 
-          <div className="h-3 w-[1px] bg-slate-800" />
+          <div className="h-3 w-[1px] bg-accent" />
 
           {/* Connectivity Status */}
           <div className="flex items-center space-x-1.5 text-xs">
@@ -177,7 +177,7 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
             variant="ghost"
             size="icon"
             onClick={() => setShowShortcutHelp(true)}
-            className="text-muted-foreground hover:text-foreground hover:bg-slate-800 h-8 w-8 rounded-full"
+            className="text-muted-foreground hover:text-foreground hover:bg-accent h-8 w-8 rounded-full"
             title="Keyboard Shortcuts Guide"
           >
             <Keyboard className="h-4.5 w-4.5" />
@@ -188,7 +188,7 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
             variant="ghost"
             size="icon"
             onClick={toggleFullscreen}
-            className="text-muted-foreground hover:text-foreground hover:bg-slate-800 h-8 w-8 rounded-full"
+            className="text-muted-foreground hover:text-foreground hover:bg-accent h-8 w-8 rounded-full"
             title="Toggle Fullscreen"
           >
             {isFullscreen ? (
@@ -204,8 +204,8 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
               variant="ghost"
               size="icon"
               className={cn(
-                'relative text-muted-foreground hover:text-foreground hover:bg-slate-800 h-8 w-8 rounded-full',
-                pathname === '/pos/held-orders' && 'bg-slate-800 text-emerald-400',
+                'relative text-muted-foreground hover:text-foreground hover:bg-accent h-8 w-8 rounded-full',
+                pathname === '/pos/held-orders' && 'bg-accent text-emerald-400',
               )}
               title={`Held Orders Queue (${heldOrders.length})`}
             >
@@ -225,8 +225,8 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
               variant="ghost"
               size="icon"
               className={cn(
-                'text-muted-foreground hover:text-foreground hover:bg-slate-800 h-8 w-8 rounded-full',
-                pathname === '/pos/orders' && 'bg-slate-800 text-emerald-400',
+                'text-muted-foreground hover:text-foreground hover:bg-accent h-8 w-8 rounded-full',
+                pathname === '/pos/orders' && 'bg-accent text-emerald-400',
               )}
               title="Order History Archive"
             >
@@ -240,8 +240,8 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
               variant="ghost"
               size="icon"
               className={cn(
-                'text-muted-foreground hover:text-foreground hover:bg-slate-800 h-8 w-8 rounded-full',
-                pathname === '/pos/returns' && 'bg-slate-800 text-emerald-400',
+                'text-muted-foreground hover:text-foreground hover:bg-accent h-8 w-8 rounded-full',
+                pathname === '/pos/returns' && 'bg-accent text-emerald-400',
               )}
               title="Sales Return Claims"
             >
@@ -255,8 +255,8 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
               variant="ghost"
               size="icon"
               className={cn(
-                'text-muted-foreground hover:text-foreground hover:bg-slate-800 h-8 w-8 rounded-full',
-                pathname === '/pos/refunds' && 'bg-slate-800 text-emerald-400',
+                'text-muted-foreground hover:text-foreground hover:bg-accent h-8 w-8 rounded-full',
+                pathname === '/pos/refunds' && 'bg-accent text-emerald-400',
               )}
               title="Refund Settlements Log"
             >
@@ -270,8 +270,8 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
               variant="ghost"
               size="icon"
               className={cn(
-                'text-muted-foreground hover:text-foreground hover:bg-slate-800 h-8 w-8 rounded-full',
-                pathname === '/pos/payments' && 'bg-slate-800 text-emerald-400',
+                'text-muted-foreground hover:text-foreground hover:bg-accent h-8 w-8 rounded-full',
+                pathname === '/pos/payments' && 'bg-accent text-emerald-400',
               )}
               title="Payments Ledger Log"
             >
@@ -285,8 +285,8 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
               variant="ghost"
               size="icon"
               className={cn(
-                'text-muted-foreground hover:text-foreground hover:bg-slate-800 h-8 w-8 rounded-full',
-                pathname === '/pos/receipts' && 'bg-slate-800 text-emerald-400',
+                'text-muted-foreground hover:text-foreground hover:bg-accent h-8 w-8 rounded-full',
+                pathname === '/pos/receipts' && 'bg-accent text-emerald-400',
               )}
               title="Receipt Reprint Registry"
             >
@@ -300,8 +300,8 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
               variant="ghost"
               size="icon"
               className={cn(
-                'text-muted-foreground hover:text-foreground hover:bg-slate-800 h-8 w-8 rounded-full',
-                pathname === '/pos/cash-drawer' && 'bg-slate-800 text-emerald-400',
+                'text-muted-foreground hover:text-foreground hover:bg-accent h-8 w-8 rounded-full',
+                pathname === '/pos/cash-drawer' && 'bg-accent text-emerald-400',
               )}
               title="Cash Drawer Shifts"
             >
@@ -315,8 +315,8 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
               variant="ghost"
               size="icon"
               className={cn(
-                'text-muted-foreground hover:text-foreground hover:bg-slate-800 h-8 w-8 rounded-full',
-                pathname === '/pos/settings' && 'bg-slate-800 text-emerald-400',
+                'text-muted-foreground hover:text-foreground hover:bg-accent h-8 w-8 rounded-full',
+                pathname === '/pos/settings' && 'bg-accent text-emerald-400',
               )}
               title="POS Configurations"
             >
@@ -324,7 +324,7 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
             </Button>
           </Link>
 
-          <div className="h-4 w-[1px] bg-slate-800 mx-1" />
+          <div className="h-4 w-[1px] bg-accent mx-1" />
 
           {/* Cashier Info block */}
           <div className="flex items-center space-x-2 bg-accent border border-border rounded-md px-2.5 py-1 text-xs select-none">
@@ -352,7 +352,7 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
       </header>
 
       {/* Main content frame */}
-      <main className="flex-1 flex overflow-hidden min-h-0 bg-background">{children}</main>
+      <main className="flex-1 flex overflow-hidden min-h-0 bg-backgroundackground">{children}</main>
 
       {/* Keyboard Shortcuts Cheat Sheet Dialog */}
       <Dialog open={showShortcutHelp} onOpenChange={setShowShortcutHelp}>
@@ -370,57 +370,57 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
             </p>
             <div className="grid grid-cols-2 gap-y-2.5 border-t border-border pt-3">
               <div className="flex items-center gap-2">
-                <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 font-mono text-emerald-400">
+                <kbd className="px-1.5 py-0.5 rounded bg-accent border border-border font-mono text-emerald-400">
                   F1
                 </kbd>
                 <span className="text-foreground">Focus Search</span>
               </div>
               <div className="flex items-center gap-2">
-                <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 font-mono text-emerald-400">
+                <kbd className="px-1.5 py-0.5 rounded bg-accent border border-border font-mono text-emerald-400">
                   F2
                 </kbd>
                 <span className="text-foreground">Customer Link</span>
               </div>
               <div className="flex items-center gap-2">
-                <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 font-mono text-emerald-400">
+                <kbd className="px-1.5 py-0.5 rounded bg-accent border border-border font-mono text-emerald-400">
                   F3
                 </kbd>
                 <span className="text-foreground">Hold Active Cart</span>
               </div>
               <div className="flex items-center gap-2">
-                <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 font-mono text-emerald-400">
+                <kbd className="px-1.5 py-0.5 rounded bg-accent border border-border font-mono text-emerald-400">
                   F4
                 </kbd>
                 <span className="text-foreground">Create New Cart</span>
               </div>
               <div className="flex items-center gap-2">
-                <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 font-mono text-emerald-400">
+                <kbd className="px-1.5 py-0.5 rounded bg-accent border border-border font-mono text-emerald-400">
                   F5
                 </kbd>
                 <span className="text-foreground">Open Discount Drawer</span>
               </div>
               <div className="flex items-center gap-2">
-                <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 font-mono text-emerald-400">
+                <kbd className="px-1.5 py-0.5 rounded bg-accent border border-border font-mono text-emerald-400">
                   F6
                 </kbd>
                 <span className="text-foreground">Initiate Checkout</span>
               </div>
               <div className="flex items-center gap-2">
-                <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 font-mono text-emerald-400">
+                <kbd className="px-1.5 py-0.5 rounded bg-accent border border-border font-mono text-emerald-400">
                   Esc
                 </kbd>
                 <span className="text-foreground">Close Overlay / Cancel</span>
               </div>
               <div className="flex items-center gap-2">
-                <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 font-mono text-emerald-400">
+                <kbd className="px-1.5 py-0.5 rounded bg-accent border border-border font-mono text-emerald-400">
                   Ctrl + Enter
                 </kbd>
                 <span className="text-foreground">Complete Checkout</span>
               </div>
             </div>
             <div className="text-[10px] text-muted-foreground text-center border-t border-border pt-3">
-              Press <kbd className="px-1 py-0.5 bg-slate-800 rounded">Esc</kbd> at any time to
-              return to workspace.
+              Press <kbd className="px-1 py-0.5 bg-accent rounded">Esc</kbd> at any time to return
+              to workspace.
             </div>
           </div>
         </DialogContent>

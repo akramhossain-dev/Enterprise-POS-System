@@ -1,5 +1,28 @@
 /* eslint-disable no-console */
-import { PrismaClient, Status, EmployeeStatus, ProductStatus } from '@prisma/client';
+import {
+  PrismaClient,
+  Status,
+  EmployeeStatus,
+  ProductStatus,
+  CustomerStatus,
+  SupplierStatus,
+  WarehouseStatus,
+  MovementType,
+  PurchaseOrderStatus,
+  GoodsReceiveStatus,
+  SupplierInvoiceStatus,
+  PaymentMethod,
+  SupplierLedgerEntryType,
+  POSSessionStatus,
+  SaleStatus,
+  PaymentStatus,
+  SalesReturnStatus,
+  RefundMethod,
+  AccountStatus,
+  ExpenseStatus,
+  AlertType,
+  AlertStatus,
+} from '@prisma/client';
 import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
@@ -11,29 +34,76 @@ async function hashPassword(password: string): Promise<string> {
 }
 
 async function main() {
-  console.log('🌱 Starting database seeding (Phase B5)...');
+  console.log('🌱 Starting comprehensive database seeding...');
 
   // ── Clear in dependency order ──────────────────────────────
   console.log('Clearing existing data...');
+
+  await prisma.salesReturnItem.deleteMany();
+  await prisma.salesReturn.deleteMany();
+  await prisma.refund.deleteMany();
+
+  await prisma.payment.deleteMany();
+  await prisma.invoice.deleteMany();
+  await prisma.saleItem.deleteMany();
+  await prisma.sale.deleteMany();
+  await prisma.cartItem.deleteMany();
+  await prisma.cart.deleteMany();
+  await prisma.pOSSession.deleteMany();
+
+  await prisma.supplierLedgerEntry.deleteMany();
+  await prisma.supplierPayment.deleteMany();
+  await prisma.purchaseReturnItem.deleteMany();
+  await prisma.purchaseReturn.deleteMany();
+  await prisma.supplierInvoice.deleteMany();
+  await prisma.goodsReceiveItem.deleteMany();
+  await prisma.goodsReceive.deleteMany();
+  await prisma.purchaseOrderItem.deleteMany();
+  await prisma.purchaseOrder.deleteMany();
+  await prisma.purchaseRequisition.deleteMany();
+
+  await prisma.supplierCreditNote.deleteMany();
+  await prisma.supplierDebitNote.deleteMany();
+
+  await prisma.stockTakeItem.deleteMany();
+  await prisma.stockTake.deleteMany();
+  await prisma.reconciliation.deleteMany();
+  await prisma.stockAlert.deleteMany();
+  await prisma.serialNumber.deleteMany();
+  await prisma.batch.deleteMany();
+  await prisma.inventoryLedger.deleteMany();
+  await prisma.stockTransferItem.deleteMany();
+  await prisma.stockTransfer.deleteMany();
+  await prisma.stockAdjustment.deleteMany();
+  await prisma.stockMovement.deleteMany();
+  await prisma.inventory.deleteMany();
+  await prisma.storageLocation.deleteMany();
+  await prisma.warehouse.deleteMany();
+
+  await prisma.customerAddress.deleteMany();
+  await prisma.customer.deleteMany();
+  await prisma.supplierAddress.deleteMany();
+  await prisma.supplier.deleteMany();
+
   await prisma.productImage.deleteMany();
   await prisma.product.deleteMany();
   await prisma.category.deleteMany();
   await prisma.brand.deleteMany();
   await prisma.unit.deleteMany();
   await prisma.tax.deleteMany();
-  await prisma.businessSetting.deleteMany();
-  await prisma.employee.deleteMany();
-  await prisma.branch.deleteMany();
-  await prisma.paymentReceipt.deleteMany();
-  await prisma.paymentVoucher.deleteMany();
-  await prisma.income.deleteMany();
+
   await prisma.expense.deleteMany();
+  await prisma.income.deleteMany();
   await prisma.expenseCategory.deleteMany();
   await prisma.journalEntryItem.deleteMany();
   await prisma.journalEntry.deleteMany();
   await prisma.account.updateMany({ data: { parentId: null } });
   await prisma.account.deleteMany();
   await prisma.accountCategory.deleteMany();
+
+  await prisma.businessSetting.deleteMany();
+  await prisma.employee.deleteMany();
+  await prisma.branch.deleteMany();
   await prisma.company.deleteMany();
   await prisma.refreshToken.deleteMany();
   await prisma.user.deleteMany();
@@ -82,139 +152,76 @@ async function main() {
     { name: 'settings.read', module: 'settings', action: 'read' },
     { name: 'settings.update', module: 'settings', action: 'update' },
     { name: 'settings.delete', module: 'settings', action: 'delete' },
-    // ── B5: Catalog Permissions ──
-    // Category
+    // Catalog Permissions
     { name: 'category.create', module: 'categories', action: 'create' },
     { name: 'category.read', module: 'categories', action: 'read' },
     { name: 'category.update', module: 'categories', action: 'update' },
     { name: 'category.delete', module: 'categories', action: 'delete' },
-    // Brand
     { name: 'brand.create', module: 'brands', action: 'create' },
     { name: 'brand.read', module: 'brands', action: 'read' },
     { name: 'brand.update', module: 'brands', action: 'update' },
     { name: 'brand.delete', module: 'brands', action: 'delete' },
-    // Unit
     { name: 'unit.create', module: 'units', action: 'create' },
     { name: 'unit.read', module: 'units', action: 'read' },
     { name: 'unit.update', module: 'units', action: 'update' },
     { name: 'unit.delete', module: 'units', action: 'delete' },
-    // Tax
     { name: 'tax.create', module: 'taxes', action: 'create' },
     { name: 'tax.read', module: 'taxes', action: 'read' },
     { name: 'tax.update', module: 'taxes', action: 'update' },
     { name: 'tax.delete', module: 'taxes', action: 'delete' },
-    // Product
     { name: 'product.create', module: 'products', action: 'create' },
     { name: 'product.read', module: 'products', action: 'read' },
     { name: 'product.update', module: 'products', action: 'update' },
     { name: 'product.delete', module: 'products', action: 'delete' },
-    // ── B6.1: Customer Permissions ──
-    { name: 'customer.create', module: 'customers', action: 'create' },
-    { name: 'customer.view', module: 'customers', action: 'view' },
-    { name: 'customer.update', module: 'customers', action: 'update' },
-    { name: 'customer.delete', module: 'customers', action: 'delete' },
-    // ── B6.2: Supplier Permissions ──
-    { name: 'supplier.create', module: 'suppliers', action: 'create' },
-    { name: 'supplier.view', module: 'suppliers', action: 'view' },
-    { name: 'supplier.update', module: 'suppliers', action: 'update' },
-    { name: 'supplier.delete', module: 'suppliers', action: 'delete' },
-    // ── B7.1: Warehouse Permissions ──
+    // Inventory Permissions
     { name: 'warehouse.create', module: 'warehouses', action: 'create' },
-    { name: 'warehouse.view', module: 'warehouses', action: 'view' },
+    { name: 'warehouse.read', module: 'warehouses', action: 'read' },
     { name: 'warehouse.update', module: 'warehouses', action: 'update' },
     { name: 'warehouse.delete', module: 'warehouses', action: 'delete' },
-    // ── B7.1: Inventory Permissions ──
-    { name: 'inventory.view', module: 'inventory', action: 'view' },
+    { name: 'inventory.read', module: 'inventory', action: 'read' },
     { name: 'inventory.update', module: 'inventory', action: 'update' },
-    { name: 'inventory.opening_stock', module: 'inventory', action: 'opening_stock' },
-    // ── B7.2: Stock Operations Permissions ──
-    { name: 'stock.view', module: 'stock', action: 'view' },
-    { name: 'stock.history', module: 'stock', action: 'history' },
-    { name: 'stock.adjust', module: 'stock', action: 'adjust' },
-    { name: 'stock.transfer', module: 'stock', action: 'transfer' },
-    { name: 'stock.approve', module: 'stock', action: 'approve' },
-    // ── B8: Purchase Module Permissions ──
+    { name: 'inventory.adjust', module: 'inventory', action: 'adjust' },
+    { name: 'inventory.transfer', module: 'inventory', action: 'transfer' },
+    { name: 'inventory.batch', module: 'inventory', action: 'batch' },
+    { name: 'inventory.serial', module: 'inventory', action: 'serial' },
+    { name: 'stocktake.create', module: 'stocktake', action: 'create' },
+    { name: 'stocktake.read', module: 'stocktake', action: 'read' },
+    { name: 'stocktake.update', module: 'stocktake', action: 'update' },
+    { name: 'reconciliation.create', module: 'reconciliation', action: 'create' },
+    { name: 'reconciliation.read', module: 'reconciliation', action: 'read' },
+    // Customers & Suppliers
+    { name: 'customer.create', module: 'customers', action: 'create' },
+    { name: 'customer.read', module: 'customers', action: 'read' },
+    { name: 'customer.update', module: 'customers', action: 'update' },
+    { name: 'customer.delete', module: 'customers', action: 'delete' },
+    { name: 'supplier.create', module: 'suppliers', action: 'create' },
+    { name: 'supplier.read', module: 'suppliers', action: 'read' },
+    { name: 'supplier.update', module: 'suppliers', action: 'update' },
+    { name: 'supplier.delete', module: 'suppliers', action: 'delete' },
+    // Purchases
     { name: 'purchase.create', module: 'purchase', action: 'create' },
     { name: 'purchase.view', module: 'purchase', action: 'view' },
     { name: 'purchase.update', module: 'purchase', action: 'update' },
     { name: 'purchase.delete', module: 'purchase', action: 'delete' },
-    { name: 'purchase.approve', module: 'purchase', action: 'approve' },
-    { name: 'purchase.receive', module: 'purchase', action: 'receive' },
-    { name: 'purchase.receive.view', module: 'purchase', action: 'receive.view' },
-    { name: 'purchase.receive.complete', module: 'purchase', action: 'receive.complete' },
-    { name: 'supplier.invoice.create', module: 'purchase', action: 'invoice.create' },
-    { name: 'supplier.invoice.view', module: 'purchase', action: 'invoice.view' },
-    { name: 'purchase.return.create', module: 'purchase', action: 'return.create' },
-    { name: 'purchase.return.view', module: 'purchase', action: 'return.view' },
-    { name: 'purchase.return.approve', module: 'purchase', action: 'return.approve' },
-    { name: 'purchase.return.complete', module: 'purchase', action: 'return.complete' },
-    { name: 'supplier.payment.create', module: 'purchase', action: 'payment.create' },
-    { name: 'supplier.payment.view', module: 'purchase', action: 'payment.view' },
-    // ── B9.1: POS & Cart Module Permissions ──
+    // POS Core Permissions
     { name: 'pos.open', module: 'pos', action: 'open' },
     { name: 'pos.close', module: 'pos', action: 'close' },
     { name: 'pos.view', module: 'pos', action: 'view' },
-    { name: 'pos.cart.create', module: 'pos', action: 'cart.create' },
-    { name: 'pos.cart.update', module: 'pos', action: 'cart.update' },
-    // ── B9.2: Checkout, Payment & Invoice Permissions ──
-    { name: 'sale.create', module: 'sales', action: 'create' },
-    { name: 'sale.view', module: 'sales', action: 'view' },
-    { name: 'payment.create', module: 'payment', action: 'create' },
-    { name: 'invoice.view', module: 'invoice', action: 'view' },
-    { name: 'invoice.print', module: 'invoice', action: 'print' },
-    // ── B9.3: Sales Return, Refund & Customer Due Permissions ──
-    { name: 'sales.return.create', module: 'sales-return', action: 'create' },
-    { name: 'sales.return.view', module: 'sales-return', action: 'view' },
-    { name: 'sales.return.approve', module: 'sales-return', action: 'approve' },
-    { name: 'sales.return.complete', module: 'sales-return', action: 'complete' },
-    { name: 'refund.create', module: 'refund', action: 'create' },
-    { name: 'refund.view', module: 'refund', action: 'view' },
-    // ── B10.1: Chart of Accounts & Ledger Foundation Permissions ──
-    { name: 'account.create', module: 'accounting', action: 'account.create' },
-    { name: 'account.view', module: 'accounting', action: 'account.view' },
-    { name: 'account.update', module: 'accounting', action: 'account.update' },
-    { name: 'account.delete', module: 'accounting', action: 'account.delete' },
-    { name: 'ledger.view', module: 'accounting', action: 'ledger.view' },
-    // ── B10.2: Income & Expense Management Permissions ──
+    { name: 'pos.checkout', module: 'pos', action: 'checkout' },
+    { name: 'pos.return', module: 'pos', action: 'return' },
+    // Accounting Permissions
+    { name: 'accounting.setup', module: 'accounting', action: 'setup' },
+    { name: 'accounting.journal', module: 'accounting', action: 'journal' },
+    { name: 'accounting.view', module: 'accounting', action: 'view' },
     { name: 'expense.create', module: 'expense', action: 'create' },
     { name: 'expense.view', module: 'expense', action: 'view' },
-    { name: 'expense.update', module: 'expense', action: 'update' },
-    { name: 'expense.delete', module: 'expense', action: 'delete' },
     { name: 'income.create', module: 'income', action: 'create' },
     { name: 'income.view', module: 'income', action: 'view' },
-    { name: 'income.update', module: 'income', action: 'update' },
-    { name: 'income.delete', module: 'income', action: 'delete' },
-    // ── B10.3: Financial Transactions & Reports Foundation Permissions ──
-    { name: 'financial.transaction.create', module: 'financial-transaction', action: 'create' },
-    { name: 'financial.transaction.view', module: 'financial-transaction', action: 'view' },
-    { name: 'financial.report.view', module: 'financial-report', action: 'view' },
-    // ── B11.1: Dashboard Analytics System Permissions ──
-    { name: 'dashboard.view', module: 'dashboard', action: 'view' },
-    { name: 'analytics.view', module: 'analytics', action: 'view' },
-    // ── B11.2: Sales & Purchase Reporting System Permissions ──
-    { name: 'report.sales.view', module: 'report-sales', action: 'view' },
-    { name: 'report.purchase.view', module: 'report-purchase', action: 'view' },
-    { name: 'report.profit.view', module: 'report-profit', action: 'view' },
-    { name: 'report.customer.view', module: 'report-customer', action: 'view' },
-    { name: 'report.supplier.view', module: 'report-supplier', action: 'view' },
-    // ── B11.3: Inventory & Financial Reports Permissions ──
-    { name: 'report.inventory.view', module: 'report-inventory', action: 'view' },
-    { name: 'report.stock.view', module: 'report-stock', action: 'view' },
-    { name: 'report.financial.view', module: 'report-financial', action: 'view' },
-    { name: 'report.ledger.view', module: 'report-ledger', action: 'view' },
-    // ── B12.1: Notification Permissions ──
-    { name: 'notification.view', module: 'notification', action: 'view' },
-    { name: 'notification.manage', module: 'notification', action: 'manage' },
-    { name: 'notification.preference', module: 'notification', action: 'preference' },
-    // ── B12.2: Audit Log & Activity Tracking Permissions ──
+    // Reports & Analytics
+    { name: 'reports.view', module: 'reports', action: 'view' },
+    { name: 'bi.view', module: 'bi', action: 'view' },
+    // Audit & System logs
     { name: 'audit.view', module: 'audit', action: 'view' },
-    { name: 'activity.view', module: 'activity', action: 'view' },
-    { name: 'login.history.view', module: 'login-history', action: 'view' },
-    { name: 'session.view', module: 'session', action: 'view' },
-    // ── B12.3: Enterprise Settings & System Configuration Permissions ──
-    { name: 'settings.view', module: 'settings', action: 'view' },
-    { name: 'company.manage', module: 'company', action: 'manage' },
-    { name: 'branch.manage', module: 'branch', action: 'manage' },
   ];
 
   const permissions: Record<string, string> = {};
@@ -237,8 +244,6 @@ async function main() {
 
   // ── Role → Permission Mapping ──────────────────────────────
   console.log('Mapping permissions to roles...');
-
-  // SUPER_ADMIN & ADMIN → all permissions
   for (const roleKey of ['SUPER_ADMIN', 'ADMIN']) {
     await prisma.rolePermission.createMany({
       data: Object.values(permissions).map((permId) => ({
@@ -248,110 +253,65 @@ async function main() {
     });
   }
 
-  // MANAGER → broad access, no hard deletes on org/finance data
-  const managerPerms = [
-    'user.create',
-    'user.read',
-    'user.update',
-    'role.read',
-    'permission.read',
-    'company.read',
-    'branch.read',
-    'branch.create',
-    'branch.update',
-    'employee.create',
-    'employee.read',
-    'employee.update',
-    'settings.read',
-    'settings.update',
-    'category.create',
-    'category.read',
-    'category.update',
-    'brand.create',
-    'brand.read',
-    'brand.update',
-    'unit.create',
-    'unit.read',
-    'unit.update',
-    'tax.create',
-    'tax.read',
-    'tax.update',
-    'product.create',
-    'product.read',
-    'product.update',
-    'product.delete',
-  ];
+  // MANAGER → Catalog, Inventory, Customers, Suppliers, Purchases, POS, Accounting, Reports
+  const managerPerms = Object.keys(permissions).filter(
+    (name) =>
+      !name.startsWith('user.') && !name.startsWith('company.') && !name.startsWith('role.'),
+  );
   await prisma.rolePermission.createMany({
-    data: managerPerms.map((name) => ({ roleId: roles.MANAGER, permissionId: permissions[name] })),
+    data: managerPerms.map((name) => ({
+      roleId: roles.MANAGER,
+      permissionId: permissions[name],
+    })),
   });
 
-  // CASHIER → minimal read-only + sales
+  // CASHIER → POS, Catalog read, Customer create/read
   const cashierPerms = [
-    'product.read',
-    'category.read',
-    'brand.read',
-    'unit.read',
-    'tax.read',
-    'branch.read',
-    'company.read',
-    // POS & Cart
     'pos.open',
     'pos.close',
     'pos.view',
-    'pos.cart.create',
-    'pos.cart.update',
-    // Sales, Payments & Invoices
-    'sale.create',
-    'sale.view',
-    'payment.create',
-    'invoice.view',
-    'invoice.print',
-    // Sales Return & Refund
-    'sales.return.create',
-    'sales.return.view',
-    'sales.return.approve',
-    'sales.return.complete',
-    'refund.create',
-    'refund.view',
+    'pos.checkout',
+    'pos.return',
+    'category.read',
+    'brand.read',
+    'unit.read',
+    'tax.read',
+    'product.read',
+    'customer.create',
+    'customer.read',
   ];
   await prisma.rolePermission.createMany({
-    data: cashierPerms.map((name) => ({ roleId: roles.CASHIER, permissionId: permissions[name] })),
+    data: cashierPerms.map((name) => ({
+      roleId: roles.CASHIER,
+      permissionId: permissions[name],
+    })),
   });
 
-  // ── Company ─────────────────────────────────────────────────
-  console.log('Seeding default company...');
+  // ── Company & Branch ─────────────────────────────────────────
+  console.log('Seeding default company & branch...');
   const company = await prisma.company.create({
     data: {
-      name: 'Demo Company',
+      name: 'Demo Company Ltd',
       email: 'info@demo-company.com',
-      phone: '+1-555-000-0001',
-      address: '123 Business Ave, Commerce City, CA 90210',
-      currency: 'USD',
-      taxNumber: 'TAX-000001',
+      phone: '555-0199',
       status: Status.ACTIVE,
     },
   });
-  console.log(`  Created company: ${company.name} (${company.id})`);
 
-  // ── Branch ──────────────────────────────────────────────────
-  console.log('Seeding default branch...');
   const branch = await prisma.branch.create({
     data: {
       companyId: company.id,
-      name: 'Main Branch',
+      name: 'Main Headquarter Branch',
       email: 'main@demo-company.com',
-      phone: '+1-555-000-0002',
-      address: '123 Business Ave, Commerce City, CA 90210',
+      phone: '555-0200',
       status: Status.ACTIVE,
     },
   });
 
   // ── Business Settings ───────────────────────────────────────
-  console.log('Seeding business settings...');
   await prisma.businessSetting.createMany({
     data: [
-      { companyId: company.id, key: 'invoice.prefix', value: 'INV' },
-      { companyId: company.id, key: 'invoice.next_number', value: '1001' },
+      { companyId: company.id, key: 'pos.receipt_logo', value: '' },
       { companyId: company.id, key: 'pos.tax_inclusive', value: 'false' },
       { companyId: company.id, key: 'pos.allow_credit_sale', value: 'true' },
       { companyId: company.id, key: 'receipt.footer', value: 'Thank you for your business!' },
@@ -372,6 +332,18 @@ async function main() {
   });
   console.log(`  Created user: ${adminUser.email} (Password: admin123)`);
 
+  const managerUser = await prisma.user.create({
+    data: {
+      name: 'System Manager',
+      email: 'manager@enterprise-pos.com',
+      password: await hashPassword('manager123'),
+      phone: '1122334455',
+      roleId: roles.MANAGER,
+      status: Status.ACTIVE,
+    },
+  });
+  console.log(`  Created user: ${managerUser.email} (Password: manager123)`);
+
   const cashierUser = await prisma.user.create({
     data: {
       name: 'Jane Cashier',
@@ -384,8 +356,8 @@ async function main() {
   });
   console.log(`  Created user: ${cashierUser.email} (Password: cashier123)`);
 
-  // ── Employee ─────────────────────────────────────────────────
-  console.log('Seeding default employee...');
+  // ── Employees ────────────────────────────────────────────────
+  console.log('Seeding default employees...');
   await prisma.employee.create({
     data: {
       companyId: company.id,
@@ -400,6 +372,53 @@ async function main() {
     },
   });
 
+  await prisma.employee.create({
+    data: {
+      companyId: company.id,
+      branchId: branch.id,
+      userId: managerUser.id,
+      firstName: 'System',
+      lastName: 'Manager',
+      email: managerUser.email,
+      phone: managerUser.phone,
+      hireDate: new Date('2026-01-01'),
+      status: EmployeeStatus.ACTIVE,
+    },
+  });
+
+  await prisma.employee.create({
+    data: {
+      companyId: company.id,
+      branchId: branch.id,
+      userId: cashierUser.id,
+      firstName: 'Jane',
+      lastName: 'Cashier',
+      email: cashierUser.email,
+      phone: cashierUser.phone,
+      hireDate: new Date('2026-01-01'),
+      status: EmployeeStatus.ACTIVE,
+    },
+  });
+
+  // ── Warehouse ───────────────────────────────────────────────
+  console.log('Seeding default warehouse...');
+  const warehouse = await prisma.warehouse.create({
+    data: {
+      companyId: company.id,
+      branchId: branch.id,
+      code: 'WH-MAIN',
+      name: 'Main Warehouse',
+      status: WarehouseStatus.ACTIVE,
+      isDefault: true,
+      phone: '1234567890',
+      email: 'warehouse@demo-company.com',
+      managerName: 'Jane Manager',
+      country: 'USA',
+      city: 'New York',
+      address: 'Central Manhattan Depot',
+    },
+  });
+
   // ── Catalog: Units ───────────────────────────────────────────
   console.log('Seeding catalog: units...');
   const unitsData = [
@@ -408,8 +427,8 @@ async function main() {
     { name: 'Liter', shortName: 'L' },
     { name: 'Box', shortName: 'box' },
     { name: 'Meter', shortName: 'm' },
-    { name: 'Dozen', shortName: 'doz' },
   ];
+
   const unitIds: Record<string, string> = {};
   for (const u of unitsData) {
     const created = await prisma.unit.create({
@@ -422,12 +441,13 @@ async function main() {
   // ── Catalog: Categories ──────────────────────────────────────
   console.log('Seeding catalog: categories...');
   const categoriesData = [
-    { name: 'General', description: 'Uncategorized products' },
     { name: 'Electronics', description: 'Electronic devices and accessories' },
     { name: 'Groceries', description: 'Food and grocery items' },
     { name: 'Clothing', description: 'Apparel and fashion' },
     { name: 'Beverages', description: 'Drinks and beverages' },
+    { name: 'General', description: 'Uncategorized products' },
   ];
+
   const categoryIds: Record<string, string> = {};
   for (const c of categoriesData) {
     const created = await prisma.category.create({
@@ -440,10 +460,12 @@ async function main() {
   // ── Catalog: Brands ──────────────────────────────────────────
   console.log('Seeding catalog: brands...');
   const brandsData = [
-    { name: 'Generic', description: 'Generic / unbranded products' },
-    { name: 'Samsung', description: 'Samsung Electronics' },
-    { name: 'Apple', description: 'Apple Inc.' },
+    { name: 'Generic' },
+    { name: 'Samsung' },
+    { name: 'Apple' },
+    { name: 'Nestle' },
   ];
+
   const brandIds: Record<string, string> = {};
   for (const b of brandsData) {
     const created = await prisma.brand.create({
@@ -456,10 +478,11 @@ async function main() {
   // ── Catalog: Taxes ───────────────────────────────────────────
   console.log('Seeding catalog: taxes...');
   const taxesData = [
-    { name: 'VAT 15%', percentage: 15 },
-    { name: 'VAT 5%', percentage: 5 },
     { name: 'Tax Free', percentage: 0 },
+    { name: 'VAT 5%', percentage: 5 },
+    { name: 'VAT 15%', percentage: 15 },
   ];
+
   const taxIds: Record<string, string> = {};
   for (const t of taxesData) {
     const created = await prisma.tax.create({
@@ -469,8 +492,8 @@ async function main() {
   }
   console.log(`  Created ${String(taxesData.length)} taxes`);
 
-  // ── Catalog: Demo Products ───────────────────────────────────
-  console.log('Seeding catalog: demo products...');
+  // ── Catalog: Products ────────────────────────────────────────
+  console.log('Seeding catalog: products...');
   const productsData = [
     {
       name: 'USB-C Cable 1m',
@@ -510,12 +533,138 @@ async function main() {
     },
   ];
 
+  const productIds: Record<string, string> = {};
   for (const p of productsData) {
-    await prisma.product.create({
+    const created = await prisma.product.create({
       data: { companyId: company.id, status: ProductStatus.ACTIVE, ...p },
     });
+    productIds[p.name] = created.id;
   }
-  console.log(`  Created ${String(productsData.length)} demo products`);
+  console.log(`  Created ${String(productsData.length)} products`);
+
+  // ── Inventory & Stock Records ──────────────────────────────
+  console.log('Seeding inventory stock records...');
+  for (const pName of Object.keys(productIds)) {
+    const pId = productIds[pName];
+    // Create stock; make USB-C cable run low to show low stock alerts
+    const qty = pName === 'USB-C Cable 1m' ? 3.0 : 150.0;
+
+    await prisma.inventory.create({
+      data: {
+        companyId: company.id,
+        warehouseId: warehouse.id,
+        productId: pId,
+        availableQuantity: qty,
+        reservedQuantity: 0.0,
+        damagedQuantity: 0.0,
+        minimumQuantity: 5.0,
+        reorderQuantity: 15.0,
+        averageCost:
+          pName === 'USB-C Cable 1m' ? 3.5 : pName === 'Bottled Water 500ml' ? 0.25 : 8.0,
+        lastPurchasePrice:
+          pName === 'USB-C Cable 1m' ? 3.5 : pName === 'Bottled Water 500ml' ? 0.25 : 8.0,
+        hasOpeningStock: true,
+      },
+    });
+
+    await prisma.stockMovement.create({
+      data: {
+        companyId: company.id,
+        branchId: branch.id,
+        warehouseId: warehouse.id,
+        productId: pId,
+        movementType: MovementType.OPENING_STOCK,
+        quantity: qty,
+        previousQuantity: 0.0,
+        newQuantity: qty,
+        unitCost: pName === 'USB-C Cable 1m' ? 3.5 : pName === 'Bottled Water 500ml' ? 0.25 : 8.0,
+        remarks: 'Initial opening stock seeding',
+        performedBy: adminUser.id,
+      },
+    });
+
+    if (pName === 'USB-C Cable 1m') {
+      await prisma.stockAlert.create({
+        data: {
+          companyId: company.id,
+          warehouseId: warehouse.id,
+          productId: pId,
+          alertType: AlertType.LOW_STOCK,
+          currentQuantity: qty,
+          minimumQuantity: 5.0,
+          reorderQuantity: 15.0,
+          status: AlertStatus.ACTIVE,
+        },
+      });
+    }
+  }
+
+  // ── Customers ───────────────────────────────────────────────
+  console.log('Seeding customers...');
+  await prisma.customer.create({
+    data: {
+      companyId: company.id,
+      customerCode: 'WALKIN',
+      firstName: 'Walk-in',
+      lastName: 'Customer',
+      fullName: 'Walk-in Customer',
+      phone: '0000000000',
+      status: CustomerStatus.ACTIVE,
+      currentBalance: 0.0,
+    },
+  });
+
+  const regularCustomer = await prisma.customer.create({
+    data: {
+      companyId: company.id,
+      customerCode: 'CUST001',
+      firstName: 'John',
+      lastName: 'Doe',
+      fullName: 'John Doe',
+      email: 'customer@enterprise-pos.com',
+      phone: '5551234567',
+      status: CustomerStatus.ACTIVE,
+      currentBalance: 50.0,
+    },
+  });
+
+  await prisma.customerAddress.create({
+    data: {
+      customerId: regularCustomer.id,
+      label: 'Billing',
+      addressLine1: '123 Main Street',
+      city: 'New York',
+      country: 'USA',
+      isDefault: true,
+    },
+  });
+
+  // ── Suppliers ───────────────────────────────────────────────
+  console.log('Seeding suppliers...');
+  const supplier = await prisma.supplier.create({
+    data: {
+      companyId: company.id,
+      supplierCode: 'SUP001',
+      companyName: 'Acme Supplies Corp',
+      contactPerson: 'Robert Supplier',
+      email: 'supplier@enterprise-pos.com',
+      phone: '5559876543',
+      status: SupplierStatus.ACTIVE,
+      openingBalance: 100.0,
+      currentBalance: 150.0,
+    },
+  });
+
+  await prisma.supplierAddress.create({
+    data: {
+      supplierId: supplier.id,
+      label: 'Main Office',
+      addressLine1: '456 Industrial Rd',
+      city: 'Chicago',
+      country: 'USA',
+      isDefault: true,
+    },
+  });
 
   // ── Accounting Foundation Seeding (B10.1) ───────────────────
   console.log('Seeding account categories & chart of accounts...');
@@ -551,21 +700,23 @@ async function main() {
     { code: '5100', name: 'Expense', type: 'EXPENSE' as const, cat: 'Expense Accounts' },
   ];
 
+  const accountIds: Record<string, string> = {};
   for (const acc of defaultAccounts) {
-    await prisma.account.create({
+    const created = await prisma.account.create({
       data: {
         companyId: company.id,
         categoryId: catIds[acc.cat],
         accountCode: acc.code,
         name: acc.name,
         type: acc.type,
-        openingBalance: 0,
-        currentBalance: 0,
-        status: 'ACTIVE',
+        openingBalance: 5000.0,
+        currentBalance: 5000.0,
+        status: AccountStatus.ACTIVE,
       },
     });
+    accountIds[acc.name] = created.id;
   }
-  console.log('  Seeded 5 categories and 8 chart of accounts');
+  console.log('  Seeded accounts chart');
 
   const initialExpenseCategories = [
     { name: 'Rent', description: 'Office or warehouse rent' },
@@ -573,12 +724,11 @@ async function main() {
     { name: 'Transport', description: 'Travel and shipping costs' },
     { name: 'Salary', description: 'Employee payroll' },
     { name: 'Maintenance', description: 'Office and hardware repair' },
-    { name: 'Marketing', description: 'Advertising and promotions' },
-    { name: 'Other', description: 'Miscellaneous expenses' },
   ];
 
+  const expenseCategoryIds: Record<string, string> = {};
   for (const cat of initialExpenseCategories) {
-    await prisma.expenseCategory.create({
+    const created = await prisma.expenseCategory.create({
       data: {
         companyId: company.id,
         name: cat.name,
@@ -586,75 +736,284 @@ async function main() {
         status: 'ACTIVE',
       },
     });
+    expenseCategoryIds[cat.name] = created.id;
   }
-  console.log('  Seeded 7 default expense categories');
 
+  // ── Purchase Operations (B8.1 & B8.2 & B8.3) ────────────────
+  console.log('Seeding purchase operations...');
+  const purchaseOrder = await prisma.purchaseOrder.create({
+    data: {
+      companyId: company.id,
+      branchId: branch.id,
+      warehouseId: warehouse.id,
+      supplierId: supplier.id,
+      purchaseOrderNumber: 'PO-2026-0001',
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      status: PurchaseOrderStatus.COMPLETED,
+      subtotal: 80.0,
+      discount: 0.0,
+      tax: 12.0,
+      grandTotal: 92.0,
+      remarks: 'Initial stock purchase order',
+      createdBy: adminUser.id,
+    },
+  });
+
+  await prisma.purchaseOrderItem.create({
+    data: {
+      purchaseOrderId: purchaseOrder.id,
+      productId: productIds['Wireless Mouse'],
+      quantity: 10.0,
+      unitPrice: 8.0,
+      discount: 0.0,
+      tax: 12.0,
+      total: 92.0,
+    },
+  });
+
+  const goodsReceive = await prisma.goodsReceive.create({
+    data: {
+      companyId: company.id,
+      branchId: branch.id,
+      warehouseId: warehouse.id,
+      supplierId: supplier.id,
+      purchaseOrderId: purchaseOrder.id,
+      grnNumber: 'GR-2026-0001',
+      status: GoodsReceiveStatus.COMPLETED,
+      subtotal: 80.0,
+      discount: 0.0,
+      tax: 12.0,
+      grandTotal: 92.0,
+      receivedBy: adminUser.id,
+      receiveDate: new Date(),
+    },
+  });
+
+  await prisma.goodsReceiveItem.create({
+    data: {
+      goodsReceiveId: goodsReceive.id,
+      productId: productIds['Wireless Mouse'],
+      quantity: 10.0,
+      receivedQuantity: 10.0,
+      unitCost: 8.0,
+      total: 80.0,
+    },
+  });
+
+  await prisma.supplierInvoice.create({
+    data: {
+      goodsReceiveId: goodsReceive.id,
+      supplierId: supplier.id,
+      invoiceNumber: 'SUP-INV-9999',
+      invoiceDate: new Date(),
+      subtotal: 80.0,
+      tax: 12.0,
+      discount: 0.0,
+      grandTotal: 92.0,
+      status: SupplierInvoiceStatus.PENDING,
+    },
+  });
+
+  const supplierPayment = await prisma.supplierPayment.create({
+    data: {
+      companyId: company.id,
+      supplierId: supplier.id,
+      paymentNumber: 'SP-2026-0001',
+      paymentDate: new Date(),
+      paymentMethod: PaymentMethod.BANK,
+      amount: 50.0,
+      reference: 'TX-BANK-0099',
+      notes: 'Initial payment for SUP-INV-9999',
+      createdBy: adminUser.id,
+    },
+  });
+
+  await prisma.supplierLedgerEntry.create({
+    data: {
+      companyId: company.id,
+      supplierId: supplier.id,
+      entryType: SupplierLedgerEntryType.PAYMENT,
+      amount: 50.0,
+      runningBalance: 42.0,
+      referenceId: supplierPayment.id,
+      referenceNo: 'SP-2026-0001',
+      description: 'Paid for invoice SUP-INV-9999',
+    },
+  });
+
+  // ── POS Session & Checkout Sales Seeding (B9.1 & B9.2) ───────
+  console.log('Seeding sales session & POS transactions...');
+  const posSession = await prisma.pOSSession.create({
+    data: {
+      companyId: company.id,
+      branchId: branch.id,
+      warehouseId: warehouse.id,
+      cashierId: adminUser.id,
+      sessionNumber: 'POS-2026-0001',
+      openingCash: 100.0,
+      status: POSSessionStatus.OPEN,
+      openedAt: new Date(),
+    },
+  });
+
+  // Completed sale
+  const sale = await prisma.sale.create({
+    data: {
+      companyId: company.id,
+      branchId: branch.id,
+      warehouseId: warehouse.id,
+      customerId: regularCustomer.id,
+      sessionId: posSession.id,
+      invoiceNumber: 'INV-2026-0001',
+      subtotal: 19.99,
+      discount: 0.0,
+      tax: 3.0,
+      grandTotal: 22.99,
+      paidAmount: 22.99,
+      paymentStatus: PaymentStatus.PAID,
+      status: SaleStatus.COMPLETED,
+      createdBy: adminUser.id,
+      createdAt: new Date(Date.now() - 3600000), // 1 hour ago
+    },
+  });
+
+  const saleItem = await prisma.saleItem.create({
+    data: {
+      saleId: sale.id,
+      productId: productIds['Wireless Mouse'],
+      quantity: 1.0,
+      unitPrice: 19.99,
+      discount: 0.0,
+      tax: 3.0,
+      total: 22.99,
+    },
+  });
+
+  await prisma.payment.create({
+    data: {
+      saleId: sale.id,
+      amount: 22.99,
+      paymentMethod: PaymentMethod.CASH,
+      reference: 'CASH-PAY',
+      createdBy: adminUser.id,
+    },
+  });
+
+  await prisma.invoice.create({
+    data: {
+      saleId: sale.id,
+      invoiceNumber: 'INV-2026-0001',
+    },
+  });
+
+  // Sales Return & Refund
+  const salesReturn = await prisma.salesReturn.create({
+    data: {
+      companyId: company.id,
+      branchId: branch.id,
+      warehouseId: warehouse.id,
+      customerId: regularCustomer.id,
+      saleId: sale.id,
+      returnNumber: 'RET-2026-0001',
+      subtotal: 19.99,
+      tax: 3.0,
+      discount: 0.0,
+      grandTotal: 22.99,
+      refundAmount: 22.99,
+      status: SalesReturnStatus.COMPLETED,
+      reason: 'Defective scrollwheel',
+      createdBy: adminUser.id,
+    },
+  });
+
+  await prisma.salesReturnItem.create({
+    data: {
+      salesReturnId: salesReturn.id,
+      saleItemId: saleItem.id,
+      productId: productIds['Wireless Mouse'],
+      quantity: 1.0,
+      unitPrice: 19.99,
+      total: 22.99,
+    },
+  });
+
+  await prisma.refund.create({
+    data: {
+      salesReturnId: salesReturn.id,
+      customerId: regularCustomer.id,
+      amount: 22.99,
+      refundMethod: RefundMethod.CASH,
+      reference: 'CASH-REFUND',
+      createdBy: adminUser.id,
+    },
+  });
+
+  // ── Accounting Journal Entries & Expenses (B10.2 & B10.3) ───
+  console.log('Seeding financial transactions...');
+  const journalEntry = await prisma.journalEntry.create({
+    data: {
+      companyId: company.id,
+      entryNumber: 'JE-2026-0001',
+      date: new Date(),
+      description: 'Rent expense',
+      createdBy: adminUser.id,
+    },
+  });
+
+  await prisma.journalEntryItem.create({
+    data: {
+      journalEntryId: journalEntry.id,
+      accountId: accountIds.Expense,
+      debit: 1000.0,
+      credit: 0.0,
+    },
+  });
+
+  await prisma.journalEntryItem.create({
+    data: {
+      journalEntryId: journalEntry.id,
+      accountId: accountIds.Cash,
+      debit: 0.0,
+      credit: 1000.0,
+    },
+  });
+
+  await prisma.expense.create({
+    data: {
+      companyId: company.id,
+      branchId: branch.id,
+      categoryId: expenseCategoryIds.Rent,
+      accountId: accountIds.Expense,
+      expenseNumber: 'EXP-2026-0001',
+      date: new Date(),
+      amount: 1000.0,
+      description: 'Warehouse rent',
+      paymentMethod: PaymentMethod.CASH,
+      status: ExpenseStatus.ACTIVE,
+      createdBy: adminUser.id,
+    },
+  });
+
+  // ── Default Notification Templates ─────────────────────────
+  console.log('Seeding templates...');
   const defaultTemplates = [
     {
       name: 'Low Stock',
       subject: 'Low Stock Alert',
-      body: 'Product {productName} (SKU: {sku}) is running low on stock in warehouse {warehouseName}. Current: {currentQuantity}, Minimum: {minimumQuantity}.',
+      body: 'Product {productName} is running low in {warehouseName}.',
       type: 'INVENTORY' as const,
     },
     {
       name: 'Out of Stock',
       subject: 'Out of Stock Alert',
-      body: 'Product {productName} (SKU: {sku}) is out of stock in warehouse {warehouseName}.',
+      body: 'Product {productName} is out of stock.',
       type: 'INVENTORY' as const,
     },
     {
       name: 'New Sale',
       subject: 'Sale Completed',
-      body: 'New sale completed. Invoice Number: {invoiceNumber}, Customer: {customerName}, Total Amount: {totalAmount}.',
+      body: 'Invoice: {invoiceNumber}, Total: {totalAmount}.',
       type: 'SALE' as const,
-    },
-    {
-      name: 'Purchase Completed',
-      subject: 'Purchase Order Received',
-      body: 'Purchase order {orderNumber} has been received. Supplier: {supplierName}, Items received: {itemCount}.',
-      type: 'PURCHASE' as const,
-    },
-    {
-      name: 'Payment Received',
-      subject: 'Payment Confirmed',
-      body: 'Payment of {amount} received for Invoice {invoiceNumber}. Method: {paymentMethod}.',
-      type: 'PAYMENT' as const,
-    },
-    {
-      name: 'Payment Due',
-      subject: 'Payment Due Notice',
-      body: 'Payment due notice for Invoice {invoiceNumber}. Remaining balance: {remainingBalance}.',
-      type: 'PAYMENT' as const,
-    },
-    {
-      name: 'Customer Due',
-      subject: 'Customer Outstanding Balance Notice',
-      body: 'Customer {customerName} has an outstanding balance of {dueAmount}.',
-      type: 'CUSTOMER' as const,
-    },
-    {
-      name: 'Supplier Due',
-      subject: 'Supplier Payable Notice',
-      body: 'Payable balance of {dueAmount} is due to supplier {supplierName}.',
-      type: 'SUPPLIER' as const,
-    },
-    {
-      name: 'New User Invitation',
-      subject: 'Invitation to join POS',
-      body: 'You have been invited to join {companyName} as a {roleName}. Click here to set up your account.',
-      type: 'SECURITY' as const,
-    },
-    {
-      name: 'Role Change',
-      subject: 'Role Updated',
-      body: 'Your system role has been changed to {roleName}.',
-      type: 'SECURITY' as const,
-    },
-    {
-      name: 'Password Change',
-      subject: 'Security Alert: Password Changed',
-      body: 'Your account password was successfully updated.',
-      type: 'SECURITY' as const,
     },
   ];
 
@@ -669,12 +1028,8 @@ async function main() {
       },
     });
   }
-  console.log('  Seeded default notification templates');
 
-  console.log('✅ Seeding completed successfully! (Phase B5)');
-  console.log('');
-  console.log('  📧 Admin:   admin@enterprise-pos.com   / admin123');
-  console.log('  📧 Cashier: cashier@enterprise-pos.com / cashier123');
+  console.log('✅ Comprehensive database seeding finished successfully!');
 }
 
 main()

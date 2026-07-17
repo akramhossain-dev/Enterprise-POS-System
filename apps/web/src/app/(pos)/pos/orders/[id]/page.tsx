@@ -110,7 +110,7 @@ export default function OrderDetailsPage({ params }: { params: Promise<Params> }
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border font-mono text-foreground">
-                      {order.items.map((it, idx) => (
+                      {order.items.map((it: any, idx: number) => (
                         <tr key={idx} className="hover:bg-muted/10">
                           <td className="py-3 px-4 font-sans font-bold text-foreground">
                             {it.productName}

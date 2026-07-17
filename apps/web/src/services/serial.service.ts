@@ -12,22 +12,18 @@ class SerialService extends ApiClient {
     if (params?.warehouseId) queryParams['warehouseId'] = params.warehouseId;
     if (params?.status) queryParams['status'] = params.status;
 
-    const response = await this.get<{
-      serials: SerialNumber[];
-      meta: PaginatedResponse<SerialNumber>['meta'];
-    }>(apiConfig.endpoints.serials, queryParams);
+    const response = await this.get<SerialNumber[]>(apiConfig.endpoints.serials, queryParams);
 
     return {
-      data: response.data.serials ?? [],
-      meta: response.meta ||
-        response.data.meta || {
-          page: params?.page ?? 1,
-          pageSize: params?.limit ?? 20,
-          total: (response.data.serials ?? []).length,
-          totalPages: 1,
-          hasNextPage: false,
-          hasPrevPage: false,
-        },
+      data: response.data ?? [],
+      meta: response.meta || {
+        page: params?.page ?? 1,
+        pageSize: params?.limit ?? 20,
+        total: (response.data ?? []).length,
+        totalPages: 1,
+        hasNextPage: false,
+        hasPrevPage: false,
+      },
     };
   }
 

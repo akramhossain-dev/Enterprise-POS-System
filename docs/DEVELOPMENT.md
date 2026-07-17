@@ -83,12 +83,20 @@ Initialize local databases via Docker Compose:
 # 1. Start PostgreSQL and Redis containers
 docker compose up -d postgres redis
 
-# 2. Run Prisma schema migrations (sets up tables)
-pnpm --filter @enterprise-pos/api prisma:migrate
+# 2. Run Prisma schema migrations (sets up and synchronizes tables)
+pnpm --filter @enterprise-pos/api exec prisma migrate dev
 
-# 3. Seed database with initial setup data (roles, admins)
-pnpm --filter @enterprise-pos/api db:seed
+# 3. Seed database with comprehensive relational data (users, branch, stock, transactions)
+pnpm --filter @enterprise-pos/api run db:seed
 ```
+
+### Seeded Credentials
+
+The following credentials are seeded by default for testing purposes:
+
+- **System Admin:** `admin@enterprise-pos.com` (Password: `admin123`)
+- **System Manager:** `manager@enterprise-pos.com` (Password: `manager123`)
+- **Jane Cashier:** `cashier@enterprise-pos.com` (Password: `cashier123`)
 
 ---
 

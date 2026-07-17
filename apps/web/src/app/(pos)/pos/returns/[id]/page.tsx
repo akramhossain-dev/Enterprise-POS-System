@@ -80,7 +80,7 @@ export default function ReturnDetailsPage({ params }: { params: Promise<Params> 
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border font-medium text-foreground font-mono">
-                      {claim.items.map((it, idx) => (
+                      {claim.items.map((it: any, idx: number) => (
                         <tr key={idx} className="hover:bg-muted/10 font-mono">
                           <td className="py-3 px-4 font-sans font-bold text-foreground">
                             <p>{it.productName}</p>

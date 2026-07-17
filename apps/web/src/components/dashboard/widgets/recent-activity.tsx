@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ShoppingCart,
@@ -76,7 +77,13 @@ const DEMO_ACTIVITY: ActivityItem[] = [
 ];
 
 export function RecentActivity({ loading = false }: { loading?: boolean }) {
-  if (loading) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (loading || !mounted) {
     return (
       <div className="space-y-3">
         {Array.from({ length: 5 }).map((_, i) => (

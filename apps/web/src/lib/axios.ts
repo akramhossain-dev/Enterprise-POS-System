@@ -35,10 +35,19 @@ const axiosInstance: AxiosInstance = axios.create({
 
 // ---- Request Interceptor ----
 axiosInstance.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
-    const token = tokenManager.getAccessToken();
-    if (token && config.headers) {
-      config.headers['Authorization'] = `Bearer ${token}`;
+  async (config: InternalAxiosRequestConfig) => {
+    const isAuthRoute =
+      config.url?.includes(apiConfig.endpoints.auth.login) ||
+      config.url?.includes(apiConfig.endpoints.auth.refresh);
+
+    if (!isAuthRoute) {
+      let token = tokenManager.getAccessToken();
+      if (!token) {
+        token = await refreshAccessToken();
+      }
+      if (token && config.headers) {
+        config.headers['Authorization'] = `Bearer ${token}`;
+      }
     }
     return config;
   },
@@ -59,7 +68,13 @@ axiosInstance.interceptors.response.use(
       originalRequest?.url?.includes(apiConfig.endpoints.auth.login) ||
       originalRequest?.url?.includes(apiConfig.endpoints.auth.refresh);
 
-    if (status === 401 && originalRequest && !originalRequest._retry && !isAuthRoute) {
+    if (
+      status === 401 &&
+      originalRequest &&
+      !originalRequest._retry &&
+      !isAuthRoute &&
+      originalRequest.headers?.['Authorization']
+    ) {
       originalRequest._retry = true;
 
       try {
@@ -67,6 +82,12 @@ axiosInstance.interceptors.response.use(
         if (newToken && originalRequest.headers) {
           originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
           return axiosInstance(originalRequest);
+        } else {
+          // Refresh failed — force logout
+          tokenManager.clearTokens();
+          if (typeof window !== 'undefined') {
+            window.location.href = authConfig.routes.login;
+          }
         }
       } catch {
         // Refresh failed — force logout

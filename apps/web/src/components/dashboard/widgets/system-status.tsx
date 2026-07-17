@@ -35,6 +35,11 @@ const SERVICES: Service[] = [
 export function SystemStatus() {
   const [lastChecked, setLastChecked] = useState(new Date());
   const [checking, setChecking] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const refresh = () => {
     setChecking(true);
@@ -101,11 +106,13 @@ export function SystemStatus() {
       <p className="text-[11px] text-muted-foreground/60 flex items-center gap-1">
         <Clock className="w-3 h-3" />
         Last checked:{' '}
-        {lastChecked.toLocaleTimeString([], {
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-        })}
+        {mounted
+          ? lastChecked.toLocaleTimeString([], {
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+            })
+          : '—'}
       </p>
     </div>
   );

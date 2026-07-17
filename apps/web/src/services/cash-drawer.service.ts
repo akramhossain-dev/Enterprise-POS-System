@@ -2,186 +2,131 @@ import { ApiClient } from './api-client';
 import { apiConfig } from '@/config/api';
 import type { CashDrawerShift } from '@/types/checkout';
 
-const SHIFT_KEY = 'epos_simulated_active_shift';
-
 class CashDrawerService extends ApiClient {
   async getActiveShift(): Promise<CashDrawerShift | null> {
+    const response = await this.get<any>('/pos/session/current');
+    const data = response.data;
+    if (!data) return null;
+
+    // Fetch sales to calculate currentBalance and build logs dynamically
+    let sales: any[] = [];
     try {
-      const response = await this.get<any>('/pos/session/current');
-      const data = response.data;
-      return {
-        id: data.id,
-        cashierName: data.cashierName,
-        openingBalance: parseFloat(data.openingCash),
-        currentBalance: parseFloat(data.openingCash),
-        shiftBalance: 0,
-        openedAt: data.openedAt,
-        closedAt: data.closedAt,
-        logs: [
-          {
-            id: 'init',
-            type: 'IN',
-            amount: parseFloat(data.openingCash),
-            notes: 'Shift Opened Balance',
-            timestamp: data.openedAt,
-          },
-        ],
-      };
-    } catch {
-      // Local Storage simulation / Fallback
-      if (typeof window === 'undefined') return null;
-      const stored = localStorage.getItem(SHIFT_KEY);
-      if (stored) {
-        try {
-          return JSON.parse(stored);
-        } catch {
-          return null;
-        }
-      }
-      return null;
+      const salesRes = await this.get<any>('/sales', { limit: 100 });
+      sales = (salesRes.data || []).filter((s: any) => s.sessionId === data.id);
+    } catch (err) {
+      console.warn('Failed to load session sales:', err);
     }
+
+    const totalSalesAmount = sales.reduce(
+      (acc: number, s: any) => acc + parseFloat(s.grandTotal || '0'),
+      0,
+    );
+
+    return {
+      id: data.id,
+      cashierName: data.cashierName || 'Cashier Admin',
+      openingBalance: parseFloat(data.openingCash || '0'),
+      currentBalance: parseFloat(data.openingCash || '0') + totalSalesAmount,
+      shiftBalance: totalSalesAmount,
+      openedAt: data.openedAt,
+      closedAt: data.closedAt,
+      logs: [
+        {
+          id: 'init',
+          type: 'IN',
+          amount: parseFloat(data.openingCash || '0'),
+          notes: 'Shift Opened Balance',
+          timestamp: data.openedAt,
+        },
+        ...sales.map((s: any) => ({
+          id: s.id,
+          type: 'IN' as const,
+          amount: parseFloat(s.grandTotal || '0'),
+          notes: `POS Transaction: ${s.invoiceNumber}`,
+          timestamp: s.createdAt,
+        })),
+      ],
+    };
   }
 
   async openShift(cashierName: string, openingBalance: number): Promise<CashDrawerShift> {
-    try {
-      // 1. Fetch current employee user profile to resolve companyId and branchId
-      const userRes = await this.get<any>('/auth/me');
-      const companyId = userRes.data.companyId;
-      const branchId = userRes.data.branchId;
+    // 1. Fetch current employee user profile to resolve companyId and branchId
+    const userRes = await this.get<any>('/auth/me');
+    const companyId = userRes.data.companyId;
+    const branchId = userRes.data.branchId;
 
-      // 2. Fetch warehouses list to get a valid warehouseId
-      const warehousesRes = await this.get<any>('/warehouses');
-      const warehouses = warehousesRes.data || [];
-      const warehouseId = warehouses[0]?.id;
+    // 2. Fetch warehouses list to get a valid warehouseId
+    const warehousesRes = await this.get<any>('/warehouses');
+    const warehouses = warehousesRes.data || [];
+    const warehouseId = warehouses[0]?.id;
 
-      if (!warehouseId) {
-        throw new Error('No warehouses available to associate with POS session.');
-      }
-
-      // 3. Open POS session on backend
-      const response = await this.post<any>('/pos/session/open', {
-        companyId,
-        branchId,
-        warehouseId,
-        openingCash: openingBalance,
-      });
-
-      const data = response.data;
-      return {
-        id: data.id,
-        cashierName: data.cashierName,
-        openingBalance: parseFloat(data.openingCash),
-        currentBalance: parseFloat(data.openingCash),
-        shiftBalance: 0,
-        openedAt: data.openedAt,
-        closedAt: data.closedAt,
-        logs: [
-          {
-            id: 'init',
-            type: 'IN',
-            amount: parseFloat(data.openingCash),
-            notes: 'Shift Opened Balance',
-            timestamp: data.openedAt,
-          },
-        ],
-      };
-    } catch (err) {
-      console.warn('Failed to open shift on backend, falling back to simulator:', err);
-      const newShift: CashDrawerShift = {
-        id: `shift-${Date.now()}`,
-        cashierName,
-        openingBalance,
-        currentBalance: openingBalance,
-        shiftBalance: 0,
-        openedAt: new Date().toISOString(),
-        closedAt: null,
-        logs: [
-          {
-            id: `log-${Date.now()}`,
-            type: 'IN',
-            amount: openingBalance,
-            notes: 'Shift Opened Balance',
-            timestamp: new Date().toISOString(),
-          },
-        ],
-      };
-      if (typeof window !== 'undefined') {
-        localStorage.setItem(SHIFT_KEY, JSON.stringify(newShift));
-      }
-      return newShift;
+    if (!warehouseId) {
+      throw new Error('No warehouses available to associate with POS session.');
     }
+
+    // 3. Open POS session on backend
+    const response = await this.post<any>('/pos/session/open', {
+      companyId,
+      branchId,
+      warehouseId,
+      openingCash: openingBalance,
+    });
+
+    const data = response.data;
+    return {
+      id: data.id,
+      cashierName: data.cashierName || cashierName,
+      openingBalance: parseFloat(data.openingCash || '0'),
+      currentBalance: parseFloat(data.openingCash || '0'),
+      shiftBalance: 0,
+      openedAt: data.openedAt,
+      closedAt: data.closedAt,
+      logs: [
+        {
+          id: 'init',
+          type: 'IN',
+          amount: parseFloat(data.openingCash || '0'),
+          notes: 'Shift Opened Balance',
+          timestamp: data.openedAt,
+        },
+      ],
+    };
   }
 
   async closeShift(): Promise<void> {
+    let closingCash = 0;
     try {
-      let closingCash = 0;
-      try {
-        const active = await this.getActiveShift();
-        if (active) {
-          closingCash = active.currentBalance;
-        }
-      } catch {}
-
-      await this.post('/pos/session/close', { closingCash });
-    } catch (err) {
-      console.warn('Failed to close shift on backend, clearing simulator:', err);
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem(SHIFT_KEY);
+      const active = await this.getActiveShift();
+      if (active) {
+        closingCash = active.currentBalance;
       }
-    }
+    } catch {}
+
+    await this.post('/pos/session/close', { closingCash });
   }
 
   async logCashEntry(type: 'IN' | 'OUT', amount: number, notes: string): Promise<CashDrawerShift> {
-    try {
-      // Simulate since backend does not persist register logs
-      const active = await this.getActiveShift();
-      if (!active) throw new Error('No active drawer shift detected.');
+    const active = await this.getActiveShift();
+    if (!active) throw new Error('No active drawer shift detected.');
 
-      const change = type === 'IN' ? amount : -amount;
-      const updated: CashDrawerShift = {
-        ...active,
-        currentBalance: Math.max(0, active.currentBalance + change),
-        logs: [
-          ...active.logs,
-          {
-            id: `log-${Date.now()}`,
-            type,
-            amount,
-            notes,
-            timestamp: new Date().toISOString(),
-          },
-        ],
-      };
-
-      if (typeof window !== 'undefined') {
-        localStorage.setItem(SHIFT_KEY, JSON.stringify(updated));
-      }
-      return updated;
-    } catch (err) {
-      const active = await this.getActiveShift();
-      if (!active) throw new Error('No active drawer shift detected.');
-
-      const change = type === 'IN' ? amount : -amount;
-      const updated: CashDrawerShift = {
-        ...active,
-        currentBalance: Math.max(0, active.currentBalance + change),
-        logs: [
-          ...active.logs,
-          {
-            id: `log-${Date.now()}`,
-            type,
-            amount,
-            notes,
-            timestamp: new Date().toISOString(),
-          },
-        ],
-      };
-
-      if (typeof window !== 'undefined') {
-        localStorage.setItem(SHIFT_KEY, JSON.stringify(updated));
-      }
-      return updated;
-    }
+    // Since register logs are not stored separately on the backend, we reflect them in memory/returns object
+    return {
+      ...active,
+      currentBalance:
+        type === 'IN'
+          ? active.currentBalance + amount
+          : Math.max(0, active.currentBalance - amount),
+      logs: [
+        ...active.logs,
+        {
+          id: `log-${Date.now()}`,
+          type,
+          amount,
+          notes,
+          timestamp: new Date().toISOString(),
+        },
+      ],
+    };
   }
 }
 

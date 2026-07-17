@@ -29,22 +29,18 @@ class CustomerService extends ApiClient {
     if (params?.sortBy) queryParams['sortBy'] = params.sortBy;
     if (params?.sortOrder) queryParams['sortOrder'] = params.sortOrder;
 
-    const response = await this.get<{
-      customers: Customer[];
-      meta: PaginatedResponse<Customer>['meta'];
-    }>(this.base, queryParams);
+    const response = await this.get<Customer[]>(this.base, queryParams);
 
     return {
-      data: response.data.customers ?? [],
-      meta: response.meta ??
-        response.data.meta ?? {
-          page: params?.page ?? 1,
-          pageSize: params?.limit ?? 20,
-          total: (response.data.customers ?? []).length,
-          totalPages: 1,
-          hasNextPage: false,
-          hasPrevPage: false,
-        },
+      data: response.data ?? [],
+      meta: response.meta ?? {
+        page: params?.page ?? 1,
+        pageSize: params?.limit ?? 20,
+        total: (response.data ?? []).length,
+        totalPages: 1,
+        hasNextPage: false,
+        hasPrevPage: false,
+      },
     };
   }
 
@@ -105,32 +101,29 @@ class CustomerService extends ApiClient {
     if (params?.dateFrom) queryParams['dateFrom'] = params.dateFrom;
     if (params?.dateTo) queryParams['dateTo'] = params.dateTo;
 
-    const response = await this.get<{
-      entries: CustomerLedgerEntry[];
-      meta: PaginatedResponse<CustomerLedgerEntry>['meta'];
-    }>(`${this.base}/${id}/ledger`, queryParams);
+    const response = await this.get<CustomerLedgerEntry[]>(
+      `${this.base}/${id}/ledger`,
+      queryParams,
+    );
 
     return {
-      data: response.data.entries ?? [],
-      meta: response.meta ??
-        response.data.meta ?? {
-          page: params?.page ?? 1,
-          pageSize: params?.limit ?? 20,
-          total: (response.data.entries ?? []).length,
-          totalPages: 1,
-          hasNextPage: false,
-          hasPrevPage: false,
-        },
+      data: response.data ?? [],
+      meta: response.meta ?? {
+        page: params?.page ?? 1,
+        pageSize: params?.limit ?? 20,
+        total: (response.data ?? []).length,
+        totalPages: 1,
+        hasNextPage: false,
+        hasPrevPage: false,
+      },
     };
   }
 
   // ── Addresses ───────────────────────────────────────────────
 
   async getCustomerAddresses(id: string): Promise<CustomerAddress[]> {
-    const response = await this.get<{ addresses: CustomerAddress[] }>(
-      `${this.base}/${id}/addresses`,
-    );
-    return response.data.addresses ?? [];
+    const response = await this.get<CustomerAddress[]>(`${this.base}/${id}/addresses`);
+    return response.data ?? [];
   }
 
   async addCustomerAddress(

@@ -12,17 +12,14 @@ class BrandService extends ApiClient {
     sortBy?: string;
     sortOrder?: 'asc' | 'desc';
   }): Promise<PaginatedResponse<Brand>> {
-    const response = await this.get<{
-      brands: Brand[];
-      meta: PaginatedResponse<Brand>['meta'];
-    }>(apiConfig.endpoints.brands, params);
+    const response = await this.get<Brand[]>(apiConfig.endpoints.brands, params);
 
     return {
-      data: response.data.brands ?? [],
+      data: response.data ?? [],
       meta: response.meta ?? {
         page: params?.page ?? 1,
         pageSize: params?.limit ?? 20,
-        total: (response.data.brands ?? []).length,
+        total: (response.data ?? []).length,
         totalPages: 1,
         hasNextPage: false,
         hasPrevPage: false,

@@ -33,22 +33,18 @@ class SupplierService extends ApiClient {
     if (params?.sortBy) q['sortBy'] = params.sortBy;
     if (params?.sortOrder) q['sortOrder'] = params.sortOrder;
 
-    const response = await this.get<{
-      suppliers: Supplier[];
-      meta: PaginatedResponse<Supplier>['meta'];
-    }>(this.base, q);
+    const response = await this.get<Supplier[]>(this.base, q);
 
     return {
-      data: response.data.suppliers ?? [],
-      meta: response.meta ??
-        response.data.meta ?? {
-          page: params?.page ?? 1,
-          pageSize: params?.limit ?? 20,
-          total: (response.data.suppliers ?? []).length,
-          totalPages: 1,
-          hasNextPage: false,
-          hasPrevPage: false,
-        },
+      data: response.data ?? [],
+      meta: response.meta ?? {
+        page: params?.page ?? 1,
+        pageSize: params?.limit ?? 20,
+        total: (response.data ?? []).length,
+        totalPages: 1,
+        hasNextPage: false,
+        hasPrevPage: false,
+      },
     };
   }
 
@@ -109,32 +105,26 @@ class SupplierService extends ApiClient {
     if (params?.dateFrom) q['dateFrom'] = params.dateFrom;
     if (params?.dateTo) q['dateTo'] = params.dateTo;
 
-    const response = await this.get<{
-      entries: SupplierLedgerEntry[];
-      meta: PaginatedResponse<SupplierLedgerEntry>['meta'];
-    }>(`${this.base}/${id}/ledger`, q);
+    const response = await this.get<SupplierLedgerEntry[]>(`${this.base}/${id}/ledger`, q);
 
     return {
-      data: response.data.entries ?? [],
-      meta: response.meta ??
-        response.data.meta ?? {
-          page: params?.page ?? 1,
-          pageSize: params?.limit ?? 20,
-          total: (response.data.entries ?? []).length,
-          totalPages: 1,
-          hasNextPage: false,
-          hasPrevPage: false,
-        },
+      data: response.data ?? [],
+      meta: response.meta ?? {
+        page: params?.page ?? 1,
+        pageSize: params?.limit ?? 20,
+        total: (response.data ?? []).length,
+        totalPages: 1,
+        hasNextPage: false,
+        hasPrevPage: false,
+      },
     };
   }
 
   // ── Addresses ───────────────────────────────────────────────
 
   async getSupplierAddresses(id: string): Promise<SupplierAddress[]> {
-    const response = await this.get<{ addresses: SupplierAddress[] }>(
-      `${this.base}/${id}/addresses`,
-    );
-    return response.data.addresses ?? [];
+    const response = await this.get<SupplierAddress[]>(`${this.base}/${id}/addresses`);
+    return response.data ?? [];
   }
 
   async addSupplierAddress(
@@ -158,22 +148,18 @@ class SupplierService extends ApiClient {
     if (params?.dateFrom) q['dateFrom'] = params.dateFrom;
     if (params?.dateTo) q['dateTo'] = params.dateTo;
 
-    const response = await this.get<{
-      payments: SupplierPayment[];
-      meta: PaginatedResponse<SupplierPayment>['meta'];
-    }>(this.paymentsBase, q);
+    const response = await this.get<SupplierPayment[]>(this.paymentsBase, q);
 
     return {
-      data: response.data.payments ?? [],
-      meta: response.meta ??
-        response.data.meta ?? {
-          page: params?.page ?? 1,
-          pageSize: params?.limit ?? 20,
-          total: (response.data.payments ?? []).length,
-          totalPages: 1,
-          hasNextPage: false,
-          hasPrevPage: false,
-        },
+      data: response.data ?? [],
+      meta: response.meta ?? {
+        page: params?.page ?? 1,
+        pageSize: params?.limit ?? 20,
+        total: (response.data ?? []).length,
+        totalPages: 1,
+        hasNextPage: false,
+        hasPrevPage: false,
+      },
     };
   }
 

@@ -17,31 +17,24 @@ class ProductService extends ApiClient {
     if (params?.sortBy) queryParams['sortBy'] = params.sortBy;
     if (params?.sortOrder) queryParams['sortOrder'] = params.sortOrder;
 
-    const response = await this.get<{
-      products: Product[];
-      meta: PaginatedResponse<Product>['meta'];
-    }>(apiConfig.endpoints.products, queryParams);
+    const response = await this.get<Product[]>(apiConfig.endpoints.products, queryParams);
 
     return {
-      data: response.data.products,
-      meta: response.meta ||
-        response.data.meta || {
-          page: params?.page ?? 1,
-          pageSize: params?.limit ?? 20,
-          total: response.data.products.length,
-          totalPages: 1,
-          hasNextPage: false,
-          hasPrevPage: false,
-        },
+      data: response.data,
+      meta: response.meta || {
+        page: params?.page ?? 1,
+        pageSize: params?.limit ?? 20,
+        total: response.data.length,
+        totalPages: 1,
+        hasNextPage: false,
+        hasPrevPage: false,
+      },
     };
   }
 
   async searchProducts(q: string): Promise<Product[]> {
-    const response = await this.get<{ products: Product[] }>(
-      `${apiConfig.endpoints.products}/search`,
-      { q },
-    );
-    return response.data.products;
+    const response = await this.get<Product[]>(`${apiConfig.endpoints.products}/search`, { q });
+    return response.data;
   }
 
   async getProduct(id: string): Promise<Product> {
@@ -76,23 +69,23 @@ class ProductService extends ApiClient {
 
   // Meta lookup methods for forms
   async getCategories(): Promise<Category[]> {
-    const response = await this.get<{ categories: Category[] }>(apiConfig.endpoints.categories);
-    return response.data.categories ?? [];
+    const response = await this.get<Category[]>(apiConfig.endpoints.categories);
+    return response.data ?? [];
   }
 
   async getBrands(): Promise<Brand[]> {
-    const response = await this.get<{ brands: Brand[] }>(apiConfig.endpoints.brands);
-    return response.data.brands ?? [];
+    const response = await this.get<Brand[]>(apiConfig.endpoints.brands);
+    return response.data ?? [];
   }
 
   async getUnits(): Promise<Unit[]> {
-    const response = await this.get<{ units: Unit[] }>(apiConfig.endpoints.units);
-    return response.data.units ?? [];
+    const response = await this.get<Unit[]>(apiConfig.endpoints.units);
+    return response.data ?? [];
   }
 
   async getTaxes(): Promise<Tax[]> {
-    const response = await this.get<{ taxes: Tax[] }>('/taxes');
-    return response.data.taxes ?? [];
+    const response = await this.get<Tax[]>('/taxes');
+    return response.data ?? [];
   }
 
   // Barcode Generation UI helper (mock utility that generates svg string)
