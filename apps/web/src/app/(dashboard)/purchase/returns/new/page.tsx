@@ -294,7 +294,7 @@ export default function CreatePurchaseReturnPage() {
       <form onSubmit={handleSubmit(onSubmit as any)} className="space-y-6">
         <div className="grid gap-6 md:grid-cols-3 text-sm">
           {/* Document configuration block */}
-          <Card className="md:col-span-2 shadow-sm border-border bg-cardard">
+          <Card className="md:col-span-2 shadow-sm border-border bg-card">
             <CardHeader className="border-b">
               <CardTitle className="text-sm font-semibold flex items-center gap-1.5">
                 <Building2 className="w-4 h-4 text-primary" /> Return Details & References
@@ -309,7 +309,7 @@ export default function CreatePurchaseReturnPage() {
                   </label>
                   <select
                     {...register('supplierId')}
-                    className="w-full text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                   >
                     <option value="">Select Supplier Vendor...</option>
                     {suppliers
@@ -332,7 +332,7 @@ export default function CreatePurchaseReturnPage() {
                   </label>
                   <select
                     {...register('warehouseId')}
-                    className="w-full text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                   >
                     <option value="">Select Warehouse...</option>
                     {warehouses.map((w) => (
@@ -356,7 +356,7 @@ export default function CreatePurchaseReturnPage() {
                   <select
                     {...register('referenceType')}
                     disabled={!supplierId}
-                    className="w-full text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
+                    className="w-full text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
                   >
                     <option value="NONE">Direct (No Reference)</option>
                     <option value="PO">Purchase Order (PO)</option>
@@ -374,7 +374,7 @@ export default function CreatePurchaseReturnPage() {
                     <select
                       {...register('referencePoId')}
                       disabled={loadingRefs}
-                      className="w-full text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 font-mono"
+                      className="w-full text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 font-mono"
                     >
                       <option value="">Select PO Reference...</option>
                       {poList.map((po) => (
@@ -394,7 +394,7 @@ export default function CreatePurchaseReturnPage() {
                     <select
                       {...register('referenceGrnId')}
                       disabled={loadingRefs}
-                      className="w-full text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 font-mono"
+                      className="w-full text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 font-mono"
                     >
                       <option value="">Select GRN Reference...</option>
                       {grnList.map((g) => (
@@ -414,7 +414,7 @@ export default function CreatePurchaseReturnPage() {
                     <select
                       {...register('referenceInvoiceId')}
                       disabled={loadingRefs}
-                      className="w-full text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 font-mono"
+                      className="w-full text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 font-mono"
                     >
                       <option value="">Select Invoice Reference...</option>
                       {invoiceList.map((i) => (
@@ -430,7 +430,7 @@ export default function CreatePurchaseReturnPage() {
           </Card>
 
           {/* Form Side Configuration Panel */}
-          <Card className="shadow-sm border-border bg-cardard">
+          <Card className="shadow-sm border-border bg-card">
             <CardHeader className="border-b">
               <CardTitle className="text-sm font-semibold flex items-center gap-1.5">
                 <Clipboard className="w-4 h-4 text-indigo-500" /> Vouchers & Settings
@@ -444,7 +444,7 @@ export default function CreatePurchaseReturnPage() {
                 <Input
                   type="date"
                   {...register('returnDate')}
-                  className="border-border bg-cardard text-foreground"
+                  className="border-border bg-card text-foreground"
                 />
                 {errors.returnDate && (
                   <p className="text-xs font-medium text-rose-500">{errors.returnDate.message}</p>
@@ -457,7 +457,7 @@ export default function CreatePurchaseReturnPage() {
                 </label>
                 <select
                   {...register('reason')}
-                  className="w-full text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   <option value="DAMAGED">Damaged Product</option>
                   <option value="EXPIRED">Expired</option>
@@ -477,7 +477,7 @@ export default function CreatePurchaseReturnPage() {
                 </label>
                 <select
                   {...register('returnMethod')}
-                  className="w-full text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   <option value="CREDIT_NOTE">Supplier Credit Note</option>
                   <option value="REFUND">Refund / Cash Back</option>
@@ -489,7 +489,7 @@ export default function CreatePurchaseReturnPage() {
         </div>
 
         {/* Dynamic product table */}
-        <Card className="shadow-sm border-border bg-cardard text-sm">
+        <Card className="shadow-sm border-border bg-card text-sm">
           <CardHeader className="border-b flex flex-row items-center justify-between">
             <CardTitle className="text-sm font-semibold">Products Return Checklist</CardTitle>
             {referenceType === 'NONE' && supplierId && (
@@ -529,7 +529,7 @@ export default function CreatePurchaseReturnPage() {
                     </tr>
                   ) : (
                     fields.map((field, index) => (
-                      <tr key={field.id} className="border-b last:border-0 border-border bg-cardard">
+                      <tr key={field.id} className="border-b last:border-0 border-border bg-card">
                         <td className="p-3 pl-6 font-medium text-foreground">
                           {field.productName}
                           <input type="hidden" {...register(`items.${index}.productId`)} />
@@ -555,7 +555,7 @@ export default function CreatePurchaseReturnPage() {
                           <Input
                             type="number"
                             {...register(`items.${index}.returnQty`)}
-                            className="w-16 text-right font-mono h-8 border-border bg-cardard text-foreground"
+                            className="w-16 text-right font-mono h-8 border-border bg-card text-foreground"
                           />
                           {errors.items?.[index]?.returnQty && (
                             <p className="text-[10px] text-rose-500 font-medium">
@@ -568,13 +568,13 @@ export default function CreatePurchaseReturnPage() {
                             type="number"
                             step="0.01"
                             {...register(`items.${index}.unitPrice`)}
-                            className="w-20 text-right font-mono h-8 border-border bg-cardard text-foreground"
+                            className="w-20 text-right font-mono h-8 border-border bg-card text-foreground"
                           />
                         </td>
                         <td className="p-3">
                           <select
                             {...register(`items.${index}.reason`)}
-                            className="text-xs rounded border border-border bg-cardard p-1.5 h-8 text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                            className="text-xs rounded border border-border bg-card p-1.5 h-8 text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                           >
                             <option value="DAMAGED">Damaged Product</option>
                             <option value="EXPIRED">Expired</option>
@@ -612,7 +612,7 @@ export default function CreatePurchaseReturnPage() {
         {/* Footer Remarks and Valuations */}
         <div className="grid gap-6 md:grid-cols-3">
           {/* Notes and remarks */}
-          <Card className="md:col-span-2 shadow-sm border-border bg-cardard">
+          <Card className="md:col-span-2 shadow-sm border-border bg-card">
             <CardHeader className="border-b">
               <CardTitle className="text-xs font-bold uppercase tracking-wider text-foreground">
                 Notes & Vouchers Remarks
@@ -623,7 +623,7 @@ export default function CreatePurchaseReturnPage() {
                 placeholder="Provide details about return discrepancies, carrier logistics, and authorization codes..."
                 {...register('notes')}
                 rows={3}
-                className="border-border bg-cardard text-foreground"
+                className="border-border bg-card text-foreground"
               />
 
               {/* Attachments foundation placeholder */}
@@ -645,7 +645,7 @@ export default function CreatePurchaseReturnPage() {
           </Card>
 
           {/* Pricing Valuation Summary */}
-          <Card className="shadow-sm border-border bg-cardard text-sm">
+          <Card className="shadow-sm border-border bg-card text-sm">
             <CardHeader className="border-b">
               <CardTitle className="text-xs font-bold uppercase tracking-wider text-foreground flex items-center gap-1">
                 <DollarSign className="w-4 h-4 text-emerald-500" /> Estimations summary

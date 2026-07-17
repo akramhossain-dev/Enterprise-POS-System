@@ -89,7 +89,7 @@ export default function TaxReportsPage() {
               size="sm"
               variant="outline"
               onClick={handleExportCSV}
-              className="h-8 border-border bg-cardard hover:bg-accent text-xs gap-1.5"
+              className="h-8 border-border bg-card hover:bg-accent text-xs gap-1.5"
             >
               <FileDown className="h-4 w-4 text-slate-455" />
               <span>Export CSV</span>
@@ -116,7 +116,7 @@ export default function TaxReportsPage() {
       {/* Date filters and class selection */}
       <div className="flex flex-col sm:flex-row gap-3 items-center justify-between mt-4 mb-6 print:hidden">
         <div className="flex flex-wrap gap-2 w-full sm:w-auto">
-          <div className="flex items-center gap-1.5 bg-cardard px-3 border border-border rounded-lg text-xs h-9">
+          <div className="flex items-center gap-1.5 bg-card px-3 border border-border rounded-lg text-xs h-9">
             <span className="text-muted-foreground">From</span>
             <input
               type="date"
@@ -136,7 +136,7 @@ export default function TaxReportsPage() {
           <select
             value={taxType}
             onChange={(e) => setTaxType(e.target.value)}
-            className="bg-cardard border border-border text-muted-foreground rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[140px]"
+            className="bg-card border border-border text-muted-foreground rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[140px]"
           >
             <option value="ALL">All Tax Classes</option>
             <option value="SALES">Output Tax (Sales)</option>
@@ -161,7 +161,7 @@ export default function TaxReportsPage() {
           />
 
           {/* Transactions details */}
-          <Card className="bg-cardard border-border text-foreground print:bg-white print:text-black print:border-none print:shadow-none">
+          <Card className="bg-card border-border text-foreground print:bg-white print:text-black print:border-none print:shadow-none">
             <CardContent className="p-6">
               <div className="text-center border-b border-slate-855 pb-4 print:border-black mb-6">
                 <h2 className="text-base font-black uppercase text-foreground print:text-black font-sans tracking-wide">
@@ -206,7 +206,9 @@ export default function TaxReportsPage() {
                               {tx.type}
                             </span>
                           </td>
-                          <td className="py-2.5 px-4 font-sans text-muted-foreground">{tx.taxRateName}</td>
+                          <td className="py-2.5 px-4 font-sans text-muted-foreground">
+                            {tx.taxRateName}
+                          </td>
                           <td className="py-2.5 px-3 text-right text-foreground print:text-black">
                             {formatCurrency(tx.amount)}
                           </td>

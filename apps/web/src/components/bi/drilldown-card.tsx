@@ -58,7 +58,7 @@ export function DrilldownCard({ title, description, className }: DrilldownCardPr
   return (
     <Card
       className={cn(
-        'bg-cardard border-border text-foreground select-none text-left print:bg-white print:text-black',
+        'bg-card border-border text-foreground select-none text-left print:bg-white print:text-black',
         className,
       )}
     >

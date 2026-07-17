@@ -128,7 +128,7 @@ export default function CustomReportsPage() {
       <div className="grid gap-6 lg:grid-cols-3 mt-6 print:hidden">
         {/* Left Side: Builder Control Box */}
         <div className="lg:col-span-1 space-y-4">
-          <Card className="bg-cardard border-border p-4 space-y-4">
+          <Card className="bg-card border-border p-4 space-y-4">
             <h3 className="text-xs font-bold text-foreground uppercase tracking-widest font-sans flex items-center gap-1.5">
               <Settings className="h-4 w-4 text-emerald-450" />
               <span>Query Settings</span>

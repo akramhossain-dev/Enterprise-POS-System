@@ -63,7 +63,7 @@ export default function NewRolePage() {
 
       <form onSubmit={handleCreate} className="space-y-6 max-w-5xl text-left">
         {/* Core fields */}
-        <div className="rounded-2xl border border-border bg-cardard p-6 space-y-4">
+        <div className="rounded-2xl border border-border bg-card p-6 space-y-4">
           <div className="flex items-center gap-2 border-b border-border/50 pb-3">
             <Shield className="w-5 h-5 text-primary" />
             <h2 className="font-semibold text-foreground text-base">Role Information</h2>
@@ -87,7 +87,7 @@ export default function NewRolePage() {
         </div>
 
         {/* Permission matrix selection */}
-        <div className="rounded-2xl border border-border bg-cardard p-6 space-y-4">
+        <div className="rounded-2xl border border-border bg-card p-6 space-y-4">
           <h2 className="font-semibold text-foreground text-base border-b border-border/50 pb-3">
             Authorization Privileges Matrix
           </h2>

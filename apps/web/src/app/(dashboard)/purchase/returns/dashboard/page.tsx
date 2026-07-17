@@ -176,7 +176,7 @@ export default function ReturnDashboardPage() {
       {/* Charts & Suppliers Return Values */}
       <div className="grid gap-6 md:grid-cols-3 mb-6 text-sm">
         {/* Chart */}
-        <Card className="md:col-span-2 shadow-sm border-border bg-cardard">
+        <Card className="md:col-span-2 shadow-sm border-border bg-card">
           <CardHeader className="border-b">
             <CardTitle className="text-sm font-semibold flex items-center gap-1.5">
               <TrendingUp className="w-4 h-4 text-primary" /> Returns Value Trend (Monthly)
@@ -208,7 +208,7 @@ export default function ReturnDashboardPage() {
         </Card>
 
         {/* Suppliers Value Summary */}
-        <Card className="shadow-sm border-border bg-cardard">
+        <Card className="shadow-sm border-border bg-card">
           <CardHeader className="border-b">
             <CardTitle className="text-sm font-semibold flex items-center gap-1.5">
               <Building className="w-4 h-4 text-pink-500" /> Claims by Supplier
@@ -238,7 +238,7 @@ export default function ReturnDashboardPage() {
       </div>
 
       {/* Recent Returns List */}
-      <Card className="shadow-sm border-border bg-cardard text-sm">
+      <Card className="shadow-sm border-border bg-card text-sm">
         <CardHeader className="border-b flex flex-row justify-between items-center">
           <div>
             <CardTitle className="text-sm font-semibold">Recent Return Vouchers</CardTitle>
@@ -276,7 +276,7 @@ export default function ReturnDashboardPage() {
                 returns.slice(0, 5).map((r) => (
                   <tr
                     key={r.id}
-                    className="border-b last:border-b-0 border-border bg-cardard hover:bg-muted/10"
+                    className="border-b last:border-b-0 border-border bg-card hover:bg-muted/10"
                   >
                     <td className="p-3 pl-6">
                       <Link

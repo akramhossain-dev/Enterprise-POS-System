@@ -50,7 +50,7 @@ export function FilterBuilder({
   onApply,
 }: FilterBuilderProps) {
   return (
-    <div className="bg-cardard border border-border rounded-xl p-4 space-y-4 select-none text-left print:hidden">
+    <div className="bg-card border border-border rounded-xl p-4 space-y-4 select-none text-left print:hidden">
       <div className="flex items-center justify-between border-b border-border pb-2">
         <h4 className="text-xs font-bold text-foreground uppercase tracking-widest font-sans flex items-center gap-1.5">
           <SlidersHorizontal className="h-4 w-4 text-emerald-450" />

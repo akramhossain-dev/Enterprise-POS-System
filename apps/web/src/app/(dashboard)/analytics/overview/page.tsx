@@ -74,7 +74,7 @@ export default function BusinessOverviewPage() {
       />
 
       {/* Date filters */}
-      <div className="flex items-center gap-1.5 bg-cardard px-3 border border-border rounded-xl text-xs h-9 w-full sm:w-auto my-6 print:hidden max-w-sm">
+      <div className="flex items-center gap-1.5 bg-card px-3 border border-border rounded-xl text-xs h-9 w-full sm:w-auto my-6 print:hidden max-w-sm">
         <span className="text-muted-foreground">From</span>
         <input
           type="date"

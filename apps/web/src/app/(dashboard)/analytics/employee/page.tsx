@@ -48,7 +48,7 @@ export default function EmployeeAnalyticsPage() {
       />
 
       {/* Date filters */}
-      <div className="flex items-center gap-1.5 bg-cardard px-3 border border-border rounded-xl text-xs h-9 w-full sm:w-auto my-6 print:hidden max-w-sm">
+      <div className="flex items-center gap-1.5 bg-card px-3 border border-border rounded-xl text-xs h-9 w-full sm:w-auto my-6 print:hidden max-w-sm">
         <span className="text-muted-foreground">From</span>
         <input
           type="date"
@@ -67,7 +67,7 @@ export default function EmployeeAnalyticsPage() {
 
       {/* Stats summary */}
       <div className="grid gap-4 grid-cols-1 md:grid-cols-3 mb-6">
-        <div className="bg-cardard border border-border p-4 rounded-xl flex items-center gap-3">
+        <div className="bg-card border border-border p-4 rounded-xl flex items-center gap-3">
           <div className="p-3 bg-indigo-500/10 rounded-lg">
             <UserCheck className="h-6 w-6 text-indigo-400" />
           </div>

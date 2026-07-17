@@ -37,12 +37,7 @@ export function StatisticsCard({
   const isOptimal = isPositiveUp ? isUp : !isUp;
 
   return (
-    <Card
-      className={cn(
-        'bg-cardard border-border text-foreground select-none text-left',
-        className,
-      )}
-    >
+    <Card className={cn('bg-card border-border text-foreground select-none text-left', className)}>
       <CardContent className="p-4 space-y-3">
         <div className="flex justify-between items-start">
           <div className="space-y-0.5 text-left">

@@ -53,7 +53,7 @@ export default function ArchivedWarehousesPage() {
         }
       />
 
-      <div className="flex flex-col gap-4 bg-cardard rounded-2xl border border-border p-4">
+      <div className="flex flex-col gap-4 bg-card rounded-2xl border border-border p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="relative w-full max-w-sm">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -78,7 +78,7 @@ export default function ArchivedWarehousesPage() {
         </div>
       </div>
 
-      <div className="border border-border bg-cardard rounded-2xl overflow-hidden">
+      <div className="border border-border bg-card rounded-2xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>

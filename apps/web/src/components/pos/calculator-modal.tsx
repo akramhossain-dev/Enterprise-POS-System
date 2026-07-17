@@ -75,7 +75,7 @@ export function CalculatorModal({ open, onOpenChange }: CalculatorModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[340px] bg-cardard border-border text-foreground p-4">
+      <DialogContent className="sm:max-w-[340px] bg-card border-border text-foreground p-4">
         <DialogHeader>
           <DialogTitle className="text-foreground text-sm font-bold flex items-center gap-2">
             <span>Cashier Calculator Widget</span>

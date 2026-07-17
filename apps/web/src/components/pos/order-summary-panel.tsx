@@ -155,7 +155,7 @@ export function OrderSummaryPanel() {
             className={`h-9 w-full border-border text-foreground text-xs gap-1 ${
               showHoldNotes
                 ? 'bg-emerald-950/20 text-emerald-450 border-emerald-900'
-                : 'bg-cardard hover:bg-accent'
+                : 'bg-card hover:bg-accent'
             }`}
           >
             <FolderHeart className="h-4 w-4" />
@@ -163,7 +163,7 @@ export function OrderSummaryPanel() {
           </Button>
 
           {showHoldNotes && (
-            <div className="absolute bottom-full right-0 mb-2 w-64 bg-cardard border border-border rounded-lg p-3 shadow-2xl z-50 text-left">
+            <div className="absolute bottom-full right-0 mb-2 w-64 bg-card border border-border rounded-lg p-3 shadow-2xl z-50 text-left">
               <p className="font-bold mb-2 text-xs text-foreground">Hold order details</p>
               <Input
                 type="text"
@@ -199,7 +199,7 @@ export function OrderSummaryPanel() {
           variant="outline"
           size="sm"
           onClick={clearCart}
-          className="h-9 border-border bg-cardard hover:bg-rose-950/20 text-rose-400 text-xs gap-1"
+          className="h-9 border-border bg-card hover:bg-rose-950/20 text-rose-400 text-xs gap-1"
         >
           <Trash className="h-4 w-4" />
           <span>Clear</span>
@@ -210,7 +210,7 @@ export function OrderSummaryPanel() {
           variant="outline"
           size="sm"
           onClick={() => setShowCalculator(true)}
-          className="h-9 border-border bg-cardard hover:bg-accent text-foreground text-xs gap-1"
+          className="h-9 border-border bg-card hover:bg-accent text-foreground text-xs gap-1"
         >
           <Calculator className="h-4 w-4" />
           <span>Calc</span>
@@ -221,7 +221,7 @@ export function OrderSummaryPanel() {
           variant="outline"
           size="sm"
           onClick={handleOpenDrawer}
-          className="h-9 border-border bg-cardard hover:bg-accent text-foreground text-xs gap-1"
+          className="h-9 border-border bg-card hover:bg-accent text-foreground text-xs gap-1"
         >
           <Key className="h-4 w-4" />
           <span>Drawer</span>

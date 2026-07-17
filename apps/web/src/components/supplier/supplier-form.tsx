@@ -135,7 +135,7 @@ export function SupplierForm({
   return (
     <form onSubmit={(handleSubmit as any)(onSubmit)} className="space-y-5" noValidate>
       {/* ── Business Information ──────────────────────── */}
-      <div className="rounded-xl border border-border bg-cardard p-5">
+      <div className="rounded-xl border border-border bg-card p-5">
         <SectionHeading>Business Information</SectionHeading>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field label="Company Name" error={errors.companyName?.message} required>
@@ -178,7 +178,7 @@ export function SupplierForm({
       </div>
 
       {/* ── Contact Information ───────────────────────── */}
-      <div className="rounded-xl border border-border bg-cardard p-5">
+      <div className="rounded-xl border border-border bg-card p-5">
         <SectionHeading>Contact Information</SectionHeading>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field label="Phone" error={errors.phone?.message}>
@@ -205,7 +205,7 @@ export function SupplierForm({
       </div>
 
       {/* ── Address ───────────────────────────────────── */}
-      <div className="rounded-xl border border-border bg-cardard p-5">
+      <div className="rounded-xl border border-border bg-card p-5">
         <SectionHeading>Address</SectionHeading>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field
@@ -229,7 +229,7 @@ export function SupplierForm({
       </div>
 
       {/* ── Account Settings ──────────────────────────── */}
-      <div className="rounded-xl border border-border bg-cardard p-5">
+      <div className="rounded-xl border border-border bg-card p-5">
         <SectionHeading>Account Settings</SectionHeading>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field label="Credit Limit ($)" error={errors.creditLimit?.message}>
@@ -262,7 +262,7 @@ export function SupplierForm({
       </div>
 
       {/* ── Notes ─────────────────────────────────────── */}
-      <div className="rounded-xl border border-border bg-cardard p-5">
+      <div className="rounded-xl border border-border bg-card p-5">
         <SectionHeading>Notes</SectionHeading>
         <Field label="Internal Notes" error={errors.notes?.message}>
           <textarea

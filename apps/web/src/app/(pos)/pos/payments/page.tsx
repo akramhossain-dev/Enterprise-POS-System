@@ -90,7 +90,7 @@ export default function POSPaymentsPage() {
               setMethod(e.target.value);
               setCurrentPage(1);
             }}
-            className="bg-cardard border border-border text-foreground rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[130px]"
+            className="bg-card border border-border text-foreground rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[130px]"
           >
             <option value="ALL">All Methods</option>
             <option value="CASH">Cash</option>
@@ -112,7 +112,7 @@ export default function POSPaymentsPage() {
           transactions.map((tx) => (
             <Card
               key={tx.id}
-              className="bg-cardard border-border hover:border-slate-750 transition-colors"
+              className="bg-card border-border hover:border-slate-750 transition-colors"
             >
               <CardContent className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 text-xs sm:text-sm">
                 {/* Details */}
@@ -174,7 +174,7 @@ export default function POSPaymentsPage() {
                       <Button
                         size="sm"
                         variant="outline"
-                        className="h-8 border-border bg-cardard hover:bg-accent text-xs"
+                        className="h-8 border-border bg-card hover:bg-accent text-xs"
                       >
                         Receipt
                       </Button>
@@ -183,7 +183,7 @@ export default function POSPaymentsPage() {
                       <Button
                         size="sm"
                         variant="outline"
-                        className="h-8 border-border bg-cardard hover:bg-accent text-xs"
+                        className="h-8 border-border bg-card hover:bg-accent text-xs"
                       >
                         Invoice
                       </Button>
@@ -214,7 +214,7 @@ export default function POSPaymentsPage() {
               variant="outline"
               disabled={currentPage <= 1}
               onClick={handlePrevPage}
-              className="h-7 w-7 bg-cardard border-border text-muted-foreground hover:text-foreground"
+              className="h-7 w-7 bg-card border-border text-muted-foreground hover:text-foreground"
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
@@ -226,7 +226,7 @@ export default function POSPaymentsPage() {
               variant="outline"
               disabled={currentPage >= meta.totalPages}
               onClick={handleNextPage}
-              className="h-7 w-7 bg-cardard border-border text-muted-foreground hover:text-foreground"
+              className="h-7 w-7 bg-card border-border text-muted-foreground hover:text-foreground"
             >
               <ChevronRight className="h-4 w-4" />
             </Button>

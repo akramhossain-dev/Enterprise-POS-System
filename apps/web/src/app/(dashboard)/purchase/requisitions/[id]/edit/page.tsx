@@ -191,7 +191,7 @@ export default function EditRequisitionPage() {
   if (error || !requisition) {
     return (
       <PageContainer>
-        <div className="text-center py-16 bg-cardard border rounded-2xl">
+        <div className="text-center py-16 bg-card border rounded-2xl">
           <AlertTriangle className="w-12 h-12 text-rose-500 mx-auto mb-4" />
           <h3 className="text-lg font-bold text-foreground">Requisition Not Found</h3>
           <p className="text-sm text-muted-foreground mt-1">
@@ -210,7 +210,7 @@ export default function EditRequisitionPage() {
   if (requisition.status !== 'DRAFT') {
     return (
       <PageContainer>
-        <div className="text-center py-16 bg-cardard border rounded-2xl">
+        <div className="text-center py-16 bg-card border rounded-2xl">
           <AlertTriangle className="w-12 h-12 text-amber-500 mx-auto mb-4" />
           <h3 className="text-lg font-bold text-foreground">Edits Forbidden</h3>
           <p className="text-sm text-muted-foreground mt-1">
@@ -243,7 +243,7 @@ export default function EditRequisitionPage() {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 text-sm">
         <div className="grid gap-6 md:grid-cols-3">
           {/* Main items grid */}
-          <Card className="md:col-span-2 shadow-sm border-border bg-cardard">
+          <Card className="md:col-span-2 shadow-sm border-border bg-card">
             <CardHeader className="border-b">
               <CardTitle className="text-sm font-semibold flex items-center gap-2">
                 <Package className="w-4 h-4 text-primary" /> Requisition Items
@@ -284,7 +284,7 @@ export default function EditRequisitionPage() {
                       items.map((item, index) => (
                         <tr
                           key={item.productId}
-                          className="border-b last:border-b-0 border-border bg-cardard hover:bg-muted/10"
+                          className="border-b last:border-b-0 border-border bg-card hover:bg-muted/10"
                         >
                           <td className="p-3 pl-6">
                             <div className="flex flex-col font-medium">
@@ -340,7 +340,7 @@ export default function EditRequisitionPage() {
 
           {/* Right sidebar config */}
           <div className="space-y-6">
-            <Card className="shadow-sm border-border bg-cardard">
+            <Card className="shadow-sm border-border bg-card">
               <CardHeader className="border-b">
                 <CardTitle className="text-sm font-semibold flex items-center gap-1.5">
                   <Layers className="w-4 h-4 text-primary" /> Request Metadata
@@ -403,7 +403,7 @@ export default function EditRequisitionPage() {
                   </label>
                   <select
                     {...register('priority')}
-                    className="w-full text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none"
+                    className="w-full text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none"
                   >
                     <option value="LOW">LOW Priority</option>
                     <option value="MEDIUM">MEDIUM Priority</option>
@@ -414,7 +414,7 @@ export default function EditRequisitionPage() {
               </CardContent>
             </Card>
 
-            <Card className="shadow-sm border-border bg-cardard">
+            <Card className="shadow-sm border-border bg-card">
               <CardHeader className="border-b">
                 <CardTitle className="text-sm font-semibold">Vendor & Warehouse Route</CardTitle>
               </CardHeader>

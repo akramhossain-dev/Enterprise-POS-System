@@ -45,7 +45,7 @@ export default function TaxDashboardPage() {
             <Button
               variant="outline"
               size="sm"
-              className="h-8 border-border bg-cardard hover:bg-accent text-xs gap-1"
+              className="h-8 border-border bg-card hover:bg-accent text-xs gap-1"
             >
               <Settings className="h-4 w-4 text-muted-foreground" />
               <span>Tax Configuration</span>
@@ -78,7 +78,7 @@ export default function TaxDashboardPage() {
           />
 
           {/* Tax Rates Configuration list */}
-          <Card className="bg-cardard border-border text-foreground font-mono">
+          <Card className="bg-card border-border text-foreground font-mono">
             <CardHeader className="py-4 border-b border-border flex flex-row items-center justify-between">
               <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-widest font-sans">
                 Active Tax System Matrices
@@ -114,7 +114,7 @@ export default function TaxDashboardPage() {
 
         {/* Right column: Recharts Tax Chart */}
         <div className="md:col-span-1">
-          <Card className="bg-cardard border-border text-foreground h-full flex flex-col justify-between">
+          <Card className="bg-card border-border text-foreground h-full flex flex-col justify-between">
             <CardHeader className="pb-3 border-b border-border">
               <CardTitle className="text-xs font-bold text-foreground uppercase tracking-widest font-sans flex items-center gap-1.5">
                 <BadgePercent className="h-4 w-4 text-emerald-400 animate-pulse" />

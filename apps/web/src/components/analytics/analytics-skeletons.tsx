@@ -21,7 +21,7 @@ export function AnalyticsDashboardSkeleton() {
       {/* KPI Grid */}
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         {Array.from({ length: 4 }).map((_, idx) => (
-          <div key={idx} className="rounded-xl border border-border bg-cardard p-5 space-y-3">
+          <div key={idx} className="rounded-xl border border-border bg-card p-5 space-y-3">
             <div className="flex items-center justify-between">
               <Skeleton className="h-3.5 w-24 bg-accent" />
               <Skeleton className="h-8 w-8 rounded-lg bg-accent" />
@@ -35,7 +35,7 @@ export function AnalyticsDashboardSkeleton() {
       {/* Secondary grid row */}
       <div className="grid gap-6 md:grid-cols-3">
         {/* Large Chart Area */}
-        <div className="md:col-span-2 rounded-xl border border-border bg-cardard p-6 space-y-4">
+        <div className="md:col-span-2 rounded-xl border border-border bg-card p-6 space-y-4">
           <div className="flex justify-between items-center border-b border-border pb-3">
             <Skeleton className="h-4 w-32 bg-accent" />
             <div className="flex gap-2">
@@ -47,7 +47,7 @@ export function AnalyticsDashboardSkeleton() {
         </div>
 
         {/* Sidebar Rankings */}
-        <div className="rounded-xl border border-border bg-cardard p-5 space-y-4">
+        <div className="rounded-xl border border-border bg-card p-5 space-y-4">
           <Skeleton className="h-4 w-32 bg-accent border-b border-border pb-3" />
           <div className="space-y-4">
             {Array.from({ length: 3 }).map((_, idx) => (
@@ -71,7 +71,7 @@ export function AnalyticsDashboardSkeleton() {
 
 export function AnalyticsChartSkeleton() {
   return (
-    <div className="rounded-xl border border-border bg-cardard p-6 space-y-4">
+    <div className="rounded-xl border border-border bg-card p-6 space-y-4">
       <div className="flex justify-between items-center border-b border-border pb-3">
         <Skeleton className="h-4 w-36 bg-accent" />
         <Skeleton className="h-6 w-16 bg-accent" />

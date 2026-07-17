@@ -39,7 +39,7 @@ export function ReportCard({ report, onToggleFavorite, className }: ReportCardPr
   return (
     <Card
       className={cn(
-        'bg-cardard border-border text-foreground hover:border-slate-700 hover:shadow-md transition-all duration-200 flex flex-col justify-between select-none text-left',
+        'bg-card border-border text-foreground hover:border-slate-700 hover:shadow-md transition-all duration-200 flex flex-col justify-between select-none text-left',
         className,
       )}
     >

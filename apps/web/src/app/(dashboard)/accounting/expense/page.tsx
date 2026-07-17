@@ -151,7 +151,7 @@ export default function ExpenseBookPage() {
               setCatFilter(e.target.value);
               setCurrentPage(1);
             }}
-            className="bg-cardard border border-border text-muted-foreground rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[140px]"
+            className="bg-card border border-border text-muted-foreground rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[140px]"
           >
             <option value="ALL">All Categories</option>
             {expenseAccounts.map((a) => (
@@ -168,7 +168,7 @@ export default function ExpenseBookPage() {
               setMethodFilter(e.target.value);
               setCurrentPage(1);
             }}
-            className="bg-cardard border border-border text-muted-foreground rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[120px]"
+            className="bg-card border border-border text-muted-foreground rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[120px]"
           >
             <option value="ALL">All Methods</option>
             <option value="CASH">Cash</option>
@@ -184,7 +184,7 @@ export default function ExpenseBookPage() {
         {isLoading ? (
           <TableSkeleton rows={5} cols={6} />
         ) : expenses.length > 0 ? (
-          <div className="bg-cardard border border-border rounded-2xl overflow-hidden">
+          <div className="bg-card border border-border rounded-2xl overflow-hidden">
             <table className="w-full text-xs sm:text-sm text-left border-collapse">
               <thead>
                 <tr className="border-b border-slate-855 text-muted-foreground font-bold uppercase tracking-wider text-[10px] bg-slate-955/35">
@@ -231,7 +231,7 @@ export default function ExpenseBookPage() {
 
       {/* Record Expense Dialog Modal */}
       <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-        <DialogContent className="bg-cardard border border-border text-foreground max-w-md p-6">
+        <DialogContent className="bg-card border border-border text-foreground max-w-md p-6">
           <DialogHeader className="mb-4">
             <DialogTitle className="text-sm font-black uppercase text-foreground tracking-wider flex items-center gap-1.5">
               <BadgeMinus className="h-5 w-5 text-rose-455 animate-pulse" />
@@ -245,7 +245,9 @@ export default function ExpenseBookPage() {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 text-xs sm:text-sm">
             {/* Category selection */}
             <div className="grid gap-1.5 text-left">
-              <label className="text-muted-foreground font-semibold">Expense Category Account *</label>
+              <label className="text-muted-foreground font-semibold">
+                Expense Category Account *
+              </label>
               <select
                 {...register('accountId')}
                 className="bg-muted border border-slate-855 rounded p-2 text-xs text-foreground focus:outline-none focus:border-emerald-500 cursor-pointer"
@@ -265,7 +267,9 @@ export default function ExpenseBookPage() {
             <div className="grid grid-cols-2 gap-4">
               {/* Amount */}
               <div className="grid gap-1.5">
-                <label className="text-muted-foreground font-semibold font-mono">Amount ($) *</label>
+                <label className="text-muted-foreground font-semibold font-mono">
+                  Amount ($) *
+                </label>
                 <Input
                   type="number"
                   step="any"
@@ -337,7 +341,7 @@ export default function ExpenseBookPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  className="h-9 border-border text-muted-foreground hover:text-foreground bg-cardard"
+                  className="h-9 border-border text-muted-foreground hover:text-foreground bg-card"
                 >
                   Cancel
                 </Button>

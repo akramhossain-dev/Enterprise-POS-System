@@ -101,7 +101,7 @@ export default function AccountLedgerPage() {
           <select
             value={selectedAccountId}
             onChange={(e) => setSelectedAccountId(e.target.value)}
-            className="bg-cardard border border-border text-foreground rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[220px] font-bold font-mono"
+            className="bg-card border border-border text-foreground rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[220px] font-bold font-mono"
           >
             <option value="">-- Choose Account * --</option>
             {accounts.map((a) => (
@@ -112,7 +112,7 @@ export default function AccountLedgerPage() {
           </select>
 
           {/* Date range filters */}
-          <div className="flex items-center gap-1.5 bg-cardard px-3 border border-border rounded-lg text-xs h-9">
+          <div className="flex items-center gap-1.5 bg-card px-3 border border-border rounded-lg text-xs h-9">
             <span className="text-muted-foreground">From</span>
             <input
               type="date"
@@ -133,7 +133,7 @@ export default function AccountLedgerPage() {
           <select
             value={txType}
             onChange={(e) => setTxType(e.target.value)}
-            className="bg-cardard border border-border text-muted-foreground rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[120px]"
+            className="bg-card border border-border text-muted-foreground rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[120px]"
           >
             <option value="ALL">All Types</option>
             <option value="JOURNAL">Journals</option>
@@ -148,7 +148,7 @@ export default function AccountLedgerPage() {
             size="sm"
             variant="outline"
             onClick={handleExportCSV}
-            className="h-8 border-border bg-cardard hover:bg-accent text-xs gap-1.5 w-full md:w-auto"
+            className="h-8 border-border bg-card hover:bg-accent text-xs gap-1.5 w-full md:w-auto"
           >
             <FileDown className="h-4 w-4 text-slate-450" />
             <span>Export CSV</span>

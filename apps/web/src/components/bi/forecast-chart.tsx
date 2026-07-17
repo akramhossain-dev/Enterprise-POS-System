@@ -30,7 +30,7 @@ export function ForecastChart({
   className,
 }: ForecastChartProps) {
   return (
-    <Card className="bg-cardard border-border text-foreground flex flex-col justify-between select-none text-left print:bg-white print:text-black">
+    <Card className="bg-card border-border text-foreground flex flex-col justify-between select-none text-left print:bg-white print:text-black">
       <CardHeader className="py-4 border-b border-border">
         <CardTitle className="text-xs font-bold text-foreground uppercase tracking-widest font-sans">
           {title}

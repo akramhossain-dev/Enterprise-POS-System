@@ -199,7 +199,7 @@ export default function PurchaseReturnDetailsPage() {
 
       <div className="space-y-6">
         {/* Document Status Ribbon */}
-        <div className="border border-border/80 bg-cardard rounded-xl p-4 flex flex-wrap gap-4 items-center justify-between shadow-sm">
+        <div className="border border-border/80 bg-card rounded-xl p-4 flex flex-wrap gap-4 items-center justify-between shadow-sm">
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2">
               <span className="font-semibold text-muted-foreground text-xs uppercase tracking-wide">
@@ -226,7 +226,7 @@ export default function PurchaseReturnDetailsPage() {
         <ReturnSummaryCard purchaseReturn={purchaseReturn} />
 
         {/* Returned items lists */}
-        <Card className="border border-border bg-cardard shadow-sm rounded-xl overflow-hidden text-sm">
+        <Card className="border border-border bg-card shadow-sm rounded-xl overflow-hidden text-sm">
           <CardHeader className="bg-muted/20 border-b p-4">
             <CardTitle className="text-xs font-bold uppercase tracking-wider text-foreground">
               Returned Products Inventory
@@ -252,7 +252,7 @@ export default function PurchaseReturnDetailsPage() {
                   {purchaseReturn.items.map((it) => (
                     <tr
                       key={it.id}
-                      className="border-b last:border-0 border-border bg-cardard hover:bg-muted/10"
+                      className="border-b last:border-0 border-border bg-card hover:bg-muted/10"
                     >
                       <td className="p-3 pl-6 font-semibold text-foreground">{it.productName}</td>
                       <td className="p-3 font-mono text-muted-foreground">{it.sku}</td>
@@ -311,7 +311,7 @@ export default function PurchaseReturnDetailsPage() {
             <ReturnFinancialSummary purchaseReturn={purchaseReturn} />
 
             {/* Workflow Approval Panel (Admin Action Panel) */}
-            <Card className="border border-border bg-cardard shadow-sm rounded-xl overflow-hidden print:hidden text-sm">
+            <Card className="border border-border bg-card shadow-sm rounded-xl overflow-hidden print:hidden text-sm">
               <CardHeader className="bg-muted/20 border-b p-4">
                 <CardTitle className="text-xs font-bold uppercase tracking-wider text-foreground">
                   Claims Control Room

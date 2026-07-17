@@ -110,7 +110,7 @@ export default function POSReturnsHistoryPage() {
               setStatus(e.target.value);
               setCurrentPage(1);
             }}
-            className="bg-cardard border border-border text-foreground rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[130px]"
+            className="bg-card border border-border text-foreground rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[130px]"
           >
             <option value="ALL">All States</option>
             <option value="DRAFT">Draft</option>
@@ -125,7 +125,9 @@ export default function POSReturnsHistoryPage() {
       {/* Claims list */}
       <div className="space-y-3">
         {isLoading ? (
-          <div className="text-center py-12 text-muted-foreground">Querying return directory...</div>
+          <div className="text-center py-12 text-muted-foreground">
+            Querying return directory...
+          </div>
         ) : returns.length > 0 ? (
           returns.map((claim) => <ReturnCard key={claim.id} claim={claim} />)
         ) : (
@@ -149,7 +151,7 @@ export default function POSReturnsHistoryPage() {
               variant="outline"
               disabled={currentPage <= 1}
               onClick={handlePrevPage}
-              className="h-7 w-7 bg-cardard border-border text-muted-foreground hover:text-foreground"
+              className="h-7 w-7 bg-card border-border text-muted-foreground hover:text-foreground"
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
@@ -158,7 +160,7 @@ export default function POSReturnsHistoryPage() {
               variant="outline"
               disabled={currentPage >= meta.totalPages}
               onClick={handleNextPage}
-              className="h-7 w-7 bg-cardard border-border text-muted-foreground hover:text-foreground"
+              className="h-7 w-7 bg-card border-border text-muted-foreground hover:text-foreground"
             >
               <ChevronRight className="h-4 w-4" />
             </Button>

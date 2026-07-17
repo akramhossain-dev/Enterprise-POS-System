@@ -25,7 +25,7 @@ export function CapacityCard({
   return (
     <div
       className={cn(
-        'rounded-2xl border border-border bg-cardard p-5 space-y-4 shadow-sm text-left',
+        'rounded-2xl border border-border bg-card p-5 space-y-4 shadow-sm text-left',
         className,
       )}
     >

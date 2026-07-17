@@ -73,7 +73,7 @@ export default function AuditReportsPage() {
               setModuleFilter(e.target.value);
               setCurrentPage(1);
             }}
-            className="bg-cardard border border-border text-muted-foreground rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[140px]"
+            className="bg-card border border-border text-muted-foreground rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[140px]"
           >
             <option value="ALL">All Modules</option>
             <option value="JOURNAL">Journals</option>
@@ -91,14 +91,14 @@ export default function AuditReportsPage() {
       <div className="grid gap-6 md:grid-cols-3">
         {/* Left Column: timeline listing */}
         <div className="md:col-span-2">
-          <Card className="bg-cardard border-border p-6">
+          <Card className="bg-card border-border p-6">
             <AuditTimeline logs={logs} loading={isLoading} />
           </Card>
         </div>
 
         {/* Right Column: details sidebar */}
         <div className="md:col-span-1">
-          <Card className="bg-cardard border-border text-foreground p-4 space-y-4">
+          <Card className="bg-card border-border text-foreground p-4 space-y-4">
             <div className="border-b border-border pb-2">
               <span className="text-[10px] font-bold text-slate-450 uppercase tracking-widest font-sans flex items-center gap-1.5">
                 <ShieldCheck className="h-4 w-4 text-emerald-450" />

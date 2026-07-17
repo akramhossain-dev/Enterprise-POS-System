@@ -56,7 +56,7 @@ export function OrderTimeline({ status, completedAt }: OrderTimelineProps) {
   const finalDetails = getStatusDetails();
 
   return (
-    <div className="bg-cardard border border-border rounded-2xl p-5 select-none text-left">
+    <div className="bg-card border border-border rounded-2xl p-5 select-none text-left">
       <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-6">
         Order Lifecycle Audit Trail
       </h3>

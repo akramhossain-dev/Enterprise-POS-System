@@ -86,7 +86,7 @@ export function ShoppingCart() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-cardard border-l border-border overflow-hidden select-none">
+    <div className="flex flex-col h-full bg-card border-l border-border overflow-hidden select-none">
       {/* Multi-Cart Tabs Navigation */}
       <div className="px-3 pt-3 pb-2 border-b border-border bg-muted/20 shrink-0 flex items-center justify-between">
         <div className="flex items-center space-x-1.5 overflow-x-auto custom-scrollbar max-w-[80%] whitespace-nowrap">
@@ -149,7 +149,7 @@ export function ShoppingCart() {
               </Button>
 
               {showCartActions && (
-                <div className="absolute right-0 top-full mt-1 w-36 bg-cardard border border-border rounded-lg shadow-xl py-1 z-30 text-xs">
+                <div className="absolute right-0 top-full mt-1 w-36 bg-card border border-border rounded-lg shadow-xl py-1 z-30 text-xs">
                   <button
                     onClick={() => handleStartRename(activeCart.id, activeCart.name)}
                     className="w-full text-left px-3 py-2 text-foreground hover:bg-accent flex items-center"
@@ -202,7 +202,7 @@ export function ShoppingCart() {
             return (
               <div
                 key={item.productId}
-                className="flex flex-col border border-border bg-cardard rounded-xl p-2.5 shadow-sm transition-all"
+                className="flex flex-col border border-border bg-card rounded-xl p-2.5 shadow-sm transition-all"
               >
                 {/* Product primary row */}
                 <div className="flex items-start justify-between gap-2.5 text-left">

@@ -17,7 +17,7 @@ export function ReturnFinancialSummary({ purchaseReturn }: ReturnFinancialSummar
   };
 
   return (
-    <Card className="border border-border bg-cardard shadow-sm rounded-xl overflow-hidden text-sm">
+    <Card className="border border-border bg-card shadow-sm rounded-xl overflow-hidden text-sm">
       <CardHeader className="bg-muted/20 border-b p-4">
         <CardTitle className="text-xs font-bold uppercase tracking-wider text-foreground flex items-center gap-1.5">
           <DollarSign className="w-4 h-4 text-emerald-500" /> Return Valuation & Settlement

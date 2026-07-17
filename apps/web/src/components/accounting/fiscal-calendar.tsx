@@ -26,7 +26,7 @@ export function FiscalCalendar({ year, onToggleStatus, isPending = false }: Fisc
   };
 
   return (
-    <Card className="bg-cardard border-border text-foreground select-none text-left">
+    <Card className="bg-card border-border text-foreground select-none text-left">
       <CardContent className="p-5 space-y-4">
         {/* Header */}
         <div className="flex justify-between items-center border-b border-border pb-3">

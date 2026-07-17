@@ -125,7 +125,7 @@ export default function ExecutiveBiDashboardPage() {
       {/* Corporate health index layout */}
       <div className="grid gap-6 md:grid-cols-3 mb-6">
         {/* Business Health Score circular card */}
-        <Card className="bg-cardard border-border p-4 flex flex-col justify-between">
+        <Card className="bg-card border-border p-4 flex flex-col justify-between">
           <CardHeader className="p-0 pb-3 border-b border-border">
             <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-widest font-sans flex items-center gap-1.5">
               <FolderHeart className="h-4 w-4 text-emerald-450" />
@@ -148,7 +148,7 @@ export default function ExecutiveBiDashboardPage() {
           {widgets.map((widget) => (
             <Card
               key={widget.id}
-              className="bg-cardard border-border p-4 flex flex-col justify-between select-none"
+              className="bg-card border-border p-4 flex flex-col justify-between select-none"
             >
               <div className="flex justify-between items-start border-b border-border pb-2 mb-2">
                 <div>

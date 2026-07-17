@@ -118,7 +118,7 @@ export default function WarehouseDetailsPage() {
   if (!warehouse) {
     return (
       <PageContainer>
-        <div className="text-center py-20 bg-cardard rounded-2xl border border-border">
+        <div className="text-center py-20 bg-card rounded-2xl border border-border">
           <AlertCircle className="w-8 h-8 mx-auto text-muted-foreground" />
           <h2 className="font-semibold text-foreground text-sm mt-3">
             Warehouse Profile Not Found
@@ -243,7 +243,7 @@ export default function WarehouseDetailsPage() {
           <CapacityCard capacity={cap} utilization={util} storageType={storageType} />
 
           {/* Quick info specs list */}
-          <div className="rounded-2xl border border-border bg-cardard p-6 space-y-4">
+          <div className="rounded-2xl border border-border bg-card p-6 space-y-4">
             <h3 className="font-bold text-foreground text-sm border-b border-border/60 pb-2 flex items-center gap-2">
               <MapPin className="w-4 h-4 text-primary" />
               Location Details
@@ -280,7 +280,7 @@ export default function WarehouseDetailsPage() {
           </div>
 
           {/* Manager Info Details */}
-          <div className="rounded-2xl border border-border bg-cardard p-6 space-y-4">
+          <div className="rounded-2xl border border-border bg-card p-6 space-y-4">
             <h3 className="font-bold text-foreground text-sm border-b border-border/60 pb-2 flex items-center gap-2">
               <UserIcon className="w-4 h-4 text-primary" />
               Manager Contacts
@@ -316,7 +316,7 @@ export default function WarehouseDetailsPage() {
         {/* Right side tab view */}
         <div className="lg:col-span-2 space-y-6">
           {/* Tab Navigation header */}
-          <div className="flex border-b border-border bg-cardard rounded-2xl p-1.5 gap-1 shadow-sm">
+          <div className="flex border-b border-border bg-card rounded-2xl p-1.5 gap-1 shadow-sm">
             {(['overview', 'locations', 'inventory', 'activity'] as const).map((tab) => (
               <button
                 key={tab}
@@ -337,7 +337,7 @@ export default function WarehouseDetailsPage() {
           </div>
 
           {/* Tab Panel contents */}
-          <div className="rounded-2xl border border-border bg-cardard p-6 min-h-[350px]">
+          <div className="rounded-2xl border border-border bg-card p-6 min-h-[350px]">
             {/* Overview tab */}
             {activeTab === 'overview' && (
               <div className="space-y-6">
@@ -494,7 +494,7 @@ export default function WarehouseDetailsPage() {
                     },
                   ].map((act, idx) => (
                     <div key={idx} className="relative text-left">
-                      <span className="absolute -left-[31px] top-0.5 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-cardard border border-border">
+                      <span className="absolute -left-[31px] top-0.5 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-card border border-border">
                         <Clock className="w-2.5 h-2.5 text-primary" />
                       </span>
                       <div>

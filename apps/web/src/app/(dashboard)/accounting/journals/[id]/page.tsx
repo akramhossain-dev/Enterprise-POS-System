@@ -117,7 +117,7 @@ export default function JournalDetailsPage({ params }: { params: Promise<{ id: s
                 <Button
                   size="sm"
                   variant="outline"
-                  className="h-8 border-border bg-cardard hover:bg-accent text-xs gap-1"
+                  className="h-8 border-border bg-card hover:bg-accent text-xs gap-1"
                 >
                   <Edit className="h-3.5 w-3.5" />
                   <span>Edit</span>
@@ -165,7 +165,7 @@ export default function JournalDetailsPage({ params }: { params: Promise<{ id: s
               variant="outline"
               onClick={handleCancel}
               disabled={cancelMutation.isPending}
-              className="h-8 border-border text-rose-455 bg-cardard hover:bg-accent text-xs gap-1"
+              className="h-8 border-border text-rose-455 bg-card hover:bg-accent text-xs gap-1"
             >
               <XCircle className="h-3.5 w-3.5" />
               <span>Cancel</span>
@@ -213,7 +213,7 @@ export default function JournalDetailsPage({ params }: { params: Promise<{ id: s
       `}</style>
 
       {/* Main details body */}
-      <div className="mt-6 space-y-6 print:m-0 print:border print:p-8 print-border-black rounded-3xl overflow-hidden bg-cardard border border-border text-foreground print:bg-white print:text-black">
+      <div className="mt-6 space-y-6 print:m-0 print:border print:p-8 print-border-black rounded-3xl overflow-hidden bg-card border border-border text-foreground print:bg-white print:text-black">
         <div className="p-6 space-y-6">
           {/* Header invoice details */}
           <div className="flex flex-col sm:flex-row justify-between items-start gap-4 border-b border-border pb-6 print:border-black">
@@ -224,7 +224,9 @@ export default function JournalDetailsPage({ params }: { params: Promise<{ id: s
               <h2 className="text-xl font-black font-mono text-foreground print:text-black">
                 {journal.referenceNumber}
               </h2>
-              <p className="text-xs text-muted-foreground print:text-black/80">{journal.description}</p>
+              <p className="text-xs text-muted-foreground print:text-black/80">
+                {journal.description}
+              </p>
             </div>
 
             <div className="space-y-1 sm:text-right text-[11px] font-mono text-muted-foreground print:text-black">
@@ -311,7 +313,9 @@ export default function JournalDetailsPage({ params }: { params: Promise<{ id: s
           {/* Notes summary details */}
           {journal.notes && (
             <div className="border-t border-border pt-4 text-xs space-y-1.5 print:border-black print:text-black">
-              <span className="font-bold text-muted-foreground block print:text-black">Audit Notes</span>
+              <span className="font-bold text-muted-foreground block print:text-black">
+                Audit Notes
+              </span>
               <p className="p-3 bg-muted rounded-lg text-muted-foreground print:bg-slate-50 print:border print:text-black">
                 {journal.notes}
               </p>

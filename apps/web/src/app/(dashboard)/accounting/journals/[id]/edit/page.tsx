@@ -192,12 +192,14 @@ export default function EditJournalPage({ params }: { params: Promise<{ id: stri
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 mt-6 text-xs sm:text-sm">
         {/* Form Meta Fields */}
-        <Card className="bg-cardard border-border text-foreground">
+        <Card className="bg-card border-border text-foreground">
           <CardContent className="p-6 space-y-4">
             <div className="grid gap-4 sm:grid-cols-3">
               {/* Reference Number */}
               <div className="grid gap-1.5">
-                <label className="text-muted-foreground font-semibold font-mono">Reference Number</label>
+                <label className="text-muted-foreground font-semibold font-mono">
+                  Reference Number
+                </label>
                 <Input
                   type="text"
                   disabled
@@ -268,7 +270,7 @@ export default function EditJournalPage({ params }: { params: Promise<{ id: stri
         </Card>
 
         {/* Double Entry Lines Section */}
-        <Card className="bg-cardard border-border text-foreground">
+        <Card className="bg-card border-border text-foreground">
           <CardContent className="p-6">
             <DebitCreditEntry value={lines} onChange={setLines} accounts={accounts} />
           </CardContent>

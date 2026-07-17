@@ -27,12 +27,7 @@ export function TaxSummaryCard({
   const isLiability = netLiability >= 0;
 
   return (
-    <Card
-      className={cn(
-        'bg-cardard border-border text-foreground select-none text-left',
-        className,
-      )}
-    >
+    <Card className={cn('bg-card border-border text-foreground select-none text-left', className)}>
       <CardContent className="p-5 space-y-4">
         {/* Header */}
         <div className="flex justify-between items-center border-b border-border pb-3">

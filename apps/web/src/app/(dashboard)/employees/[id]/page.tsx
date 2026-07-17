@@ -61,7 +61,7 @@ export default function EmployeeDetailsPage() {
   if (!employee) {
     return (
       <PageContainer>
-        <div className="text-center py-20 bg-cardard rounded-2xl border border-border">
+        <div className="text-center py-20 bg-card rounded-2xl border border-border">
           <AlertCircle className="w-8 h-8 mx-auto text-muted-foreground" />
           <h2 className="font-semibold text-foreground text-sm mt-3">Employee Record Not Found</h2>
           <Link href="/employees" className="mt-4 inline-block">
@@ -126,7 +126,7 @@ export default function EmployeeDetailsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left column - card summary */}
         <div className="lg:col-span-1 space-y-6">
-          <div className="rounded-2xl border border-border bg-cardard p-6 flex flex-col items-center text-center">
+          <div className="rounded-2xl border border-border bg-card p-6 flex flex-col items-center text-center">
             {/* Avatar */}
             <div className="relative flex h-24 w-24 items-center justify-center rounded-2xl bg-primary/10 font-bold text-primary text-3xl shadow-sm border border-primary/5">
               {employee.metadata?.photoUrl ? (
@@ -221,7 +221,7 @@ export default function EmployeeDetailsPage() {
         {/* Right column - detailed info tabs */}
         <div className="lg:col-span-2 space-y-6">
           {/* Tab Navigation header */}
-          <div className="flex border-b border-border bg-cardard rounded-2xl p-1.5 gap-1 shadow-sm">
+          <div className="flex border-b border-border bg-card rounded-2xl p-1.5 gap-1 shadow-sm">
             {(['personal', 'attendance', 'documents', 'security'] as const).map((tab) => (
               <button
                 key={tab}
@@ -239,7 +239,7 @@ export default function EmployeeDetailsPage() {
           </div>
 
           {/* Tab Contents */}
-          <div className="rounded-2xl border border-border bg-cardard p-6 min-h-[300px]">
+          <div className="rounded-2xl border border-border bg-card p-6 min-h-[300px]">
             {activeTab === 'personal' && (
               <div className="space-y-6 text-left">
                 {/* Personal Information section */}

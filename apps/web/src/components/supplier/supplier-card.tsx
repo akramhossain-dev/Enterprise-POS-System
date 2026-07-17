@@ -34,7 +34,7 @@ export function SupplierCard({ supplier, className, onClick }: SupplierCardProps
     <div
       onClick={onClick}
       className={cn(
-        'group relative flex flex-col gap-3 rounded-xl border border-border bg-cardard p-4 transition-all duration-200',
+        'group relative flex flex-col gap-3 rounded-xl border border-border bg-card p-4 transition-all duration-200',
         'hover:border-primary/30 hover:shadow-md hover:shadow-primary/5',
         onClick && 'cursor-pointer',
         className,

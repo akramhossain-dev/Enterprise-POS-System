@@ -190,7 +190,7 @@ export default function JournalsListPage() {
             size="sm"
             variant="outline"
             onClick={handleExport}
-            className="h-8 border-border bg-cardard hover:bg-accent text-xs gap-1"
+            className="h-8 border-border bg-card hover:bg-accent text-xs gap-1"
           >
             <FileDown className="h-4 w-4 text-slate-450" />
             <span>Export CSV</span>
@@ -235,7 +235,7 @@ export default function JournalsListPage() {
               setStatusFilter(e.target.value);
               setCurrentPage(1);
             }}
-            className="bg-cardard border border-border text-foreground rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[120px]"
+            className="bg-card border border-border text-foreground rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[120px]"
           >
             <option value="ALL">All Statuses</option>
             <option value="DRAFT">Draft</option>
@@ -287,7 +287,7 @@ export default function JournalsListPage() {
         {isLoading ? (
           <TableSkeleton rows={5} cols={6} />
         ) : journals.length > 0 ? (
-          <div className="bg-cardard border border-border rounded-2xl overflow-hidden">
+          <div className="bg-card border border-border rounded-2xl overflow-hidden">
             <table className="w-full text-xs sm:text-sm text-left border-collapse">
               <thead>
                 <tr className="border-b border-slate-855 text-muted-foreground font-bold uppercase tracking-wider text-[10px] bg-slate-955/35">
@@ -391,7 +391,7 @@ export default function JournalsListPage() {
               variant="outline"
               disabled={currentPage <= 1}
               onClick={handlePrevPage}
-              className="h-7 w-7 bg-cardard border-border text-muted-foreground hover:text-foreground"
+              className="h-7 w-7 bg-card border-border text-muted-foreground hover:text-foreground"
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
@@ -400,7 +400,7 @@ export default function JournalsListPage() {
               variant="outline"
               disabled={currentPage >= meta.totalPages}
               onClick={handleNextPage}
-              className="h-7 w-7 bg-cardard border-border text-muted-foreground hover:text-foreground"
+              className="h-7 w-7 bg-card border-border text-muted-foreground hover:text-foreground"
             >
               <ChevronRight className="h-4 w-4" />
             </Button>

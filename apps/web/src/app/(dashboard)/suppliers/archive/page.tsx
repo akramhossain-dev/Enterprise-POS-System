@@ -111,7 +111,7 @@ export default function SupplierArchivePage() {
       </div>
 
       {/* Table */}
-      <div className="rounded-xl border border-border bg-cardard overflow-hidden">
+      <div className="rounded-xl border border-border bg-card overflow-hidden">
         {error ? (
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <p className="text-sm text-destructive mb-3">Failed to load archived suppliers</p>

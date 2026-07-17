@@ -101,7 +101,7 @@ export default function ReturnHistoryPage() {
       </div>
 
       {/* Audit History Logs Card */}
-      <Card className="shadow-sm border-border bg-cardard text-sm">
+      <Card className="shadow-sm border-border bg-card text-sm">
         <CardHeader className="border-b">
           <CardTitle className="text-sm font-semibold flex items-center gap-1.5">
             <History className="w-4 h-4 text-primary" /> Workflow Audit Ledger

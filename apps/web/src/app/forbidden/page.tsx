@@ -12,7 +12,7 @@ export default function ForbiddenPage() {
     <div className="min-h-dvh flex items-center justify-center bg-background p-4">
       <div className="max-w-md w-full text-center space-y-6">
         {/* Icon */}
-        <div className="mx-auto w-20 h-20 rounded-full bg-backgroundestructive/10 flex items-center justify-center">
+        <div className="mx-auto w-20 h-20 rounded-full bg-destructive/10 flex items-center justify-center">
           <Ban className="w-10 h-10 text-destructive" />
         </div>
 

@@ -160,7 +160,7 @@ export default function EditEmployeePage() {
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 max-w-4xl">
         {/* Core Personal Details Card */}
-        <div className="rounded-2xl border border-border bg-cardard p-6 space-y-4">
+        <div className="rounded-2xl border border-border bg-card p-6 space-y-4">
           <div className="flex items-center gap-2 border-b border-border/50 pb-3">
             <User className="w-5 h-5 text-primary" />
             <h2 className="font-semibold text-foreground text-base">Personal Details</h2>
@@ -231,7 +231,7 @@ export default function EditEmployeePage() {
         </div>
 
         {/* Corporate Placement Details */}
-        <div className="rounded-2xl border border-border bg-cardard p-6 space-y-4">
+        <div className="rounded-2xl border border-border bg-card p-6 space-y-4">
           <div className="flex items-center gap-2 border-b border-border/50 pb-3">
             <Building className="w-5 h-5 text-primary" />
             <h2 className="font-semibold text-foreground text-base">Employment Placement</h2>
@@ -361,7 +361,7 @@ export default function EditEmployeePage() {
         </div>
 
         {/* Address and Emergency Contacts */}
-        <div className="rounded-2xl border border-border bg-cardard p-6 space-y-4">
+        <div className="rounded-2xl border border-border bg-card p-6 space-y-4">
           <div className="flex items-center gap-2 border-b border-border/50 pb-3">
             <Phone className="w-5 h-5 text-primary" />
             <h2 className="font-semibold text-foreground text-base">Address & Emergency Contact</h2>

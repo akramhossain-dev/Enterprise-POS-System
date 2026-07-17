@@ -72,9 +72,11 @@ export default function POSAccountGroupsPage() {
       <div className="grid gap-6 md:grid-cols-3 mt-6">
         {/* Creation form */}
         <div className="md:col-span-1">
-          <Card className="bg-cardard border-border text-foreground h-full">
+          <Card className="bg-card border-border text-foreground h-full">
             <CardHeader className="pb-3 border-b border-border">
-              <CardTitle className="text-sm font-bold text-muted-foreground">Register New Group</CardTitle>
+              <CardTitle className="text-sm font-bold text-muted-foreground">
+                Register New Group
+              </CardTitle>
             </CardHeader>
             <CardContent className="p-4">
               <form onSubmit={handleCreate} className="space-y-4 text-xs sm:text-sm">
@@ -129,7 +131,7 @@ export default function POSAccountGroupsPage() {
 
         {/* Groups table list */}
         <div className="md:col-span-2">
-          <Card className="bg-cardard border-border text-foreground flex flex-col h-full overflow-hidden">
+          <Card className="bg-card border-border text-foreground flex flex-col h-full overflow-hidden">
             <CardHeader className="pb-3 border-b border-border shrink-0">
               <CardTitle className="text-sm font-bold text-muted-foreground flex items-center gap-1.5">
                 <Bookmark className="h-4.5 w-4.5 text-emerald-400" />

@@ -83,7 +83,7 @@ export default function POSChartAccountsPage() {
             <Button
               size="sm"
               variant="outline"
-              className="h-8 border-border bg-cardard hover:bg-accent text-xs gap-1"
+              className="h-8 border-border bg-card hover:bg-accent text-xs gap-1"
             >
               <FolderLock className="h-4 w-4 text-muted-foreground" />
               <span>Archived Accounts</span>
@@ -129,7 +129,7 @@ export default function POSChartAccountsPage() {
               setTypeFilter(e.target.value);
               setCurrentPage(1);
             }}
-            className="bg-cardard border border-border text-foreground rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[120px]"
+            className="bg-card border border-border text-foreground rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[120px]"
           >
             <option value="ALL">All Types</option>
             <option value="ASSETS">Assets</option>
@@ -178,7 +178,7 @@ export default function POSChartAccountsPage() {
             <AccountTree accounts={accounts} onArchive={handleArchive} />
           ) : (
             /* Table View */
-            <div className="bg-cardard border border-border rounded-2xl overflow-hidden">
+            <div className="bg-card border border-border rounded-2xl overflow-hidden">
               <table className="w-full text-xs sm:text-sm text-left border-collapse">
                 <thead>
                   <tr className="border-b border-slate-855 text-muted-foreground font-bold uppercase tracking-wider text-[10px] bg-slate-955/35">
@@ -195,7 +195,9 @@ export default function POSChartAccountsPage() {
                     <tr key={acc.id} className="hover:bg-accent/40">
                       <td className="py-3 px-4 font-bold text-foreground">{acc.code}</td>
                       <td className="py-3 px-4 font-sans font-bold text-foreground">{acc.name}</td>
-                      <td className="py-3 px-3 font-sans text-xs text-muted-foreground">{acc.type}</td>
+                      <td className="py-3 px-3 font-sans text-xs text-muted-foreground">
+                        {acc.type}
+                      </td>
                       <td className="py-3 px-3 font-sans text-xs text-muted-foreground">
                         {acc.parentAccountCode
                           ? `${acc.parentAccountCode} (${acc.parentAccountName})`
@@ -260,7 +262,7 @@ export default function POSChartAccountsPage() {
               variant="outline"
               disabled={currentPage <= 1}
               onClick={handlePrevPage}
-              className="h-7 w-7 bg-cardard border-border text-muted-foreground hover:text-foreground"
+              className="h-7 w-7 bg-card border-border text-muted-foreground hover:text-foreground"
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
@@ -269,7 +271,7 @@ export default function POSChartAccountsPage() {
               variant="outline"
               disabled={currentPage >= meta.totalPages}
               onClick={handleNextPage}
-              className="h-7 w-7 bg-cardard border-border text-muted-foreground hover:text-foreground"
+              className="h-7 w-7 bg-card border-border text-muted-foreground hover:text-foreground"
             >
               <ChevronRight className="h-4 w-4" />
             </Button>

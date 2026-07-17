@@ -149,12 +149,9 @@ export default function ReportsDashboardPage() {
               </Link>
             </div>
 
-            <Card className="bg-cardard border-border p-4 font-mono text-[10px] text-muted-foreground space-y-3 text-left">
+            <Card className="bg-card border-border p-4 font-mono text-[10px] text-muted-foreground space-y-3 text-left">
               {schedules.map((sch) => (
-                <div
-                  key={sch.id}
-                  className="border-b border-border pb-2 last:border-0 last:pb-0"
-                >
+                <div key={sch.id} className="border-b border-border pb-2 last:border-0 last:pb-0">
                   <div className="flex justify-between items-start">
                     <span className="font-bold text-foreground truncate max-w-[120px]">
                       {sch.reportName}
@@ -185,14 +182,18 @@ export default function ReportsDashboardPage() {
                 <span>Generated Export Logs</span>
               </h3>
               <Link href="/reports/export">
-                <Button variant="ghost" size="sm" className="h-6 text-[10px] text-muted-foreground gap-1">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 text-[10px] text-muted-foreground gap-1"
+                >
                   <span>View All</span>
                   <ArrowRight className="h-3 w-3" />
                 </Button>
               </Link>
             </div>
 
-            <Card className="bg-cardard border-border p-4 font-mono text-[10px] text-muted-foreground space-y-3 text-left">
+            <Card className="bg-card border-border p-4 font-mono text-[10px] text-muted-foreground space-y-3 text-left">
               {logs.slice(0, 3).map((log) => (
                 <div
                   key={log.id}

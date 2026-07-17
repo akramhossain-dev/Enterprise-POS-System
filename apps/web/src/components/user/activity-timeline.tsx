@@ -55,7 +55,7 @@ export function ActivityTimeline({ logs, loading = false }: ActivityTimelineProp
         return (
           <div key={log.id} className="relative group text-left">
             {/* Dot Timeline Marker */}
-            <span className="absolute -left-[35px] top-0 flex h-7 w-7 items-center justify-center rounded-full bg-cardard border border-border">
+            <span className="absolute -left-[35px] top-0 flex h-7 w-7 items-center justify-center rounded-full bg-card border border-border">
               <span
                 className={`flex h-5 w-5 items-center justify-center rounded-full ${iconColor}`}
               >

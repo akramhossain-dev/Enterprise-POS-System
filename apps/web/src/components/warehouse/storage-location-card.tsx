@@ -13,7 +13,7 @@ interface StorageLocationCardProps {
 
 export function StorageLocationCard({ location, onEdit, onDelete }: StorageLocationCardProps) {
   return (
-    <div className="group rounded-2xl border border-border bg-cardard p-4 flex flex-col justify-between transition-all hover:border-primary/20 hover:shadow-md text-left">
+    <div className="group rounded-2xl border border-border bg-card p-4 flex flex-col justify-between transition-all hover:border-primary/20 hover:shadow-md text-left">
       <div>
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-2.5">

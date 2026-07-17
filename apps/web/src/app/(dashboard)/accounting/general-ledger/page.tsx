@@ -98,7 +98,7 @@ export default function GeneralLedgerPage() {
           </div>
 
           {/* Date Range selectors */}
-          <div className="flex items-center gap-1.5 bg-cardard px-3 border border-border rounded-lg text-xs h-9">
+          <div className="flex items-center gap-1.5 bg-card px-3 border border-border rounded-lg text-xs h-9">
             <span className="text-muted-foreground">From</span>
             <input
               type="date"
@@ -121,7 +121,7 @@ export default function GeneralLedgerPage() {
             size="sm"
             variant="outline"
             onClick={handleExportCSV}
-            className="h-8 border-border bg-cardard hover:bg-accent text-xs gap-1.5 w-full md:w-auto"
+            className="h-8 border-border bg-card hover:bg-accent text-xs gap-1.5 w-full md:w-auto"
           >
             <FileDown className="h-4 w-4 text-slate-450" />
             <span>Export CSV</span>

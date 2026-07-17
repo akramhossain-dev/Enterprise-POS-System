@@ -75,14 +75,16 @@ export function CashDrawerCard() {
 
   if (isLoading) {
     return (
-      <div className="text-center py-8 text-xs text-muted-foreground">Retrieving shift status...</div>
+      <div className="text-center py-8 text-xs text-muted-foreground">
+        Retrieving shift status...
+      </div>
     );
   }
 
   // 1. SHIFT NOT OPENED YET: Render check-in setup form
   if (!activeShift) {
     return (
-      <Card className="bg-cardard border-border text-foreground max-w-md mx-auto text-left">
+      <Card className="bg-card border-border text-foreground max-w-md mx-auto text-left">
         <CardHeader>
           <CardTitle className="text-sm font-bold flex items-center gap-2 text-foreground">
             <Lock className="h-4.5 w-4.5 text-rose-500 animate-pulse" />
@@ -108,7 +110,9 @@ export function CashDrawerCard() {
               Starting Cash Float ($)
             </label>
             <div className="relative">
-              <span className="absolute left-3 top-2.5 text-muted-foreground font-mono text-sm">$</span>
+              <span className="absolute left-3 top-2.5 text-muted-foreground font-mono text-sm">
+                $
+              </span>
               <Input
                 type="number"
                 placeholder="100.00"
@@ -140,7 +144,7 @@ export function CashDrawerCard() {
     <div className="grid gap-6 md:grid-cols-3 text-left text-foreground select-none">
       {/* Drawer stats overview */}
       <div className="md:col-span-1 space-y-4">
-        <Card className="bg-cardard border-border">
+        <Card className="bg-card border-border">
           <CardHeader className="pb-2">
             <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-1.5">
               <Unlock className="h-4 w-4 text-emerald-400" />
@@ -152,13 +156,17 @@ export function CashDrawerCard() {
               <p className="text-2xl font-black font-mono text-emerald-400">
                 ${activeShift.currentBalance.toFixed(2)}
               </p>
-              <p className="text-[10px] text-muted-foreground mt-1">Cashier: {activeShift.cashierName}</p>
+              <p className="text-[10px] text-muted-foreground mt-1">
+                Cashier: {activeShift.cashierName}
+              </p>
             </div>
 
             <div className="grid grid-cols-2 gap-2 border-t border-border pt-3 text-[11px] font-mono text-muted-foreground">
               <div>
                 <span>Starting Float:</span>
-                <p className="text-foreground font-bold">${activeShift.openingBalance.toFixed(2)}</p>
+                <p className="text-foreground font-bold">
+                  ${activeShift.openingBalance.toFixed(2)}
+                </p>
               </div>
               <div>
                 <span>POS Checkouts:</span>
@@ -170,7 +178,7 @@ export function CashDrawerCard() {
               variant="outline"
               onClick={handleCloseShift}
               disabled={closeShiftMutation.isPending}
-              className="w-full h-8 border-rose-900/40 bg-cardard text-rose-400 text-xs hover:bg-rose-950/20 uppercase tracking-wider font-bold mt-2"
+              className="w-full h-8 border-rose-900/40 bg-card text-rose-400 text-xs hover:bg-rose-950/20 uppercase tracking-wider font-bold mt-2"
             >
               <span>Close Shift & Lock</span>
             </Button>
@@ -180,7 +188,7 @@ export function CashDrawerCard() {
 
       {/* Record Cash In/Out logs form */}
       <div className="md:col-span-1">
-        <Card className="bg-cardard border-border h-full">
+        <Card className="bg-card border-border h-full">
           <CardHeader className="pb-3">
             <CardTitle className="text-xs font-bold text-foreground uppercase tracking-wider">
               Log Cash Adjustment
@@ -256,7 +264,7 @@ export function CashDrawerCard() {
 
       {/* Cash register transaction logs log history */}
       <div className="md:col-span-1">
-        <Card className="bg-cardard border-border h-full flex flex-col overflow-hidden">
+        <Card className="bg-card border-border h-full flex flex-col overflow-hidden">
           <CardHeader className="pb-3 border-b border-border shrink-0">
             <CardTitle className="text-xs font-bold text-foreground uppercase tracking-wider flex items-center gap-1.5">
               <ClipboardList className="h-4.5 w-4.5 text-muted-foreground" />

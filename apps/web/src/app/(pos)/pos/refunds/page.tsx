@@ -82,7 +82,7 @@ export default function POSRefundsHistoryPage() {
           refunds.map((refund) => (
             <Card
               key={refund.id}
-              className="bg-cardard border-border hover:border-slate-750 transition-colors"
+              className="bg-card border-border hover:border-slate-750 transition-colors"
             >
               <CardContent className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs sm:text-sm">
                 <div className="space-y-1.5 text-left flex-1 min-w-0">
@@ -150,7 +150,7 @@ export default function POSRefundsHistoryPage() {
               variant="outline"
               disabled={currentPage <= 1}
               onClick={handlePrevPage}
-              className="h-7 w-7 bg-cardard border-border text-muted-foreground hover:text-foreground"
+              className="h-7 w-7 bg-card border-border text-muted-foreground hover:text-foreground"
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
@@ -159,7 +159,7 @@ export default function POSRefundsHistoryPage() {
               variant="outline"
               disabled={currentPage >= meta.totalPages}
               onClick={handleNextPage}
-              className="h-7 w-7 bg-cardard border-border text-muted-foreground hover:text-foreground"
+              className="h-7 w-7 bg-card border-border text-muted-foreground hover:text-foreground"
             >
               <ChevronRight className="h-4 w-4" />
             </Button>

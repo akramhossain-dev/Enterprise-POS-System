@@ -97,13 +97,15 @@ export default function POSEditAccountPage({ params }: { params: Promise<Params>
           <p className="text-xs">Loading ledger record...</p>
         </div>
       ) : (
-        <Card className="bg-cardard border-border text-foreground mt-6">
+        <Card className="bg-card border-border text-foreground mt-6">
           <CardContent className="p-6">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 text-xs sm:text-sm">
               <div className="grid gap-4 sm:grid-cols-2">
                 {/* Account Code */}
                 <div className="grid gap-1.5">
-                  <label className="text-muted-foreground font-semibold font-mono">Account Code</label>
+                  <label className="text-muted-foreground font-semibold font-mono">
+                    Account Code
+                  </label>
                   <Input
                     type="text"
                     {...register('code')}
@@ -131,7 +133,9 @@ export default function POSEditAccountPage({ params }: { params: Promise<Params>
               <div className="grid gap-4 sm:grid-cols-2">
                 {/* Account Type */}
                 <div className="grid gap-1.5 text-left">
-                  <label className="text-muted-foreground font-semibold">Account Category Type</label>
+                  <label className="text-muted-foreground font-semibold">
+                    Account Category Type
+                  </label>
                   <select
                     {...register('type')}
                     className="bg-muted border border-slate-855 rounded p-1.5 text-xs text-foreground focus:outline-none focus:border-emerald-500 cursor-pointer"
@@ -149,7 +153,9 @@ export default function POSEditAccountPage({ params }: { params: Promise<Params>
 
                 {/* Parent Account */}
                 <div className="grid gap-1.5 text-left">
-                  <label className="text-muted-foreground font-semibold">Parent Association Account</label>
+                  <label className="text-muted-foreground font-semibold">
+                    Parent Association Account
+                  </label>
                   <select
                     {...register('parentAccountCode')}
                     className="bg-muted border border-slate-855 rounded p-1.5 text-xs text-foreground focus:outline-none focus:border-emerald-500 cursor-pointer"
@@ -189,7 +195,9 @@ export default function POSEditAccountPage({ params }: { params: Promise<Params>
 
                 {/* Balance Type */}
                 <div className="grid gap-1.5 text-left">
-                  <label className="text-muted-foreground font-semibold">Balance Classification</label>
+                  <label className="text-muted-foreground font-semibold">
+                    Balance Classification
+                  </label>
                   <select
                     {...register('balanceType')}
                     className="bg-muted border border-slate-855 rounded p-1.5 text-xs text-foreground focus:outline-none focus:border-emerald-500 cursor-pointer"
@@ -205,7 +213,9 @@ export default function POSEditAccountPage({ params }: { params: Promise<Params>
 
               {/* Description */}
               <div className="grid gap-1.5 text-left">
-                <label className="text-muted-foreground font-semibold">Account Description / Notes</label>
+                <label className="text-muted-foreground font-semibold">
+                  Account Description / Notes
+                </label>
                 <textarea
                   {...register('description')}
                   className="w-full bg-muted border border-slate-855 rounded p-2 text-xs text-foreground focus:outline-none focus:border-emerald-500 h-16 resize-none"

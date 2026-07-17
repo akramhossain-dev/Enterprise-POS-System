@@ -93,7 +93,7 @@ export function UnitForm({ initialValues, onSubmit, isPending }: UnitFormProps) 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left column (Core inputs) */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="rounded-xl border border-border bg-cardard p-5 space-y-4 shadow-sm">
+          <div className="rounded-xl border border-border bg-card p-5 space-y-4 shadow-sm">
             <h3 className="font-semibold text-base text-foreground">Unit Profile</h3>
 
             <div className="space-y-4">
@@ -194,7 +194,7 @@ export function UnitForm({ initialValues, onSubmit, isPending }: UnitFormProps) 
 
         {/* Right column (Settings) */}
         <div className="space-y-6">
-          <div className="rounded-xl border border-border bg-cardard p-5 space-y-4 shadow-sm">
+          <div className="rounded-xl border border-border bg-card p-5 space-y-4 shadow-sm">
             <h3 className="font-semibold text-base text-foreground">Unit Settings</h3>
 
             {/* Status */}

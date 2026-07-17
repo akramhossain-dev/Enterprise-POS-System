@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -17,6 +17,11 @@ export function Sidebar() {
   const pathname = usePathname();
   const { sidebarOpen, sidebarCollapsed, setSidebarOpen, toggleSidebarCollapsed } = useUIStore();
   const { hasPermission, user } = useAuthStore();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const isActive = useCallback(
     (href: string) => pathname === href || pathname.startsWith(href + '/'),
@@ -31,6 +36,18 @@ export function Sidebar() {
   const initials = user
     ? `${user.firstName?.[0] ?? ''}${user.lastName?.[0] ?? ''}`.toUpperCase()
     : 'U';
+
+  if (!mounted) {
+    return (
+      <aside
+        id="sidebar"
+        className={cn(
+          'fixed left-0 top-0 z-50 h-full flex flex-col bg-sidebar border-r border-sidebar-border hidden md:flex',
+          sidebarCollapsed ? 'md:w-16' : 'md:w-64',
+        )}
+      />
+    );
+  }
 
   return (
     <Tooltip.Provider delayDuration={300}>

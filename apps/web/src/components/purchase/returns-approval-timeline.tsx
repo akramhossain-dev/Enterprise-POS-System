@@ -126,7 +126,7 @@ export function ReturnsApprovalTimeline({
   }, [status, timeline]);
 
   return (
-    <div className={cn('bg-cardard border rounded-xl p-6 shadow-sm', className)}>
+    <div className={cn('bg-card border rounded-xl p-6 shadow-sm', className)}>
       <h3 className="font-semibold text-sm border-b pb-2 text-foreground uppercase tracking-wider mb-5">
         Return Approval Timeline
       </h3>
@@ -139,7 +139,7 @@ export function ReturnsApprovalTimeline({
           return (
             <div key={idx} className="relative">
               {/* Timeline circle icon */}
-              <span className="absolute -left-[35px] top-0 flex h-6.5 w-6.5 items-center justify-center rounded-full bg-cardard border shadow-sm">
+              <span className="absolute -left-[35px] top-0 flex h-6.5 w-6.5 items-center justify-center rounded-full bg-card border shadow-sm">
                 {isCompleted && <CheckCircle2 className="h-4 w-4 text-emerald-500" />}
                 {isCurrent && <Clock className="h-4 w-4 text-amber-500 animate-spin" />}
                 {isFailed && <XCircle className="h-4 w-4 text-rose-500" />}

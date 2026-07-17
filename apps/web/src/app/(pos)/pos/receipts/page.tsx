@@ -95,7 +95,7 @@ export default function POSReceiptsPage() {
           transactions.map((tx) => (
             <Card
               key={tx.id}
-              className="bg-cardard border-border hover:border-slate-750 transition-colors"
+              className="bg-card border-border hover:border-slate-750 transition-colors"
             >
               <CardContent className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs sm:text-sm">
                 <div className="space-y-1 text-left">
@@ -111,7 +111,9 @@ export default function POSReceiptsPage() {
                       <Calendar className="h-3.5 w-3.5 shrink-0" />
                       <span>{new Date(tx.completedAt).toLocaleString()}</span>
                     </span>
-                    <span className="text-muted-foreground font-medium">Customer: {tx.customerName}</span>
+                    <span className="text-muted-foreground font-medium">
+                      Customer: {tx.customerName}
+                    </span>
                   </div>
                 </div>
 
@@ -179,7 +181,7 @@ export default function POSReceiptsPage() {
               variant="outline"
               disabled={currentPage <= 1}
               onClick={handlePrevPage}
-              className="h-7 w-7 bg-cardard border-border text-muted-foreground hover:text-foreground"
+              className="h-7 w-7 bg-card border-border text-muted-foreground hover:text-foreground"
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
@@ -188,7 +190,7 @@ export default function POSReceiptsPage() {
               variant="outline"
               disabled={currentPage >= meta.totalPages}
               onClick={handleNextPage}
-              className="h-7 w-7 bg-cardard border-border text-muted-foreground hover:text-foreground"
+              className="h-7 w-7 bg-card border-border text-muted-foreground hover:text-foreground"
             >
               <ChevronRight className="h-4 w-4" />
             </Button>

@@ -92,7 +92,7 @@ export function DebitCreditEntry({ value, onChange, accounts }: DebitCreditEntry
       </div>
 
       {/* Entry Rows */}
-      <div className="bg-cardard border border-border rounded-2xl overflow-hidden">
+      <div className="bg-card border border-border rounded-2xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>

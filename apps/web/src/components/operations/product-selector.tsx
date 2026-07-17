@@ -88,7 +88,7 @@ export function ProductSelector({
             setIsOpen(true);
           }}
           onFocus={() => setIsOpen(true)}
-          className="pl-9 bg-cardard border-border"
+          className="pl-9 bg-card border-border"
         />
         {isLoading && (
           <Loader2 className="absolute right-3 top-2.5 h-4 w-4 text-muted-foreground animate-spin" />

@@ -159,7 +159,7 @@ export default function CreateTransferPage() {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 text-sm">
         <div className="grid gap-6 md:grid-cols-3">
           {/* Main selection card */}
-          <Card className="md:col-span-2 shadow-sm border-border bg-cardard">
+          <Card className="md:col-span-2 shadow-sm border-border bg-card">
             <CardHeader className="border-b">
               <CardTitle className="text-sm font-semibold flex items-center gap-2">
                 <Package className="w-4 h-4 text-primary" /> Transfer Line Items
@@ -206,7 +206,7 @@ export default function CreateTransferPage() {
                       items.map((item, index) => (
                         <tr
                           key={item.productId}
-                          className="border-b last:border-b-0 border-border bg-cardard hover:bg-muted/20"
+                          className="border-b last:border-b-0 border-border bg-card hover:bg-muted/20"
                         >
                           <td className="p-3">
                             <div className="flex flex-col font-medium">
@@ -257,7 +257,7 @@ export default function CreateTransferPage() {
 
           {/* Right sidebar options */}
           <div className="space-y-6">
-            <Card className="shadow-sm border-border bg-cardard">
+            <Card className="shadow-sm border-border bg-card">
               <CardHeader className="border-b">
                 <CardTitle className="text-sm font-semibold flex items-center gap-1.5">
                   <WarehouseIcon className="w-4 h-4 text-primary" /> Route Depots
@@ -305,7 +305,7 @@ export default function CreateTransferPage() {
               </CardContent>
             </Card>
 
-            <Card className="shadow-sm border-border bg-cardard">
+            <Card className="shadow-sm border-border bg-card">
               <CardHeader className="border-b">
                 <CardTitle className="text-sm font-semibold">Transfer Comments</CardTitle>
               </CardHeader>

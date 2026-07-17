@@ -63,9 +63,11 @@ export default function ReturnDetailsPage({ params }: { params: Promise<Params> 
           <div className="grid gap-6 md:grid-cols-3">
             {/* Items */}
             <div className="md:col-span-2 space-y-6">
-              <Card className="bg-cardard border-border text-foreground">
+              <Card className="bg-card border-border text-foreground">
                 <CardHeader className="pb-3 border-b border-border">
-                  <CardTitle className="text-sm font-bold text-muted-foreground">Returned Goods</CardTitle>
+                  <CardTitle className="text-sm font-bold text-muted-foreground">
+                    Returned Goods
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="p-0">
                   <table className="w-full text-xs text-left border-collapse">
@@ -105,7 +107,7 @@ export default function ReturnDetailsPage({ params }: { params: Promise<Params> 
 
             {/* Refund options panel */}
             <div className="md:col-span-1 space-y-6">
-              <Card className="bg-cardard border-border text-foreground">
+              <Card className="bg-card border-border text-foreground">
                 <CardHeader className="pb-3 border-b border-border">
                   <CardTitle className="text-sm font-bold text-muted-foreground">
                     Claim Valuation

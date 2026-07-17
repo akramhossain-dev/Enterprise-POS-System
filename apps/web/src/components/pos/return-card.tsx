@@ -30,12 +30,14 @@ export function ReturnCard({ claim }: ReturnCardProps) {
   };
 
   return (
-    <Card className="bg-cardard border-border hover:border-slate-750 transition-all text-foreground text-left">
+    <Card className="bg-card border-border hover:border-slate-750 transition-all text-foreground text-left">
       <CardContent className="p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="space-y-1.5 min-w-0 flex-1">
           <div className="flex items-center gap-2 flex-wrap text-xs sm:text-sm">
             <span className="font-mono font-black text-foreground">{claim.returnNumber}</span>
-            <span className="text-[10px] text-muted-foreground">Invoice: {claim.invoiceNumber}</span>
+            <span className="text-[10px] text-muted-foreground">
+              Invoice: {claim.invoiceNumber}
+            </span>
             <Badge
               className={`text-[9px] font-bold tracking-wider px-1.5 py-0.5 uppercase rounded border ${getStatusColor(claim.status)}`}
             >
@@ -77,7 +79,7 @@ export function ReturnCard({ claim }: ReturnCardProps) {
             <Button
               size="sm"
               variant="outline"
-              className="h-8 border-border bg-cardard hover:bg-accent text-xs"
+              className="h-8 border-border bg-card hover:bg-accent text-xs"
             >
               <span>View Claim</span>
               <ArrowRight className="h-3.5 w-3.5 ml-1" />

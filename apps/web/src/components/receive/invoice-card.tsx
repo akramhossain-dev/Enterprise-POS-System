@@ -17,7 +17,7 @@ export function InvoiceCard({ invoice, className }: InvoiceCardProps) {
   const invTotal = Number(invoice.grandTotal);
 
   return (
-    <div className="bg-cardard border rounded-xl p-5 shadow-sm space-y-4 text-sm">
+    <div className="bg-card border rounded-xl p-5 shadow-sm space-y-4 text-sm">
       <div className="flex justify-between items-start border-b pb-3">
         <div className="flex flex-col gap-0.5">
           <span className="text-[10px] text-muted-foreground uppercase font-bold">

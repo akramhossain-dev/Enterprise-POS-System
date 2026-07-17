@@ -35,7 +35,7 @@ export function BalanceSummary({
   return (
     <div className={cn('grid gap-4 sm:grid-cols-2 lg:grid-cols-4', className)}>
       {/* Opening Balance Card */}
-      <Card className="bg-cardard border-border text-foreground text-left">
+      <Card className="bg-card border-border text-foreground text-left">
         <CardContent className="p-4 flex items-center justify-between">
           <div className="space-y-1">
             <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
@@ -52,7 +52,7 @@ export function BalanceSummary({
       </Card>
 
       {/* Inflow Card */}
-      <Card className="bg-cardard border-border text-foreground text-left">
+      <Card className="bg-card border-border text-foreground text-left">
         <CardContent className="p-4 flex items-center justify-between">
           <div className="space-y-1">
             <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
@@ -69,7 +69,7 @@ export function BalanceSummary({
       </Card>
 
       {/* Outflow Card */}
-      <Card className="bg-cardard border-border text-foreground text-left">
+      <Card className="bg-card border-border text-foreground text-left">
         <CardContent className="p-4 flex items-center justify-between">
           <div className="space-y-1">
             <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
@@ -84,7 +84,7 @@ export function BalanceSummary({
       </Card>
 
       {/* Current Balance Card */}
-      <Card className="bg-cardard border-border text-foreground text-left">
+      <Card className="bg-card border-border text-foreground text-left">
         <CardContent className="p-4 flex items-center justify-between">
           <div className="space-y-1">
             <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">

@@ -39,7 +39,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
         </div>
 
         {/* Page card */}
-        <div className="rounded-[--radius-xl] border border-border/60 bg-cardard/80 backdrop-blur-sm shadow-xl shadow-black/5 dark:shadow-black/20 p-6 sm:p-8">
+        <div className="rounded-[--radius-xl] border border-border/60 bg-card/80 backdrop-blur-sm shadow-xl shadow-black/5 dark:shadow-black/20 p-6 sm:p-8">
           {children}
         </div>
 

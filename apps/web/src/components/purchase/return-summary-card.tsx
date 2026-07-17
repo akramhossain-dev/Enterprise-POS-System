@@ -26,7 +26,7 @@ export function ReturnSummaryCard({ purchaseReturn }: ReturnSummaryCardProps) {
   return (
     <div className="grid gap-6 md:grid-cols-2 text-sm">
       {/* Supplier & Warehouse Details */}
-      <Card className="border border-border bg-cardard shadow-sm rounded-xl overflow-hidden">
+      <Card className="border border-border bg-card shadow-sm rounded-xl overflow-hidden">
         <CardHeader className="bg-muted/20 border-b p-4">
           <CardTitle className="text-xs font-bold uppercase tracking-wider text-foreground flex items-center gap-1.5">
             <Building2 className="w-4 h-4 text-primary" /> Supplier & Warehouse
@@ -70,7 +70,7 @@ export function ReturnSummaryCard({ purchaseReturn }: ReturnSummaryCardProps) {
       </Card>
 
       {/* Reference & Audit Info */}
-      <Card className="border border-border bg-cardard shadow-sm rounded-xl overflow-hidden">
+      <Card className="border border-border bg-card shadow-sm rounded-xl overflow-hidden">
         <CardHeader className="bg-muted/20 border-b p-4">
           <CardTitle className="text-xs font-bold uppercase tracking-wider text-foreground flex items-center gap-1.5">
             <Clipboard className="w-4 h-4 text-indigo-500" /> Document Reference & Dates
@@ -109,7 +109,7 @@ export function ReturnSummaryCard({ purchaseReturn }: ReturnSummaryCardProps) {
       </Card>
 
       {/* Notes & Attachments (Full width) */}
-      <Card className="border border-border bg-cardard shadow-sm rounded-xl overflow-hidden md:col-span-2">
+      <Card className="border border-border bg-card shadow-sm rounded-xl overflow-hidden md:col-span-2">
         <CardHeader className="bg-muted/20 border-b p-4">
           <CardTitle className="text-xs font-bold uppercase tracking-wider text-foreground flex items-center gap-1.5">
             <FileText className="w-4 h-4 text-muted-foreground" /> Notes & Attachments

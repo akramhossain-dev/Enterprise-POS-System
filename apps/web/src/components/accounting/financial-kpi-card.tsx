@@ -30,7 +30,7 @@ export function FinancialKpiCard({
   const isUp = isPositiveChange;
 
   return (
-    <Card className={cn('bg-cardard border-border text-foreground', className)}>
+    <Card className={cn('bg-card border-border text-foreground', className)}>
       <CardContent className="p-4 space-y-3">
         <div className="flex justify-between items-start">
           <div className="space-y-0.5 text-left">

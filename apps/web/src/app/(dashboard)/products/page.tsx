@@ -210,7 +210,7 @@ export default function ProductsPage() {
             <span
               className={cn(
                 'font-semibold text-xs px-1.5 py-0.5 rounded-full',
-                qty <= 5 ? 'bg-backgroundestructive/10 text-destructive' : 'bg-muted text-muted-foreground',
+                qty <= 5 ? 'bg-destructive/10 text-destructive' : 'bg-muted text-muted-foreground',
               )}
             >
               {qty}
@@ -339,7 +339,7 @@ export default function ProductsPage() {
       />
 
       {/* Toolbar */}
-      <div className="flex flex-col gap-3 bg-cardard border border-border p-4 rounded-xl">
+      <div className="flex flex-col gap-3 bg-card border border-border p-4 rounded-xl">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex flex-1 items-center gap-2 w-full sm:max-w-md relative">
             <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -507,7 +507,7 @@ export default function ProductsPage() {
 
       {/* Error state */}
       {isError && (
-        <div className="border border-destructive/20 rounded-xl bg-backgroundestructive/5 p-4 text-sm text-destructive flex items-center justify-between">
+        <div className="border border-destructive/20 rounded-xl bg-destructive/5 p-4 text-sm text-destructive flex items-center justify-between">
           <span>Error loading products: {error?.message || 'Unknown network error.'}</span>
           <Button
             size="xs"
@@ -598,7 +598,7 @@ export default function ProductsPage() {
           <Button
             size="sm"
             variant="ghost"
-            className="w-full justify-start text-xs h-8 text-destructive hover:bg-backgroundestructive/10"
+            className="w-full justify-start text-xs h-8 text-destructive hover:bg-destructive/10"
             leftIcon={<Trash2 className="w-3.5 h-3.5" />}
             onClick={() => {
               setContextMenu(null);

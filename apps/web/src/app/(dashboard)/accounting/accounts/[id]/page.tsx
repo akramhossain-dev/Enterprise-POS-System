@@ -52,7 +52,7 @@ export default function AccountDetailsPage({ params }: { params: Promise<Params>
         <div className="grid gap-6 md:grid-cols-3 mt-6">
           {/* Main Info */}
           <div className="md:col-span-2 space-y-6">
-            <Card className="bg-cardard border-border text-foreground">
+            <Card className="bg-card border-border text-foreground">
               <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between">
                 <CardTitle className="text-sm font-bold text-muted-foreground">
                   General Configuration
@@ -106,7 +106,9 @@ export default function AccountDetailsPage({ params }: { params: Promise<Params>
                     <span className="text-[10px] text-muted-foreground uppercase font-bold block mb-1">
                       Description
                     </span>
-                    <p className="text-muted-foreground leading-relaxed text-xs">{account.description}</p>
+                    <p className="text-muted-foreground leading-relaxed text-xs">
+                      {account.description}
+                    </p>
                   </div>
                 )}
               </CardContent>
@@ -115,7 +117,7 @@ export default function AccountDetailsPage({ params }: { params: Promise<Params>
 
           {/* Balance card */}
           <div className="md:col-span-1">
-            <Card className="bg-cardard border-border text-foreground">
+            <Card className="bg-card border-border text-foreground">
               <CardHeader className="pb-3 border-b border-border">
                 <CardTitle className="text-sm font-bold text-muted-foreground">
                   Ledger Balance Summary

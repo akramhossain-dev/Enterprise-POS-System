@@ -65,7 +65,7 @@ export function VoucherCard({
   };
 
   return (
-    <Card className="bg-cardard border-border text-foreground hover:border-slate-700 transition-colors text-left flex flex-col justify-between">
+    <Card className="bg-card border-border text-foreground hover:border-slate-700 transition-colors text-left flex flex-col justify-between">
       <CardContent className="p-4 space-y-3">
         {/* Header */}
         <div className="flex justify-between items-start gap-2">
@@ -97,7 +97,9 @@ export function VoucherCard({
         <div className="grid grid-cols-2 gap-2 text-[10px] font-mono border-t border-border pt-2.5">
           <div>
             <span className="text-muted-foreground block">Date</span>
-            <span className="text-muted-foreground">{new Date(voucher.date).toLocaleDateString()}</span>
+            <span className="text-muted-foreground">
+              {new Date(voucher.date).toLocaleDateString()}
+            </span>
           </div>
           <div>
             <span className="text-muted-foreground block">Method</span>

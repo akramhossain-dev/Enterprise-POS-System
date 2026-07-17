@@ -93,7 +93,7 @@ export function KpiCard({
 }: KpiCardProps) {
   if (loading) {
     return (
-      <div className={cn('rounded-xl border border-border bg-cardard p-5 space-y-3', className)}>
+      <div className={cn('rounded-xl border border-border bg-card p-5 space-y-3', className)}>
         <div className="flex items-center justify-between">
           <Skeleton variant="text" className="w-24 h-3" />
           <Skeleton variant="circular" className="w-9 h-9" />
@@ -113,7 +113,7 @@ export function KpiCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
       className={cn(
-        'rounded-xl border border-border bg-cardard p-5 shadow-sm',
+        'rounded-xl border border-border bg-card p-5 shadow-sm',
         'transition-all duration-200',
         href && 'hover:shadow-md hover:border-border/80 hover:-translate-y-0.5 cursor-pointer',
         className,

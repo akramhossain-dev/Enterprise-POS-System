@@ -23,7 +23,7 @@ export function OrderSummaryCard({
   const grandTotal = subtotal - discount + tax + shippingCost + otherCharges;
 
   return (
-    <div className="bg-cardard border rounded-xl p-6 shadow-sm space-y-4">
+    <div className="bg-card border rounded-xl p-6 shadow-sm space-y-4">
       <h3 className="font-semibold text-sm border-b pb-2 text-foreground uppercase tracking-wider">
         Order Financial Summary
       </h3>

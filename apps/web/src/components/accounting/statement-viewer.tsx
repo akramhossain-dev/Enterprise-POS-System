@@ -80,7 +80,7 @@ export function StatementViewer({
   };
 
   return (
-    <Card className="bg-cardard border-border text-foreground print:bg-white print:text-black print:border-none print:shadow-none select-none text-left">
+    <Card className="bg-card border-border text-foreground print:bg-white print:text-black print:border-none print:shadow-none select-none text-left">
       {/* Actions header (Hidden when printing) */}
       <div className="p-4 bg-muted/45 border-b border-border flex justify-between items-center print:hidden">
         <span className="text-[10px] font-bold text-slate-450 uppercase tracking-widest font-sans flex items-center gap-1.5">
@@ -92,7 +92,7 @@ export function StatementViewer({
             size="sm"
             variant="outline"
             onClick={handleExportCSV}
-            className="h-8 border-border bg-cardard hover:bg-accent text-xs gap-1.5"
+            className="h-8 border-border bg-card hover:bg-accent text-xs gap-1.5"
           >
             <FileDown className="h-4 w-4 text-slate-450" />
             <span>Export CSV</span>

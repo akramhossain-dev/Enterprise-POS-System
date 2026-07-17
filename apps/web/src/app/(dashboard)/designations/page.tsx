@@ -123,7 +123,7 @@ export default function DesignationsPage() {
         />
 
         {/* Toolbar */}
-        <div className="flex justify-between items-center bg-cardard border border-border rounded-2xl p-4">
+        <div className="flex justify-between items-center bg-card border border-border rounded-2xl p-4">
           <span className="text-xs text-muted-foreground font-semibold">
             {designations?.length ?? 0} designations configured
           </span>
@@ -144,7 +144,7 @@ export default function DesignationsPage() {
             Loading designations registry...
           </div>
         ) : !designations || designations.length === 0 ? (
-          <div className="text-center py-20 border border-dashed border-border bg-cardard rounded-2xl text-xs text-muted-foreground">
+          <div className="text-center py-20 border border-dashed border-border bg-card rounded-2xl text-xs text-muted-foreground">
             No designations configured yet.
           </div>
         ) : (

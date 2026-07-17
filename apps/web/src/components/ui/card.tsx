@@ -10,7 +10,7 @@ function Card({ className, hover, glass, ...props }: CardProps) {
   return (
     <div
       className={cn(
-        'rounded-xl border border-border bg-cardard text-card-foreground shadow-sm',
+        'rounded-xl border border-border bg-card text-card-foreground shadow-sm',
         hover &&
           'hover:shadow-md hover:border-border/80 transition-all duration-200 cursor-pointer',
         glass && 'glass-card',

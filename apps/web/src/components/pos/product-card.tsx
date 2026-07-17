@@ -37,7 +37,7 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
           'flex items-center justify-between p-3 rounded-xl border transition-all duration-200 cursor-pointer select-none',
           isOutOfStock
             ? 'bg-muted/20 border-border opacity-60 hover:opacity-85'
-            : 'bg-cardard border-border hover:border-slate-700 hover:bg-accent/60',
+            : 'bg-card border-border hover:border-slate-700 hover:bg-accent/60',
         )}
       >
         <div className="flex items-center space-x-3 min-w-0">
@@ -96,7 +96,9 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
           <div className="text-right">
             <p className="text-xs font-bold text-emerald-400 font-mono">{formattedPrice}</p>
             {product.tax && (
-              <p className="text-[9px] text-muted-foreground font-mono">Tax: {product.tax.percentage}%</p>
+              <p className="text-[9px] text-muted-foreground font-mono">
+                Tax: {product.tax.percentage}%
+              </p>
             )}
           </div>
           <Button
@@ -120,7 +122,7 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
         'group relative flex flex-col justify-between overflow-hidden rounded-xl border transition-all duration-300 cursor-pointer select-none',
         isOutOfStock
           ? 'bg-muted/20 border-border opacity-60 hover:opacity-85'
-          : 'bg-cardard border-border hover:border-slate-700 hover:bg-accent/40 hover:shadow-xl hover:shadow-emerald-950/5',
+          : 'bg-card border-border hover:border-slate-700 hover:bg-accent/40 hover:shadow-xl hover:shadow-emerald-950/5',
       )}
     >
       {/* Product Image cover */}

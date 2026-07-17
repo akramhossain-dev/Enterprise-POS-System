@@ -66,7 +66,7 @@ export function CustomerSelector() {
           'flex items-center justify-between px-3 py-2 border rounded-lg cursor-pointer transition-colors duration-200',
           isOpen
             ? 'border-emerald-500 bg-emerald-950/20'
-            : 'border-border bg-cardard hover:border-slate-700',
+            : 'border-border bg-card hover:border-slate-700',
         )}
       >
         <div className="flex items-center space-x-2.5 min-w-0">
@@ -112,7 +112,7 @@ export function CustomerSelector() {
 
       {/* Customer Options list dropdown */}
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-1.5 border border-border bg-cardard rounded-lg shadow-2xl p-2 z-50">
+        <div className="absolute top-full left-0 right-0 mt-1.5 border border-border bg-card rounded-lg shadow-2xl p-2 z-50">
           <div className="relative mb-2">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
@@ -127,7 +127,9 @@ export function CustomerSelector() {
 
           <div className="max-h-56 overflow-y-auto space-y-1 pr-1 custom-scrollbar">
             {isLoading ? (
-              <div className="text-center py-4 text-xs text-muted-foreground">Searching accounts...</div>
+              <div className="text-center py-4 text-xs text-muted-foreground">
+                Searching accounts...
+              </div>
             ) : customersList.length > 0 ? (
               customersList.map((cust) => (
                 <div
@@ -157,7 +159,9 @@ export function CustomerSelector() {
                 </div>
               ))
             ) : (
-              <div className="text-center py-4 text-xs text-muted-foreground">No customers found.</div>
+              <div className="text-center py-4 text-xs text-muted-foreground">
+                No customers found.
+              </div>
             )}
           </div>
         </div>

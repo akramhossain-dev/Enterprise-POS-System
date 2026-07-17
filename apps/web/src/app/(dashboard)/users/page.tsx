@@ -148,7 +148,7 @@ export default function UserManagementPage() {
       />
 
       {/* Toolbar filters */}
-      <div className="flex flex-col md:flex-row gap-3 bg-cardard border border-border rounded-2xl p-4">
+      <div className="flex flex-col md:flex-row gap-3 bg-card border border-border rounded-2xl p-4">
         {/* Search */}
         <div className="relative flex-1">
           <input
@@ -208,7 +208,7 @@ export default function UserManagementPage() {
           Loading system user accounts directory...
         </div>
       ) : users.length === 0 ? (
-        <div className="text-center py-20 border border-dashed border-border bg-cardard rounded-2xl text-xs text-muted-foreground">
+        <div className="text-center py-20 border border-dashed border-border bg-card rounded-2xl text-xs text-muted-foreground">
           No system users found.
         </div>
       ) : (

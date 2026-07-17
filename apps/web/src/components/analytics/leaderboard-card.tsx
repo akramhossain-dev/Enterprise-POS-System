@@ -30,12 +30,7 @@ export function LeaderboardCard({
   };
 
   return (
-    <Card
-      className={cn(
-        'bg-cardard border-border text-foreground select-none text-left',
-        className,
-      )}
-    >
+    <Card className={cn('bg-card border-border text-foreground select-none text-left', className)}>
       <CardHeader className="py-4 border-b border-border flex flex-row items-center justify-between">
         <CardTitle className="text-xs font-bold text-foreground uppercase tracking-widest font-sans flex items-center gap-1.5">
           <Trophy className="h-4 w-4 text-amber-500 animate-bounce" />

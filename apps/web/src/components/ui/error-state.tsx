@@ -24,7 +24,7 @@ function ErrorState({
       role="alert"
       {...props}
     >
-      <div className="w-16 h-16 rounded-2xl bg-backgroundestructive/10 flex items-center justify-center mb-4">
+      <div className="w-16 h-16 rounded-2xl bg-destructive/10 flex items-center justify-center mb-4">
         <AlertTriangle className="w-8 h-8 text-destructive" aria-hidden="true" />
       </div>
       <h3 className="text-base font-semibold text-foreground mb-1">{title}</h3>

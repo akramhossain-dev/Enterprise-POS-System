@@ -104,7 +104,7 @@ export default function POSOrdersHistoryPage() {
               setStatus(e.target.value);
               setCurrentPage(1);
             }}
-            className="bg-cardard border border-border text-foreground rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[130px]"
+            className="bg-card border border-border text-foreground rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[130px]"
           >
             <option value="ALL">All Statuses</option>
             <option value="PAID">Paid</option>
@@ -123,7 +123,7 @@ export default function POSOrdersHistoryPage() {
           orders.map((order) => (
             <Card
               key={order.id}
-              className="bg-cardard border-border hover:border-slate-750 transition-colors"
+              className="bg-card border-border hover:border-slate-750 transition-colors"
             >
               <CardContent className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 text-xs sm:text-sm">
                 <div className="space-y-1.5 flex-1 min-w-0">
@@ -172,7 +172,7 @@ export default function POSOrdersHistoryPage() {
                     <Button
                       size="sm"
                       variant="outline"
-                      className="h-8 border-border bg-cardard hover:bg-accent text-xs"
+                      className="h-8 border-border bg-card hover:bg-accent text-xs"
                     >
                       View Order Details
                     </Button>
@@ -202,7 +202,7 @@ export default function POSOrdersHistoryPage() {
               variant="outline"
               disabled={currentPage <= 1}
               onClick={handlePrevPage}
-              className="h-7 w-7 bg-cardard border-border text-muted-foreground hover:text-foreground"
+              className="h-7 w-7 bg-card border-border text-muted-foreground hover:text-foreground"
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
@@ -214,7 +214,7 @@ export default function POSOrdersHistoryPage() {
               variant="outline"
               disabled={currentPage >= meta.totalPages}
               onClick={handleNextPage}
-              className="h-7 w-7 bg-cardard border-border text-muted-foreground hover:text-foreground"
+              className="h-7 w-7 bg-card border-border text-muted-foreground hover:text-foreground"
             >
               <ChevronRight className="h-4 w-4" />
             </Button>

@@ -158,7 +158,7 @@ export function ChartCard({
   };
 
   return (
-    <Card className="bg-cardard border-border text-foreground flex flex-col justify-between select-none text-left print:bg-white print:text-black print:border-none print:shadow-none">
+    <Card className="bg-card border-border text-foreground flex flex-col justify-between select-none text-left print:bg-white print:text-black print:border-none print:shadow-none">
       <CardHeader className="py-4 border-b border-border flex flex-col sm:flex-row sm:items-center justify-between gap-3 print:border-black">
         <div className="space-y-0.5 text-left">
           <CardTitle className="text-xs font-bold text-foreground uppercase tracking-widest font-sans flex items-center gap-1.5 print:text-black">

@@ -21,7 +21,7 @@ export function CreditNoteCard({ creditNote, onPrint }: CreditNoteCardProps) {
   };
 
   return (
-    <Card className="border border-border bg-cardard shadow-sm hover:shadow-md transition-shadow rounded-xl overflow-hidden text-sm">
+    <Card className="border border-border bg-card shadow-sm hover:shadow-md transition-shadow rounded-xl overflow-hidden text-sm">
       <CardHeader className="bg-muted/30 border-b p-4 flex flex-row items-center justify-between">
         <div className="flex items-center gap-2">
           <FileText className="w-4 h-4 text-emerald-500" />

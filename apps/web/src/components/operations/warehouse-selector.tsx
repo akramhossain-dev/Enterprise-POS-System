@@ -35,7 +35,7 @@ export function WarehouseSelector({
         onChange={(e) => onChange(e.target.value)}
         disabled={isLoading}
         className={cn(
-          'w-full text-sm rounded-lg border bg-cardard p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary',
+          'w-full text-sm rounded-lg border bg-card p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary',
           error ? 'border-rose-500 focus:ring-rose-500' : 'border-border focus:ring-primary',
           className,
         )}

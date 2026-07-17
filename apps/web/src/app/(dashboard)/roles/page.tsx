@@ -37,7 +37,7 @@ export default function RolesManagementPage() {
       />
 
       {/* Toolbar */}
-      <div className="flex justify-between items-center bg-cardard border border-border rounded-2xl p-4">
+      <div className="flex justify-between items-center bg-card border border-border rounded-2xl p-4">
         <span className="text-xs text-muted-foreground font-semibold">
           {roles?.length ?? 0} security roles configured
         </span>
@@ -58,7 +58,7 @@ export default function RolesManagementPage() {
           Loading security roles matrix database...
         </div>
       ) : !roles || roles.length === 0 ? (
-        <div className="text-center py-20 border border-dashed border-border bg-cardard rounded-2xl text-xs text-muted-foreground">
+        <div className="text-center py-20 border border-dashed border-border bg-card rounded-2xl text-xs text-muted-foreground">
           No security roles found.
         </div>
       ) : (
@@ -66,7 +66,7 @@ export default function RolesManagementPage() {
           {roles.map((role) => (
             <div
               key={role.id}
-              className="group rounded-2xl border border-border bg-cardard p-5 flex flex-col justify-between transition-all hover:border-primary/20 hover:shadow-md"
+              className="group rounded-2xl border border-border bg-card p-5 flex flex-col justify-between transition-all hover:border-primary/20 hover:shadow-md"
             >
               <div>
                 <div className="flex items-start justify-between">

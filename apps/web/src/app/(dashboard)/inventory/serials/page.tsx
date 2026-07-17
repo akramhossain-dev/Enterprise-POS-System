@@ -330,7 +330,7 @@ export default function SerialNumberManagementPage() {
       />
 
       {/* Filter toolbar */}
-      <div className="bg-cardard border rounded-xl p-4 mb-6 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
+      <div className="bg-card border rounded-xl p-4 mb-6 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
         <div className="relative w-full md:max-w-sm flex-1">
           <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
@@ -352,7 +352,7 @@ export default function SerialNumberManagementPage() {
               setWarehouseFilter(e.target.value);
               setPage(1);
             }}
-            className="text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary w-full sm:w-44"
+            className="text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary w-full sm:w-44"
           >
             <option value="">All Warehouses</option>
             {warehouses.map((w) => (
@@ -369,7 +369,7 @@ export default function SerialNumberManagementPage() {
               setStatusFilter(e.target.value as any);
               setPage(1);
             }}
-            className="text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary w-full sm:w-40"
+            className="text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary w-full sm:w-40"
           >
             <option value="">All Statuses</option>
             <option value="AVAILABLE">AVAILABLE</option>
@@ -395,7 +395,7 @@ export default function SerialNumberManagementPage() {
       {isLoading ? (
         <TableSkeleton columns={7} rows={pageSize} />
       ) : (
-        <div className="bg-cardard border rounded-xl shadow-sm p-4">
+        <div className="bg-card border rounded-xl shadow-sm p-4">
           <DataTable
             columns={columns}
             data={serials}
@@ -444,7 +444,7 @@ export default function SerialNumberManagementPage() {
                     </label>
                     <select
                       {...registerSingle('warehouseId')}
-                      className="w-full text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                      className="w-full text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                     >
                       <option value="">Select Depot...</option>
                       {warehouses.map((w) => (
@@ -466,7 +466,7 @@ export default function SerialNumberManagementPage() {
                     </label>
                     <select
                       {...registerSingle('productId')}
-                      className="w-full text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                      className="w-full text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                     >
                       <option value="">Select Catalog Item...</option>
                       {products.map((p) => (
@@ -531,7 +531,7 @@ export default function SerialNumberManagementPage() {
                     </label>
                     <select
                       {...registerBulk('warehouseId')}
-                      className="w-full text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                      className="w-full text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                     >
                       <option value="">Select Depot...</option>
                       {warehouses.map((w) => (
@@ -553,7 +553,7 @@ export default function SerialNumberManagementPage() {
                     </label>
                     <select
                       {...registerBulk('productId')}
-                      className="w-full text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                      className="w-full text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                     >
                       <option value="">Select Catalog Item...</option>
                       {products.map((p) => (
@@ -635,7 +635,7 @@ export default function SerialNumberManagementPage() {
                 </label>
                 <select
                   {...registerStatus('status')}
-                  className="w-full text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   <option value="AVAILABLE">AVAILABLE — In stock for Sales</option>
                   <option value="SOLD">SOLD — Assigned to Invoice</option>

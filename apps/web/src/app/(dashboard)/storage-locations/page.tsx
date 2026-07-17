@@ -170,7 +170,7 @@ export default function StorageLocationsPage() {
       />
 
       {/* Toolbar filters */}
-      <div className="flex flex-col md:flex-row gap-3 bg-cardard border border-border rounded-2xl p-4">
+      <div className="flex flex-col md:flex-row gap-3 bg-card border border-border rounded-2xl p-4">
         {/* Search */}
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -217,7 +217,7 @@ export default function StorageLocationsPage() {
           Loading layout bin indices...
         </div>
       ) : filteredLocations.length === 0 ? (
-        <div className="text-center py-20 bg-cardard border border-border rounded-2xl">
+        <div className="text-center py-20 bg-card border border-border rounded-2xl">
           <AlertCircle className="w-8 h-8 mx-auto text-muted-foreground" />
           <h3 className="font-semibold text-foreground text-sm mt-3">No Storage Bins Configured</h3>
           <p className="text-xs text-muted-foreground mt-1">

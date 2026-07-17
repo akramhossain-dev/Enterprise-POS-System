@@ -80,13 +80,15 @@ export default function POSCreateAccountPage() {
         description="Add a new account to the company Chart of Accounts, configure parent associations, and log opening floats."
       />
 
-      <Card className="bg-cardard border-border text-foreground mt-6">
+      <Card className="bg-card border-border text-foreground mt-6">
         <CardContent className="p-6">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 text-xs sm:text-sm">
             <div className="grid gap-4 sm:grid-cols-2">
               {/* Account Code */}
               <div className="grid gap-1.5">
-                <label className="text-muted-foreground font-semibold font-mono">Account Code</label>
+                <label className="text-muted-foreground font-semibold font-mono">
+                  Account Code
+                </label>
                 <Input
                   type="text"
                   placeholder="E.g., 1120, 2150"
@@ -130,7 +132,9 @@ export default function POSCreateAccountPage() {
 
               {/* Parent Account */}
               <div className="grid gap-1.5 text-left">
-                <label className="text-muted-foreground font-semibold">Parent Association Account</label>
+                <label className="text-muted-foreground font-semibold">
+                  Parent Association Account
+                </label>
                 <select
                   {...register('parentAccountCode')}
                   className="bg-muted border border-slate-855 rounded p-1.5 text-xs text-foreground focus:outline-none focus:border-emerald-500 cursor-pointer"
@@ -169,7 +173,9 @@ export default function POSCreateAccountPage() {
 
               {/* Balance Type */}
               <div className="grid gap-1.5 text-left">
-                <label className="text-muted-foreground font-semibold">Balance Classification</label>
+                <label className="text-muted-foreground font-semibold">
+                  Balance Classification
+                </label>
                 <select
                   {...register('balanceType')}
                   className="bg-muted border border-slate-855 rounded p-1.5 text-xs text-foreground focus:outline-none focus:border-emerald-500 cursor-pointer"
@@ -185,7 +191,9 @@ export default function POSCreateAccountPage() {
 
             {/* Description */}
             <div className="grid gap-1.5 text-left">
-              <label className="text-muted-foreground font-semibold">Account Description / Notes</label>
+              <label className="text-muted-foreground font-semibold">
+                Account Description / Notes
+              </label>
               <textarea
                 placeholder="Optional description notes..."
                 {...register('description')}

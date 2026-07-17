@@ -65,7 +65,7 @@ export function ReportTable({ columns, rows, isLoading = false }: ReportTablePro
   }, [rows, columns, filterQuery, sortColumn, sortDirection, currentPage, pageSize]);
 
   return (
-    <Card className="bg-cardard border-border text-foreground select-none text-left print:border-none print:shadow-none print:bg-white print:text-black">
+    <Card className="bg-card border-border text-foreground select-none text-left print:border-none print:shadow-none print:bg-white print:text-black">
       {/* Top search controls */}
       <div className="p-3 border-b border-border flex flex-col sm:flex-row items-center gap-3 print:hidden">
         <div className="relative flex-1">
@@ -90,7 +90,7 @@ export function ReportTable({ columns, rows, isLoading = false }: ReportTablePro
               setPageSize(Number(e.target.value));
               setCurrentPage(1);
             }}
-            className="bg-cardard border border-border rounded p-1 text-[10px]"
+            className="bg-card border border-border rounded p-1 text-[10px]"
           >
             <option value={5}>5 Rows</option>
             <option value={10}>10 Rows</option>

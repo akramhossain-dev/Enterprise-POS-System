@@ -29,7 +29,7 @@ export function ClosingChecklist({
   const allChecked = items.length > 0 && items.every((i) => i.checked);
 
   return (
-    <Card className="bg-cardard border-border text-foreground select-none text-left">
+    <Card className="bg-card border-border text-foreground select-none text-left">
       <CardContent className="p-6 space-y-6">
         {/* Header */}
         <div className="flex justify-between items-center border-b border-border pb-3">

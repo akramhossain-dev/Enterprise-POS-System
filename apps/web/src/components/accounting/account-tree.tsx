@@ -82,7 +82,9 @@ export function AccountTree({ accounts, onArchive }: AccountTreeProps) {
             )}
 
             {/* Details */}
-            <span className="font-mono text-muted-foreground font-bold shrink-0">{account.code}</span>
+            <span className="font-mono text-muted-foreground font-bold shrink-0">
+              {account.code}
+            </span>
             <span className="font-semibold truncate text-foreground">{account.name}</span>
           </div>
 
@@ -145,7 +147,7 @@ export function AccountTree({ accounts, onArchive }: AccountTreeProps) {
   };
 
   return (
-    <div className="bg-cardard border border-border rounded-2xl overflow-hidden divide-y divide-border">
+    <div className="bg-card border border-border rounded-2xl overflow-hidden divide-y divide-border">
       {/* Header bar */}
       <div className="flex items-center justify-between p-3 bg-muted/40 text-[10px] text-muted-foreground uppercase font-black tracking-widest text-left">
         <div className="pl-6">Account Code & Name</div>

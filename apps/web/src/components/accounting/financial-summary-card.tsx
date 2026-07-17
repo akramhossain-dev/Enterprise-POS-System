@@ -23,7 +23,7 @@ export function FinancialSummaryCard({
   color = 'text-emerald-400',
 }: FinancialSummaryCardProps) {
   return (
-    <Card className="bg-cardard border-border text-foreground text-left">
+    <Card className="bg-card border-border text-foreground text-left">
       <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
         <CardTitle className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
           {label}

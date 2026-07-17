@@ -58,7 +58,7 @@ export default function BranchAnalyticsPage() {
       />
 
       {/* Date filters */}
-      <div className="flex items-center gap-1.5 bg-cardard px-3 border border-border rounded-xl text-xs h-9 w-full sm:w-auto my-6 print:hidden max-w-sm">
+      <div className="flex items-center gap-1.5 bg-card px-3 border border-border rounded-xl text-xs h-9 w-full sm:w-auto my-6 print:hidden max-w-sm">
         <span className="text-muted-foreground">From</span>
         <input
           type="date"
@@ -83,7 +83,7 @@ export default function BranchAnalyticsPage() {
             <span>Local Branch Rankings</span>
           </h3>
 
-          <Card className="bg-cardard border-border p-4 font-mono">
+          <Card className="bg-card border-border p-4 font-mono">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-xs">
                 <thead>

@@ -173,7 +173,7 @@ export default function POSCreateReturnPage() {
         {/* Left column form controls */}
         <div className="md:col-span-2 space-y-6">
           {/* Invoice search card */}
-          <Card className="bg-cardard border-border text-foreground">
+          <Card className="bg-card border-border text-foreground">
             <CardHeader className="pb-3 border-b border-border">
               <CardTitle className="text-sm font-bold text-muted-foreground">
                 Retrieve Invoice Details
@@ -206,7 +206,7 @@ export default function POSCreateReturnPage() {
 
           {/* Sold products to return details */}
           {fetchedOrder && (
-            <Card className="bg-cardard border-border text-foreground">
+            <Card className="bg-card border-border text-foreground">
               <CardHeader className="pb-3 border-b border-border">
                 <CardTitle className="text-sm font-bold text-muted-foreground">
                   Select Returnable Items
@@ -280,7 +280,7 @@ export default function POSCreateReturnPage() {
 
           {/* Exchange selection details */}
           {fetchedOrder && (
-            <Card className="bg-cardard border-border text-foreground">
+            <Card className="bg-card border-border text-foreground">
               <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between">
                 <div>
                   <CardTitle className="text-sm font-bold text-muted-foreground">
@@ -355,7 +355,7 @@ export default function POSCreateReturnPage() {
         {/* Right column checklist summaries */}
         <div className="md:col-span-1">
           {fetchedOrder && (
-            <Card className="bg-cardard border-border text-foreground">
+            <Card className="bg-card border-border text-foreground">
               <CardHeader className="pb-3 border-b border-border">
                 <CardTitle className="text-sm font-bold text-muted-foreground">
                   Claim Settlements

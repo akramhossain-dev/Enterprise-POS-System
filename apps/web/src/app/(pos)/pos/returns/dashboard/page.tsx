@@ -76,7 +76,7 @@ export default function POSReturnsDashboardPage() {
         {metrics.map((m, idx) => {
           const Icon = m.icon;
           return (
-            <Card key={idx} className="bg-cardard border-border text-foreground">
+            <Card key={idx} className="bg-card border-border text-foreground">
               <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                 <CardTitle className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
                   {m.label}
@@ -94,7 +94,7 @@ export default function POSReturnsDashboardPage() {
 
       {/* defect splits details */}
       <div className="grid gap-6 md:grid-cols-2 mt-6">
-        <Card className="bg-cardard border-border text-foreground">
+        <Card className="bg-card border-border text-foreground">
           <CardHeader>
             <CardTitle className="text-sm font-bold text-muted-foreground">
               Defect Rationale Breakdown
@@ -122,7 +122,7 @@ export default function POSReturnsDashboardPage() {
         </Card>
 
         {/* Dynamic tips card */}
-        <Card className="bg-cardard border-border text-foreground flex flex-col justify-between">
+        <Card className="bg-card border-border text-foreground flex flex-col justify-between">
           <CardHeader>
             <CardTitle className="text-sm font-bold text-slate-355 flex items-center gap-1.5">
               <Sparkles className="h-4.5 w-4.5 text-amber-400" />

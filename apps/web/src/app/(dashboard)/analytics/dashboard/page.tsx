@@ -241,7 +241,7 @@ export default function ExecutiveDashboardPage() {
         />
 
         <div className="flex flex-wrap gap-2 items-center self-end sm:self-auto text-xs">
-          <div className="flex items-center gap-2 bg-cardard border border-border rounded-lg p-1">
+          <div className="flex items-center gap-2 bg-card border border-border rounded-lg p-1">
             <span className="text-[10px] text-muted-foreground font-bold px-1.5 uppercase font-mono">
               Auto Sync:
             </span>
@@ -268,7 +268,7 @@ export default function ExecutiveDashboardPage() {
           <Button
             size="sm"
             onClick={() => setIsCustomizeOpen(true)}
-            className="h-8 border-border bg-cardard hover:bg-accent text-xs gap-1.5 text-muted-foreground"
+            className="h-8 border-border bg-card hover:bg-accent text-xs gap-1.5 text-muted-foreground"
           >
             <SlidersHorizontal className="h-4 w-4" />
             <span>Customize Grid</span>
@@ -287,7 +287,7 @@ export default function ExecutiveDashboardPage() {
 
       {/* Query filters */}
       <div className="grid gap-4 sm:grid-cols-3 mb-6 print:hidden">
-        <div className="flex items-center gap-1.5 bg-cardard px-3 border border-border rounded-xl text-xs h-9 w-full">
+        <div className="flex items-center gap-1.5 bg-card px-3 border border-border rounded-xl text-xs h-9 w-full">
           <span className="text-muted-foreground">From</span>
           <input
             type="date"
@@ -331,7 +331,7 @@ export default function ExecutiveDashboardPage() {
           icon={DollarSign}
           prefix="$"
           description="vs. last month"
-          className="bg-cardard border-border"
+          className="bg-card border-border"
         />
         <KpiCard
           title="Net Operating Profit"
@@ -341,7 +341,7 @@ export default function ExecutiveDashboardPage() {
           icon={DollarSign}
           prefix="$"
           description="vs. last month"
-          className="bg-cardard border-border text-emerald-450"
+          className="bg-card border-border text-emerald-450"
         />
         <KpiCard
           title="Avg Order Value (AOV)"
@@ -350,7 +350,7 @@ export default function ExecutiveDashboardPage() {
           trend={kpis.avgOrderValueChange >= 0 ? 'up' : 'down'}
           icon={ShoppingCart}
           prefix="$"
-          className="bg-cardard border-border"
+          className="bg-card border-border"
         />
         <KpiCard
           title="Active Customer Growth"
@@ -358,7 +358,7 @@ export default function ExecutiveDashboardPage() {
           growth={kpis.customerGrowth}
           trend={kpis.customerGrowth >= 0 ? 'up' : 'down'}
           icon={Users}
-          className="bg-cardard border-border"
+          className="bg-card border-border"
         />
       </div>
 
@@ -454,7 +454,7 @@ export default function ExecutiveDashboardPage() {
 
       {/* Grid customization modal dialog */}
       <Dialog open={isCustomizeOpen} onOpenChange={setIsCustomizeOpen}>
-        <DialogContent className="bg-cardard border border-border text-foreground max-w-lg p-6">
+        <DialogContent className="bg-card border border-border text-foreground max-w-lg p-6">
           <DialogHeader className="mb-4">
             <DialogTitle className="text-sm font-black uppercase text-foreground tracking-wider flex items-center gap-1.5 font-sans">
               <SlidersHorizontal className="h-5 w-5 text-indigo-400" />
@@ -490,7 +490,7 @@ export default function ExecutiveDashboardPage() {
                       <select
                         value={item.width}
                         onChange={(e) => changeWidgetWidth(item.id, e.target.value as any)}
-                        className="bg-cardard border border-border text-muted-foreground rounded p-1 text-[10px] focus:outline-none"
+                        className="bg-card border border-border text-muted-foreground rounded p-1 text-[10px] focus:outline-none"
                       >
                         <option value="third">1/3 Column</option>
                         <option value="half">1/2 Column</option>
@@ -544,7 +544,7 @@ export default function ExecutiveDashboardPage() {
                   type="button"
                   onClick={handleResetLayout}
                   variant="outline"
-                  className="h-9 border-border text-muted-foreground hover:text-foreground bg-cardard gap-1"
+                  className="h-9 border-border text-muted-foreground hover:text-foreground bg-card gap-1"
                 >
                   <RotateCcw className="h-3.5 w-3.5" />
                   <span>Reset Layout</span>

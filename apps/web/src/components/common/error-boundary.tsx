@@ -42,7 +42,7 @@ export class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div className="flex min-h-[400px] flex-col items-center justify-center p-6 text-foreground bg-cardard rounded-xl border border-border font-sans text-center max-w-md mx-auto my-12 select-none">
+        <div className="flex min-h-[400px] flex-col items-center justify-center p-6 text-foreground bg-card rounded-xl border border-border font-sans text-center max-w-md mx-auto my-12 select-none">
           <ShieldAlert className="h-12 w-12 text-rose-500 mb-4 animate-bounce" />
           <h2 className="text-sm font-black uppercase tracking-wider text-foreground">
             Runtime Error Intercepted

@@ -109,7 +109,7 @@ export default function POSTerminalPage() {
       </div>
 
       {/* Right section: Multi-Cart details list & Checkout pricing summaries */}
-      <div className="w-full md:w-[380px] lg:w-[420px] flex flex-col border-l border-border bg-cardard shrink-0 h-full overflow-hidden">
+      <div className="w-full md:w-[380px] lg:w-[420px] flex flex-col border-l border-border bg-card shrink-0 h-full overflow-hidden">
         {/* Shopping Cart List */}
         <div className="flex-1 min-h-0 overflow-hidden">
           <ShoppingCart />

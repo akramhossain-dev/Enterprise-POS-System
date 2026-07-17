@@ -168,7 +168,7 @@ export default function CreditNotesPage() {
       />
 
       {/* Filter and Search Bar */}
-      <Card className="shadow-sm border-border bg-cardard mb-6">
+      <Card className="shadow-sm border-border bg-card mb-6">
         <CardContent className="p-4 space-y-4">
           <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 text-sm">
             {/* Search Box */}
@@ -178,7 +178,7 @@ export default function CreditNotesPage() {
                 placeholder="Search credit note number, return number..."
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
-                className="pl-9 h-9 border-border bg-cardard text-foreground"
+                className="pl-9 h-9 border-border bg-card text-foreground"
               />
             </div>
 
@@ -187,7 +187,7 @@ export default function CreditNotesPage() {
               <select
                 value={supplierId}
                 onChange={(e) => setSupplierId(e.target.value)}
-                className="w-full text-xs rounded-lg border border-border bg-cardard p-2 h-9 text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                className="w-full text-xs rounded-lg border border-border bg-card p-2 h-9 text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
               >
                 <option value="">All Suppliers</option>
                 {suppliers.map((s) => (
@@ -203,7 +203,7 @@ export default function CreditNotesPage() {
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value as any)}
-                className="w-full text-xs rounded-lg border border-border bg-cardard p-2 h-9 text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                className="w-full text-xs rounded-lg border border-border bg-card p-2 h-9 text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
               >
                 <option value="ALL">All Statuses</option>
                 <option value="DRAFT">Draft</option>

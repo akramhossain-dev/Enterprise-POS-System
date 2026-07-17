@@ -93,7 +93,7 @@ export default function OrderDetailsPage({ params }: { params: Promise<Params> }
             {/* Left panels */}
             <div className="md:col-span-2 space-y-6">
               {/* Products list grid */}
-              <Card className="bg-cardard border-border text-foreground">
+              <Card className="bg-card border-border text-foreground">
                 <CardHeader className="pb-3 border-b border-border">
                   <CardTitle className="text-sm font-bold text-muted-foreground">
                     Sold Line Items
@@ -130,9 +130,11 @@ export default function OrderDetailsPage({ params }: { params: Promise<Params> }
 
             {/* Right meta values card */}
             <div className="md:col-span-1 space-y-6">
-              <Card className="bg-cardard border-border text-foreground">
+              <Card className="bg-card border-border text-foreground">
                 <CardHeader className="pb-3 border-b border-border">
-                  <CardTitle className="text-sm font-bold text-muted-foreground">Order Summary</CardTitle>
+                  <CardTitle className="text-sm font-bold text-muted-foreground">
+                    Order Summary
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="p-4 space-y-4 text-xs font-mono">
                   <div className="space-y-1.5 border-b border-border pb-3 text-muted-foreground">
@@ -199,7 +201,7 @@ export default function OrderDetailsPage({ params }: { params: Promise<Params> }
 
       {/* Supervisor void verification dialog */}
       <Dialog open={openVoidDialog} onOpenChange={setOpenVoidDialog}>
-        <DialogContent className="sm:max-w-[420px] bg-cardard border-border text-foreground p-5">
+        <DialogContent className="sm:max-w-[420px] bg-card border-border text-foreground p-5">
           <DialogHeader>
             <DialogTitle className="text-foreground text-sm font-bold flex items-center gap-2 pb-2 border-b border-border">
               <ShieldAlert className="h-5 w-5 text-rose-500" />
@@ -209,7 +211,9 @@ export default function OrderDetailsPage({ params }: { params: Promise<Params> }
 
           <div className="space-y-4 text-xs mt-3 text-left">
             <div className="grid gap-1.5">
-              <label className="text-muted-foreground font-semibold">Voiding Reason / Rationale</label>
+              <label className="text-muted-foreground font-semibold">
+                Voiding Reason / Rationale
+              </label>
               <Input
                 type="text"
                 placeholder="E.g., Customer double charge, scanning error"

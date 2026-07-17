@@ -57,7 +57,7 @@ export default function EditBrandPage({ params }: EditBrandPageProps) {
   if (isError || !brand) {
     return (
       <PageContainer narrow>
-        <div className="text-center py-12 rounded-xl border border-border bg-cardard shadow-xs">
+        <div className="text-center py-12 rounded-xl border border-border bg-card shadow-xs">
           <AlertCircle className="w-12 h-12 text-destructive mx-auto" />
           <h3 className="font-semibold text-lg text-foreground mt-4">Brand Not Found</h3>
           <p className="text-sm text-muted-foreground mt-2">

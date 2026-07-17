@@ -95,7 +95,7 @@ export function ProductBrowser() {
   return (
     <div className="flex flex-col flex-1 h-full min-w-0 bg-background border-r border-border z-10 overflow-hidden select-none">
       {/* Search & Mode Headers */}
-      <div className="p-3 bg-cardard/40 border-b border-border flex flex-col md:flex-row gap-3 items-center justify-between shrink-0">
+      <div className="p-3 bg-card/40 border-b border-border flex flex-col md:flex-row gap-3 items-center justify-between shrink-0">
         {/* Search Field */}
         <div className="relative w-full md:w-80">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -116,7 +116,7 @@ export function ProductBrowser() {
             <select
               value={activeBrand || 'all'}
               onChange={handleBrandChange}
-              className="bg-cardard border border-border text-foreground rounded-md text-xs py-1.5 px-3 pr-8 appearance-none focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[120px]"
+              className="bg-card border border-border text-foreground rounded-md text-xs py-1.5 px-3 pr-8 appearance-none focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[120px]"
             >
               <option value="all">All Brands</option>
               {brands.map((b) => (
@@ -181,7 +181,7 @@ export function ProductBrowser() {
             'rounded-full text-xs px-3 h-7 font-bold border',
             activeCategory === null
               ? 'bg-emerald-500 text-slate-950 border-emerald-500 font-extrabold'
-              : 'bg-cardard text-muted-foreground border-border hover:bg-accent hover:text-foreground',
+              : 'bg-card text-muted-foreground border-border hover:bg-accent hover:text-foreground',
           )}
         >
           All Items
@@ -195,7 +195,7 @@ export function ProductBrowser() {
               'rounded-full text-xs px-3 h-7 border font-bold',
               activeCategory === cat.id
                 ? 'bg-emerald-500 text-slate-950 border-emerald-500 font-extrabold'
-                : 'bg-cardard text-muted-foreground border-border hover:bg-accent hover:text-foreground',
+                : 'bg-card text-muted-foreground border-border hover:bg-accent hover:text-foreground',
             )}
           >
             {cat.name}
@@ -253,7 +253,7 @@ export function ProductBrowser() {
 
       {/* Footer Pager Pagination */}
       {meta && meta.totalPages > 1 && (
-        <div className="px-4 py-2 border-t border-border bg-cardard/40 flex items-center justify-between shrink-0">
+        <div className="px-4 py-2 border-t border-border bg-card/40 flex items-center justify-between shrink-0">
           <p className="text-[10px] sm:text-xs text-muted-foreground">
             Showing <span className="text-foreground font-bold">{displayedProducts.length}</span> of{' '}
             <span className="text-foreground font-bold">{meta.total}</span> items
@@ -265,7 +265,7 @@ export function ProductBrowser() {
               variant="outline"
               disabled={currentPage <= 1}
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              className="h-7 w-7 bg-cardard border-border text-muted-foreground hover:text-foreground"
+              className="h-7 w-7 bg-card border-border text-muted-foreground hover:text-foreground"
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
@@ -277,7 +277,7 @@ export function ProductBrowser() {
               variant="outline"
               disabled={currentPage >= meta.totalPages}
               onClick={() => setCurrentPage((p) => p + 1)}
-              className="h-7 w-7 bg-cardard border-border text-muted-foreground hover:text-foreground"
+              className="h-7 w-7 bg-card border-border text-muted-foreground hover:text-foreground"
             >
               <ChevronRight className="h-4 w-4" />
             </Button>

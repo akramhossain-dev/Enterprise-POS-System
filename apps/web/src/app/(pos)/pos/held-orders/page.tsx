@@ -87,7 +87,7 @@ export default function POSHeldOrdersPage() {
             return (
               <Card
                 key={held.id}
-                className="bg-cardard border-border hover:border-slate-750 transition-colors"
+                className="bg-card border-border hover:border-slate-750 transition-colors"
               >
                 <CardContent className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs sm:text-sm">
                   {/* Cart info */}

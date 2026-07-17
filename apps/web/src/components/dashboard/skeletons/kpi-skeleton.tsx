@@ -2,7 +2,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export function KpiSkeleton() {
   return (
-    <div className="rounded-xl border border-border bg-cardard p-5 space-y-3">
+    <div className="rounded-xl border border-border bg-card p-5 space-y-3">
       <div className="flex items-center justify-between">
         <Skeleton variant="text" className="w-24 h-3" />
         <Skeleton variant="circular" className="w-9 h-9" />

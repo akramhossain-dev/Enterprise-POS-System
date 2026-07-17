@@ -183,7 +183,7 @@ export function CheckoutModal({ open, onOpenChange, grandTotal }: CheckoutModalP
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[540px] bg-cardard border-border text-foreground p-5 overflow-y-auto max-h-[90vh] custom-scrollbar">
+      <DialogContent className="sm:max-w-[540px] bg-card border-border text-foreground p-5 overflow-y-auto max-h-[90vh] custom-scrollbar">
         <DialogHeader>
           <DialogTitle className="text-foreground text-base font-bold flex items-center justify-between border-b border-border pb-2.5">
             <div className="flex items-center gap-2">
@@ -343,7 +343,7 @@ export function CheckoutModal({ open, onOpenChange, grandTotal }: CheckoutModalP
                       'flex flex-col items-center justify-center h-16 rounded-xl border text-xs gap-1.5 transition-all',
                       isSelected
                         ? 'border-emerald-500 bg-emerald-950/20 text-emerald-400'
-                        : 'border-border bg-cardard text-muted-foreground hover:text-foreground',
+                        : 'border-border bg-card text-muted-foreground hover:text-foreground',
                     )}
                   >
                     <Icon className="h-5 w-5" />

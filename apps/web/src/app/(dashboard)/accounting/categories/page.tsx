@@ -77,9 +77,11 @@ export default function POSAccountCategoriesPage() {
       <div className="grid gap-6 md:grid-cols-3 mt-6">
         {/* Creation form */}
         <div className="md:col-span-1">
-          <Card className="bg-cardard border-border text-foreground h-full">
+          <Card className="bg-card border-border text-foreground h-full">
             <CardHeader className="pb-3 border-b border-border">
-              <CardTitle className="text-sm font-bold text-muted-foreground">Register Category</CardTitle>
+              <CardTitle className="text-sm font-bold text-muted-foreground">
+                Register Category
+              </CardTitle>
             </CardHeader>
             <CardContent className="p-4">
               <form onSubmit={handleCreate} className="space-y-4 text-xs sm:text-sm">
@@ -135,7 +137,7 @@ export default function POSAccountCategoriesPage() {
 
         {/* Categories table list */}
         <div className="md:col-span-2">
-          <Card className="bg-cardard border-border text-foreground flex flex-col h-full overflow-hidden">
+          <Card className="bg-card border-border text-foreground flex flex-col h-full overflow-hidden">
             <CardHeader className="pb-3 border-b border-border shrink-0">
               <CardTitle className="text-sm font-bold text-muted-foreground flex items-center gap-1.5">
                 <Bookmark className="h-4.5 w-4.5 text-emerald-400" />
@@ -144,7 +146,9 @@ export default function POSAccountCategoriesPage() {
             </CardHeader>
             <CardContent className="flex-1 p-0 overflow-y-auto max-h-[420px] custom-scrollbar text-xs">
               {isLoading ? (
-                <div className="text-center py-10 text-muted-foreground">Querying categories...</div>
+                <div className="text-center py-10 text-muted-foreground">
+                  Querying categories...
+                </div>
               ) : categories.length > 0 ? (
                 <table className="w-full text-xs text-left border-collapse">
                   <thead>

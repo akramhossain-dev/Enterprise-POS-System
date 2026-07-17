@@ -113,7 +113,7 @@ export default function TrialBalancePage() {
               size="sm"
               variant="outline"
               onClick={handleExportCSV}
-              className="h-8 border-border bg-cardard hover:bg-accent text-xs gap-1.5"
+              className="h-8 border-border bg-card hover:bg-accent text-xs gap-1.5"
             >
               <FileDown className="h-4 w-4 text-slate-455" />
               <span>Export CSV</span>
@@ -130,7 +130,7 @@ export default function TrialBalancePage() {
         </div>
 
         {/* Trial balance table worksheet */}
-        <Card className="bg-cardard border-border text-foreground print:bg-white print:text-black print:border-none print:shadow-none">
+        <Card className="bg-card border-border text-foreground print:bg-white print:text-black print:border-none print:shadow-none">
           <CardContent className="p-6">
             <div className="text-center border-b border-slate-855 pb-4 print:border-black mb-6">
               <h2 className="text-base font-black uppercase text-foreground print:text-black font-sans tracking-wide">

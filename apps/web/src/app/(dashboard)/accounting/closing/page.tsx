@@ -84,7 +84,7 @@ export default function AccountingClosingPage() {
           <select
             value={selectedPeriodId}
             onChange={(e) => setSelectedPeriodId(e.target.value)}
-            className="bg-cardard border border-slate-855 text-muted-foreground rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[200px] font-bold"
+            className="bg-card border border-slate-855 text-muted-foreground rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[200px] font-bold"
           >
             {periods.map((p: any) => (
               <option key={p.id} value={p.id}>
@@ -115,7 +115,7 @@ export default function AccountingClosingPage() {
 
         {/* Right Column: details info */}
         <div className="md:col-span-1">
-          <Card className="bg-cardard border-border text-foreground p-4 space-y-4">
+          <Card className="bg-card border-border text-foreground p-4 space-y-4">
             <div className="border-b border-border pb-2">
               <span className="text-[10px] font-bold text-slate-450 uppercase tracking-widest font-sans flex items-center gap-1.5">
                 <Lock className="h-4 w-4 text-indigo-400" />

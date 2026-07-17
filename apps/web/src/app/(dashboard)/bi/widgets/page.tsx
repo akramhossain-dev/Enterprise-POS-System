@@ -47,7 +47,7 @@ export default function WidgetLibraryPage() {
           <span>Active Formulas Library</span>
         </h3>
 
-        <Card className="bg-cardard border-border p-4 font-mono">
+        <Card className="bg-card border-border p-4 font-mono">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs">
               <thead>

@@ -72,7 +72,7 @@ export default function POSSettingsPage() {
 
       <div className="grid gap-6 mt-6">
         {/* Receipt Printer configuration card */}
-        <Card className="bg-cardard border-border text-foreground">
+        <Card className="bg-card border-border text-foreground">
           <CardHeader>
             <CardTitle className="text-sm font-bold flex items-center gap-2 text-foreground">
               <Printer className="h-4.5 w-4.5 text-emerald-400" />
@@ -86,7 +86,9 @@ export default function POSSettingsPage() {
             <div className="flex items-center justify-between text-xs sm:text-sm">
               <div>
                 <p className="font-semibold text-foreground">Paper Roll Print Width</p>
-                <p className="text-[11px] text-muted-foreground">Choose standard thermal receipt width.</p>
+                <p className="text-[11px] text-muted-foreground">
+                  Choose standard thermal receipt width.
+                </p>
               </div>
               <div className="flex bg-muted p-1 border border-border rounded-lg animate-fade-in">
                 <Button
@@ -117,7 +119,7 @@ export default function POSSettingsPage() {
         </Card>
 
         {/* Barcode scanner configurations */}
-        <Card className="bg-cardard border-border text-foreground">
+        <Card className="bg-card border-border text-foreground">
           <CardHeader>
             <CardTitle className="text-sm font-bold flex items-center gap-2 text-foreground">
               <Barcode className="h-4.5 w-4.5 text-emerald-400" />
@@ -151,7 +153,7 @@ export default function POSSettingsPage() {
         </Card>
 
         {/* Defaults & Facilities configurations */}
-        <Card className="bg-cardard border-border text-foreground">
+        <Card className="bg-card border-border text-foreground">
           <CardHeader>
             <CardTitle className="text-sm font-bold flex items-center gap-2 text-foreground">
               <Warehouse className="h-4.5 w-4.5 text-emerald-400" />

@@ -104,7 +104,7 @@ export function ReportViewer({
             size="sm"
             variant="outline"
             onClick={handleRefresh}
-            className="h-8 border-border bg-cardard hover:bg-accent text-muted-foreground hover:text-foreground"
+            className="h-8 border-border bg-card hover:bg-accent text-muted-foreground hover:text-foreground"
           >
             <RefreshCw className="h-4 w-4" />
           </Button>
@@ -112,7 +112,7 @@ export function ReportViewer({
           <Button
             size="sm"
             onClick={() => setIsExportOpen(true)}
-            className="h-8 bg-cardard border border-border hover:bg-accent text-xs gap-1.5 text-muted-foreground"
+            className="h-8 bg-card border border-border hover:bg-accent text-xs gap-1.5 text-muted-foreground"
           >
             <FileDown className="h-4 w-4" />
             <span>Export File</span>

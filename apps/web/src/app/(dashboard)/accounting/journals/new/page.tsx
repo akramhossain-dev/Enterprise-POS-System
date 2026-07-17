@@ -143,12 +143,14 @@ export default function POSCreateJournalPage() {
 
       <form onSubmit={(e) => e.preventDefault()} className="space-y-6 mt-6 text-xs sm:text-sm">
         {/* Form Meta Fields */}
-        <Card className="bg-cardard border-border text-foreground">
+        <Card className="bg-card border-border text-foreground">
           <CardContent className="p-6 space-y-4">
             <div className="grid gap-4 sm:grid-cols-3">
               {/* Reference Number */}
               <div className="grid gap-1.5">
-                <label className="text-muted-foreground font-semibold font-mono">Reference Number</label>
+                <label className="text-muted-foreground font-semibold font-mono">
+                  Reference Number
+                </label>
                 <Input
                   type="text"
                   placeholder="Auto-generated if empty"
@@ -219,7 +221,7 @@ export default function POSCreateJournalPage() {
         </Card>
 
         {/* Double Entry Lines Section */}
-        <Card className="bg-cardard border-border text-foreground">
+        <Card className="bg-card border-border text-foreground">
           <CardContent className="p-6">
             <DebitCreditEntry value={lines} onChange={setLines} accounts={accounts} />
           </CardContent>
@@ -231,7 +233,7 @@ export default function POSCreateJournalPage() {
             type="button"
             disabled={createMutation.isPending}
             onClick={handleSubmit((vals) => onSubmit(vals, 'DRAFT'))}
-            className="h-10 border border-border bg-cardard hover:bg-accent text-slate-250 font-bold uppercase text-xs tracking-wider"
+            className="h-10 border border-border bg-card hover:bg-accent text-slate-250 font-bold uppercase text-xs tracking-wider"
           >
             <span>Save as Draft</span>
           </Button>

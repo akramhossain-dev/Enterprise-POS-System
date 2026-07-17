@@ -33,7 +33,7 @@ export function LedgerTable({
           <Button
             size="xs"
             onClick={onExportCSV}
-            className="h-8 border border-border bg-cardard hover:bg-accent text-[10px] font-bold uppercase tracking-wider gap-1.5"
+            className="h-8 border border-border bg-card hover:bg-accent text-[10px] font-bold uppercase tracking-wider gap-1.5"
           >
             <Download className="h-3.5 w-3.5" />
             <span>Export CSV</span>
@@ -42,7 +42,7 @@ export function LedgerTable({
       )}
 
       {/* Main Table */}
-      <div className="bg-cardard border border-border rounded-2xl overflow-hidden">
+      <div className="bg-card border border-border rounded-2xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs sm:text-sm">
             <thead>

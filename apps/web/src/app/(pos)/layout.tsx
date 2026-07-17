@@ -114,7 +114,7 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-[#070b13] text-foreground font-sans selection:bg-primary selection:text-white">
       {/* POS Topbar Bar Header */}
-      <header className="flex items-center justify-between px-4 py-2 border-b border-border bg-cardard/90 backdrop-blur-md shadow-lg z-30 select-none">
+      <header className="flex items-center justify-between px-4 py-2 border-b border-border bg-card/90 backdrop-blur-md shadow-lg z-30 select-none">
         {/* Left Actions & Logo */}
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2 mr-2">
@@ -333,7 +333,9 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
               <span className="font-semibold text-foreground">
                 {user?.fullName || 'Cashier Admin'}
               </span>
-              <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Operator</span>
+              <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
+                Operator
+              </span>
             </div>
           </div>
 
@@ -354,7 +356,7 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
 
       {/* Keyboard Shortcuts Cheat Sheet Dialog */}
       <Dialog open={showShortcutHelp} onOpenChange={setShowShortcutHelp}>
-        <DialogContent className="sm:max-w-[425px] bg-cardard border-border text-foreground">
+        <DialogContent className="sm:max-w-[425px] bg-card border-border text-foreground">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-foreground">
               <Keyboard className="h-5 w-5 text-emerald-400" />

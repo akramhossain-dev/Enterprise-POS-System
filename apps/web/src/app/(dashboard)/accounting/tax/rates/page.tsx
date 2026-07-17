@@ -112,7 +112,7 @@ export default function TaxRatesPage() {
               rates.map((rate) => (
                 <Card
                   key={rate.id}
-                  className="bg-cardard border-border hover:border-slate-700 transition-colors"
+                  className="bg-card border-border hover:border-slate-700 transition-colors"
                 >
                   <CardContent className="p-4 flex items-center justify-between">
                     <div className="space-y-1 text-left">
@@ -122,7 +122,9 @@ export default function TaxRatesPage() {
                           {rate.type}
                         </span>
                       </div>
-                      {rate.notes && <p className="text-[10px] text-muted-foreground">{rate.notes}</p>}
+                      {rate.notes && (
+                        <p className="text-[10px] text-muted-foreground">{rate.notes}</p>
+                      )}
                     </div>
 
                     <div className="text-right">
@@ -151,10 +153,7 @@ export default function TaxRatesPage() {
           <div className="space-y-3">
             {groups.length > 0 ? (
               groups.map((group) => (
-                <Card
-                  key={group.id}
-                  className="bg-cardard border-border p-4 space-y-3 text-left"
-                >
+                <Card key={group.id} className="bg-card border-border p-4 space-y-3 text-left">
                   <div className="flex justify-between items-start border-b border-border pb-2">
                     <p className="text-xs font-bold text-foreground">{group.name}</p>
                     <span className="text-[9px] bg-emerald-500/10 text-emerald-400 px-1.5 rounded font-bold">
@@ -193,7 +192,7 @@ export default function TaxRatesPage() {
 
       {/* Define Tax Rate Modal */}
       <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-        <DialogContent className="bg-cardard border border-border text-foreground max-w-md p-6">
+        <DialogContent className="bg-card border border-border text-foreground max-w-md p-6">
           <DialogHeader className="mb-4">
             <DialogTitle className="text-sm font-black uppercase text-foreground tracking-wider flex items-center gap-1.5">
               <ShieldCheck className="h-5 w-5 text-emerald-450" />
@@ -266,7 +265,7 @@ export default function TaxRatesPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  className="h-9 border-border text-muted-foreground hover:text-foreground bg-cardard"
+                  className="h-9 border-border text-muted-foreground hover:text-foreground bg-card"
                 >
                   Cancel
                 </Button>

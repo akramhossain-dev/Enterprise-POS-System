@@ -28,10 +28,7 @@ export function AuditTimeline({ logs, loading = false }: AuditTimelineProps) {
     return (
       <div className="space-y-4">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div
-            key={i}
-            className="h-16 bg-cardard border border-border rounded-xl animate-pulse"
-          />
+          <div key={i} className="h-16 bg-card border border-border rounded-xl animate-pulse" />
         ))}
       </div>
     );
@@ -72,7 +69,9 @@ export function AuditTimeline({ logs, loading = false }: AuditTimelineProps) {
             </div>
           </div>
 
-          <p className="text-xs text-muted-foreground font-sans pr-4 leading-relaxed">{log.description}</p>
+          <p className="text-xs text-muted-foreground font-sans pr-4 leading-relaxed">
+            {log.description}
+          </p>
           <div className="flex items-center gap-1 text-[10px] text-muted-foreground font-sans pt-0.5">
             <User className="h-3 w-3" />
             <span>

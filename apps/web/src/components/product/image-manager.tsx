@@ -125,7 +125,7 @@ export function ImageManager({
           'border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all duration-200',
           isDragActive
             ? 'border-primary bg-primary/5 scale-[0.99]'
-            : 'border-border bg-cardard hover:border-primary/50',
+            : 'border-border bg-card hover:border-primary/50',
         )}
       >
         <input {...getInputProps()} />

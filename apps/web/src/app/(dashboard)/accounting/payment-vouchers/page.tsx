@@ -239,7 +239,7 @@ export default function PaymentVouchersPage() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="bg-cardard border border-border text-muted-foreground rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[120px]"
+              className="bg-card border border-border text-muted-foreground rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[120px]"
             >
               <option value="ALL">All Statuses</option>
               <option value="DRAFT">Draft</option>
@@ -255,7 +255,7 @@ export default function PaymentVouchersPage() {
             {Array.from({ length: 6 }).map((_, i) => (
               <div
                 key={i}
-                className="h-48 bg-cardard border border-border rounded-2xl animate-pulse"
+                className="h-48 bg-card border border-border rounded-2xl animate-pulse"
               />
             ))}
           </div>
@@ -281,7 +281,7 @@ export default function PaymentVouchersPage() {
 
       {/* Create Voucher Dialog Modal */}
       <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-        <DialogContent className="bg-cardard border border-border text-foreground max-w-md p-6">
+        <DialogContent className="bg-card border border-border text-foreground max-w-md p-6">
           <DialogHeader className="mb-4">
             <DialogTitle className="text-sm font-black uppercase text-foreground tracking-wider flex items-center gap-1.5">
               <FileText className="h-5 w-5 text-indigo-400" />
@@ -295,7 +295,9 @@ export default function PaymentVouchersPage() {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 text-xs sm:text-sm">
             {/* Payee name */}
             <div className="grid gap-1.5 text-left">
-              <label className="text-muted-foreground font-semibold">Payee (Zenith/Vendor name) *</label>
+              <label className="text-muted-foreground font-semibold">
+                Payee (Zenith/Vendor name) *
+              </label>
               <Input
                 type="text"
                 placeholder="E.g., Zenith Shipping Co."
@@ -308,7 +310,9 @@ export default function PaymentVouchersPage() {
             <div className="grid grid-cols-2 gap-4">
               {/* Amount */}
               <div className="grid gap-1.5">
-                <label className="text-muted-foreground font-semibold font-mono">Amount ($) *</label>
+                <label className="text-muted-foreground font-semibold font-mono">
+                  Amount ($) *
+                </label>
                 <Input
                   type="number"
                   step="any"
@@ -380,7 +384,7 @@ export default function PaymentVouchersPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  className="h-9 border-border text-muted-foreground hover:text-foreground bg-cardard"
+                  className="h-9 border-border text-muted-foreground hover:text-foreground bg-card"
                 >
                   Cancel
                 </Button>

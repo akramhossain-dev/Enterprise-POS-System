@@ -140,7 +140,7 @@ export default function FiscalPeriodsPage() {
 
       {/* New Fiscal Year Dialog */}
       <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-        <DialogContent className="bg-cardard border border-border text-foreground max-w-md p-6">
+        <DialogContent className="bg-card border border-border text-foreground max-w-md p-6">
           <DialogHeader className="mb-4">
             <DialogTitle className="text-sm font-black uppercase text-foreground tracking-wider flex items-center gap-1.5 font-sans">
               <CalendarRange className="h-5 w-5 text-indigo-400" />
@@ -172,7 +172,7 @@ export default function FiscalPeriodsPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  className="h-9 border-border text-muted-foreground hover:text-foreground bg-cardard"
+                  className="h-9 border-border text-muted-foreground hover:text-foreground bg-card"
                 >
                   Cancel
                 </Button>

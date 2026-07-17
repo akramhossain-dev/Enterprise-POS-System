@@ -140,7 +140,7 @@ export default function NewSupplierInvoicePage() {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 text-sm">
         <div className="grid gap-6 md:grid-cols-3">
           {/* Form details card */}
-          <Card className="md:col-span-2 shadow-sm border-border bg-cardard">
+          <Card className="md:col-span-2 shadow-sm border-border bg-card">
             <CardHeader className="border-b">
               <CardTitle className="text-sm font-semibold flex items-center gap-2">
                 <FileText className="w-4 h-4 text-primary animate-pulse" /> Invoice Configuration
@@ -154,7 +154,7 @@ export default function NewSupplierInvoicePage() {
                 </label>
                 <select
                   {...register('goodsReceiveId')}
-                  className="w-full text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none"
+                  className="w-full text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none"
                 >
                   <option value="">Select completed receiving log...</option>
                   {uninvoicedGRNs.map((g) => (
@@ -217,7 +217,7 @@ export default function NewSupplierInvoicePage() {
           </Card>
 
           {/* Pricing breakdowns */}
-          <Card className="shadow-sm border-border bg-cardard">
+          <Card className="shadow-sm border-border bg-card">
             <CardHeader className="border-b">
               <CardTitle className="text-sm font-semibold">Financial Reconciliation</CardTitle>
             </CardHeader>

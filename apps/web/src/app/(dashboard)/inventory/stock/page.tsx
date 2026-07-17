@@ -309,7 +309,7 @@ export default function CurrentStockPage() {
       />
 
       {/* Search & Filter Header Toolbar */}
-      <div className="bg-cardard border rounded-xl p-4 mb-6 space-y-4 shadow-sm">
+      <div className="bg-card border rounded-xl p-4 mb-6 space-y-4 shadow-sm">
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
           <div className="relative w-full md:max-w-sm flex-1">
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -363,7 +363,7 @@ export default function CurrentStockPage() {
                   setWarehouseFilter(e.target.value);
                   setPage(1);
                 }}
-                className="w-full text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="">All Warehouses</option>
                 {warehouses.map((w) => (
@@ -385,7 +385,7 @@ export default function CurrentStockPage() {
                   setCategoryFilter(e.target.value);
                   setPage(1);
                 }}
-                className="w-full text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="">All Categories</option>
                 {categories.map((c) => (
@@ -407,7 +407,7 @@ export default function CurrentStockPage() {
                   setStockStatusFilter(e.target.value as any);
                   setPage(1);
                 }}
-                className="w-full text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="ALL">All Statuses</option>
                 <option value="IN_STOCK">In Stock</option>
@@ -423,7 +423,7 @@ export default function CurrentStockPage() {
       {isLoading ? (
         <TableSkeleton columns={11} rows={pageSize} />
       ) : (
-        <div className="bg-cardard border rounded-xl shadow-sm p-4">
+        <div className="bg-card border rounded-xl shadow-sm p-4">
           <DataTable
             columns={columns}
             data={inventories}

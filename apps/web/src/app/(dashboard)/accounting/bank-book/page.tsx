@@ -55,7 +55,7 @@ export default function BankBookPage() {
 
       {/* Date Filters */}
       <div className="flex flex-col sm:flex-row gap-3 items-center justify-between mt-4 mb-6">
-        <div className="flex items-center gap-1.5 bg-cardard px-3 border border-slate-855 rounded-lg text-xs h-9 w-full sm:w-auto">
+        <div className="flex items-center gap-1.5 bg-card px-3 border border-slate-855 rounded-lg text-xs h-9 w-full sm:w-auto">
           <span className="text-muted-foreground">From</span>
           <input
             type="date"
@@ -89,7 +89,7 @@ export default function BankBookPage() {
           />
 
           {/* Transactions lists table */}
-          <div className="bg-cardard border border-border rounded-2xl overflow-hidden">
+          <div className="bg-card border border-border rounded-2xl overflow-hidden">
             <div className="p-4 bg-muted/40 border-b border-border flex justify-between items-center">
               <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-1.5 font-sans">
                 <Building2 className="h-4 w-4 text-indigo-400" />

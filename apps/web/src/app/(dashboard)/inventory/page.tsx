@@ -159,7 +159,7 @@ export default function InventoryDashboardPage() {
         <Link href="/inventory/stock" className="w-full">
           <Button
             variant="outline"
-            className="w-full h-20 flex flex-col gap-1.5 justify-center items-center rounded-xl bg-cardard border-border hover:bg-muted/30"
+            className="w-full h-20 flex flex-col gap-1.5 justify-center items-center rounded-xl bg-card border-border hover:bg-muted/30"
           >
             <Barcode className="w-5 h-5 text-primary" />
             <span className="text-xs font-semibold">Current Stock</span>
@@ -168,7 +168,7 @@ export default function InventoryDashboardPage() {
         <Link href="/inventory/batches" className="w-full">
           <Button
             variant="outline"
-            className="w-full h-20 flex flex-col gap-1.5 justify-center items-center rounded-xl bg-cardard border-border hover:bg-muted/30"
+            className="w-full h-20 flex flex-col gap-1.5 justify-center items-center rounded-xl bg-card border-border hover:bg-muted/30"
           >
             <Layers className="w-5 h-5 text-indigo-500" />
             <span className="text-xs font-semibold">Batches</span>
@@ -177,7 +177,7 @@ export default function InventoryDashboardPage() {
         <Link href="/inventory/serials" className="w-full">
           <Button
             variant="outline"
-            className="w-full h-20 flex flex-col gap-1.5 justify-center items-center rounded-xl bg-cardard border-border hover:bg-muted/30"
+            className="w-full h-20 flex flex-col gap-1.5 justify-center items-center rounded-xl bg-card border-border hover:bg-muted/30"
           >
             <Warehouse className="w-5 h-5 text-blue-500" />
             <span className="text-xs font-semibold">Serial Numbers</span>
@@ -186,7 +186,7 @@ export default function InventoryDashboardPage() {
         <Link href="/inventory/low-stock" className="w-full">
           <Button
             variant="outline"
-            className="w-full h-20 flex flex-col gap-1.5 justify-center items-center rounded-xl bg-cardard border-border hover:bg-muted/30"
+            className="w-full h-20 flex flex-col gap-1.5 justify-center items-center rounded-xl bg-card border-border hover:bg-muted/30"
           >
             <AlertTriangle className="w-5 h-5 text-amber-500 animate-bounce" />
             <span className="text-xs font-semibold">Low Stock</span>
@@ -195,7 +195,7 @@ export default function InventoryDashboardPage() {
         <Link href="/inventory/expiring" className="w-full">
           <Button
             variant="outline"
-            className="w-full h-20 flex flex-col gap-1.5 justify-center items-center rounded-xl bg-cardard border-border hover:bg-muted/30"
+            className="w-full h-20 flex flex-col gap-1.5 justify-center items-center rounded-xl bg-card border-border hover:bg-muted/30"
           >
             <AlertOctagon className="w-5 h-5 text-rose-500" />
             <span className="text-xs font-semibold">Expiring Items</span>
@@ -204,7 +204,7 @@ export default function InventoryDashboardPage() {
         <Link href="/inventory/history" className="w-full">
           <Button
             variant="outline"
-            className="w-full h-20 flex flex-col gap-1.5 justify-center items-center rounded-xl bg-cardard border-border hover:bg-muted/30"
+            className="w-full h-20 flex flex-col gap-1.5 justify-center items-center rounded-xl bg-card border-border hover:bg-muted/30"
           >
             <History className="w-5 h-5 text-muted-foreground" />
             <span className="text-xs font-semibold">Stock Ledger</span>
@@ -215,7 +215,7 @@ export default function InventoryDashboardPage() {
       {/* Main Charts & Widgets Section */}
       <div className="grid gap-6 md:grid-cols-3 mb-6">
         {/* Recharts Warehouse Distribution */}
-        <Card className="md:col-span-2 shadow-sm border-border bg-cardard">
+        <Card className="md:col-span-2 shadow-sm border-border bg-card">
           <CardHeader>
             <CardTitle className="text-sm font-semibold flex items-center gap-2">
               <Warehouse className="w-4 h-4 text-primary" />
@@ -256,7 +256,7 @@ export default function InventoryDashboardPage() {
         </Card>
 
         {/* Stock Alerts Queue */}
-        <Card className="shadow-sm border-border bg-cardard">
+        <Card className="shadow-sm border-border bg-card">
           <CardHeader>
             <CardTitle className="text-sm font-semibold flex items-center gap-2">
               <ShieldAlert className="w-4 h-4 text-rose-500 animate-pulse" />
@@ -299,7 +299,7 @@ export default function InventoryDashboardPage() {
       </div>
 
       {/* Recent Activity Ledger History */}
-      <Card className="shadow-sm border-border bg-cardard">
+      <Card className="shadow-sm border-border bg-card">
         <CardHeader>
           <CardTitle className="text-sm font-semibold flex items-center gap-2">
             <History className="w-4 h-4 text-primary" />

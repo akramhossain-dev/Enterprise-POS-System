@@ -178,7 +178,7 @@ export default function StockHistoryPage() {
       />
 
       {/* Advanced search, filter, and dates toolbar */}
-      <div className="bg-cardard border rounded-xl p-4 mb-6 shadow-sm space-y-4">
+      <div className="bg-card border rounded-xl p-4 mb-6 shadow-sm space-y-4">
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-5 items-end">
           {/* Search product */}
           <div className="space-y-1.5">
@@ -210,7 +210,7 @@ export default function StockHistoryPage() {
                 setWarehouseFilter(e.target.value);
                 setPage(1);
               }}
-              className="w-full text-xs rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary h-9"
+              className="w-full text-xs rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary h-9"
             >
               <option value="">All Warehouses</option>
               {warehouses.map((w) => (
@@ -232,7 +232,7 @@ export default function StockHistoryPage() {
                 setMovementTypeFilter(e.target.value as any);
                 setPage(1);
               }}
-              className="w-full text-xs rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary h-9"
+              className="w-full text-xs rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary h-9"
             >
               <option value="ALL">All Types</option>
               <option value="OPENING_STOCK">Opening Stock</option>
@@ -315,7 +315,7 @@ export default function StockHistoryPage() {
         viewMode === 'table' ? (
           <TableSkeleton columns={7} rows={pageSize} />
         ) : (
-          <div className="bg-cardard border rounded-xl shadow-sm p-6">
+          <div className="bg-card border rounded-xl shadow-sm p-6">
             <div className="animate-pulse space-y-6 pl-6 ml-3 border-l border-border relative">
               {Array.from({ length: 3 }).map((_, i) => (
                 <div key={i} className="space-y-2">
@@ -327,7 +327,7 @@ export default function StockHistoryPage() {
           </div>
         )
       ) : viewMode === 'table' ? (
-        <div className="bg-cardard border rounded-xl shadow-sm p-4">
+        <div className="bg-card border rounded-xl shadow-sm p-4">
           <DataTable
             columns={columns}
             data={movements}
@@ -344,7 +344,7 @@ export default function StockHistoryPage() {
           />
         </div>
       ) : (
-        <div className="bg-cardard border rounded-xl shadow-sm p-6">
+        <div className="bg-card border rounded-xl shadow-sm p-6">
           <StockTimeline movements={movements} />
           {movements.length === 0 && (
             <div className="text-center py-8">

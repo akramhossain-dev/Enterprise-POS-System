@@ -53,9 +53,11 @@ export default function POSArchivedAccountsPage() {
 
       <div className="mt-6">
         {isLoading ? (
-          <div className="text-center py-12 text-muted-foreground">Querying archive directory...</div>
+          <div className="text-center py-12 text-muted-foreground">
+            Querying archive directory...
+          </div>
         ) : accounts.length > 0 ? (
-          <div className="bg-cardard border border-border rounded-2xl overflow-hidden">
+          <div className="bg-card border border-border rounded-2xl overflow-hidden">
             <table className="w-full text-xs sm:text-sm text-left border-collapse">
               <thead>
                 <tr className="border-b border-slate-855 text-muted-foreground font-bold uppercase tracking-wider text-[10px] bg-slate-955/35">
@@ -71,7 +73,9 @@ export default function POSArchivedAccountsPage() {
                   <tr key={acc.id} className="hover:bg-accent/20">
                     <td className="py-3 px-4 font-bold text-foreground">{acc.code}</td>
                     <td className="py-3 px-4 font-sans font-bold text-foreground">{acc.name}</td>
-                    <td className="py-3 px-3 font-sans text-xs text-muted-foreground">{acc.type}</td>
+                    <td className="py-3 px-3 font-sans text-xs text-muted-foreground">
+                      {acc.type}
+                    </td>
                     <td className="py-3 px-3 text-right font-bold">
                       ${acc.balance.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                     </td>

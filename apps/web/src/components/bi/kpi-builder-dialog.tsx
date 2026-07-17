@@ -44,7 +44,7 @@ export function KpiBuilderDialog({ isOpen, onOpenChange, onSaveKpi }: KpiBuilder
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-cardard border border-border text-foreground max-w-sm p-6 select-none text-left">
+      <DialogContent className="bg-card border border-border text-foreground max-w-sm p-6 select-none text-left">
         <DialogHeader className="mb-4">
           <DialogTitle className="text-sm font-black uppercase text-foreground tracking-wider flex items-center gap-1.5 font-sans">
             <Sliders className="h-5 w-5 text-indigo-400" />

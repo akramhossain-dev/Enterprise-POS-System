@@ -30,7 +30,7 @@ function Avatar({ className, size, src, alt, fallback, status, ...props }: Avata
   const statusColors = {
     online: 'bg-success',
     offline: 'bg-muted-foreground',
-    busy: 'bg-backgroundestructive',
+    busy: 'bg-destructive',
     away: 'bg-warning',
   };
 

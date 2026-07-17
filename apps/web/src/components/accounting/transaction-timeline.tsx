@@ -52,7 +52,7 @@ export function TransactionTimeline({
   };
 
   return (
-    <Card className={cn('bg-cardard border-border text-foreground text-left', className)}>
+    <Card className={cn('bg-card border-border text-foreground text-left', className)}>
       <CardContent className="p-4 space-y-4">
         <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-widest border-b border-border pb-2">
           Transaction Timeline
@@ -73,7 +73,7 @@ export function TransactionTimeline({
               return (
                 <div key={entry.id || idx} className="relative flex items-start gap-3 group">
                   {/* Anchor timeline dot */}
-                  <div className="absolute -left-[30px] top-1.5 bg-cardard px-0.5">
+                  <div className="absolute -left-[30px] top-1.5 bg-card px-0.5">
                     {getTimelineIcon(entry.transactionType)}
                   </div>
 
