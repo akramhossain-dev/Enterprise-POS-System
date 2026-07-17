@@ -16,7 +16,7 @@ export async function supplierDebitNoteRoutes(fastify: FastifyInstance): Promise
   fastify.get(
     '/',
     {
-      preHandler: guard('purchase.read'),
+      preHandler: guard('purchase.view'),
       schema: { tags: ['Supplier Debit Notes'], summary: 'List supplier debit notes' },
     },
     handleListSupplierDebitNotes,
@@ -24,7 +24,7 @@ export async function supplierDebitNoteRoutes(fastify: FastifyInstance): Promise
   fastify.get(
     '/:id',
     {
-      preHandler: guard('purchase.read'),
+      preHandler: guard('purchase.view'),
       schema: { tags: ['Supplier Debit Notes'], summary: 'Get supplier debit note by ID' },
     },
     handleGetSupplierDebitNote,

@@ -89,7 +89,7 @@ export const useAuthStore = create<AuthState>()(
             status: (user.status || 'active').toLowerCase() as User['status'],
             avatar: user.avatar || null,
             bio: user.bio || null,
-            timezone: user.timezone,
+            timezone: user.timezone || undefined,
             emailVerified: user.emailVerified ?? true,
             twoFactorEnabled: user.twoFactorEnabled ?? false,
             workspaceId: user.workspaceId,

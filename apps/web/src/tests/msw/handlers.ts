@@ -8,9 +8,7 @@ export const handlers = [
     HttpResponse.json({
       success: true,
       data: {
-        tokens: {
-          accessToken: 'mock-access-token',
-        },
+        accessToken: 'mock-access-token',
         user: { id: '1', email: 'admin@test.com', role: 'admin', roles: [], permissions: [] },
       },
     }),

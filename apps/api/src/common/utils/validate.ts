@@ -8,7 +8,7 @@ import { ValidationError } from '../errors/AppError';
 /**
  * Validates data against a Zod schema and throws a ValidationError on failure.
  */
-function validate<T>(schema: ZodSchema<T>, data: unknown): T {
+function validate<T>(schema: z.ZodType<T, any, any>, data: unknown): T {
   const result = schema.safeParse(data);
   if (!result.success) {
     const errors = formatZodErrors(result.error);
@@ -34,7 +34,7 @@ export function formatZodErrors(error: ZodError): string[] {
  * @example
  * const body = validateBody(CreateProductSchema, request.body);
  */
-export function validateBody<T>(schema: ZodSchema<T>, data: unknown): T {
+export function validateBody<T>(schema: z.ZodType<T, any, any>, data: unknown): T {
   return validate(schema, data);
 }
 
@@ -45,7 +45,7 @@ export function validateBody<T>(schema: ZodSchema<T>, data: unknown): T {
  * @example
  * const query = validateQuery(PaginationSchema, request.query);
  */
-export function validateQuery<T>(schema: ZodSchema<T>, data: unknown): T {
+export function validateQuery<T>(schema: z.ZodType<T, any, any>, data: unknown): T {
   return validate(schema, data);
 }
 

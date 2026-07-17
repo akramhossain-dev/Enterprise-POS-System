@@ -16,7 +16,7 @@ export async function purchaseRequisitionRoutes(fastify: FastifyInstance): Promi
   fastify.get(
     '/',
     {
-      preHandler: guard('purchase.read'),
+      preHandler: guard('purchase.view'),
       schema: { tags: ['Purchase Requisitions'], summary: 'List purchase requisitions' },
     },
     handleListPurchaseRequisitions,
@@ -24,7 +24,7 @@ export async function purchaseRequisitionRoutes(fastify: FastifyInstance): Promi
   fastify.get(
     '/:id',
     {
-      preHandler: guard('purchase.read'),
+      preHandler: guard('purchase.view'),
       schema: { tags: ['Purchase Requisitions'], summary: 'Get purchase requisition by ID' },
     },
     handleGetPurchaseRequisition,

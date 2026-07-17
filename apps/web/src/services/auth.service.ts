@@ -16,7 +16,7 @@ import type {
 
 interface LoginResponse {
   user: User;
-  tokens: AuthTokens;
+  accessToken: string;
   requiresTwoFactor?: boolean;
   twoFactorSessionToken?: string;
 }
@@ -26,8 +26,8 @@ class AuthService extends ApiClient {
 
   async login(credentials: LoginCredentials): Promise<LoginResponse> {
     const response = await this.post<LoginResponse>(apiConfig.endpoints.auth.login, credentials);
-    if (response.data.tokens?.accessToken) {
-      tokenManager.setAccessToken(response.data.tokens.accessToken);
+    if (response.data.accessToken) {
+      tokenManager.setAccessToken(response.data.accessToken);
     }
     return response.data;
   }
@@ -85,8 +85,8 @@ class AuthService extends ApiClient {
 
   async verifyTwoFactor(payload: TwoFactorPayload): Promise<LoginResponse> {
     const response = await this.post<LoginResponse>(apiConfig.endpoints.auth.twoFactor, payload);
-    if (response.data.tokens?.accessToken) {
-      tokenManager.setAccessToken(response.data.tokens.accessToken);
+    if (response.data.accessToken) {
+      tokenManager.setAccessToken(response.data.accessToken);
     }
     return response.data;
   }

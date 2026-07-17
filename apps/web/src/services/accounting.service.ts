@@ -2619,7 +2619,7 @@ class AccountingService extends ApiClient {
     try {
       const response = await this.get<ClosingChecklistItem[]>(
         `${apiConfig.endpoints.accounting.closing}/checklist`,
-        { params: { periodId } },
+        { periodId },
       );
       return response.data;
     } catch {

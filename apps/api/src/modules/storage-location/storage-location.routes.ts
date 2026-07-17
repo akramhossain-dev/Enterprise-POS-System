@@ -16,7 +16,7 @@ export async function storageLocationRoutes(fastify: FastifyInstance): Promise<v
   fastify.get(
     '/',
     {
-      preHandler: guard('warehouse.read'),
+      preHandler: guard('warehouse.view'),
       schema: { tags: ['Storage Locations'], summary: 'List storage locations' },
     },
     handleListStorageLocations,
@@ -24,7 +24,7 @@ export async function storageLocationRoutes(fastify: FastifyInstance): Promise<v
   fastify.get(
     '/:id',
     {
-      preHandler: guard('warehouse.read'),
+      preHandler: guard('warehouse.view'),
       schema: { tags: ['Storage Locations'], summary: 'Get storage location by ID' },
     },
     handleGetStorageLocation,

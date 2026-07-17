@@ -16,7 +16,7 @@ export async function supplierCreditNoteRoutes(fastify: FastifyInstance): Promis
   fastify.get(
     '/',
     {
-      preHandler: guard('purchase.read'),
+      preHandler: guard('purchase.view'),
       schema: { tags: ['Supplier Credit Notes'], summary: 'List supplier credit notes' },
     },
     handleListSupplierCreditNotes,
@@ -24,7 +24,7 @@ export async function supplierCreditNoteRoutes(fastify: FastifyInstance): Promis
   fastify.get(
     '/:id',
     {
-      preHandler: guard('purchase.read'),
+      preHandler: guard('purchase.view'),
       schema: { tags: ['Supplier Credit Notes'], summary: 'Get supplier credit note by ID' },
     },
     handleGetSupplierCreditNote,

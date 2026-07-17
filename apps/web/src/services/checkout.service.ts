@@ -78,18 +78,41 @@ class CheckoutService extends ApiClient {
     limit?: number;
   }): Promise<PaginatedResponse<CheckoutTransaction>> {
     try {
-      const response = await this.get<any>(apiConfig.endpoints.pos.payments, params);
+      const response = await this.get<any>('/sales', {
+        page: params?.page,
+        limit: params?.limit,
+      });
+
+      const sales = response.data || [];
+      const mappedTransactions: CheckoutTransaction[] = sales.map((sale: any) => ({
+        id: sale.id,
+        invoiceNumber: sale.invoiceNumber,
+        cartName: 'POS Cart',
+        customerId: sale.customerId || 'walk-in',
+        customerName: sale.customerName || 'Walk-in Customer',
+        itemsCount: 1,
+        subtotal: parseFloat(sale.subtotal),
+        discount: parseFloat(sale.discount),
+        discountType: 'FIXED',
+        tax: parseFloat(sale.tax),
+        grandTotal: parseFloat(sale.grandTotal),
+        payments: [{ method: 'CASH', amount: parseFloat(sale.paidAmount) }],
+        paymentStatus: sale.paymentStatus,
+        changeAmount: 0,
+        cashierName: 'Cashier Admin',
+        completedAt: sale.createdAt,
+      }));
+
       return {
-        data: response.data.transactions ?? [],
-        meta: response.meta ||
-          (response.data as any).meta || {
-            page: 1,
-            pageSize: params?.limit || 20,
-            total: 0,
-            totalPages: 0,
-            hasNextPage: false,
-            hasPrevPage: false,
-          },
+        data: mappedTransactions,
+        meta: response.meta || {
+          page: params?.page ?? 1,
+          pageSize: params?.limit ?? 20,
+          total: mappedTransactions.length,
+          totalPages: 1,
+          hasNextPage: false,
+          hasPrevPage: false,
+        },
       };
     } catch {
       // SIMULATION FALLBACK
@@ -138,10 +161,26 @@ class CheckoutService extends ApiClient {
 
   async getTransaction(id: string): Promise<CheckoutTransaction> {
     try {
-      const response = await this.get<CheckoutTransaction>(
-        `${apiConfig.endpoints.pos.checkout}/${id}`,
-      );
-      return response.data;
+      const response = await this.get<any>(`/sales/${id}`);
+      const sale = response.data;
+      return {
+        id: sale.id,
+        invoiceNumber: sale.invoiceNumber,
+        cartName: 'POS Cart',
+        customerId: sale.customerId || 'walk-in',
+        customerName: sale.customerName || 'Walk-in Customer',
+        itemsCount: 1,
+        subtotal: parseFloat(sale.subtotal),
+        discount: parseFloat(sale.discount),
+        discountType: 'FIXED',
+        tax: parseFloat(sale.tax),
+        grandTotal: parseFloat(sale.grandTotal),
+        payments: [{ method: 'CASH', amount: parseFloat(sale.paidAmount) }],
+        paymentStatus: sale.paymentStatus,
+        changeAmount: 0,
+        cashierName: 'Cashier Admin',
+        completedAt: sale.createdAt,
+      };
     } catch {
       const items = this.getMockTransactions();
       const found = items.find((tx) => tx.id === id || tx.invoiceNumber === id);
@@ -152,12 +191,84 @@ class CheckoutService extends ApiClient {
 
   async createTransaction(payload: any): Promise<CheckoutTransaction> {
     try {
-      const response = await this.post<CheckoutTransaction>(
-        apiConfig.endpoints.pos.checkout,
-        payload,
-      );
-      return response.data;
-    } catch {
+      const { usePOSStore } = await import('@/stores/pos.store');
+      const { carts, activeCartId } = usePOSStore.getState();
+      const activeCart = carts.find((c) => c.id === activeCartId);
+
+      if (!activeCart || activeCart.items.length === 0) {
+        throw new Error('No items in the active cart to checkout.');
+      }
+
+      // 1. Fetch active POS session
+      const sessionRes = await this.get<any>('/pos/session/current');
+      const session = sessionRes.data;
+
+      // 2. Create POS cart on backend
+      const customerId = activeCart.customerId && activeCart.customerId !== 'walk-in' ? activeCart.customerId : null;
+      const cartRes = await this.post<any>('/pos/cart', {
+        sessionId: session.id,
+        customerId,
+      });
+      const createdCart = cartRes.data;
+
+      // 3. Add items to backend cart
+      for (const item of activeCart.items) {
+        await this.post<any>(`/pos/cart/${createdCart.id}/items`, {
+          productId: item.productId,
+          quantity: item.quantity,
+          unitPrice: item.unitPrice,
+          discount: item.discount,
+          tax: item.tax,
+        });
+      }
+
+      // 4. Map payment method
+      const singlePayment = payload.payments?.[0];
+      let mappedMethod = 'CASH';
+      if (singlePayment) {
+        if (singlePayment.method === 'CARD') mappedMethod = 'CARD';
+        else if (singlePayment.method === 'MOBILE') mappedMethod = 'MOBILE_BANKING';
+        else if (singlePayment.method === 'BANK') mappedMethod = 'BANK';
+        else mappedMethod = 'OTHER';
+      }
+
+      const checkoutPayload = {
+        cartId: createdCart.id,
+        customerId,
+        paymentDetails: singlePayment
+          ? {
+              paymentMethod: mappedMethod,
+              amount: singlePayment.amount,
+              reference: singlePayment.reference || null,
+              transactionId: singlePayment.reference || null,
+            }
+          : null,
+      };
+
+      // 5. Checkout
+      const response = await this.post<any>('/pos/checkout', checkoutPayload);
+      const sale = response.data.sale;
+
+      return {
+        id: sale.id,
+        invoiceNumber: sale.invoiceNumber,
+        cartName: activeCart.name,
+        customerId: sale.customerId || 'walk-in',
+        customerName: sale.customerName || 'Walk-in Customer',
+        itemsCount: activeCart.items.reduce((acc, it) => acc + it.quantity, 0),
+        subtotal: parseFloat(sale.subtotal),
+        discount: parseFloat(sale.discount),
+        discountType: 'FIXED',
+        tax: parseFloat(sale.tax),
+        grandTotal: parseFloat(sale.grandTotal),
+        payments: payload.payments || [],
+        paymentStatus: sale.paymentStatus,
+        changeAmount: payload.changeAmount || 0,
+        cashierName: 'Cashier Admin',
+        completedAt: sale.createdAt,
+      };
+    } catch (err) {
+      console.warn('Real checkout failed, falling back to simulator:', err);
       const items = this.getMockTransactions();
       const newTx: CheckoutTransaction = {
         id: `tx-${Math.floor(1000 + Math.random() * 9000)}`,

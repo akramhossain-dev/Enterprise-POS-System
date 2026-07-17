@@ -20,7 +20,7 @@ class ProductService extends ApiClient {
     const response = await this.get<{
       products: Product[];
       meta: PaginatedResponse<Product>['meta'];
-    }>(apiConfig.endpoints.products, { params: queryParams });
+    }>(apiConfig.endpoints.products, queryParams);
 
     return {
       data: response.data.products,
@@ -39,7 +39,7 @@ class ProductService extends ApiClient {
   async searchProducts(q: string): Promise<Product[]> {
     const response = await this.get<{ products: Product[] }>(
       `${apiConfig.endpoints.products}/search`,
-      { params: { q } },
+      { q },
     );
     return response.data.products;
   }

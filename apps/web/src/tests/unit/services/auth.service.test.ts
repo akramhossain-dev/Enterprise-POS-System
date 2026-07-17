@@ -14,7 +14,7 @@ describe('AuthService (API Client wrapper)', () => {
   it('login() calls the API, stores access token and returns payload', async () => {
     const res = await authService.login({ email: 'admin@test.com', password: 'password' });
     expect(res.user.email).toBe('admin@test.com');
-    expect(res.tokens.accessToken).toBe('mock-access-token');
+    expect(res.accessToken).toBe('mock-access-token');
     expect(tokenManager.getAccessToken()).toBe('mock-access-token');
   });
 
