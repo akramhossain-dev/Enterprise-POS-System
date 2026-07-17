@@ -33,13 +33,13 @@ services:
     image: redis:7-alpine
     container_name: enterprise-pos-redis
     restart: unless-stopped
-    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru --requirepass dev_redis_password
     ports:
       - '6380:6379' # Use 6380 on host to avoid conflict with local Redis
     volumes:
       - redis_data:/data
     healthcheck:
-      test: ['CMD', 'redis-cli', 'ping']
+      test: ['CMD', 'redis-cli', '-a', 'dev_redis_password', 'ping']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -60,7 +60,7 @@ services:
       PORT: 4000
       APP_NAME: Enterprise POS API
       DATABASE_URL: postgresql://pos_user:pos_password@postgres:5432/enterprise_pos
-      REDIS_URL: redis://redis:6379
+      REDIS_URL: redis://:dev_redis_password@redis:6379
       FRONTEND_URL: http://localhost:3000
     ports:
       - '4000:4000'

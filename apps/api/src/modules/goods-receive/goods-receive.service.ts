@@ -63,28 +63,34 @@ export async function createGRN(
       );
     }
 
-    // Validate receiving quantities
+    // Validate receiving quantities (aggregated by productId to prevent duplicate item exploit)
+    const incomingQuantities: Record<string, number> = {};
     for (const item of body.items) {
-      const poItem = po.items.find((pi) => pi.productId === item.productId);
+      incomingQuantities[item.productId] =
+        (incomingQuantities[item.productId] ?? 0) + item.receivedQuantity;
+    }
+
+    for (const [productId, qty] of Object.entries(incomingQuantities)) {
+      const poItem = po.items.find((pi) => pi.productId === productId);
       if (!poItem) {
         throw new BadRequestError(
-          `Product "${item.productId}" is not part of Purchase Order ${po.purchaseOrderNumber}`,
+          `Product "${productId}" is not part of Purchase Order ${po.purchaseOrderNumber}`,
         );
       }
 
       // Sum previously received quantities
       let previouslyReceived = 0;
       for (const gr of po.goodsReceives) {
-        const grItem = gr.items.find((gi) => gi.productId === item.productId);
+        const grItem = gr.items.find((gi) => gi.productId === productId);
         if (grItem) {
           previouslyReceived += Number(grItem.receivedQuantity.toString());
         }
       }
 
       const orderedQty = Number(poItem.quantity.toString());
-      if (previouslyReceived + item.receivedQuantity > orderedQty) {
+      if (previouslyReceived + qty > orderedQty) {
         throw new BadRequestError(
-          `Product "${item.productId}" received quantity (${String(item.receivedQuantity)}) ` +
+          `Product "${productId}" received quantity (${String(qty)}) ` +
             `plus previously received (${String(previouslyReceived)}) exceeds ordered quantity (${String(orderedQty)})`,
         );
       }
@@ -152,25 +158,30 @@ export async function completeGRN(id: string, actorId: string): Promise<MappedGo
         throw new NotFoundError(`Purchase Order "${grn.purchaseOrderId}" not found`);
       }
 
+      const grnQuantities: Record<string, number> = {};
       for (const item of grn.items) {
-        const poItem = po.items.find((pi) => pi.productId === item.productId);
+        grnQuantities[item.productId] =
+          (grnQuantities[item.productId] ?? 0) + Number(item.receivedQuantity.toString());
+      }
+
+      for (const [productId, qty] of Object.entries(grnQuantities)) {
+        const poItem = po.items.find((pi) => pi.productId === productId);
         if (!poItem) {
-          throw new BadRequestError(`Product "${item.productId}" not in PO`);
+          throw new BadRequestError(`Product "${productId}" not in PO`);
         }
 
         let previouslyReceived = 0;
         for (const gr of po.goodsReceives) {
-          const grItem = gr.items.find((gi) => gi.productId === item.productId);
+          const grItem = gr.items.find((gi) => gi.productId === productId);
           if (grItem) {
             previouslyReceived += Number(grItem.receivedQuantity.toString());
           }
         }
 
         const orderedQty = Number(poItem.quantity.toString());
-        const currentRecQty = Number(item.receivedQuantity.toString());
-        if (previouslyReceived + currentRecQty > orderedQty) {
+        if (previouslyReceived + qty > orderedQty) {
           throw new BadRequestError(
-            `Completing this GRN would cause product "${item.productId}" total received quantity to exceed PO limits.`,
+            `Completing this GRN would cause product "${productId}" total received quantity to exceed PO limits.`,
           );
         }
       }

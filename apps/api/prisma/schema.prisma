@@ -159,6 +159,7 @@ model RefreshToken {
   expiresAt DateTime @map("expires_at") @db.Timestamptz
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
 
+  @@index([userId])
   @@map("refresh_tokens")
 }
 
@@ -224,6 +225,8 @@ model Company {
   designations          Designation[]
   storageLocations      StorageLocation[]
   purchaseRequisitions  PurchaseRequisition[]
+  supplierCreditNotes   SupplierCreditNote[]
+  supplierDebitNotes    SupplierDebitNote[]
   createdAt             DateTime               @default(now()) @map("created_at") @db.Timestamptz
   updatedAt             DateTime               @updatedAt @map("updated_at") @db.Timestamptz
   notifications         Notification[]
@@ -536,7 +539,9 @@ model Supplier {
   ledgerEntries    SupplierLedgerEntry[]
   paymentReceipts  PaymentReceipt[]
   purchaseRequisitions PurchaseRequisition[]
-  createdAt        DateTime              @default(now()) @map("created_at") @db.Timestamptz
+  supplierCreditNotes  SupplierCreditNote[]
+  supplierDebitNotes   SupplierDebitNote[]
+  createdAt            DateTime              @default(now()) @map("created_at") @db.Timestamptz
   updatedAt        DateTime              @updatedAt @map("updated_at") @db.Timestamptz
   deletedAt        DateTime?             @map("deleted_at") @db.Timestamptz
 
@@ -2108,4 +2113,44 @@ model PurchaseRequisitionItem {
   @@index([purchaseRequisitionId])
   @@index([productId])
   @@map("purchase_requisition_items")
+}
+
+model SupplierCreditNote {
+  id                    String         @id @default(uuid()) @db.Uuid
+  companyId             String         @map("company_id") @db.Uuid
+  company               Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  creditNoteNumber      String         @unique @map("credit_note_number") @db.VarChar(100)
+  supplierId            String         @map("supplier_id") @db.Uuid
+  supplier              Supplier       @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  referenceReturnId     String?        @map("reference_return_id") @db.Uuid
+  referenceReturnNumber String?        @map("reference_return_number") @db.VarChar(100)
+  creditAmount          Decimal        @map("credit_amount") @db.Decimal(15, 4)
+  status                String         @default("ISSUED") @db.VarChar(50) // ISSUED, USED, VOID
+  issueDate             DateTime       @map("issue_date") @db.Date
+  createdAt             DateTime       @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt             DateTime       @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@index([companyId])
+  @@index([supplierId])
+  @@map("supplier_credit_notes")
+}
+
+model SupplierDebitNote {
+  id                    String         @id @default(uuid()) @db.Uuid
+  companyId             String         @map("company_id") @db.Uuid
+  company               Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  debitNoteNumber       String         @unique @map("debit_note_number") @db.VarChar(100)
+  supplierId            String         @map("supplier_id") @db.Uuid
+  supplier              Supplier       @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  referenceReturnId     String?        @map("reference_return_id") @db.Uuid
+  referenceReturnNumber String?        @map("reference_return_number") @db.VarChar(100)
+  amount                Decimal        @map("amount") @db.Decimal(15, 4)
+  status                String         @default("ISSUED") @db.VarChar(50) // ISSUED, REFUNDED, VOID
+  issueDate             DateTime       @map("issue_date") @db.Date
+  createdAt             DateTime       @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt             DateTime       @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@index([companyId])
+  @@index([supplierId])
+  @@map("supplier_debit_notes")
 }

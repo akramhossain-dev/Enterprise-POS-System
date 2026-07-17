@@ -18,7 +18,6 @@ import fastifyEtag from '@fastify/etag';
 
 import { routes } from './routes';
 import { initScheduler } from './jobs/scheduler';
-import { sanitizeInput } from './common/utils/security';
 
 const log = createLogger('app');
 
@@ -77,14 +76,6 @@ export async function buildApp(): Promise<FastifyInstance> {
 
   const { initSocketServer } = await import('./modules/notification/socket');
   initSocketServer(fastify);
-
-  // ── Input Sanitization preValidation Hook ───
-  fastify.addHook('preValidation', (request, reply, done) => {
-    if (request.body) {
-      request.body = sanitizeInput(request.body);
-    }
-    done();
-  });
 
   // ── Structured Logging Hooks ───────────────
   fastify.addHook('onRequest', (request, reply, done) => {

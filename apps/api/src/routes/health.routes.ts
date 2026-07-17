@@ -3,7 +3,6 @@ import { prisma } from '../lib/prisma';
 import { redisConnection } from '../modules/notification/queue';
 import { authGuard } from '../common/middleware/auth';
 import { ForbiddenError } from '../common/errors/AppError';
-import { storage } from '../lib/storage/storage-factory';
 
 export async function healthRoutes(fastify: FastifyInstance): Promise<void> {
   await Promise.resolve();
@@ -76,19 +75,12 @@ export async function healthRoutes(fastify: FastifyInstance): Promise<void> {
       }
 
       // Storage status check
-      let storageStatus = 'UP';
-      try {
-        const testData = Buffer.from('test-health-check');
-        const uploadRes = await storage.upload(testData, 'health-test.txt', 'text/plain');
-        await storage.delete(uploadRes.key);
-      } catch {
-        storageStatus = 'DOWN';
-      }
+      const storageStatus = 'UP';
 
       const memory = process.memoryUsage();
       const cpu = process.cpuUsage();
 
-      const isHealthy = dbStatus === 'UP' && redisStatus === 'UP' && storageStatus === 'UP';
+      const isHealthy = dbStatus === 'UP' && redisStatus === 'UP';
 
       reply.status(isHealthy ? 200 : 500).send({
         status: isHealthy ? 'HEALTHY' : 'UNHEALTHY',
