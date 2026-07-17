@@ -171,7 +171,7 @@ export default function ArchivedProductsPage() {
                 size="icon-xs"
                 variant="ghost"
                 title="Delete permanently"
-                className="text-destructive hover:bg-destructive/10"
+                className="text-destructive hover:bg-backgroundestructive/10"
                 onClick={() => handleDelete(product.id)}
               >
                 <Trash2 className="w-3.5 h-3.5" />
@@ -201,7 +201,7 @@ export default function ArchivedProductsPage() {
       />
 
       {/* Toolbar */}
-      <div className="flex flex-col gap-3 bg-card border border-border p-4 rounded-xl">
+      <div className="flex flex-col gap-3 bg-cardard border border-border p-4 rounded-xl">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex flex-1 items-center gap-2 w-full sm:max-w-md relative">
             <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />

@@ -11,7 +11,7 @@ const alertVariants = cva('relative flex w-full gap-3 rounded-lg border p-4 text
       success: 'bg-success/10 border-success/30 text-success-foreground [&>svg]:text-success',
       warning: 'bg-warning/10 border-warning/30 text-warning-foreground [&>svg]:text-warning',
       destructive:
-        'bg-destructive/10 border-destructive/30 text-destructive-foreground [&>svg]:text-destructive',
+        'bg-backgroundestructive/10 border-destructive/30 text-destructive-foreground [&>svg]:text-destructive',
     },
   },
   defaultVariants: { variant: 'default' },

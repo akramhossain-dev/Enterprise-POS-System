@@ -171,14 +171,14 @@ export default function JournalsListPage() {
   };
 
   return (
-    <PageContainer className="text-slate-100 select-none text-left">
+    <PageContainer className="text-foreground select-none text-left">
       {/* Action header bar */}
       <div className="mb-4 flex justify-between items-center">
         <Link href="/accounting">
           <Button
             variant="ghost"
             size="sm"
-            className="text-slate-400 hover:text-slate-200 gap-1.5 h-8"
+            className="text-muted-foreground hover:text-foreground gap-1.5 h-8"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Accounting Dashboard</span>
@@ -190,7 +190,7 @@ export default function JournalsListPage() {
             size="sm"
             variant="outline"
             onClick={handleExport}
-            className="h-8 border-slate-800 bg-[#0c1220] hover:bg-slate-900 text-xs gap-1"
+            className="h-8 border-border bg-cardard hover:bg-accent text-xs gap-1"
           >
             <FileDown className="h-4 w-4 text-slate-450" />
             <span>Export CSV</span>
@@ -216,7 +216,7 @@ export default function JournalsListPage() {
       <div className="flex flex-col md:flex-row gap-3 items-center justify-between mt-4 mb-6">
         <div className="flex flex-wrap gap-2 w-full md:w-auto">
           <div className="relative flex-1 sm:w-64 min-w-[200px]">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-500" />
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="text"
               placeholder="Search reference or description..."
@@ -225,7 +225,7 @@ export default function JournalsListPage() {
                 setQuery(e.target.value);
                 setCurrentPage(1);
               }}
-              className="pl-8 bg-slate-950 border-slate-800 text-slate-100 text-xs focus-visible:ring-emerald-500 h-9"
+              className="pl-8 bg-muted border-border text-foreground text-xs focus-visible:ring-emerald-500 h-9"
             />
           </div>
 
@@ -235,7 +235,7 @@ export default function JournalsListPage() {
               setStatusFilter(e.target.value);
               setCurrentPage(1);
             }}
-            className="bg-[#0c1220] border border-slate-850 text-slate-300 rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[120px]"
+            className="bg-cardard border border-border text-foreground rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[120px]"
           >
             <option value="ALL">All Statuses</option>
             <option value="DRAFT">Draft</option>
@@ -247,15 +247,15 @@ export default function JournalsListPage() {
 
         {/* Bulk Actions Panel */}
         {selectedIds.length > 0 && (
-          <div className="flex gap-2 bg-slate-950 p-1 border border-slate-900 rounded-lg w-full md:w-auto justify-end">
-            <span className="text-slate-400 text-xs font-mono self-center px-2">
+          <div className="flex gap-2 bg-muted p-1 border border-border rounded-lg w-full md:w-auto justify-end">
+            <span className="text-muted-foreground text-xs font-mono self-center px-2">
               {selectedIds.length} Selected:
             </span>
             <Button
               size="sm"
               variant="ghost"
               onClick={handleBulkApprove}
-              className="h-7 text-[10px] font-bold uppercase tracking-wider text-indigo-400 hover:text-indigo-300 hover:bg-slate-900"
+              className="h-7 text-[10px] font-bold uppercase tracking-wider text-indigo-400 hover:text-indigo-300 hover:bg-accent"
             >
               <BadgeCheck className="h-3.5 w-3.5 mr-1" />
               <span>Approve</span>
@@ -264,7 +264,7 @@ export default function JournalsListPage() {
               size="sm"
               variant="ghost"
               onClick={handleBulkPost}
-              className="h-7 text-[10px] font-bold uppercase tracking-wider text-emerald-400 hover:text-emerald-355 hover:bg-slate-900"
+              className="h-7 text-[10px] font-bold uppercase tracking-wider text-emerald-400 hover:text-emerald-355 hover:bg-accent"
             >
               <Building className="h-3.5 w-3.5 mr-1" />
               <span>Post</span>
@@ -273,7 +273,7 @@ export default function JournalsListPage() {
               size="sm"
               variant="ghost"
               onClick={handleBulkCancel}
-              className="h-7 text-[10px] font-bold uppercase tracking-wider text-rose-455 hover:text-rose-400 hover:bg-slate-900"
+              className="h-7 text-[10px] font-bold uppercase tracking-wider text-rose-455 hover:text-rose-400 hover:bg-accent"
             >
               <XCircle className="h-3.5 w-3.5 mr-1" />
               <span>Cancel</span>
@@ -287,10 +287,10 @@ export default function JournalsListPage() {
         {isLoading ? (
           <TableSkeleton rows={5} cols={6} />
         ) : journals.length > 0 ? (
-          <div className="bg-[#0c1220] border border-slate-800 rounded-2xl overflow-hidden">
+          <div className="bg-cardard border border-border rounded-2xl overflow-hidden">
             <table className="w-full text-xs sm:text-sm text-left border-collapse">
               <thead>
-                <tr className="border-b border-slate-855 text-slate-500 font-bold uppercase tracking-wider text-[10px] bg-slate-955/35">
+                <tr className="border-b border-slate-855 text-muted-foreground font-bold uppercase tracking-wider text-[10px] bg-slate-955/35">
                   <th className="py-3 px-4 w-[40px] text-center">
                     <input
                       type="checkbox"
@@ -307,9 +307,9 @@ export default function JournalsListPage() {
                   <th className="py-3 px-4 text-center">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-900 font-medium text-slate-350 font-mono">
+              <tbody className="divide-y divide-border font-medium text-muted-foreground font-mono">
                 {journals.map((j) => (
-                  <tr key={j.id} className="hover:bg-slate-900/40">
+                  <tr key={j.id} className="hover:bg-accent/40">
                     <td className="py-3 px-4 text-center">
                       <input
                         type="checkbox"
@@ -318,14 +318,14 @@ export default function JournalsListPage() {
                         className="cursor-pointer"
                       />
                     </td>
-                    <td className="py-3 px-4 font-bold text-slate-200">{j.referenceNumber}</td>
-                    <td className="py-3 px-3 text-slate-400">
+                    <td className="py-3 px-4 font-bold text-foreground">{j.referenceNumber}</td>
+                    <td className="py-3 px-3 text-muted-foreground">
                       {new Date(j.date).toLocaleDateString()}
                     </td>
-                    <td className="py-3 px-4 font-sans text-slate-100 text-left truncate max-w-[220px]">
+                    <td className="py-3 px-4 font-sans text-foreground text-left truncate max-w-[220px]">
                       {j.description}
                     </td>
-                    <td className="py-3 px-3 text-right font-bold text-slate-200">
+                    <td className="py-3 px-3 text-right font-bold text-foreground">
                       $
                       {calculateTotalDebit(j.lines).toLocaleString(undefined, {
                         minimumFractionDigits: 2,
@@ -346,7 +346,7 @@ export default function JournalsListPage() {
                           <Button
                             size="icon"
                             variant="ghost"
-                            className="h-7 w-7 text-slate-500 hover:text-emerald-400"
+                            className="h-7 w-7 text-muted-foreground hover:text-emerald-400"
                             title="View Details"
                           >
                             <Eye className="h-3.5 w-3.5" />
@@ -357,7 +357,7 @@ export default function JournalsListPage() {
                             <Button
                               size="icon"
                               variant="ghost"
-                              className="h-7 w-7 text-slate-500 hover:text-amber-400"
+                              className="h-7 w-7 text-muted-foreground hover:text-amber-400"
                               title="Edit Entry"
                             >
                               <Edit3 className="h-3.5 w-3.5" />
@@ -372,7 +372,7 @@ export default function JournalsListPage() {
             </table>
           </div>
         ) : (
-          <div className="text-center py-12 text-slate-500 border border-dashed border-slate-850 rounded-xl">
+          <div className="text-center py-12 text-muted-foreground border border-dashed border-border rounded-xl">
             <p className="text-xs">No journal ledger entries found.</p>
           </div>
         )}
@@ -380,7 +380,7 @@ export default function JournalsListPage() {
 
       {/* Paging */}
       {meta && meta.totalPages > 1 && (
-        <div className="flex items-center justify-between mt-6 pt-4 border-t border-slate-900 text-xs text-slate-500 font-mono">
+        <div className="flex items-center justify-between mt-6 pt-4 border-t border-border text-xs text-muted-foreground font-mono">
           <p>
             Showing {journals.length} of {meta.total} journal entries
           </p>
@@ -391,7 +391,7 @@ export default function JournalsListPage() {
               variant="outline"
               disabled={currentPage <= 1}
               onClick={handlePrevPage}
-              className="h-7 w-7 bg-[#0c1220] border-slate-800 text-slate-400 hover:text-slate-200"
+              className="h-7 w-7 bg-cardard border-border text-muted-foreground hover:text-foreground"
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
@@ -400,7 +400,7 @@ export default function JournalsListPage() {
               variant="outline"
               disabled={currentPage >= meta.totalPages}
               onClick={handleNextPage}
-              className="h-7 w-7 bg-[#0c1220] border-slate-800 text-slate-400 hover:text-slate-200"
+              className="h-7 w-7 bg-cardard border-border text-muted-foreground hover:text-foreground"
             >
               <ChevronRight className="h-4 w-4" />
             </Button>

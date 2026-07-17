@@ -81,20 +81,20 @@ export function ExportDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-[#0c1220] border border-slate-800 text-slate-100 max-w-sm p-6 select-none text-left">
+      <DialogContent className="bg-cardard border border-border text-foreground max-w-sm p-6 select-none text-left">
         <DialogHeader className="mb-4">
-          <DialogTitle className="text-sm font-black uppercase text-slate-200 tracking-wider flex items-center gap-1.5 font-sans">
+          <DialogTitle className="text-sm font-black uppercase text-foreground tracking-wider flex items-center gap-1.5 font-sans">
             <FileDown className="h-5 w-5 text-indigo-400" />
             <span>Export Report Sheet</span>
           </DialogTitle>
-          <DialogDescription className="text-slate-500 text-xs mt-1">
+          <DialogDescription className="text-muted-foreground text-xs mt-1">
             Choose format layout to download corporate dataset logs.
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 text-xs">
           <div className="flex flex-col gap-1.5">
-            <label className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">
+            <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-wide">
               Output Format Choice
             </label>
             <div className="grid grid-cols-2 gap-2">
@@ -112,8 +112,8 @@ export function ExportDialog({
                   onClick={() => setFormat(fmt.id)}
                   className={`p-3 border rounded-xl text-left transition-all ${
                     format === fmt.id
-                      ? 'border-indigo-500 bg-indigo-500/10 text-slate-100 font-bold'
-                      : 'border-slate-900 bg-slate-950/20 text-slate-400 hover:text-slate-200'
+                      ? 'border-indigo-500 bg-indigo-500/10 text-foreground font-bold'
+                      : 'border-border bg-muted/20 text-muted-foreground hover:text-foreground'
                   }`}
                 >
                   <p className="font-bold text-[11px] leading-tight">{fmt.name}</p>
@@ -127,7 +127,7 @@ export function ExportDialog({
               <Button
                 type="button"
                 variant="ghost"
-                className="h-9 text-slate-500 hover:text-slate-200 hover:bg-slate-900"
+                className="h-9 text-muted-foreground hover:text-foreground hover:bg-accent"
               >
                 Cancel
               </Button>

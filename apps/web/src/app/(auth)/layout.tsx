@@ -17,7 +17,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-primary/20 blur-[120px] opacity-60 dark:opacity-40" />
         <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-violet-500/20 blur-[100px] opacity-50 dark:opacity-30" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full bg-cyan-500/10 blur-[80px] opacity-40 dark:opacity-20" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full bg-cardyan-500/10 blur-[80px] opacity-40 dark:opacity-20" />
       </div>
 
       {/* Theme switcher — top right */}
@@ -39,7 +39,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
         </div>
 
         {/* Page card */}
-        <div className="rounded-[--radius-xl] border border-border/60 bg-card/80 backdrop-blur-sm shadow-xl shadow-black/5 dark:shadow-black/20 p-6 sm:p-8">
+        <div className="rounded-[--radius-xl] border border-border/60 bg-cardard/80 backdrop-blur-sm shadow-xl shadow-black/5 dark:shadow-black/20 p-6 sm:p-8">
           {children}
         </div>
 

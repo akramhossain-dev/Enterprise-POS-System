@@ -23,15 +23,15 @@ export function FinancialSummaryCard({
   color = 'text-emerald-400',
 }: FinancialSummaryCardProps) {
   return (
-    <Card className="bg-[#0c1220] border-slate-800 text-slate-100 text-left">
+    <Card className="bg-cardard border-border text-foreground text-left">
       <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-        <CardTitle className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+        <CardTitle className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
           {label}
         </CardTitle>
         <Icon className={cn('h-4 w-4', color)} />
       </CardHeader>
       <CardContent>
-        <div className="text-xl font-black font-mono text-slate-200">
+        <div className="text-xl font-black font-mono text-foreground">
           ${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
         </div>
         {change && (

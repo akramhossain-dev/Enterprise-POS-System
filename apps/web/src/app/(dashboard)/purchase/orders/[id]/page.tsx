@@ -114,7 +114,7 @@ export default function PurchaseOrderDetailsPage() {
   if (error || !po) {
     return (
       <PageContainer>
-        <div className="text-center py-16 bg-card border rounded-2xl">
+        <div className="text-center py-16 bg-cardard border rounded-2xl">
           <AlertTriangle className="w-12 h-12 text-rose-500 mx-auto mb-4" />
           <h3 className="text-lg font-bold text-foreground">Order Not Found</h3>
           <p className="text-sm text-muted-foreground mt-1">
@@ -181,7 +181,7 @@ export default function PurchaseOrderDetailsPage() {
       <div className="grid gap-6 md:grid-cols-3 text-sm">
         {/* Left item grid list */}
         <div className="md:col-span-2 space-y-6">
-          <Card className="shadow-sm border-border bg-card">
+          <Card className="shadow-sm border-border bg-cardard">
             <CardHeader className="border-b">
               <CardTitle className="text-sm font-semibold flex items-center gap-2">
                 <Package className="w-4 h-4 text-primary" /> Purchase Order Items
@@ -204,7 +204,7 @@ export default function PurchaseOrderDetailsPage() {
                   {po.items?.map((item) => (
                     <tr
                       key={item.id}
-                      className="border-b last:border-b-0 border-border bg-card hover:bg-muted/10"
+                      className="border-b last:border-b-0 border-border bg-cardard hover:bg-muted/10"
                     >
                       <td className="p-3 pl-6 font-semibold text-foreground text-sm">
                         {item.product?.name || '—'}
@@ -233,7 +233,7 @@ export default function PurchaseOrderDetailsPage() {
           </Card>
 
           {/* Pricing breakdowns details */}
-          <Card className="shadow-sm border-border bg-card">
+          <Card className="shadow-sm border-border bg-cardard">
             <CardHeader className="border-b">
               <CardTitle className="text-sm font-semibold flex items-center gap-1.5">
                 <DollarSign className="w-4 h-4 text-emerald-500" /> Invoice Breakdown
@@ -278,7 +278,7 @@ export default function PurchaseOrderDetailsPage() {
         {/* Right side stats */}
         <div className="space-y-6">
           {/* Status & Approvals visual workflow */}
-          <Card className="shadow-sm border-border bg-card">
+          <Card className="shadow-sm border-border bg-cardard">
             <CardHeader className="border-b">
               <CardTitle className="text-sm font-semibold flex items-center gap-1.5">
                 <Clock className="w-4 h-4 text-primary" /> Approvals Status
@@ -365,7 +365,7 @@ export default function PurchaseOrderDetailsPage() {
           </Card>
 
           {/* Supplier Info */}
-          <Card className="shadow-sm border-border bg-card">
+          <Card className="shadow-sm border-border bg-cardard">
             <CardHeader className="border-b">
               <CardTitle className="text-sm font-semibold flex items-center gap-1.5">
                 <Building2 className="w-4 h-4 text-indigo-500" /> Supplier Vendor
@@ -396,7 +396,7 @@ export default function PurchaseOrderDetailsPage() {
           </Card>
 
           {/* Warehouse Route */}
-          <Card className="shadow-sm border-border bg-card">
+          <Card className="shadow-sm border-border bg-cardard">
             <CardHeader className="border-b">
               <CardTitle className="text-sm font-semibold flex items-center gap-1.5">
                 <WarehouseIcon className="w-4 h-4 text-primary" /> Delivery Depot

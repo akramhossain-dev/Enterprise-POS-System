@@ -183,9 +183,9 @@ export function CheckoutModal({ open, onOpenChange, grandTotal }: CheckoutModalP
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[540px] bg-[#0c1220] border-slate-800 text-slate-100 p-5 overflow-y-auto max-h-[90vh] custom-scrollbar">
+      <DialogContent className="sm:max-w-[540px] bg-cardard border-border text-foreground p-5 overflow-y-auto max-h-[90vh] custom-scrollbar">
         <DialogHeader>
-          <DialogTitle className="text-slate-100 text-base font-bold flex items-center justify-between border-b border-slate-800 pb-2.5">
+          <DialogTitle className="text-foreground text-base font-bold flex items-center justify-between border-b border-border pb-2.5">
             <div className="flex items-center gap-2">
               <Wallet2 className="h-5 w-5 text-emerald-400" />
               <span>Checkout Settlement Panel</span>
@@ -206,21 +206,21 @@ export function CheckoutModal({ open, onOpenChange, grandTotal }: CheckoutModalP
         </DialogHeader>
 
         {/* Pricing Dashboard */}
-        <div className="grid grid-cols-3 gap-3 my-3 bg-slate-950 p-3.5 border border-slate-900 rounded-xl font-mono text-left">
+        <div className="grid grid-cols-3 gap-3 my-3 bg-muted p-3.5 border border-border rounded-xl font-mono text-left">
           <div>
-            <span className="text-[10px] text-slate-500 block uppercase font-bold">
+            <span className="text-[10px] text-muted-foreground block uppercase font-bold">
               Grand Total
             </span>
-            <span className="text-lg font-black text-slate-200">${grandTotal.toFixed(2)}</span>
+            <span className="text-lg font-black text-foreground">${grandTotal.toFixed(2)}</span>
           </div>
           <div>
-            <span className="text-[10px] text-slate-500 block uppercase font-bold">
+            <span className="text-[10px] text-muted-foreground block uppercase font-bold">
               Total Received
             </span>
-            <span className="text-lg font-black text-slate-200">${totalReceived.toFixed(2)}</span>
+            <span className="text-lg font-black text-foreground">${totalReceived.toFixed(2)}</span>
           </div>
-          <div className="border-l border-slate-850 pl-3">
-            <span className="text-[10px] text-slate-500 block uppercase font-bold">
+          <div className="border-l border-border pl-3">
+            <span className="text-[10px] text-muted-foreground block uppercase font-bold">
               {remainingBalance > 0 ? 'Balance Due' : 'Cash Change'}
             </span>
             <span
@@ -236,16 +236,16 @@ export function CheckoutModal({ open, onOpenChange, grandTotal }: CheckoutModalP
 
         {/* Guest vs Customer details (Loyalty, credits modifiers) */}
         {currentCustomer ? (
-          <div className="bg-[#080d19] border border-slate-850 rounded-xl p-3 space-y-2 text-xs">
-            <p className="font-bold text-slate-300 flex items-center gap-1.5">
+          <div className="bg-background border border-border rounded-xl p-3 space-y-2 text-xs">
+            <p className="font-bold text-foreground flex items-center gap-1.5">
               <Award className="h-4 w-4 text-emerald-400" />
               <span>Customer Account: {currentCustomer.fullName}</span>
             </p>
 
-            <div className="grid grid-cols-2 gap-4 border-t border-slate-900 pt-2 text-left">
+            <div className="grid grid-cols-2 gap-4 border-t border-border pt-2 text-left">
               {/* Loyalty Points redemption */}
               <div className="space-y-1">
-                <span className="text-[10px] text-slate-500 block">
+                <span className="text-[10px] text-muted-foreground block">
                   Redeem Loyalty Points (Bal: {currentCustomer.loyaltyPoints ?? 0})
                 </span>
                 <div className="flex gap-1.5">
@@ -254,12 +254,12 @@ export function CheckoutModal({ open, onOpenChange, grandTotal }: CheckoutModalP
                     placeholder="Points"
                     value={redeemedPoints || ''}
                     onChange={(e) => setRedeemedPoints(parseInt(e.target.value) || 0)}
-                    className="h-8 text-xs bg-slate-950 border-slate-800 focus-visible:ring-emerald-500"
+                    className="h-8 text-xs bg-muted border-border focus-visible:ring-emerald-500"
                   />
                   <Button
                     size="sm"
                     onClick={handleApplyLoyalty}
-                    className="h-8 bg-slate-900 border border-slate-800 text-emerald-400 hover:bg-slate-800"
+                    className="h-8 bg-accent border border-border text-emerald-400 hover:bg-slate-800"
                   >
                     Apply
                   </Button>
@@ -268,7 +268,7 @@ export function CheckoutModal({ open, onOpenChange, grandTotal }: CheckoutModalP
 
               {/* Store credit redemption */}
               <div className="space-y-1">
-                <span className="text-[10px] text-slate-500 block">
+                <span className="text-[10px] text-muted-foreground block">
                   Use Store Credit (Max: ${Number(currentCustomer.currentBalance || 0).toFixed(2)})
                 </span>
                 <div className="flex gap-1.5">
@@ -277,12 +277,12 @@ export function CheckoutModal({ open, onOpenChange, grandTotal }: CheckoutModalP
                     placeholder="Credit Amount"
                     value={storeCreditRedeemed || ''}
                     onChange={(e) => setStoreCreditRedeemed(parseFloat(e.target.value) || 0)}
-                    className="h-8 text-xs bg-slate-950 border-slate-800 focus-visible:ring-emerald-500"
+                    className="h-8 text-xs bg-muted border-border focus-visible:ring-emerald-500"
                   />
                   <Button
                     size="sm"
                     onClick={handleApplyStoreCredit}
-                    className="h-8 bg-slate-900 border border-slate-800 text-emerald-400 hover:bg-slate-800"
+                    className="h-8 bg-accent border border-border text-emerald-400 hover:bg-slate-800"
                   >
                     Apply
                   </Button>
@@ -291,14 +291,14 @@ export function CheckoutModal({ open, onOpenChange, grandTotal }: CheckoutModalP
             </div>
           </div>
         ) : (
-          <div className="text-[10px] text-slate-500 text-left px-1.5">
+          <div className="text-[10px] text-muted-foreground text-left px-1.5">
             Checkout running as Guest. Link customer to redeem loyalty credits and balance.
           </div>
         )}
 
         {/* Gift Card modifier */}
-        <div className="mt-3 bg-[#080d19] border border-slate-850 rounded-xl p-3 text-xs text-left">
-          <span className="font-bold text-slate-300 flex items-center gap-1.5 mb-1.5">
+        <div className="mt-3 bg-background border border-border rounded-xl p-3 text-xs text-left">
+          <span className="font-bold text-foreground flex items-center gap-1.5 mb-1.5">
             <Gift className="h-4 w-4 text-emerald-400" />
             <span>Apply Coupon or Gift Card code</span>
           </span>
@@ -308,12 +308,12 @@ export function CheckoutModal({ open, onOpenChange, grandTotal }: CheckoutModalP
               placeholder="Enter Gift Card code (E.g. GIFT50, GIFT100)"
               value={giftCardCode}
               onChange={(e) => setGiftCardCode(e.target.value)}
-              className="h-8 bg-slate-950 border-slate-800 text-xs focus-visible:ring-emerald-500"
+              className="h-8 bg-muted border-border text-xs focus-visible:ring-emerald-500"
             />
             <Button
               size="sm"
               onClick={handleApplyGiftCard}
-              className="h-8 bg-slate-900 border border-slate-800 text-emerald-400 hover:bg-slate-800"
+              className="h-8 bg-accent border border-border text-emerald-400 hover:bg-slate-800"
             >
               Validate
             </Button>
@@ -323,7 +323,7 @@ export function CheckoutModal({ open, onOpenChange, grandTotal }: CheckoutModalP
         {/* Single Payment Method selectors */}
         {!isSplit ? (
           <div className="space-y-3 mt-4 text-left">
-            <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
+            <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider block">
               Single Payment Details
             </label>
             <div className="grid grid-cols-3 gap-2">
@@ -343,7 +343,7 @@ export function CheckoutModal({ open, onOpenChange, grandTotal }: CheckoutModalP
                       'flex flex-col items-center justify-center h-16 rounded-xl border text-xs gap-1.5 transition-all',
                       isSelected
                         ? 'border-emerald-500 bg-emerald-950/20 text-emerald-400'
-                        : 'border-slate-800 bg-[#0c1220] text-slate-400 hover:text-slate-200',
+                        : 'border-border bg-cardard text-muted-foreground hover:text-foreground',
                     )}
                   >
                     <Icon className="h-5 w-5" />
@@ -354,14 +354,14 @@ export function CheckoutModal({ open, onOpenChange, grandTotal }: CheckoutModalP
             </div>
 
             <div className="grid gap-2.5 mt-3">
-              <span className="text-[10px] text-slate-500 block uppercase font-bold">
+              <span className="text-[10px] text-muted-foreground block uppercase font-bold">
                 Tender amount received ($)
               </span>
               <Input
                 type="number"
                 value={singleAmount}
                 onChange={(e) => setSingleAmount(e.target.value)}
-                className="bg-slate-950 border-slate-800 text-slate-100 font-mono text-sm focus-visible:ring-emerald-500"
+                className="bg-muted border-border text-foreground font-mono text-sm focus-visible:ring-emerald-500"
               />
             </div>
           </div>
@@ -369,14 +369,14 @@ export function CheckoutModal({ open, onOpenChange, grandTotal }: CheckoutModalP
           /* Split Payments manager */
           <div className="space-y-3 mt-4 text-left">
             <div className="flex justify-between items-center">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+              <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                 Split Payment Entries
               </label>
               <Button
                 size="sm"
                 variant="outline"
                 onClick={handleAddSplit}
-                className="h-6 text-[10px] bg-slate-900 border-slate-800 text-emerald-400 hover:bg-slate-800"
+                className="h-6 text-[10px] bg-accent border-border text-emerald-400 hover:bg-slate-800"
               >
                 <Plus className="h-3 w-3 mr-1" /> Add split
               </Button>
@@ -386,13 +386,13 @@ export function CheckoutModal({ open, onOpenChange, grandTotal }: CheckoutModalP
               {paymentSplits.map((split, idx) => (
                 <div
                   key={idx}
-                  className="flex gap-2 items-center bg-slate-950/30 p-2 border border-slate-850 rounded-lg"
+                  className="flex gap-2 items-center bg-muted/30 p-2 border border-border rounded-lg"
                 >
                   {/* Method dropdown */}
                   <select
                     value={split.method}
                     onChange={(e) => handleUpdateSplit(idx, { method: e.target.value as any })}
-                    className="bg-slate-900 border border-slate-800 text-slate-200 rounded p-1 text-xs focus:outline-none"
+                    className="bg-accent border border-border text-foreground rounded p-1 text-xs focus:outline-none"
                   >
                     <option value="CASH">Cash</option>
                     <option value="CARD">Card</option>
@@ -407,7 +407,7 @@ export function CheckoutModal({ open, onOpenChange, grandTotal }: CheckoutModalP
                     onChange={(e) =>
                       handleUpdateSplit(idx, { amount: parseFloat(e.target.value) || 0 })
                     }
-                    className="flex-1 bg-slate-900 border border-slate-800 rounded px-2 py-1 text-xs text-slate-200 focus:outline-none font-mono"
+                    className="flex-1 bg-accent border border-border rounded px-2 py-1 text-xs text-foreground focus:outline-none font-mono"
                   />
 
                   {/* Remove button */}
@@ -416,7 +416,7 @@ export function CheckoutModal({ open, onOpenChange, grandTotal }: CheckoutModalP
                     variant="ghost"
                     disabled={paymentSplits.length <= 1}
                     onClick={() => handleRemoveSplit(idx)}
-                    className="h-7 w-7 text-slate-500 hover:text-rose-400 hover:bg-slate-900"
+                    className="h-7 w-7 text-muted-foreground hover:text-rose-400 hover:bg-accent"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>

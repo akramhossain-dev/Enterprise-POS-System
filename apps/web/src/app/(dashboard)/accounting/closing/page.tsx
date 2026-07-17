@@ -58,14 +58,14 @@ export default function AccountingClosingPage() {
   };
 
   return (
-    <PageContainer className="text-slate-100 select-none text-left">
+    <PageContainer className="text-foreground select-none text-left">
       {/* Navigation bar */}
       <div className="mb-4">
         <Link href="/accounting">
           <Button
             variant="ghost"
             size="sm"
-            className="text-slate-400 hover:text-slate-200 gap-1.5 h-8"
+            className="text-muted-foreground hover:text-foreground gap-1.5 h-8"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Accounting Dashboard</span>
@@ -84,7 +84,7 @@ export default function AccountingClosingPage() {
           <select
             value={selectedPeriodId}
             onChange={(e) => setSelectedPeriodId(e.target.value)}
-            className="bg-[#0c1220] border border-slate-855 text-slate-350 rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[200px] font-bold"
+            className="bg-cardard border border-slate-855 text-muted-foreground rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[200px] font-bold"
           >
             {periods.map((p: any) => (
               <option key={p.id} value={p.id}>
@@ -115,15 +115,15 @@ export default function AccountingClosingPage() {
 
         {/* Right Column: details info */}
         <div className="md:col-span-1">
-          <Card className="bg-[#0c1220] border-slate-800 text-slate-100 p-4 space-y-4">
-            <div className="border-b border-slate-900 pb-2">
+          <Card className="bg-cardard border-border text-foreground p-4 space-y-4">
+            <div className="border-b border-border pb-2">
               <span className="text-[10px] font-bold text-slate-450 uppercase tracking-widest font-sans flex items-center gap-1.5">
                 <Lock className="h-4 w-4 text-indigo-400" />
                 <span>Period Closing Details</span>
               </span>
             </div>
 
-            <div className="space-y-3 text-xs leading-relaxed text-slate-400 text-left font-sans">
+            <div className="space-y-3 text-xs leading-relaxed text-muted-foreground text-left font-sans">
               <p>
                 The closing checklist helps controllers ensure ledger integrity before locking
                 period books:
@@ -134,7 +134,7 @@ export default function AccountingClosingPage() {
                 <li>Double check draft journals are finalized.</li>
                 <li>Validate Trial Balance equals zero.</li>
               </ul>
-              <p className="text-[10px] text-slate-500 italic">
+              <p className="text-[10px] text-muted-foreground italic">
                 Closing authorization records audit trail details with signature metrics.
               </p>
             </div>

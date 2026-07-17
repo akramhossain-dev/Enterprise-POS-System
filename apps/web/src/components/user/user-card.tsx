@@ -37,7 +37,7 @@ export function UserCard({ user, onLockToggle, onStatusToggle, onResetPassword }
   const isLocked = user.status === 'INACTIVE'; // Lock logic mapped by status in this client iteration
 
   return (
-    <div className="group rounded-2xl border border-border bg-card p-5 transition-all hover:border-primary/20 hover:shadow-md">
+    <div className="group rounded-2xl border border-border bg-cardard p-5 transition-all hover:border-primary/20 hover:shadow-md">
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3.5">
           <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 font-semibold text-primary text-sm">

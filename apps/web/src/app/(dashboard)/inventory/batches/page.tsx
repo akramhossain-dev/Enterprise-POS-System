@@ -303,7 +303,7 @@ export default function BatchManagementPage() {
       />
 
       {/* Filtering Toolbar */}
-      <div className="bg-card border rounded-xl p-4 mb-6 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
+      <div className="bg-cardard border rounded-xl p-4 mb-6 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
         <div className="relative w-full md:max-w-sm flex-1">
           <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
@@ -325,7 +325,7 @@ export default function BatchManagementPage() {
               setWarehouseFilter(e.target.value);
               setPage(1);
             }}
-            className="text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary w-full sm:w-44"
+            className="text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary w-full sm:w-44"
           >
             <option value="">All Warehouses</option>
             {warehouses.map((w) => (
@@ -342,7 +342,7 @@ export default function BatchManagementPage() {
               setStatusFilter(e.target.value as any);
               setPage(1);
             }}
-            className="text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary w-full sm:w-40"
+            className="text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary w-full sm:w-40"
           >
             <option value="">All Statuses</option>
             <option value="ACTIVE">ACTIVE</option>
@@ -367,7 +367,7 @@ export default function BatchManagementPage() {
       {isLoading ? (
         <TableSkeleton columns={9} rows={pageSize} />
       ) : (
-        <div className="bg-card border rounded-xl shadow-sm p-4">
+        <div className="bg-cardard border rounded-xl shadow-sm p-4">
           <DataTable
             columns={columns}
             data={batches}
@@ -405,7 +405,7 @@ export default function BatchManagementPage() {
                 </label>
                 <select
                   {...registerCreate('warehouseId')}
-                  className="w-full text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   <option value="">Select Depot...</option>
                   {warehouses.map((w) => (
@@ -427,7 +427,7 @@ export default function BatchManagementPage() {
                 </label>
                 <select
                   {...registerCreate('productId')}
-                  className="w-full text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   <option value="">Select Catalog Item...</option>
                   {products.map((p) => (
@@ -550,7 +550,7 @@ export default function BatchManagementPage() {
                 </label>
                 <select
                   {...registerStatus('status')}
-                  className="w-full text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   <option value="ACTIVE">ACTIVE — Normal Sales</option>
                   <option value="QUARANTINE">QUARANTINE — Locked from Sales</option>

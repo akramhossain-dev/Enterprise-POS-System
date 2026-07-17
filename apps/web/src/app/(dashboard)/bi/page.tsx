@@ -103,7 +103,7 @@ export default function ExecutiveBiDashboardPage() {
   }
 
   return (
-    <PageContainer className="text-slate-100 select-none text-left print:bg-white print:text-black">
+    <PageContainer className="text-foreground select-none text-left print:bg-white print:text-black">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 print:hidden">
         <PageHeader
           title="Executive Business Intelligence (BI)"
@@ -125,9 +125,9 @@ export default function ExecutiveBiDashboardPage() {
       {/* Corporate health index layout */}
       <div className="grid gap-6 md:grid-cols-3 mb-6">
         {/* Business Health Score circular card */}
-        <Card className="bg-[#0c1220] border-slate-800 p-4 flex flex-col justify-between">
-          <CardHeader className="p-0 pb-3 border-b border-slate-900">
-            <CardTitle className="text-xs font-bold text-slate-400 uppercase tracking-widest font-sans flex items-center gap-1.5">
+        <Card className="bg-cardard border-border p-4 flex flex-col justify-between">
+          <CardHeader className="p-0 pb-3 border-b border-border">
+            <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-widest font-sans flex items-center gap-1.5">
               <FolderHeart className="h-4 w-4 text-emerald-450" />
               <span>Business Health Score</span>
             </CardTitle>
@@ -137,7 +137,7 @@ export default function ExecutiveBiDashboardPage() {
               <div className="absolute inset-0 rounded-full border-4 border-emerald-500 border-t-transparent animate-spin-slow" />
               <span className="text-2xl font-black font-mono text-emerald-400">84.5%</span>
             </div>
-            <p className="text-[10px] text-slate-500 font-mono mt-2 text-center">
+            <p className="text-[10px] text-muted-foreground font-mono mt-2 text-center">
               Target Level: 80% (Optimal Efficiency)
             </p>
           </CardContent>
@@ -148,14 +148,14 @@ export default function ExecutiveBiDashboardPage() {
           {widgets.map((widget) => (
             <Card
               key={widget.id}
-              className="bg-[#0c1220] border-slate-800 p-4 flex flex-col justify-between select-none"
+              className="bg-cardard border-border p-4 flex flex-col justify-between select-none"
             >
-              <div className="flex justify-between items-start border-b border-slate-900 pb-2 mb-2">
+              <div className="flex justify-between items-start border-b border-border pb-2 mb-2">
                 <div>
-                  <span className="text-[9px] text-slate-500 uppercase tracking-wide font-bold">
+                  <span className="text-[9px] text-muted-foreground uppercase tracking-wide font-bold">
                     Custom Formula: {widget.formula || 'Static Score'}
                   </span>
-                  <h4 className="text-xs font-bold text-slate-200 truncate mt-0.5 max-w-[150px]">
+                  <h4 className="text-xs font-bold text-foreground truncate mt-0.5 max-w-[150px]">
                     {widget.name}
                   </h4>
                 </div>
@@ -165,7 +165,7 @@ export default function ExecutiveBiDashboardPage() {
                     size="icon"
                     variant="ghost"
                     onClick={() => handleDuplicate(widget.id)}
-                    className="h-6 w-6 text-slate-500 hover:text-slate-200"
+                    className="h-6 w-6 text-muted-foreground hover:text-foreground"
                     title="Duplicate Widget"
                   >
                     <Copy className="h-3 w-3" />
@@ -174,7 +174,7 @@ export default function ExecutiveBiDashboardPage() {
                     size="icon"
                     variant="ghost"
                     onClick={() => handleDelete(widget.id)}
-                    className="h-6 w-6 text-slate-500 hover:text-rose-500"
+                    className="h-6 w-6 text-muted-foreground hover:text-rose-500"
                     title="Delete Widget"
                   >
                     <Trash className="h-3 w-3" />
@@ -184,7 +184,7 @@ export default function ExecutiveBiDashboardPage() {
 
               <div className="py-2">
                 <span
-                  className={`text-2xl font-black font-mono ${widget.color || 'text-slate-100'}`}
+                  className={`text-2xl font-black font-mono ${widget.color || 'text-foreground'}`}
                 >
                   {widget.value}%
                 </span>

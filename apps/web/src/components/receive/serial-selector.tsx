@@ -58,7 +58,7 @@ export function SerialSelector({
 
       {isOpen && (
         <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-card border border-border rounded-xl shadow-lg w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+          <div className="bg-cardard border border-border rounded-xl shadow-lg w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-200">
             <div className="p-4 border-b bg-muted/40 flex items-center justify-between">
               <h3 className="font-bold text-sm flex items-center gap-1.5">
                 <ListChecks className="w-4 h-4 text-primary" /> Assign Product Serial Numbers

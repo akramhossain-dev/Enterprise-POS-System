@@ -65,11 +65,11 @@ export function ReportTable({ columns, rows, isLoading = false }: ReportTablePro
   }, [rows, columns, filterQuery, sortColumn, sortDirection, currentPage, pageSize]);
 
   return (
-    <Card className="bg-[#0c1220] border-slate-800 text-slate-100 select-none text-left print:border-none print:shadow-none print:bg-white print:text-black">
+    <Card className="bg-cardard border-border text-foreground select-none text-left print:border-none print:shadow-none print:bg-white print:text-black">
       {/* Top search controls */}
-      <div className="p-3 border-b border-slate-900 flex flex-col sm:flex-row items-center gap-3 print:hidden">
+      <div className="p-3 border-b border-border flex flex-col sm:flex-row items-center gap-3 print:hidden">
         <div className="relative flex-1">
-          <Search className="absolute left-2.5 top-2 h-3.5 w-3.5 text-slate-500" />
+          <Search className="absolute left-2.5 top-2 h-3.5 w-3.5 text-muted-foreground" />
           <input
             type="text"
             placeholder="Quick search active records..."
@@ -78,11 +78,11 @@ export function ReportTable({ columns, rows, isLoading = false }: ReportTablePro
               setFilterQuery(e.target.value);
               setCurrentPage(1);
             }}
-            className="w-full h-8 pl-8 bg-slate-950 border border-slate-855 rounded text-xs text-slate-100 focus:outline-none focus:border-emerald-500"
+            className="w-full h-8 pl-8 bg-muted border border-slate-855 rounded text-xs text-foreground focus:outline-none focus:border-emerald-500"
           />
         </div>
 
-        <div className="flex items-center gap-1.5 text-xs text-slate-500 font-bold">
+        <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-bold">
           <span>Show:</span>
           <select
             value={pageSize}
@@ -90,7 +90,7 @@ export function ReportTable({ columns, rows, isLoading = false }: ReportTablePro
               setPageSize(Number(e.target.value));
               setCurrentPage(1);
             }}
-            className="bg-[#0c1220] border border-slate-850 rounded p-1 text-[10px]"
+            className="bg-cardard border border-border rounded p-1 text-[10px]"
           >
             <option value={5}>5 Rows</option>
             <option value={10}>10 Rows</option>
@@ -104,12 +104,12 @@ export function ReportTable({ columns, rows, isLoading = false }: ReportTablePro
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs font-mono">
             <thead>
-              <tr className="border-b border-slate-900 bg-slate-950/20 text-slate-500 font-bold uppercase tracking-wider text-[10px] print:border-black">
+              <tr className="border-b border-border bg-muted/20 text-muted-foreground font-bold uppercase tracking-wider text-[10px] print:border-black">
                 {columns.map((col) => (
                   <th
                     key={col}
                     onClick={() => handleSort(col)}
-                    className="py-2.5 px-4 cursor-pointer hover:bg-slate-900/40 select-none transition-colors"
+                    className="py-2.5 px-4 cursor-pointer hover:bg-accent/40 select-none transition-colors"
                   >
                     <div className="flex items-center gap-1">
                       <span>{col}</span>
@@ -123,18 +123,18 @@ export function ReportTable({ columns, rows, isLoading = false }: ReportTablePro
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-900/40 text-slate-350 print:text-black print:divide-gray-300">
+            <tbody className="divide-y divide-border/40 text-muted-foreground print:text-black print:divide-gray-300">
               {isLoading ? (
                 <tr>
-                  <td colSpan={columns.length} className="text-center py-8 text-slate-500">
+                  <td colSpan={columns.length} className="text-center py-8 text-muted-foreground">
                     Loading records data...
                   </td>
                 </tr>
               ) : paginatedRows.length > 0 ? (
                 paginatedRows.map((row, idx) => (
-                  <tr key={idx} className="hover:bg-slate-950/10">
+                  <tr key={idx} className="hover:bg-muted/10">
                     {columns.map((col) => (
-                      <td key={col} className="py-2.5 px-4 text-slate-200 print:text-black">
+                      <td key={col} className="py-2.5 px-4 text-foreground print:text-black">
                         {row[col] ?? ''}
                       </td>
                     ))}
@@ -142,7 +142,7 @@ export function ReportTable({ columns, rows, isLoading = false }: ReportTablePro
                 ))
               ) : (
                 <tr>
-                  <td colSpan={columns.length} className="text-center py-8 text-slate-500">
+                  <td colSpan={columns.length} className="text-center py-8 text-muted-foreground">
                     No matching records found.
                   </td>
                 </tr>
@@ -152,7 +152,7 @@ export function ReportTable({ columns, rows, isLoading = false }: ReportTablePro
         </div>
 
         {/* Pagination controls */}
-        <div className="p-3 border-t border-slate-900 flex justify-between items-center text-xs text-slate-500 font-mono print:hidden">
+        <div className="p-3 border-t border-border flex justify-between items-center text-xs text-muted-foreground font-mono print:hidden">
           <span>
             Page {currentPage} of {totalPages} ({totalItems} items)
           </span>
@@ -163,7 +163,7 @@ export function ReportTable({ columns, rows, isLoading = false }: ReportTablePro
               variant="ghost"
               disabled={currentPage === 1}
               onClick={() => setCurrentPage(currentPage - 1)}
-              className="h-7 w-7 border border-slate-900 text-slate-400 hover:text-slate-200"
+              className="h-7 w-7 border border-border text-muted-foreground hover:text-foreground"
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
@@ -172,7 +172,7 @@ export function ReportTable({ columns, rows, isLoading = false }: ReportTablePro
               variant="ghost"
               disabled={currentPage === totalPages}
               onClick={() => setCurrentPage(currentPage + 1)}
-              className="h-7 w-7 border border-slate-900 text-slate-400 hover:text-slate-200"
+              className="h-7 w-7 border border-border text-muted-foreground hover:text-foreground"
             >
               <ChevronRight className="h-4 w-4" />
             </Button>

@@ -84,7 +84,7 @@ export default function EditJournalPage({ params }: { params: Promise<{ id: stri
 
   if (!journal) {
     return (
-      <PageContainer className="max-w-4xl mx-auto py-12 text-center text-slate-500 text-xs">
+      <PageContainer className="max-w-4xl mx-auto py-12 text-center text-muted-foreground text-xs">
         Journal details could not be loaded.
       </PageContainer>
     );
@@ -93,25 +93,25 @@ export default function EditJournalPage({ params }: { params: Promise<{ id: stri
   // Guard: Edit is restricted to DRAFT status
   if (journal.status !== 'DRAFT') {
     return (
-      <PageContainer className="max-w-4xl mx-auto py-12 text-left text-slate-100">
+      <PageContainer className="max-w-4xl mx-auto py-12 text-left text-foreground">
         <div className="mb-4">
           <Link href={`/accounting/journals/${id}`}>
             <Button
               variant="ghost"
               size="sm"
-              className="text-slate-400 hover:text-slate-200 gap-1.5 h-8"
+              className="text-muted-foreground hover:text-foreground gap-1.5 h-8"
             >
               <ArrowLeft className="h-4 w-4" />
               <span>Back to Details</span>
             </Button>
           </Link>
         </div>
-        <div className="p-6 bg-slate-950 border border-slate-800 rounded-3xl space-y-4 max-w-lg mx-auto text-center">
+        <div className="p-6 bg-muted border border-border rounded-3xl space-y-4 max-w-lg mx-auto text-center">
           <ShieldAlert className="h-10 w-10 text-rose-455 mx-auto animate-pulse" />
           <h3 className="text-sm font-black font-sans uppercase tracking-wider text-slate-250">
             Edit Action Blocked
           </h3>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-muted-foreground">
             Only journal entries in{' '}
             <span className="text-amber-400 font-bold uppercase">DRAFT</span> status can be
             modified. This entry is currently in status:{' '}
@@ -170,14 +170,14 @@ export default function EditJournalPage({ params }: { params: Promise<{ id: stri
   };
 
   return (
-    <PageContainer className="max-w-4xl mx-auto py-6 text-slate-100 select-none text-left">
+    <PageContainer className="max-w-4xl mx-auto py-6 text-foreground select-none text-left">
       {/* Back button */}
       <div className="mb-4">
         <Link href={`/accounting/journals/${id}`}>
           <Button
             variant="ghost"
             size="sm"
-            className="text-slate-400 hover:text-slate-200 gap-1.5 h-8"
+            className="text-muted-foreground hover:text-foreground gap-1.5 h-8"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Back to Details</span>
@@ -192,48 +192,48 @@ export default function EditJournalPage({ params }: { params: Promise<{ id: stri
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 mt-6 text-xs sm:text-sm">
         {/* Form Meta Fields */}
-        <Card className="bg-[#0c1220] border-slate-800 text-slate-100">
+        <Card className="bg-cardard border-border text-foreground">
           <CardContent className="p-6 space-y-4">
             <div className="grid gap-4 sm:grid-cols-3">
               {/* Reference Number */}
               <div className="grid gap-1.5">
-                <label className="text-slate-400 font-semibold font-mono">Reference Number</label>
+                <label className="text-muted-foreground font-semibold font-mono">Reference Number</label>
                 <Input
                   type="text"
                   disabled
                   {...register('referenceNumber')}
-                  className="bg-slate-950/60 border-slate-855 text-xs text-slate-400 font-mono"
+                  className="bg-muted/60 border-slate-855 text-xs text-muted-foreground font-mono"
                 />
               </div>
 
               {/* Transaction Date */}
               <div className="grid gap-1.5 text-left">
-                <label className="text-slate-400 font-semibold">Transaction Date *</label>
+                <label className="text-muted-foreground font-semibold">Transaction Date *</label>
                 <Input
                   type="date"
                   required
                   {...register('date')}
-                  className="bg-slate-950 border-slate-855 text-xs text-slate-100 focus-visible:ring-emerald-500"
+                  className="bg-muted border-slate-855 text-xs text-foreground focus-visible:ring-emerald-500"
                 />
                 {errors.date && <p className="text-[10px] text-rose-455">{errors.date.message}</p>}
               </div>
 
               {/* Attachment URL */}
               <div className="grid gap-1.5">
-                <label className="text-slate-400 font-semibold">Attachment Reference</label>
+                <label className="text-muted-foreground font-semibold">Attachment Reference</label>
                 <div className="relative flex items-center">
                   <Input
                     type="text"
                     placeholder="URL or voucher doc code"
                     {...register('attachmentUrl')}
-                    className="bg-slate-950 border-slate-855 text-xs text-slate-100 pr-10 focus-visible:ring-emerald-500"
+                    className="bg-muted border-slate-855 text-xs text-foreground pr-10 focus-visible:ring-emerald-500"
                   />
                   <Button
                     type="button"
                     size="icon"
                     variant="ghost"
                     onClick={() => toast.info('File attachment upload is a UI placeholder.')}
-                    className="absolute right-0 h-9 w-9 text-slate-500 hover:text-slate-350"
+                    className="absolute right-0 h-9 w-9 text-muted-foreground hover:text-muted-foreground"
                   >
                     <FileUp className="h-4 w-4" />
                   </Button>
@@ -243,12 +243,12 @@ export default function EditJournalPage({ params }: { params: Promise<{ id: stri
 
             {/* Description */}
             <div className="grid gap-1.5 text-left">
-              <label className="text-slate-400 font-semibold">Description / Purpose *</label>
+              <label className="text-muted-foreground font-semibold">Description / Purpose *</label>
               <Input
                 type="text"
                 placeholder="E.g., Monthly inventory valuation adjustment"
                 {...register('description')}
-                className="bg-slate-950 border-slate-855 text-xs text-slate-100 focus-visible:ring-emerald-500"
+                className="bg-muted border-slate-855 text-xs text-foreground focus-visible:ring-emerald-500"
               />
               {errors.description && (
                 <p className="text-[10px] text-rose-455">{errors.description.message}</p>
@@ -257,18 +257,18 @@ export default function EditJournalPage({ params }: { params: Promise<{ id: stri
 
             {/* Notes */}
             <div className="grid gap-1.5 text-left">
-              <label className="text-slate-400 font-semibold">Internal Audit Notes</label>
+              <label className="text-muted-foreground font-semibold">Internal Audit Notes</label>
               <textarea
                 placeholder="Audit notes or references..."
                 {...register('notes')}
-                className="w-full bg-slate-950 border border-slate-855 rounded p-2 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 h-16 resize-none"
+                className="w-full bg-muted border border-slate-855 rounded p-2 text-xs text-foreground focus:outline-none focus:border-emerald-500 h-16 resize-none"
               />
             </div>
           </CardContent>
         </Card>
 
         {/* Double Entry Lines Section */}
-        <Card className="bg-[#0c1220] border-slate-800 text-slate-100">
+        <Card className="bg-cardard border-border text-foreground">
           <CardContent className="p-6">
             <DebitCreditEntry value={lines} onChange={setLines} accounts={accounts} />
           </CardContent>

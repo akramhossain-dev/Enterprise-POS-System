@@ -233,7 +233,7 @@ export default function CategoriesPage() {
                 });
               }}
               title="Archive"
-              className="text-destructive hover:bg-destructive/10"
+              className="text-destructive hover:bg-backgroundestructive/10"
             >
               <Archive className="w-3.5 h-3.5" />
             </Button>
@@ -262,7 +262,7 @@ export default function CategoriesPage() {
       </div>
 
       {/* Filter and View Mode Toolbar */}
-      <div className="mt-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between border border-border bg-card p-4 rounded-xl shadow-xs">
+      <div className="mt-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between border border-border bg-cardard p-4 rounded-xl shadow-xs">
         <div className="flex flex-1 flex-wrap items-center gap-3">
           <div className="relative flex-1 min-w-[200px] max-w-sm">
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -383,7 +383,7 @@ export default function CategoriesPage() {
       {/* Render Main Content */}
       <div className="mt-6">
         {viewMode === 'tree' ? (
-          <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
+          <div className="bg-cardard border border-border rounded-xl p-5 shadow-sm">
             <CategoryTree
               categories={categories}
               onDelete={(id) => {

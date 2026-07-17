@@ -42,14 +42,14 @@ export default function BusinessOverviewPage() {
   ];
 
   return (
-    <PageContainer className="text-slate-100 select-none text-left print:bg-white print:text-black print:p-0">
+    <PageContainer className="text-foreground select-none text-left print:bg-white print:text-black print:p-0">
       {/* Navigation bar */}
       <div className="mb-4 flex justify-between items-center print:hidden">
         <Link href="/analytics/dashboard">
           <Button
             variant="ghost"
             size="sm"
-            className="text-slate-400 hover:text-slate-200 gap-1.5 h-8"
+            className="text-muted-foreground hover:text-foreground gap-1.5 h-8"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Executive Dashboard</span>
@@ -74,20 +74,20 @@ export default function BusinessOverviewPage() {
       />
 
       {/* Date filters */}
-      <div className="flex items-center gap-1.5 bg-[#0c1220] px-3 border border-slate-850 rounded-xl text-xs h-9 w-full sm:w-auto my-6 print:hidden max-w-sm">
-        <span className="text-slate-500">From</span>
+      <div className="flex items-center gap-1.5 bg-cardard px-3 border border-border rounded-xl text-xs h-9 w-full sm:w-auto my-6 print:hidden max-w-sm">
+        <span className="text-muted-foreground">From</span>
         <input
           type="date"
           value={startDate}
           onChange={(e) => setStartDate(e.target.value)}
-          className="bg-transparent text-slate-200 focus:outline-none cursor-pointer h-full"
+          className="bg-transparent text-foreground focus:outline-none cursor-pointer h-full"
         />
-        <span className="text-slate-500">To</span>
+        <span className="text-muted-foreground">To</span>
         <input
           type="date"
           value={endDate}
           onChange={(e) => setEndDate(e.target.value)}
-          className="bg-transparent text-slate-200 focus:outline-none cursor-pointer h-full"
+          className="bg-transparent text-foreground focus:outline-none cursor-pointer h-full"
         />
       </div>
 

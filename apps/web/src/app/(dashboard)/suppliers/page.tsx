@@ -448,7 +448,7 @@ export default function SuppliersPage() {
       </div>
 
       {/* ── Table ─────────────────────────────────────── */}
-      <div className="rounded-xl border border-border bg-card overflow-hidden">
+      <div className="rounded-xl border border-border bg-cardard overflow-hidden">
         {/* Error state */}
         {error && !isLoading && (
           <div className="flex flex-col items-center justify-center py-16 text-center px-4">

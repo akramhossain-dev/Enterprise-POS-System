@@ -222,7 +222,7 @@ export default function CycleCountDetailsPage() {
   if (error || !stockTake) {
     return (
       <PageContainer>
-        <div className="text-center py-16 bg-card border rounded-2xl">
+        <div className="text-center py-16 bg-cardard border rounded-2xl">
           <AlertTriangle className="w-12 h-12 text-rose-500 mx-auto mb-4" />
           <h3 className="text-lg font-bold text-foreground">Audit Session Not Found</h3>
           <p className="text-sm text-muted-foreground mt-1">
@@ -264,7 +264,7 @@ export default function CycleCountDetailsPage() {
       <div className="grid gap-6 md:grid-cols-3 text-sm">
         {/* Left item grid list */}
         <div className="md:col-span-2 space-y-6">
-          <Card className="shadow-sm border-border bg-card">
+          <Card className="shadow-sm border-border bg-cardard">
             <CardHeader className="border-b flex flex-row items-center justify-between">
               <div>
                 <CardTitle className="text-sm font-semibold">Verification Sheet items</CardTitle>
@@ -295,7 +295,7 @@ export default function CycleCountDetailsPage() {
                     rows={4}
                     value={bulkText}
                     onChange={(e) => setBulkText(e.target.value)}
-                    className="font-mono text-xs bg-card border-border"
+                    className="font-mono text-xs bg-cardard border-border"
                   />
                   <div className="flex justify-end gap-2">
                     <Button variant="ghost" size="sm" onClick={() => setShowBulkUpload(false)}>
@@ -339,7 +339,7 @@ export default function CycleCountDetailsPage() {
                       return (
                         <tr
                           key={item.id}
-                          className="border-b last:border-b-0 border-border bg-card hover:bg-muted/10"
+                          className="border-b last:border-b-0 border-border bg-cardard hover:bg-muted/10"
                         >
                           <td className="p-3 pl-6">
                             <div className="flex flex-col font-medium">
@@ -364,7 +364,7 @@ export default function CycleCountDetailsPage() {
                                     min="0"
                                     value={editQty}
                                     onChange={(e) => setEditQty(e.target.value)}
-                                    className="w-20 h-8 text-center bg-card border-border font-bold text-xs"
+                                    className="w-20 h-8 text-center bg-cardard border-border font-bold text-xs"
                                   />
                                   <Button
                                     size="sm"
@@ -426,7 +426,7 @@ export default function CycleCountDetailsPage() {
 
           {/* Reconciliation flow card */}
           {isCompleted && (
-            <Card className="shadow-sm border-border bg-card">
+            <Card className="shadow-sm border-border bg-cardard">
               <CardHeader className="border-b">
                 <CardTitle className="text-sm font-semibold flex items-center gap-1.5 text-primary">
                   <FileCheck className="w-5 h-5 text-primary" /> Stock Reconciliation Workflow
@@ -591,7 +591,7 @@ export default function CycleCountDetailsPage() {
 
         {/* Right side stats panel */}
         <div className="space-y-6">
-          <Card className="shadow-sm border-border bg-card">
+          <Card className="shadow-sm border-border bg-cardard">
             <CardHeader className="border-b">
               <CardTitle className="text-sm font-semibold flex items-center gap-1.5">
                 <ClipboardList className="w-4 h-4 text-primary" /> Session Info
@@ -675,7 +675,7 @@ export default function CycleCountDetailsPage() {
           </Card>
 
           {/* Warehouse details */}
-          <Card className="shadow-sm border-border bg-card">
+          <Card className="shadow-sm border-border bg-cardard">
             <CardHeader className="border-b">
               <CardTitle className="text-sm font-semibold flex items-center gap-1.5">
                 <WarehouseIcon className="w-4 h-4 text-indigo-500" /> Location Details
@@ -702,7 +702,7 @@ export default function CycleCountDetailsPage() {
           </Card>
 
           {/* Audit trail */}
-          <Card className="shadow-sm border-border bg-card">
+          <Card className="shadow-sm border-border bg-cardard">
             <CardHeader className="border-b">
               <CardTitle className="text-sm font-semibold flex items-center gap-1.5">
                 <User className="w-4 h-4 text-emerald-500" /> Counter Operator

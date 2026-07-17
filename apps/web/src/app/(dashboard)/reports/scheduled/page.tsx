@@ -97,13 +97,13 @@ export default function ScheduledReportsPage() {
   };
 
   return (
-    <PageContainer className="text-slate-100 select-none text-left print:bg-white print:text-black">
+    <PageContainer className="text-foreground select-none text-left print:bg-white print:text-black">
       <div className="mb-4 print:hidden">
         <Link href="/reports">
           <Button
             variant="ghost"
             size="sm"
-            className="text-slate-400 hover:text-slate-200 gap-1.5 h-8"
+            className="text-muted-foreground hover:text-foreground gap-1.5 h-8"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Reports Center</span>
@@ -119,21 +119,21 @@ export default function ScheduledReportsPage() {
       <div className="grid gap-6 lg:grid-cols-3 mt-6 print:hidden">
         {/* Left Side: Cron setup form */}
         <div className="lg:col-span-1">
-          <Card className="bg-[#0c1220] border-slate-800 p-4">
+          <Card className="bg-cardard border-border p-4">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              <h3 className="text-xs font-bold text-slate-200 uppercase tracking-widest font-sans flex items-center gap-1.5">
+              <h3 className="text-xs font-bold text-foreground uppercase tracking-widest font-sans flex items-center gap-1.5">
                 <Calendar className="h-4 w-4 text-emerald-450" />
                 <span>Add Scheduled Job</span>
               </h3>
 
               {/* Target Report */}
               <div className="flex flex-col gap-1">
-                <label className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">
+                <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-wide">
                   Target Report Template
                 </label>
                 <select
                   {...register('reportId')}
-                  className="w-full h-8 px-2 bg-slate-950 border border-slate-855 rounded text-xs text-slate-200 focus:outline-none"
+                  className="w-full h-8 px-2 bg-muted border border-slate-855 rounded text-xs text-foreground focus:outline-none"
                 >
                   <option value="rep-sales-summary">Sales Summary Report</option>
                   <option value="rep-current-stock">Current Stock Report</option>
@@ -146,12 +146,12 @@ export default function ScheduledReportsPage() {
 
               {/* Recurrence frequency */}
               <div className="flex flex-col gap-1">
-                <label className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">
+                <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-wide">
                   Execution Recurrence
                 </label>
                 <select
                   {...register('frequency')}
-                  className="w-full h-8 px-2 bg-slate-950 border border-slate-855 rounded text-xs text-slate-200 focus:outline-none"
+                  className="w-full h-8 px-2 bg-muted border border-slate-855 rounded text-xs text-foreground focus:outline-none"
                 >
                   <option value="daily">Daily Loop</option>
                   <option value="weekly">Weekly Loop</option>
@@ -164,14 +164,14 @@ export default function ScheduledReportsPage() {
 
               {/* Recipient email lists */}
               <div className="flex flex-col gap-1">
-                <label className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">
+                <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-wide">
                   Recipient Emails (comma separated)
                 </label>
                 <input
                   type="text"
                   placeholder="exec@company.com, finance@company.com"
                   {...register('emails')}
-                  className="w-full h-8 px-2 bg-slate-950 border border-slate-855 rounded text-xs text-slate-200 focus:outline-none focus:border-emerald-500"
+                  className="w-full h-8 px-2 bg-muted border border-slate-855 rounded text-xs text-foreground focus:outline-none focus:border-emerald-500"
                 />
                 {errors.emails && (
                   <span className="text-[9px] text-rose-500">{errors.emails.message}</span>
@@ -180,13 +180,13 @@ export default function ScheduledReportsPage() {
 
               {/* Execution time */}
               <div className="flex flex-col gap-1">
-                <label className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">
+                <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-wide">
                   Execution Time
                 </label>
                 <input
                   type="time"
                   {...register('timeOfDay')}
-                  className="w-full h-8 px-2 bg-slate-950 border border-slate-855 rounded text-xs text-slate-200 focus:outline-none focus:border-emerald-500"
+                  className="w-full h-8 px-2 bg-muted border border-slate-855 rounded text-xs text-foreground focus:outline-none focus:border-emerald-500"
                 />
                 {errors.timeOfDay && (
                   <span className="text-[9px] text-rose-500">{errors.timeOfDay.message}</span>
@@ -206,16 +206,16 @@ export default function ScheduledReportsPage() {
 
         {/* Right Side: active schedulers list */}
         <div className="lg:col-span-2 space-y-4">
-          <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest font-sans flex items-center gap-1.5">
+          <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest font-sans flex items-center gap-1.5">
             <Clock className="h-4 w-4 text-indigo-400" />
             <span>Active Scheduled Triggers</span>
           </h3>
 
-          <Card className="bg-[#0c1220] border-slate-800 p-4 font-mono">
+          <Card className="bg-cardard border-border p-4 font-mono">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr className="border-b border-slate-900 text-slate-500 font-bold uppercase tracking-wider text-[10px] pb-2">
+                  <tr className="border-b border-border text-muted-foreground font-bold uppercase tracking-wider text-[10px] pb-2">
                     <th className="py-2">Report Name</th>
                     <th className="py-2">Frequency</th>
                     <th className="py-2">Time</th>
@@ -223,20 +223,20 @@ export default function ScheduledReportsPage() {
                     <th className="py-2 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-900/40 text-slate-350">
+                <tbody className="divide-y divide-border/40 text-muted-foreground">
                   {isLoading ? (
                     <tr>
-                      <td colSpan={5} className="text-center py-8 text-slate-500">
+                      <td colSpan={5} className="text-center py-8 text-muted-foreground">
                         Loading scheduled triggers...
                       </td>
                     </tr>
                   ) : schedules.length > 0 ? (
                     schedules.map((sch) => (
-                      <tr key={sch.id} className="hover:bg-slate-950/20">
-                        <td className="py-3 font-sans font-bold text-slate-200">
+                      <tr key={sch.id} className="hover:bg-muted/20">
+                        <td className="py-3 font-sans font-bold text-foreground">
                           {sch.reportName}
                         </td>
-                        <td className="py-3 capitalize text-slate-400">{sch.frequency}</td>
+                        <td className="py-3 capitalize text-muted-foreground">{sch.frequency}</td>
                         <td className="py-3">{sch.timeOfDay}</td>
                         <td className="py-3 truncate max-w-[150px]">{sch.emailList.join(', ')}</td>
                         <td className="py-3 text-right">
@@ -257,7 +257,7 @@ export default function ScheduledReportsPage() {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan={5} className="text-center py-8 text-slate-500">
+                      <td colSpan={5} className="text-center py-8 text-muted-foreground">
                         No active scheduling triggers configured.
                       </td>
                     </tr>

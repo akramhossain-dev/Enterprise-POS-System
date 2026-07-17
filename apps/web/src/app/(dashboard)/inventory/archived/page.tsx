@@ -176,7 +176,7 @@ export default function ArchivedInventoryPage() {
 
         {/* TAB: DISCONTINUED PRODUCTS */}
         <TabsContent value="products">
-          <div className="bg-card border rounded-xl p-4 shadow-sm space-y-4">
+          <div className="bg-cardard border rounded-xl p-4 shadow-sm space-y-4">
             <div className="flex justify-between items-center gap-4">
               <div className="relative w-full sm:max-w-xs">
                 <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -219,7 +219,7 @@ export default function ArchivedInventoryPage() {
 
         {/* TAB: INACTIVE WAREHOUSES */}
         <TabsContent value="warehouses">
-          <div className="bg-card border rounded-xl p-4 shadow-sm space-y-4">
+          <div className="bg-cardard border rounded-xl p-4 shadow-sm space-y-4">
             <div className="flex justify-between items-center gap-4">
               <div className="relative w-full sm:max-w-xs">
                 <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />

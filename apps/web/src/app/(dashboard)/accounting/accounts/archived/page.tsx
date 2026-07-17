@@ -31,14 +31,14 @@ export default function POSArchivedAccountsPage() {
   };
 
   return (
-    <PageContainer className="text-slate-100 select-none text-left max-w-4xl mx-auto py-6">
+    <PageContainer className="text-foreground select-none text-left max-w-4xl mx-auto py-6">
       {/* Back button */}
       <div className="mb-4">
         <Link href="/accounting/accounts">
           <Button
             variant="ghost"
             size="sm"
-            className="text-slate-400 hover:text-slate-200 gap-1.5 h-8"
+            className="text-muted-foreground hover:text-foreground gap-1.5 h-8"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Back to Active Accounts</span>
@@ -53,12 +53,12 @@ export default function POSArchivedAccountsPage() {
 
       <div className="mt-6">
         {isLoading ? (
-          <div className="text-center py-12 text-slate-500">Querying archive directory...</div>
+          <div className="text-center py-12 text-muted-foreground">Querying archive directory...</div>
         ) : accounts.length > 0 ? (
-          <div className="bg-[#0c1220] border border-slate-800 rounded-2xl overflow-hidden">
+          <div className="bg-cardard border border-border rounded-2xl overflow-hidden">
             <table className="w-full text-xs sm:text-sm text-left border-collapse">
               <thead>
-                <tr className="border-b border-slate-855 text-slate-500 font-bold uppercase tracking-wider text-[10px] bg-slate-955/35">
+                <tr className="border-b border-slate-855 text-muted-foreground font-bold uppercase tracking-wider text-[10px] bg-slate-955/35">
                   <th className="py-3 px-4">Code</th>
                   <th className="py-3 px-4">Account Name</th>
                   <th className="py-3 px-3">Type</th>
@@ -66,12 +66,12 @@ export default function POSArchivedAccountsPage() {
                   <th className="py-3 px-4 text-center">Restore Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-900 font-mono text-slate-350">
+              <tbody className="divide-y divide-border font-mono text-muted-foreground">
                 {accounts.map((acc) => (
-                  <tr key={acc.id} className="hover:bg-slate-900/20">
-                    <td className="py-3 px-4 font-bold text-slate-200">{acc.code}</td>
-                    <td className="py-3 px-4 font-sans font-bold text-slate-100">{acc.name}</td>
-                    <td className="py-3 px-3 font-sans text-xs text-slate-400">{acc.type}</td>
+                  <tr key={acc.id} className="hover:bg-accent/20">
+                    <td className="py-3 px-4 font-bold text-foreground">{acc.code}</td>
+                    <td className="py-3 px-4 font-sans font-bold text-foreground">{acc.name}</td>
+                    <td className="py-3 px-3 font-sans text-xs text-muted-foreground">{acc.type}</td>
                     <td className="py-3 px-3 text-right font-bold">
                       ${acc.balance.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                     </td>
@@ -92,7 +92,7 @@ export default function POSArchivedAccountsPage() {
             </table>
           </div>
         ) : (
-          <div className="text-center py-20 border border-dashed border-slate-850 rounded-2xl text-slate-500">
+          <div className="text-center py-20 border border-dashed border-border rounded-2xl text-muted-foreground">
             <FolderLock className="h-10 w-10 mb-2 text-slate-800 mx-auto" />
             <p className="text-xs">No archived accounting records registered.</p>
           </div>

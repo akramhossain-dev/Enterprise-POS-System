@@ -14,7 +14,7 @@ export function ReceivingSummaryCard({ matchingResult, className }: ReceivingSum
   const { isMatched, discrepancyCount, varianceSummary } = matchingResult;
 
   return (
-    <div className={cn('bg-card border rounded-xl p-5 shadow-sm space-y-4 text-sm', className)}>
+    <div className={cn('bg-cardard border rounded-xl p-5 shadow-sm space-y-4 text-sm', className)}>
       <h3 className="font-semibold text-sm border-b pb-2 text-foreground uppercase tracking-wider flex items-center gap-1.5">
         <Scale className="w-4 h-4 text-primary" /> 3-Way Match Verification
       </h3>

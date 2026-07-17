@@ -38,13 +38,13 @@ export default function BranchAnalyticsPage() {
   const chartData = branches.map((b) => ({ name: b.branchName, value: b.revenue }));
 
   return (
-    <PageContainer className="text-slate-100 select-none text-left print:bg-white print:text-black">
+    <PageContainer className="text-foreground select-none text-left print:bg-white print:text-black">
       <div className="mb-4 print:hidden">
         <Link href="/analytics/dashboard">
           <Button
             variant="ghost"
             size="sm"
-            className="text-slate-400 hover:text-slate-200 gap-1.5 h-8"
+            className="text-muted-foreground hover:text-foreground gap-1.5 h-8"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Executive Dashboard</span>
@@ -58,51 +58,51 @@ export default function BranchAnalyticsPage() {
       />
 
       {/* Date filters */}
-      <div className="flex items-center gap-1.5 bg-[#0c1220] px-3 border border-slate-850 rounded-xl text-xs h-9 w-full sm:w-auto my-6 print:hidden max-w-sm">
-        <span className="text-slate-500">From</span>
+      <div className="flex items-center gap-1.5 bg-cardard px-3 border border-border rounded-xl text-xs h-9 w-full sm:w-auto my-6 print:hidden max-w-sm">
+        <span className="text-muted-foreground">From</span>
         <input
           type="date"
           value={startDate}
           onChange={(e) => setStartDate(e.target.value)}
-          className="bg-transparent text-slate-200 focus:outline-none cursor-pointer h-full"
+          className="bg-transparent text-foreground focus:outline-none cursor-pointer h-full"
         />
-        <span className="text-slate-500">To</span>
+        <span className="text-muted-foreground">To</span>
         <input
           type="date"
           value={endDate}
           onChange={(e) => setEndDate(e.target.value)}
-          className="bg-transparent text-slate-200 focus:outline-none cursor-pointer h-full"
+          className="bg-transparent text-foreground focus:outline-none cursor-pointer h-full"
         />
       </div>
 
       <div className="grid gap-6 md:grid-cols-3">
         {/* Left Columns: performance list table */}
         <div className="md:col-span-2 space-y-4">
-          <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest font-sans flex items-center gap-1.5">
+          <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest font-sans flex items-center gap-1.5">
             <Store className="h-4 w-4 text-emerald-450" />
             <span>Local Branch Rankings</span>
           </h3>
 
-          <Card className="bg-[#0c1220] border-slate-800 p-4 font-mono">
+          <Card className="bg-cardard border-border p-4 font-mono">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr className="border-b border-slate-900 text-slate-500 font-bold uppercase tracking-wider text-[10px] pb-2">
+                  <tr className="border-b border-border text-muted-foreground font-bold uppercase tracking-wider text-[10px] pb-2">
                     <th className="py-2">Branch Name</th>
                     <th className="py-2 text-right">Transactions</th>
                     <th className="py-2 text-right">Net Profit ($)</th>
                     <th className="py-2 text-right">Total Revenue ($)</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-900/40 text-slate-350">
+                <tbody className="divide-y divide-border/40 text-muted-foreground">
                   {branches.map((b) => (
-                    <tr key={b.branchId} className="hover:bg-slate-950/20">
-                      <td className="py-3 font-sans font-bold text-slate-200">{b.branchName}</td>
+                    <tr key={b.branchId} className="hover:bg-muted/20">
+                      <td className="py-3 font-sans font-bold text-foreground">{b.branchName}</td>
                       <td className="py-3 text-right">{b.salesCount.toLocaleString()}</td>
                       <td className="py-3 text-right text-emerald-450">
                         {formatCurrency(b.profit)}
                       </td>
-                      <td className="py-3 text-right text-slate-200 font-bold">
+                      <td className="py-3 text-right text-foreground font-bold">
                         {formatCurrency(b.revenue)}
                       </td>
                     </tr>

@@ -54,7 +54,7 @@ export default function BranchDetailsPage() {
   if (!branch) {
     return (
       <PageContainer>
-        <div className="text-center py-20 bg-card rounded-2xl border border-border">
+        <div className="text-center py-20 bg-cardard rounded-2xl border border-border">
           <AlertCircle className="w-8 h-8 mx-auto text-muted-foreground" />
           <h2 className="font-semibold text-foreground text-sm mt-3">Branch Location Not Found</h2>
           <Link href="/branches" className="mt-4 inline-block">
@@ -113,7 +113,7 @@ export default function BranchDetailsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 text-left">
         {/* Left summary card */}
         <div className="lg:col-span-1 space-y-6">
-          <div className="rounded-2xl border border-border bg-card p-6 flex flex-col items-center text-center">
+          <div className="rounded-2xl border border-border bg-cardard p-6 flex flex-col items-center text-center">
             <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary">
               <Building className="w-8 h-8" />
             </div>
@@ -188,7 +188,7 @@ export default function BranchDetailsPage() {
 
         {/* Right side tabbed grids */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="flex border-b border-border bg-card rounded-2xl p-1.5 gap-1 shadow-sm">
+          <div className="flex border-b border-border bg-cardard rounded-2xl p-1.5 gap-1 shadow-sm">
             <button
               onClick={() => setActiveTab('warehouses')}
               className={cn(
@@ -215,7 +215,7 @@ export default function BranchDetailsPage() {
             </button>
           </div>
 
-          <div className="rounded-2xl border border-border bg-card p-6 min-h-[350px]">
+          <div className="rounded-2xl border border-border bg-cardard p-6 min-h-[350px]">
             {/* Warehouses list */}
             {activeTab === 'warehouses' && (
               <div className="space-y-4">

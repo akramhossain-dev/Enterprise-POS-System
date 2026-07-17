@@ -110,7 +110,7 @@ export default function RequisitionDetailsPage() {
   if (error || !requisition) {
     return (
       <PageContainer>
-        <div className="text-center py-16 bg-card border rounded-2xl">
+        <div className="text-center py-16 bg-cardard border rounded-2xl">
           <AlertTriangle className="w-12 h-12 text-rose-500 mx-auto mb-4" />
           <h3 className="text-lg font-bold text-foreground">Requisition Not Found</h3>
           <p className="text-sm text-muted-foreground mt-1">
@@ -165,7 +165,7 @@ export default function RequisitionDetailsPage() {
 
       <div className="grid gap-6 md:grid-cols-3 text-sm">
         {/* Left items grid */}
-        <Card className="md:col-span-2 shadow-sm border-border bg-card">
+        <Card className="md:col-span-2 shadow-sm border-border bg-cardard">
           <CardHeader className="border-b">
             <CardTitle className="text-sm font-semibold flex items-center gap-2">
               <Package className="w-4 h-4 text-primary" /> Requested Procurement Items
@@ -186,7 +186,7 @@ export default function RequisitionDetailsPage() {
                 {requisition.items?.map((item) => (
                   <tr
                     key={item.id}
-                    className="border-b last:border-b-0 border-border bg-card hover:bg-muted/10"
+                    className="border-b last:border-b-0 border-border bg-cardard hover:bg-muted/10"
                   >
                     <td className="p-3 pl-6 font-semibold text-foreground text-sm">
                       {item.productName}
@@ -209,7 +209,7 @@ export default function RequisitionDetailsPage() {
         {/* Right sidebar details */}
         <div className="space-y-6">
           {/* Workflow Status Controls */}
-          <Card className="shadow-sm border-border bg-card">
+          <Card className="shadow-sm border-border bg-cardard">
             <CardHeader className="border-b">
               <CardTitle className="text-sm font-semibold flex items-center gap-1.5">
                 <Clock className="w-4 h-4 text-primary" /> Workflow Status
@@ -332,7 +332,7 @@ export default function RequisitionDetailsPage() {
           </Card>
 
           {/* Supplier & Warehouse info */}
-          <Card className="shadow-sm border-border bg-card">
+          <Card className="shadow-sm border-border bg-cardard">
             <CardHeader className="border-b">
               <CardTitle className="text-sm font-semibold flex items-center gap-1.5">
                 <Building2 className="w-4 h-4 text-indigo-500" /> Procurement Targets
@@ -365,7 +365,7 @@ export default function RequisitionDetailsPage() {
           </Card>
 
           {/* Notes & Justification */}
-          <Card className="shadow-sm border-border bg-card">
+          <Card className="shadow-sm border-border bg-cardard">
             <CardHeader className="border-b">
               <CardTitle className="text-sm font-semibold">Justification Notes</CardTitle>
             </CardHeader>

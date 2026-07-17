@@ -93,19 +93,19 @@ export function ProductBrowser() {
   };
 
   return (
-    <div className="flex flex-col flex-1 h-full min-w-0 bg-[#080d19] border-r border-slate-900 z-10 overflow-hidden select-none">
+    <div className="flex flex-col flex-1 h-full min-w-0 bg-background border-r border-border z-10 overflow-hidden select-none">
       {/* Search & Mode Headers */}
-      <div className="p-3 bg-[#0c1220]/40 border-b border-slate-900 flex flex-col md:flex-row gap-3 items-center justify-between shrink-0">
+      <div className="p-3 bg-cardard/40 border-b border-border flex flex-col md:flex-row gap-3 items-center justify-between shrink-0">
         {/* Search Field */}
         <div className="relative w-full md:w-80">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-500" />
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             id="pos-catalog-search-input"
             type="text"
             placeholder="Search catalog (Name, SKU, Barcode)... [F1]"
             value={localSearch}
             onChange={(e) => setLocalSearch(e.target.value)}
-            className="pl-8 bg-slate-950 border-slate-800 text-slate-100 text-xs focus-visible:ring-emerald-500 h-9"
+            className="pl-8 bg-muted border-border text-foreground text-xs focus-visible:ring-emerald-500 h-9"
           />
         </div>
 
@@ -116,7 +116,7 @@ export function ProductBrowser() {
             <select
               value={activeBrand || 'all'}
               onChange={handleBrandChange}
-              className="bg-[#0c1220] border border-slate-800 text-slate-300 rounded-md text-xs py-1.5 px-3 pr-8 appearance-none focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[120px]"
+              className="bg-cardard border border-border text-foreground rounded-md text-xs py-1.5 px-3 pr-8 appearance-none focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[120px]"
             >
               <option value="all">All Brands</option>
               {brands.map((b) => (
@@ -125,7 +125,7 @@ export function ProductBrowser() {
                 </option>
               ))}
             </select>
-            <Filter className="absolute right-2.5 top-2 h-3.5 w-3.5 text-slate-500 pointer-events-none" />
+            <Filter className="absolute right-2.5 top-2 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
           </div>
 
           {/* In Stock toggle */}
@@ -137,7 +137,7 @@ export function ProductBrowser() {
               'h-8 px-2.5 border text-xs gap-1',
               onlyInStock
                 ? 'border-emerald-500 bg-emerald-950/20 text-emerald-400 hover:bg-emerald-950/30 hover:text-emerald-300'
-                : 'border-slate-800 text-slate-400 hover:bg-slate-900',
+                : 'border-border text-muted-foreground hover:bg-accent',
             )}
           >
             <CheckCircle2 className="h-3.5 w-3.5" />
@@ -145,7 +145,7 @@ export function ProductBrowser() {
           </Button>
 
           {/* View mode toggle */}
-          <div className="flex bg-slate-900 p-0.5 border border-slate-800 rounded-lg">
+          <div className="flex bg-accent p-0.5 border border-border rounded-lg">
             <Button
               size="icon"
               variant="ghost"
@@ -173,7 +173,7 @@ export function ProductBrowser() {
       </div>
 
       {/* Categories ribbon scroll bar */}
-      <div className="px-3 py-2 bg-slate-950/25 border-b border-slate-900 flex items-center gap-2 overflow-x-auto shrink-0 custom-scrollbar whitespace-nowrap">
+      <div className="px-3 py-2 bg-muted/25 border-b border-border flex items-center gap-2 overflow-x-auto shrink-0 custom-scrollbar whitespace-nowrap">
         <Button
           size="sm"
           onClick={() => handleCategoryClick(null)}
@@ -181,7 +181,7 @@ export function ProductBrowser() {
             'rounded-full text-xs px-3 h-7 font-bold border',
             activeCategory === null
               ? 'bg-emerald-500 text-slate-950 border-emerald-500 font-extrabold'
-              : 'bg-[#0c1220] text-slate-400 border-slate-800 hover:bg-slate-900 hover:text-slate-200',
+              : 'bg-cardard text-muted-foreground border-border hover:bg-accent hover:text-foreground',
           )}
         >
           All Items
@@ -195,7 +195,7 @@ export function ProductBrowser() {
               'rounded-full text-xs px-3 h-7 border font-bold',
               activeCategory === cat.id
                 ? 'bg-emerald-500 text-slate-950 border-emerald-500 font-extrabold'
-                : 'bg-[#0c1220] text-slate-400 border-slate-800 hover:bg-slate-900 hover:text-slate-200',
+                : 'bg-cardard text-muted-foreground border-border hover:bg-accent hover:text-foreground',
             )}
           >
             {cat.name}
@@ -210,24 +210,24 @@ export function ProductBrowser() {
             {Array.from({ length: 12 }).map((_, i) => (
               <div
                 key={i}
-                className="border border-slate-900 bg-slate-950/20 rounded-xl p-3 flex flex-col gap-3"
+                className="border border-border bg-muted/20 rounded-xl p-3 flex flex-col gap-3"
               >
-                <Skeleton className="aspect-video w-full rounded-lg bg-slate-900" />
-                <Skeleton className="h-4 w-3/4 rounded bg-slate-900" />
-                <Skeleton className="h-3 w-1/2 rounded bg-slate-900" />
+                <Skeleton className="aspect-video w-full rounded-lg bg-accent" />
+                <Skeleton className="h-4 w-3/4 rounded bg-accent" />
+                <Skeleton className="h-3 w-1/2 rounded bg-accent" />
                 <div className="flex justify-between items-center mt-2">
-                  <Skeleton className="h-4 w-12 rounded bg-slate-900" />
-                  <Skeleton className="h-7 w-20 rounded-lg bg-slate-900" />
+                  <Skeleton className="h-4 w-12 rounded bg-accent" />
+                  <Skeleton className="h-7 w-20 rounded-lg bg-accent" />
                 </div>
               </div>
             ))}
           </div>
         ) : isError ? (
-          <div className="flex flex-col items-center justify-center h-48 border border-dashed border-slate-850 rounded-xl m-4 bg-slate-950/10">
+          <div className="flex flex-col items-center justify-center h-48 border border-dashed border-border rounded-xl m-4 bg-muted/10">
             <span className="text-xs text-rose-400 font-semibold mb-1">
               Failed to fetch product catalog.
             </span>
-            <span className="text-[10px] text-slate-500">
+            <span className="text-[10px] text-muted-foreground">
               Verify client APIs are fully connected.
             </span>
           </div>
@@ -244,7 +244,7 @@ export function ProductBrowser() {
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center h-56 text-slate-500">
+          <div className="flex flex-col items-center justify-center h-56 text-muted-foreground">
             <Layers className="h-8 w-8 mb-2 text-slate-700 animate-pulse" />
             <p className="text-xs">No matching products found inside this branch.</p>
           </div>
@@ -253,10 +253,10 @@ export function ProductBrowser() {
 
       {/* Footer Pager Pagination */}
       {meta && meta.totalPages > 1 && (
-        <div className="px-4 py-2 border-t border-slate-900 bg-[#0c1220]/40 flex items-center justify-between shrink-0">
-          <p className="text-[10px] sm:text-xs text-slate-500">
-            Showing <span className="text-slate-300 font-bold">{displayedProducts.length}</span> of{' '}
-            <span className="text-slate-300 font-bold">{meta.total}</span> items
+        <div className="px-4 py-2 border-t border-border bg-cardard/40 flex items-center justify-between shrink-0">
+          <p className="text-[10px] sm:text-xs text-muted-foreground">
+            Showing <span className="text-foreground font-bold">{displayedProducts.length}</span> of{' '}
+            <span className="text-foreground font-bold">{meta.total}</span> items
           </p>
 
           <div className="flex items-center gap-1.5">
@@ -265,11 +265,11 @@ export function ProductBrowser() {
               variant="outline"
               disabled={currentPage <= 1}
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              className="h-7 w-7 bg-[#0c1220] border-slate-800 text-slate-400 hover:text-slate-200"
+              className="h-7 w-7 bg-cardard border-border text-muted-foreground hover:text-foreground"
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
-            <span className="text-[10px] sm:text-xs font-mono px-2 text-slate-400">
+            <span className="text-[10px] sm:text-xs font-mono px-2 text-muted-foreground">
               Page {meta.page} of {meta.totalPages}
             </span>
             <Button
@@ -277,7 +277,7 @@ export function ProductBrowser() {
               variant="outline"
               disabled={currentPage >= meta.totalPages}
               onClick={() => setCurrentPage((p) => p + 1)}
-              className="h-7 w-7 bg-[#0c1220] border-slate-800 text-slate-400 hover:text-slate-200"
+              className="h-7 w-7 bg-cardard border-border text-muted-foreground hover:text-foreground"
             >
               <ChevronRight className="h-4 w-4" />
             </Button>

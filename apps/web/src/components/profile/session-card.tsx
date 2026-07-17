@@ -39,7 +39,7 @@ export function SessionCard({ session, onRevoke, isRevoking }: SessionCardProps)
         'flex items-start gap-4 p-4 rounded-[--radius-lg] border transition-colors',
         session.isCurrent
           ? 'border-primary/30 bg-primary/5'
-          : 'border-border bg-card hover:bg-muted/30',
+          : 'border-border bg-cardard hover:bg-muted/30',
       )}
     >
       {/* Device icon */}

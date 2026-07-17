@@ -75,14 +75,14 @@ export default function FiscalPeriodsPage() {
   };
 
   return (
-    <PageContainer className="text-slate-100 select-none text-left">
+    <PageContainer className="text-foreground select-none text-left">
       {/* Navigation and actions bar */}
       <div className="mb-4 flex justify-between items-center">
         <Link href="/accounting">
           <Button
             variant="ghost"
             size="sm"
-            className="text-slate-400 hover:text-slate-200 gap-1.5 h-8"
+            className="text-muted-foreground hover:text-foreground gap-1.5 h-8"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Accounting Dashboard</span>
@@ -108,10 +108,10 @@ export default function FiscalPeriodsPage() {
       />
 
       {/* Info Banner */}
-      <div className="my-6 p-4 bg-slate-950 border border-slate-850 rounded-2xl flex items-start gap-3 max-w-3xl">
+      <div className="my-6 p-4 bg-muted border border-border rounded-2xl flex items-start gap-3 max-w-3xl">
         <Info className="h-5 w-5 text-indigo-400 shrink-0 mt-0.5" />
         <div className="text-xs space-y-1 text-slate-450 leading-relaxed text-left">
-          <p className="font-bold text-slate-300">Period Locking Instructions:</p>
+          <p className="font-bold text-foreground">Period Locking Instructions:</p>
           <p>
             Closing a period freezes entries from POS checkouts and payment vouchers. To adjust
             books in a closed period, it must first be re-opened by an Administrator.
@@ -132,7 +132,7 @@ export default function FiscalPeriodsPage() {
             />
           ))
         ) : (
-          <div className="text-center py-20 border border-dashed border-slate-850 rounded-2xl text-slate-500 text-xs">
+          <div className="text-center py-20 border border-dashed border-border rounded-2xl text-muted-foreground text-xs">
             No active fiscal years defined. Click &quot;New Fiscal Year&quot; above to start.
           </div>
         )}
@@ -140,13 +140,13 @@ export default function FiscalPeriodsPage() {
 
       {/* New Fiscal Year Dialog */}
       <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-        <DialogContent className="bg-[#0c1220] border border-slate-800 text-slate-100 max-w-md p-6">
+        <DialogContent className="bg-cardard border border-border text-foreground max-w-md p-6">
           <DialogHeader className="mb-4">
-            <DialogTitle className="text-sm font-black uppercase text-slate-200 tracking-wider flex items-center gap-1.5 font-sans">
+            <DialogTitle className="text-sm font-black uppercase text-foreground tracking-wider flex items-center gap-1.5 font-sans">
               <CalendarRange className="h-5 w-5 text-indigo-400" />
               <span>Initialize Fiscal Year</span>
             </DialogTitle>
-            <DialogDescription className="text-slate-500 text-xs">
+            <DialogDescription className="text-muted-foreground text-xs">
               Initialize calendar parameters and start period locks.
             </DialogDescription>
           </DialogHeader>
@@ -154,12 +154,12 @@ export default function FiscalPeriodsPage() {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 text-xs sm:text-sm">
             {/* Year Input */}
             <div className="grid gap-1.5 text-left">
-              <label className="text-slate-400 font-semibold font-mono">Fiscal Year *</label>
+              <label className="text-muted-foreground font-semibold font-mono">Fiscal Year *</label>
               <Input
                 type="number"
                 placeholder="2026"
                 {...register('year')}
-                className="bg-slate-950 border-slate-855 text-xs text-slate-100 font-mono focus-visible:ring-emerald-500"
+                className="bg-muted border-slate-855 text-xs text-foreground font-mono focus-visible:ring-emerald-500"
               />
               {errors.year && (
                 <p className="text-[10px] text-rose-455 font-mono">{errors.year.message}</p>
@@ -172,7 +172,7 @@ export default function FiscalPeriodsPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  className="h-9 border-slate-800 text-slate-400 hover:text-slate-200 bg-[#0c1220]"
+                  className="h-9 border-border text-muted-foreground hover:text-foreground bg-cardard"
                 >
                   Cancel
                 </Button>

@@ -31,7 +31,7 @@ export function StatementViewer({
   sections,
   netValueLabel,
   netValue,
-  netValueColor = 'text-slate-100',
+  netValueColor = 'text-foreground',
   footerNotes,
   onPrint,
 }: StatementViewerProps) {
@@ -80,9 +80,9 @@ export function StatementViewer({
   };
 
   return (
-    <Card className="bg-[#0c1220] border-slate-800 text-slate-100 print:bg-white print:text-black print:border-none print:shadow-none select-none text-left">
+    <Card className="bg-cardard border-border text-foreground print:bg-white print:text-black print:border-none print:shadow-none select-none text-left">
       {/* Actions header (Hidden when printing) */}
-      <div className="p-4 bg-slate-950/45 border-b border-slate-900 flex justify-between items-center print:hidden">
+      <div className="p-4 bg-muted/45 border-b border-border flex justify-between items-center print:hidden">
         <span className="text-[10px] font-bold text-slate-450 uppercase tracking-widest font-sans flex items-center gap-1.5">
           <HelpCircle className="h-4 w-4 text-emerald-450" />
           <span>Statement Worksheets</span>
@@ -92,7 +92,7 @@ export function StatementViewer({
             size="sm"
             variant="outline"
             onClick={handleExportCSV}
-            className="h-8 border-slate-800 bg-[#0c1220] hover:bg-slate-900 text-xs gap-1.5"
+            className="h-8 border-border bg-cardard hover:bg-accent text-xs gap-1.5"
           >
             <FileDown className="h-4 w-4 text-slate-450" />
             <span>Export CSV</span>
@@ -111,21 +111,21 @@ export function StatementViewer({
       <CardContent className="p-6 sm:p-8 space-y-6 max-w-3xl mx-auto print:p-0">
         {/* Title details */}
         <div className="text-center border-b border-slate-855 pb-4 print:border-black">
-          <h2 className="text-base font-black uppercase text-slate-200 print:text-black font-sans tracking-wide">
+          <h2 className="text-base font-black uppercase text-foreground print:text-black font-sans tracking-wide">
             {title}
           </h2>
-          <p className="text-xs text-slate-500 font-mono mt-0.5">{subtitle}</p>
+          <p className="text-xs text-muted-foreground font-mono mt-0.5">{subtitle}</p>
         </div>
 
         {/* Sections layout */}
         <div className="space-y-6">
           {sections.map((sec, idx) => (
             <div key={idx} className="space-y-2">
-              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-900/60 pb-1.5 print:text-black print:border-black font-sans">
+              <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest border-b border-border/60 pb-1.5 print:text-black print:border-black font-sans">
                 {sec.title}
               </h3>
 
-              <div className="divide-y divide-slate-900/50 print:divide-gray-200">
+              <div className="divide-y divide-border/50 print:divide-gray-200">
                 {sec.items.length > 0 ? (
                   sec.items.map((item, itemIdx) => (
                     <div
@@ -133,23 +133,23 @@ export function StatementViewer({
                       className="flex justify-between items-center py-2 text-xs font-mono font-medium"
                     >
                       <div className="flex gap-2">
-                        <span className="text-slate-500">{item.code}</span>
-                        <span className="text-slate-300 print:text-black">{item.name}</span>
+                        <span className="text-muted-foreground">{item.code}</span>
+                        <span className="text-foreground print:text-black">{item.name}</span>
                       </div>
-                      <span className="text-slate-200 print:text-black">
+                      <span className="text-foreground print:text-black">
                         {formatCurrency(item.balance)}
                       </span>
                     </div>
                   ))
                 ) : (
-                  <p className="py-2 text-[11px] text-slate-500 font-sans">
+                  <p className="py-2 text-[11px] text-muted-foreground font-sans">
                     No transactions logged under this classification.
                   </p>
                 )}
               </div>
 
               {sec.showTotal && sec.totalValue !== undefined && (
-                <div className="flex justify-between items-center py-2.5 border-t-2 border-slate-855 text-xs font-mono font-black text-slate-200 print:border-black print:text-black">
+                <div className="flex justify-between items-center py-2.5 border-t-2 border-slate-855 text-xs font-mono font-black text-foreground print:border-black print:text-black">
                   <span>{sec.totalLabel || 'Total'}</span>
                   <span>{formatCurrency(sec.totalValue)}</span>
                 </div>
@@ -167,8 +167,8 @@ export function StatementViewer({
         )}
 
         {footerNotes && (
-          <div className="text-[10px] text-slate-500 leading-normal text-left font-sans border-t border-slate-855 pt-4 print:border-black">
-            <span className="font-bold text-slate-400 uppercase tracking-widest block mb-1">
+          <div className="text-[10px] text-muted-foreground leading-normal text-left font-sans border-t border-slate-855 pt-4 print:border-black">
+            <span className="font-bold text-muted-foreground uppercase tracking-widest block mb-1">
               Accounting Disclosures:
             </span>
             <p>{footerNotes}</p>

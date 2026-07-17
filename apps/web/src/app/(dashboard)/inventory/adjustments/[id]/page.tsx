@@ -49,7 +49,7 @@ export default function AdjustmentDetailsPage() {
   if (error || !adjustment) {
     return (
       <PageContainer>
-        <div className="text-center py-16 bg-card border rounded-2xl">
+        <div className="text-center py-16 bg-cardard border rounded-2xl">
           <AlertTriangle className="w-12 h-12 text-rose-500 mx-auto mb-4" />
           <h3 className="text-lg font-bold text-foreground">Adjustment Record Not Found</h3>
           <p className="text-sm text-muted-foreground mt-1">
@@ -86,7 +86,7 @@ export default function AdjustmentDetailsPage() {
 
       <div className="grid gap-6 md:grid-cols-3">
         {/* Left card */}
-        <Card className="md:col-span-2 shadow-sm border-border bg-card">
+        <Card className="md:col-span-2 shadow-sm border-border bg-cardard">
           <CardHeader className="border-b">
             <CardTitle className="text-sm font-semibold flex items-center gap-2">
               <FileText className="w-4 h-4 text-primary" /> Adjustment Audit Summary
@@ -203,7 +203,7 @@ export default function AdjustmentDetailsPage() {
 
         {/* Right side stats */}
         <div className="space-y-6">
-          <Card className="shadow-sm border-border bg-card">
+          <Card className="shadow-sm border-border bg-cardard">
             <CardHeader>
               <CardTitle className="text-sm font-semibold flex items-center gap-1.5">
                 <WarehouseIcon className="w-4 h-4 text-indigo-500" /> Warehouse Location
@@ -235,7 +235,7 @@ export default function AdjustmentDetailsPage() {
             </CardContent>
           </Card>
 
-          <Card className="shadow-sm border-border bg-card">
+          <Card className="shadow-sm border-border bg-cardard">
             <CardHeader>
               <CardTitle className="text-sm font-semibold flex items-center gap-1.5">
                 <User className="w-4 h-4 text-emerald-500" /> Operator Info

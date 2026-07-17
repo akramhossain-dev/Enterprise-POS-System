@@ -101,7 +101,7 @@ export default function InventoryDetailsPage() {
   if (error || !inventory) {
     return (
       <PageContainer>
-        <div className="text-center py-16 bg-card border rounded-2xl">
+        <div className="text-center py-16 bg-cardard border rounded-2xl">
           <AlertTriangle className="w-12 h-12 text-rose-500 mx-auto mb-4" />
           <h3 className="text-lg font-bold text-foreground">Inventory Record Not Found</h3>
           <p className="text-sm text-muted-foreground mt-1">
@@ -150,7 +150,7 @@ export default function InventoryDetailsPage() {
 
       {/* Quick Metrics Widgets */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
-        <Card className="shadow-sm border-border bg-card">
+        <Card className="shadow-sm border-border bg-cardard">
           <CardContent className="p-5 flex items-center justify-between">
             <div className="space-y-1">
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
@@ -165,7 +165,7 @@ export default function InventoryDetailsPage() {
           </CardContent>
         </Card>
 
-        <Card className="shadow-sm border-border bg-card">
+        <Card className="shadow-sm border-border bg-cardard">
           <CardContent className="p-5 flex items-center justify-between">
             <div className="space-y-1">
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
@@ -184,7 +184,7 @@ export default function InventoryDetailsPage() {
           </CardContent>
         </Card>
 
-        <Card className="shadow-sm border-border bg-card">
+        <Card className="shadow-sm border-border bg-cardard">
           <CardContent className="p-5 flex items-center justify-between">
             <div className="space-y-1">
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
@@ -203,7 +203,7 @@ export default function InventoryDetailsPage() {
           </CardContent>
         </Card>
 
-        <Card className="shadow-sm border-border bg-card">
+        <Card className="shadow-sm border-border bg-cardard">
           <CardContent className="p-5 flex items-center justify-between">
             <div className="space-y-1">
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
@@ -392,7 +392,7 @@ export default function InventoryDetailsPage() {
 
         {/* TAB 2: HISTORY */}
         <TabsContent value="history">
-          <Card className="shadow-sm border-border bg-card">
+          <Card className="shadow-sm border-border bg-cardard">
             <CardHeader className="border-b flex flex-row items-center justify-between">
               <CardTitle className="text-sm font-semibold flex items-center gap-2">
                 <History className="w-4 h-4 text-primary" /> Comprehensive Stock History Logs
@@ -417,7 +417,7 @@ export default function InventoryDetailsPage() {
 
         {/* TAB 3: BATCHES */}
         <TabsContent value="batches">
-          <Card className="shadow-sm border-border bg-card">
+          <Card className="shadow-sm border-border bg-cardard">
             <CardHeader className="border-b">
               <CardTitle className="text-sm font-semibold flex items-center gap-2">
                 <Layers className="w-4 h-4 text-indigo-500" /> Active Tracking Batches
@@ -479,7 +479,7 @@ export default function InventoryDetailsPage() {
 
         {/* TAB 4: SERIALS */}
         <TabsContent value="serials">
-          <Card className="shadow-sm border-border bg-card">
+          <Card className="shadow-sm border-border bg-cardard">
             <CardHeader className="border-b">
               <CardTitle className="text-sm font-semibold flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4 text-blue-500" /> Tracked Unique Serial Numbers

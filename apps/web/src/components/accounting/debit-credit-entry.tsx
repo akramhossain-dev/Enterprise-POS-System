@@ -77,14 +77,14 @@ export function DebitCreditEntry({ value, onChange, accounts }: DebitCreditEntry
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+        <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
           Double-Entry Line Items
         </h3>
         <Button
           type="button"
           size="sm"
           onClick={addLine}
-          className="h-8 bg-slate-950 border border-slate-800 hover:bg-slate-900 text-xs font-bold gap-1 text-slate-200"
+          className="h-8 bg-muted border border-border hover:bg-accent text-xs font-bold gap-1 text-foreground"
         >
           <Plus className="h-4 w-4" />
           <span>Add Line</span>
@@ -92,11 +92,11 @@ export function DebitCreditEntry({ value, onChange, accounts }: DebitCreditEntry
       </div>
 
       {/* Entry Rows */}
-      <div className="bg-[#0c1220] border border-slate-800 rounded-2xl overflow-hidden">
+      <div className="bg-cardard border border-border rounded-2xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="border-b border-slate-855 text-slate-500 font-bold uppercase tracking-wider text-[10px] bg-slate-955/35">
+              <tr className="border-b border-slate-855 text-muted-foreground font-bold uppercase tracking-wider text-[10px] bg-slate-955/35">
                 <th className="py-3 px-4 w-[280px]">Ledger Account *</th>
                 <th className="py-3 px-3">Line Memo / Description</th>
                 <th className="py-3 px-3 w-[120px] text-right font-mono">Debit ($)</th>
@@ -104,15 +104,15 @@ export function DebitCreditEntry({ value, onChange, accounts }: DebitCreditEntry
                 <th className="py-3 px-4 w-[60px] text-center">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-900 font-medium text-slate-350">
+            <tbody className="divide-y divide-border font-medium text-muted-foreground">
               {value.map((line, idx) => (
-                <tr key={idx} className="hover:bg-slate-900/20">
+                <tr key={idx} className="hover:bg-accent/20">
                   <td className="py-2.5 px-4">
                     <select
                       value={line.accountId}
                       required
                       onChange={(e) => updateLine(idx, 'accountId', e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-855 rounded p-1.5 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 cursor-pointer font-sans"
+                      className="w-full bg-muted border border-slate-855 rounded p-1.5 text-xs text-foreground focus:outline-none focus:border-emerald-500 cursor-pointer font-sans"
                     >
                       <option value="">-- Choose Account --</option>
                       {activeAccounts.map((a) => (
@@ -128,7 +128,7 @@ export function DebitCreditEntry({ value, onChange, accounts }: DebitCreditEntry
                       value={line.description}
                       placeholder="Optional memo..."
                       onChange={(e) => updateLine(idx, 'description', e.target.value)}
-                      className="bg-slate-950 border-slate-855 text-xs text-slate-100 font-sans focus-visible:ring-emerald-500 h-8"
+                      className="bg-muted border-slate-855 text-xs text-foreground font-sans focus-visible:ring-emerald-500 h-8"
                     />
                   </td>
                   <td className="py-2.5 px-3">
@@ -139,7 +139,7 @@ export function DebitCreditEntry({ value, onChange, accounts }: DebitCreditEntry
                       value={line.debitAmount || ''}
                       placeholder="0.00"
                       onChange={(e) => updateLine(idx, 'debitAmount', e.target.value)}
-                      className="bg-slate-950 border-slate-855 text-xs text-slate-100 font-mono text-right focus-visible:ring-emerald-500 h-8"
+                      className="bg-muted border-slate-855 text-xs text-foreground font-mono text-right focus-visible:ring-emerald-500 h-8"
                     />
                   </td>
                   <td className="py-2.5 px-3">
@@ -150,7 +150,7 @@ export function DebitCreditEntry({ value, onChange, accounts }: DebitCreditEntry
                       value={line.creditAmount || ''}
                       placeholder="0.00"
                       onChange={(e) => updateLine(idx, 'creditAmount', e.target.value)}
-                      className="bg-slate-950 border-slate-855 text-xs text-slate-100 font-mono text-right focus-visible:ring-emerald-500 h-8"
+                      className="bg-muted border-slate-855 text-xs text-foreground font-mono text-right focus-visible:ring-emerald-500 h-8"
                     />
                   </td>
                   <td className="py-2.5 px-4 text-center">
@@ -160,7 +160,7 @@ export function DebitCreditEntry({ value, onChange, accounts }: DebitCreditEntry
                       variant="ghost"
                       disabled={value.length <= 2}
                       onClick={() => removeLine(idx)}
-                      className="h-7 w-7 text-slate-500 hover:text-rose-455 hover:bg-transparent"
+                      className="h-7 w-7 text-muted-foreground hover:text-rose-455 hover:bg-transparent"
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -170,10 +170,10 @@ export function DebitCreditEntry({ value, onChange, accounts }: DebitCreditEntry
             </tbody>
             {/* Totals Footer */}
             <tfoot>
-              <tr className="bg-slate-955/25 font-black border-t border-slate-855 font-mono text-slate-200">
+              <tr className="bg-slate-955/25 font-black border-t border-slate-855 font-mono text-foreground">
                 <td
                   colSpan={2}
-                  className="py-3 px-4 font-sans text-right uppercase tracking-wider text-slate-400"
+                  className="py-3 px-4 font-sans text-right uppercase tracking-wider text-muted-foreground"
                 >
                   Total Alignment:
                 </td>
@@ -192,7 +192,7 @@ export function DebitCreditEntry({ value, onChange, accounts }: DebitCreditEntry
 
       {/* Validation Warning / Balancing helper */}
       {value.length > 0 && (
-        <div className="flex justify-between items-center text-xs font-mono p-3 rounded-xl border bg-slate-950">
+        <div className="flex justify-between items-center text-xs font-mono p-3 rounded-xl border bg-muted">
           <div className="flex items-center gap-2">
             {isBalanced ? (
               <span className="flex items-center gap-1.5 text-emerald-400 font-bold">
@@ -209,7 +209,7 @@ export function DebitCreditEntry({ value, onChange, accounts }: DebitCreditEntry
               </span>
             )}
           </div>
-          <div className="text-slate-500">
+          <div className="text-muted-foreground">
             <span>Lines Count: {value.length} (Min 2)</span>
           </div>
         </div>

@@ -337,7 +337,7 @@ export default function PurchaseReturnsPage() {
       </div>
 
       {/* Filter and Search Bar */}
-      <Card className="shadow-sm border-border bg-card mb-6">
+      <Card className="shadow-sm border-border bg-cardard mb-6">
         <CardContent className="p-4 space-y-4">
           <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 text-sm">
             {/* Search Box */}
@@ -347,7 +347,7 @@ export default function PurchaseReturnsPage() {
                 placeholder="Search return code, supplier, PO, invoice..."
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
-                className="pl-9 h-9 border-border bg-card text-foreground"
+                className="pl-9 h-9 border-border bg-cardard text-foreground"
               />
             </div>
 
@@ -356,7 +356,7 @@ export default function PurchaseReturnsPage() {
               <select
                 value={supplierId}
                 onChange={(e) => setSupplierId(e.target.value)}
-                className="w-full text-xs rounded-lg border border-border bg-card p-2 h-9 text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                className="w-full text-xs rounded-lg border border-border bg-cardard p-2 h-9 text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
               >
                 <option value="">All Suppliers</option>
                 {suppliers.map((s) => (
@@ -372,7 +372,7 @@ export default function PurchaseReturnsPage() {
               <select
                 value={warehouseId}
                 onChange={(e) => setWarehouseId(e.target.value)}
-                className="w-full text-xs rounded-lg border border-border bg-card p-2 h-9 text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                className="w-full text-xs rounded-lg border border-border bg-cardard p-2 h-9 text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
               >
                 <option value="">All Warehouses</option>
                 {warehouses.map((w) => (
@@ -388,7 +388,7 @@ export default function PurchaseReturnsPage() {
               <select
                 value={reason}
                 onChange={(e) => setReason(e.target.value as any)}
-                className="w-full text-xs rounded-lg border border-border bg-card p-2 h-9 text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                className="w-full text-xs rounded-lg border border-border bg-cardard p-2 h-9 text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
               >
                 <option value="ALL">All Reasons</option>
                 <option value="DAMAGED">Damaged Product</option>
@@ -413,14 +413,14 @@ export default function PurchaseReturnsPage() {
                   type="date"
                   value={dateFrom}
                   onChange={(e) => setDateFrom(e.target.value)}
-                  className="rounded border border-border bg-card p-1 text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="rounded border border-border bg-cardard p-1 text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                 />
                 <span className="text-muted-foreground">to</span>
                 <input
                   type="date"
                   value={dateTo}
                   onChange={(e) => setDateTo(e.target.value)}
-                  className="rounded border border-border bg-card p-1 text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="rounded border border-border bg-cardard p-1 text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                 />
               </div>
 
@@ -430,7 +430,7 @@ export default function PurchaseReturnsPage() {
                 <select
                   value={status}
                   onChange={(e) => setStatus(e.target.value as any)}
-                  className="rounded border border-border bg-card p-1 text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="rounded border border-border bg-cardard p-1 text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                 >
                   <option value="ALL">All Statuses</option>
                   <option value="DRAFT">Draft</option>

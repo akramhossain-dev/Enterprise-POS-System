@@ -49,7 +49,7 @@ export default function JournalDetailsPage({ params }: { params: Promise<{ id: s
 
   if (!journal) {
     return (
-      <PageContainer className="max-w-4xl mx-auto py-12 text-center text-slate-500 text-xs">
+      <PageContainer className="max-w-4xl mx-auto py-12 text-center text-muted-foreground text-xs">
         Journal entry details could not be found.
       </PageContainer>
     );
@@ -96,14 +96,14 @@ export default function JournalDetailsPage({ params }: { params: Promise<{ id: s
   const totalCredit = journal.lines.reduce((sum, l) => sum + (l.creditAmount || 0), 0);
 
   return (
-    <PageContainer className="max-w-4xl mx-auto py-6 text-slate-100 select-none text-left print:p-0 print:bg-white print:text-black">
+    <PageContainer className="max-w-4xl mx-auto py-6 text-foreground select-none text-left print:p-0 print:bg-white print:text-black">
       {/* Back & Action bar (Hidden on Print) */}
       <div className="mb-4 flex justify-between items-center print:hidden">
         <Link href="/accounting/journals">
           <Button
             variant="ghost"
             size="sm"
-            className="text-slate-400 hover:text-slate-200 gap-1.5 h-8"
+            className="text-muted-foreground hover:text-foreground gap-1.5 h-8"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Back to Journals</span>
@@ -117,7 +117,7 @@ export default function JournalDetailsPage({ params }: { params: Promise<{ id: s
                 <Button
                   size="sm"
                   variant="outline"
-                  className="h-8 border-slate-800 bg-[#0c1220] hover:bg-slate-900 text-xs gap-1"
+                  className="h-8 border-border bg-cardard hover:bg-accent text-xs gap-1"
                 >
                   <Edit className="h-3.5 w-3.5" />
                   <span>Edit</span>
@@ -165,7 +165,7 @@ export default function JournalDetailsPage({ params }: { params: Promise<{ id: s
               variant="outline"
               onClick={handleCancel}
               disabled={cancelMutation.isPending}
-              className="h-8 border-slate-800 text-rose-455 bg-[#0c1220] hover:bg-slate-900 text-xs gap-1"
+              className="h-8 border-border text-rose-455 bg-cardard hover:bg-accent text-xs gap-1"
             >
               <XCircle className="h-3.5 w-3.5" />
               <span>Cancel</span>
@@ -175,7 +175,7 @@ export default function JournalDetailsPage({ params }: { params: Promise<{ id: s
           <Button
             size="sm"
             onClick={handlePrint}
-            className="h-8 bg-slate-950 border border-slate-800 text-slate-300 hover:text-slate-100 text-xs gap-1"
+            className="h-8 bg-muted border border-border text-foreground hover:text-foreground text-xs gap-1"
           >
             <Printer className="h-3.5 w-3.5" />
             <span>Print Layout</span>
@@ -213,34 +213,34 @@ export default function JournalDetailsPage({ params }: { params: Promise<{ id: s
       `}</style>
 
       {/* Main details body */}
-      <div className="mt-6 space-y-6 print:m-0 print:border print:p-8 print-border-black rounded-3xl overflow-hidden bg-[#0c1220] border border-slate-800 text-slate-100 print:bg-white print:text-black">
+      <div className="mt-6 space-y-6 print:m-0 print:border print:p-8 print-border-black rounded-3xl overflow-hidden bg-cardard border border-border text-foreground print:bg-white print:text-black">
         <div className="p-6 space-y-6">
           {/* Header invoice details */}
-          <div className="flex flex-col sm:flex-row justify-between items-start gap-4 border-b border-slate-900 pb-6 print:border-black">
+          <div className="flex flex-col sm:flex-row justify-between items-start gap-4 border-b border-border pb-6 print:border-black">
             <div className="space-y-1">
-              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest print:text-black/60">
+              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest print:text-black/60">
                 Enterprise Journal Entry
               </span>
-              <h2 className="text-xl font-black font-mono text-slate-200 print:text-black">
+              <h2 className="text-xl font-black font-mono text-foreground print:text-black">
                 {journal.referenceNumber}
               </h2>
-              <p className="text-xs text-slate-400 print:text-black/80">{journal.description}</p>
+              <p className="text-xs text-muted-foreground print:text-black/80">{journal.description}</p>
             </div>
 
-            <div className="space-y-1 sm:text-right text-[11px] font-mono text-slate-400 print:text-black">
+            <div className="space-y-1 sm:text-right text-[11px] font-mono text-muted-foreground print:text-black">
               <p>
-                <span className="font-sans text-slate-500">Date:</span>{' '}
+                <span className="font-sans text-muted-foreground">Date:</span>{' '}
                 {new Date(journal.date).toLocaleDateString()}
               </p>
               <p>
-                <span className="font-sans text-slate-500">Status:</span>{' '}
+                <span className="font-sans text-muted-foreground">Status:</span>{' '}
                 <span className="font-sans uppercase font-bold text-indigo-400 print:text-black">
                   {journal.status}
                 </span>
               </p>
               {journal.attachmentUrl && (
                 <p>
-                  <span className="font-sans text-slate-500">Attachment:</span>{' '}
+                  <span className="font-sans text-muted-foreground">Attachment:</span>{' '}
                   <span className="truncate max-w-[120px] inline-block align-bottom">
                     {journal.attachmentUrl}
                   </span>
@@ -251,15 +251,15 @@ export default function JournalDetailsPage({ params }: { params: Promise<{ id: s
 
           {/* Lines Table */}
           <div className="space-y-2">
-            <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1.5 print:text-black">
+            <h3 className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-1.5 print:text-black">
               <ClipboardList className="h-4 w-4" />
               <span>Journal Entries Breakdown</span>
             </h3>
 
-            <div className="border border-slate-900 rounded-xl overflow-hidden print:border-black">
+            <div className="border border-border rounded-xl overflow-hidden print:border-black">
               <table className="w-full text-xs text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-slate-855 text-slate-500 font-bold uppercase tracking-wider text-[10px] bg-slate-955/35 print:border-black print:text-black print:bg-slate-100">
+                  <tr className="border-b border-slate-855 text-muted-foreground font-bold uppercase tracking-wider text-[10px] bg-slate-955/35 print:border-black print:text-black print:bg-slate-100">
                     <th className="py-2.5 px-4">Account Code</th>
                     <th className="py-2.5 px-3">Account Name</th>
                     <th className="py-2.5 px-4">Line Notes</th>
@@ -267,16 +267,16 @@ export default function JournalDetailsPage({ params }: { params: Promise<{ id: s
                     <th className="py-2.5 px-3 text-right font-mono">Credit ($)</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-900 font-medium text-slate-300 font-mono print:divide-black/20 print:text-black">
+                <tbody className="divide-y divide-border font-medium text-foreground font-mono print:divide-black/20 print:text-black">
                   {journal.lines.map((l, idx) => (
-                    <tr key={l.id || idx} className="hover:bg-slate-900/10">
-                      <td className="py-3 px-4 text-slate-400 print:text-black font-bold">
+                    <tr key={l.id || idx} className="hover:bg-accent/10">
+                      <td className="py-3 px-4 text-muted-foreground print:text-black font-bold">
                         {l.accountCode}
                       </td>
-                      <td className="py-3 px-3 font-sans text-slate-100 print:text-black font-bold">
+                      <td className="py-3 px-3 font-sans text-foreground print:text-black font-bold">
                         {l.accountName}
                       </td>
-                      <td className="py-3 px-4 font-sans text-slate-400 print:text-black/80">
+                      <td className="py-3 px-4 font-sans text-muted-foreground print:text-black/80">
                         {l.description || '-'}
                       </td>
                       <td className="py-3 px-3 text-right text-emerald-400 print:text-black font-bold">
@@ -289,10 +289,10 @@ export default function JournalDetailsPage({ params }: { params: Promise<{ id: s
                   ))}
                 </tbody>
                 <tfoot>
-                  <tr className="bg-slate-955/25 font-black border-t border-slate-855 font-mono text-slate-200 print:border-black print:text-black print:bg-slate-100">
+                  <tr className="bg-slate-955/25 font-black border-t border-slate-855 font-mono text-foreground print:border-black print:text-black print:bg-slate-100">
                     <td
                       colSpan={3}
-                      className="py-3 px-4 font-sans text-right uppercase tracking-wider text-slate-500 print:text-black"
+                      className="py-3 px-4 font-sans text-right uppercase tracking-wider text-muted-foreground print:text-black"
                     >
                       Total:
                     </td>
@@ -310,9 +310,9 @@ export default function JournalDetailsPage({ params }: { params: Promise<{ id: s
 
           {/* Notes summary details */}
           {journal.notes && (
-            <div className="border-t border-slate-900 pt-4 text-xs space-y-1.5 print:border-black print:text-black">
-              <span className="font-bold text-slate-400 block print:text-black">Audit Notes</span>
-              <p className="p-3 bg-slate-950 rounded-lg text-slate-350 print:bg-slate-50 print:border print:text-black">
+            <div className="border-t border-border pt-4 text-xs space-y-1.5 print:border-black print:text-black">
+              <span className="font-bold text-muted-foreground block print:text-black">Audit Notes</span>
+              <p className="p-3 bg-muted rounded-lg text-muted-foreground print:bg-slate-50 print:border print:text-black">
                 {journal.notes}
               </p>
             </div>

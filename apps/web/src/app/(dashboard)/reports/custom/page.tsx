@@ -106,13 +106,13 @@ export default function CustomReportsPage() {
   };
 
   return (
-    <PageContainer className="text-slate-100 select-none text-left print:bg-white print:text-black">
+    <PageContainer className="text-foreground select-none text-left print:bg-white print:text-black">
       <div className="mb-4 print:hidden">
         <Link href="/reports">
           <Button
             variant="ghost"
             size="sm"
-            className="text-slate-400 hover:text-slate-200 gap-1.5 h-8"
+            className="text-muted-foreground hover:text-foreground gap-1.5 h-8"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Reports Center</span>
@@ -128,28 +128,28 @@ export default function CustomReportsPage() {
       <div className="grid gap-6 lg:grid-cols-3 mt-6 print:hidden">
         {/* Left Side: Builder Control Box */}
         <div className="lg:col-span-1 space-y-4">
-          <Card className="bg-[#0c1220] border-slate-800 p-4 space-y-4">
-            <h3 className="text-xs font-bold text-slate-200 uppercase tracking-widest font-sans flex items-center gap-1.5">
+          <Card className="bg-cardard border-border p-4 space-y-4">
+            <h3 className="text-xs font-bold text-foreground uppercase tracking-widest font-sans flex items-center gap-1.5">
               <Settings className="h-4 w-4 text-emerald-450" />
               <span>Query Settings</span>
             </h3>
 
             {/* Template naming */}
             <div className="flex flex-col gap-1">
-              <label className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">
+              <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-wide">
                 Template Name
               </label>
               <input
                 type="text"
                 value={reportName}
                 onChange={(e) => setReportName(e.target.value)}
-                className="w-full h-8 px-2 bg-slate-950 border border-slate-855 rounded text-xs text-slate-200 focus:outline-none"
+                className="w-full h-8 px-2 bg-muted border border-slate-855 rounded text-xs text-foreground focus:outline-none"
               />
             </div>
 
             {/* Select Module */}
             <div className="flex flex-col gap-1">
-              <label className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">
+              <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-wide">
                 Target Database Module
               </label>
               <select
@@ -158,7 +158,7 @@ export default function CustomReportsPage() {
                   setSelectedModule(e.target.value);
                   setSelectedColumns(availableColumns[e.target.value]?.slice(0, 3) || []);
                 }}
-                className="w-full h-8 px-2 bg-slate-950 border border-slate-855 rounded text-xs text-slate-200 focus:outline-none"
+                className="w-full h-8 px-2 bg-muted border border-slate-855 rounded text-xs text-foreground focus:outline-none"
               >
                 <option value="sales">Sales Transactions Log</option>
                 <option value="purchase">Purchase Orders Ledger</option>
@@ -168,7 +168,7 @@ export default function CustomReportsPage() {
 
             {/* Checkbox columns */}
             <div className="space-y-1.5">
-              <label className="text-[9px] font-bold text-slate-500 uppercase tracking-wide block">
+              <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-wide block">
                 Select Output Columns
               </label>
               <div className="space-y-1 max-h-44 overflow-y-auto pr-1">
@@ -176,10 +176,10 @@ export default function CustomReportsPage() {
                   <div
                     key={col}
                     onClick={() => handleColumnToggle(col)}
-                    className={`flex justify-between items-center p-1.5 border rounded-lg bg-slate-950/20 cursor-pointer transition-colors ${
+                    className={`flex justify-between items-center p-1.5 border rounded-lg bg-muted/20 cursor-pointer transition-colors ${
                       selectedColumns.includes(col)
                         ? 'border-emerald-500/40 text-emerald-400'
-                        : 'border-slate-900 text-slate-400'
+                        : 'border-border text-muted-foreground'
                     }`}
                   >
                     <span className="text-[10px] font-mono">{col}</span>
@@ -192,7 +192,7 @@ export default function CustomReportsPage() {
             <div className="flex gap-2 pt-2">
               <Button
                 onClick={handleSaveTemplate}
-                className="flex-1 h-8 bg-slate-950 border border-slate-850 hover:bg-slate-900 text-slate-350 text-xs font-bold gap-1"
+                className="flex-1 h-8 bg-muted border border-border hover:bg-accent text-muted-foreground text-xs font-bold gap-1"
               >
                 <Save className="h-3.5 w-3.5" />
                 <span>Save Config</span>
@@ -212,14 +212,14 @@ export default function CustomReportsPage() {
         <div className="lg:col-span-2">
           {runData ? (
             <div className="space-y-4">
-              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest font-sans flex items-center gap-1.5">
+              <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest font-sans flex items-center gap-1.5">
                 <FileText className="h-4 w-4 text-indigo-400" />
                 <span>Custom Query Output</span>
               </h3>
               <ReportTable columns={runData.columns} rows={runData.rows} />
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center py-20 border border-dashed border-slate-900 rounded-2xl text-slate-500 text-xs gap-3">
+            <div className="flex flex-col items-center justify-center py-20 border border-dashed border-border rounded-2xl text-muted-foreground text-xs gap-3">
               <Sparkles className="h-8 w-8 text-slate-700" />
               <span>Configure query parameters and click Run Query to load dataset.</span>
             </div>

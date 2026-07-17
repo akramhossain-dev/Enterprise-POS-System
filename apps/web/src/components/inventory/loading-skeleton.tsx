@@ -25,7 +25,7 @@ export function CardSkeleton() {
 
 export function TableSkeleton({ columns = 6, rows = 5 }) {
   return (
-    <div className="space-y-4 border border-border rounded-lg p-4 bg-card">
+    <div className="space-y-4 border border-border rounded-lg p-4 bg-cardard">
       <div className="flex justify-between items-center gap-4">
         <Skeleton className="h-10 w-1/3 rounded-lg" />
         <div className="flex gap-2">

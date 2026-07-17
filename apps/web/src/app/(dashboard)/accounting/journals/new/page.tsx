@@ -121,14 +121,14 @@ export default function POSCreateJournalPage() {
   };
 
   return (
-    <PageContainer className="max-w-4xl mx-auto py-6 text-slate-100 select-none text-left">
+    <PageContainer className="max-w-4xl mx-auto py-6 text-foreground select-none text-left">
       {/* Back button */}
       <div className="mb-4">
         <Link href="/accounting/journals">
           <Button
             variant="ghost"
             size="sm"
-            className="text-slate-400 hover:text-slate-200 gap-1.5 h-8"
+            className="text-muted-foreground hover:text-foreground gap-1.5 h-8"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Back to Journals</span>
@@ -143,48 +143,48 @@ export default function POSCreateJournalPage() {
 
       <form onSubmit={(e) => e.preventDefault()} className="space-y-6 mt-6 text-xs sm:text-sm">
         {/* Form Meta Fields */}
-        <Card className="bg-[#0c1220] border-slate-800 text-slate-100">
+        <Card className="bg-cardard border-border text-foreground">
           <CardContent className="p-6 space-y-4">
             <div className="grid gap-4 sm:grid-cols-3">
               {/* Reference Number */}
               <div className="grid gap-1.5">
-                <label className="text-slate-400 font-semibold font-mono">Reference Number</label>
+                <label className="text-muted-foreground font-semibold font-mono">Reference Number</label>
                 <Input
                   type="text"
                   placeholder="Auto-generated if empty"
                   {...register('referenceNumber')}
-                  className="bg-slate-950 border-slate-855 text-xs text-slate-100 font-mono focus-visible:ring-emerald-500"
+                  className="bg-muted border-slate-855 text-xs text-foreground font-mono focus-visible:ring-emerald-500"
                 />
               </div>
 
               {/* Transaction Date */}
               <div className="grid gap-1.5 text-left">
-                <label className="text-slate-400 font-semibold">Transaction Date *</label>
+                <label className="text-muted-foreground font-semibold">Transaction Date *</label>
                 <Input
                   type="date"
                   required
                   {...register('date')}
-                  className="bg-slate-950 border-slate-855 text-xs text-slate-100 focus-visible:ring-emerald-500"
+                  className="bg-muted border-slate-855 text-xs text-foreground focus-visible:ring-emerald-500"
                 />
                 {errors.date && <p className="text-[10px] text-rose-455">{errors.date.message}</p>}
               </div>
 
               {/* Attachment UI Foundation */}
               <div className="grid gap-1.5">
-                <label className="text-slate-400 font-semibold">Attachment Reference</label>
+                <label className="text-muted-foreground font-semibold">Attachment Reference</label>
                 <div className="relative flex items-center">
                   <Input
                     type="text"
                     placeholder="URL or voucher doc code"
                     {...register('attachmentUrl')}
-                    className="bg-slate-950 border-slate-855 text-xs text-slate-100 pr-10 focus-visible:ring-emerald-500"
+                    className="bg-muted border-slate-855 text-xs text-foreground pr-10 focus-visible:ring-emerald-500"
                   />
                   <Button
                     type="button"
                     size="icon"
                     variant="ghost"
                     onClick={() => toast.info('File attachment upload is a UI placeholder.')}
-                    className="absolute right-0 h-9 w-9 text-slate-500 hover:text-slate-350"
+                    className="absolute right-0 h-9 w-9 text-muted-foreground hover:text-muted-foreground"
                   >
                     <FileUp className="h-4 w-4" />
                   </Button>
@@ -194,12 +194,12 @@ export default function POSCreateJournalPage() {
 
             {/* Description */}
             <div className="grid gap-1.5 text-left">
-              <label className="text-slate-400 font-semibold">Description / Purpose *</label>
+              <label className="text-muted-foreground font-semibold">Description / Purpose *</label>
               <Input
                 type="text"
                 placeholder="E.g., Monthly inventory valuation adjustment"
                 {...register('description')}
-                className="bg-slate-950 border-slate-855 text-xs text-slate-100 focus-visible:ring-emerald-500"
+                className="bg-muted border-slate-855 text-xs text-foreground focus-visible:ring-emerald-500"
               />
               {errors.description && (
                 <p className="text-[10px] text-rose-455">{errors.description.message}</p>
@@ -208,18 +208,18 @@ export default function POSCreateJournalPage() {
 
             {/* Notes */}
             <div className="grid gap-1.5 text-left">
-              <label className="text-slate-400 font-semibold">Internal Audit Notes</label>
+              <label className="text-muted-foreground font-semibold">Internal Audit Notes</label>
               <textarea
                 placeholder="Audit notes or references..."
                 {...register('notes')}
-                className="w-full bg-slate-950 border border-slate-855 rounded p-2 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 h-16 resize-none"
+                className="w-full bg-muted border border-slate-855 rounded p-2 text-xs text-foreground focus:outline-none focus:border-emerald-500 h-16 resize-none"
               />
             </div>
           </CardContent>
         </Card>
 
         {/* Double Entry Lines Section */}
-        <Card className="bg-[#0c1220] border-slate-800 text-slate-100">
+        <Card className="bg-cardard border-border text-foreground">
           <CardContent className="p-6">
             <DebitCreditEntry value={lines} onChange={setLines} accounts={accounts} />
           </CardContent>
@@ -231,7 +231,7 @@ export default function POSCreateJournalPage() {
             type="button"
             disabled={createMutation.isPending}
             onClick={handleSubmit((vals) => onSubmit(vals, 'DRAFT'))}
-            className="h-10 border border-slate-800 bg-[#0c1220] hover:bg-slate-900 text-slate-250 font-bold uppercase text-xs tracking-wider"
+            className="h-10 border border-border bg-cardard hover:bg-accent text-slate-250 font-bold uppercase text-xs tracking-wider"
           >
             <span>Save as Draft</span>
           </Button>

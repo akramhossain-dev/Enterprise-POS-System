@@ -26,7 +26,7 @@ function Skeleton({ className, variant = 'rectangular', ...props }: SkeletonProp
 // Pre-built skeleton patterns
 function SkeletonCard() {
   return (
-    <div className="rounded-xl border border-border bg-card p-5 space-y-3">
+    <div className="rounded-xl border border-border bg-cardard p-5 space-y-3">
       <div className="flex items-center gap-3">
         <Skeleton variant="circular" className="w-10 h-10" />
         <div className="space-y-1.5 flex-1">

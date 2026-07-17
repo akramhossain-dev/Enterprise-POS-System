@@ -27,10 +27,10 @@ export function ReceiptViewer({ transaction }: ReceiptViewerProps) {
   };
 
   return (
-    <div className="flex flex-col gap-4 text-slate-100 select-none">
+    <div className="flex flex-col gap-4 text-foreground select-none">
       {/* Configuration Toolbar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 p-3 bg-slate-900 border border-slate-800 rounded-xl">
-        <div className="flex items-center space-x-1.5 bg-slate-950 p-1 border border-slate-850 rounded-lg">
+      <div className="flex flex-wrap items-center justify-between gap-3 p-3 bg-accent border border-border rounded-xl">
+        <div className="flex items-center space-x-1.5 bg-muted p-1 border border-border rounded-lg">
           <Button
             size="sm"
             onClick={() => setPrintWidth(58)}
@@ -38,7 +38,7 @@ export function ReceiptViewer({ transaction }: ReceiptViewerProps) {
               'h-7 px-3 text-xs rounded-md',
               printWidth === 58
                 ? 'bg-emerald-500 text-slate-950 font-bold'
-                : 'bg-transparent text-slate-400 hover:text-slate-200',
+                : 'bg-transparent text-muted-foreground hover:text-foreground',
             )}
           >
             58mm
@@ -50,7 +50,7 @@ export function ReceiptViewer({ transaction }: ReceiptViewerProps) {
               'h-7 px-3 text-xs rounded-md',
               printWidth === 80
                 ? 'bg-emerald-500 text-slate-950 font-bold'
-                : 'bg-transparent text-slate-400 hover:text-slate-200',
+                : 'bg-transparent text-muted-foreground hover:text-foreground',
             )}
           >
             80mm
@@ -69,7 +69,7 @@ export function ReceiptViewer({ transaction }: ReceiptViewerProps) {
           <Button
             size="sm"
             onClick={handleEmail}
-            className="h-8 bg-slate-950 border border-slate-800 text-slate-400 hover:text-slate-200 text-xs gap-1.5"
+            className="h-8 bg-muted border border-border text-muted-foreground hover:text-foreground text-xs gap-1.5"
           >
             <Mail className="h-4 w-4" />
             <span>Email</span>
@@ -77,7 +77,7 @@ export function ReceiptViewer({ transaction }: ReceiptViewerProps) {
           <Button
             size="sm"
             onClick={handleDownload}
-            className="h-8 bg-slate-950 border border-slate-800 text-slate-400 hover:text-slate-200 text-xs gap-1.5"
+            className="h-8 bg-muted border border-border text-muted-foreground hover:text-foreground text-xs gap-1.5"
           >
             <Download className="h-4 w-4" />
             <span>PDF</span>
@@ -86,7 +86,7 @@ export function ReceiptViewer({ transaction }: ReceiptViewerProps) {
       </div>
 
       {/* Printable Receipt Envelope */}
-      <div className="flex justify-center bg-slate-950/40 p-6 border border-slate-900 rounded-2xl overflow-x-auto print:bg-white print:border-none print:p-0 print:m-0">
+      <div className="flex justify-center bg-muted/40 p-6 border border-border rounded-2xl overflow-x-auto print:bg-white print:border-none print:p-0 print:m-0">
         <div
           id="pos-thermal-receipt-printable-area"
           className={cn(
@@ -200,7 +200,7 @@ export function ReceiptViewer({ transaction }: ReceiptViewerProps) {
               *** Thank You! Visit Again ***
             </p>
             {/* Mock barcode */}
-            <div className="h-8 bg-slate-900 w-3/4 mx-auto flex items-center justify-center text-slate-400 font-mono text-[9px] tracking-[6px] border border-slate-950 font-bold uppercase">
+            <div className="h-8 bg-accent w-3/4 mx-auto flex items-center justify-center text-muted-foreground font-mono text-[9px] tracking-[6px] border border-slate-950 font-bold uppercase">
               *{transaction.id}*
             </div>
             <p className="text-[8px] opacity-70">Powered by Enterprise Retail System</p>

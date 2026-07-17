@@ -335,7 +335,7 @@ export default function CustomersPage() {
 
       {/* Toolbar */}
       <div
-        className="flex flex-col gap-3 bg-card border border-border p-4 rounded-xl"
+        className="flex flex-col gap-3 bg-cardard border border-border p-4 rounded-xl"
         onClick={() => setContextMenu(null)}
       >
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
@@ -506,7 +506,7 @@ export default function CustomersPage() {
 
       {/* Error state */}
       {isError && (
-        <div className="border border-destructive/20 rounded-xl bg-destructive/5 p-4 text-sm text-destructive flex items-center justify-between">
+        <div className="border border-destructive/20 rounded-xl bg-backgroundestructive/5 p-4 text-sm text-destructive flex items-center justify-between">
           <span>Error loading customers: {(error as any)?.message || 'Unknown error.'}</span>
           <Button
             size="xs"
@@ -596,7 +596,7 @@ export default function CustomersPage() {
           <Button
             size="sm"
             variant="ghost"
-            className="w-full justify-start text-xs h-8 text-destructive hover:bg-destructive/10"
+            className="w-full justify-start text-xs h-8 text-destructive hover:bg-backgroundestructive/10"
             leftIcon={<Trash2 className="w-3.5 h-3.5" />}
             onClick={() => {
               setContextMenu(null);

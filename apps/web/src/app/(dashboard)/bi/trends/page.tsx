@@ -12,13 +12,13 @@ export default function BusinessTrendsPage() {
   const [comparePeriod, setComparePeriod] = useState<'wow' | 'mom' | 'yoy'>('mom');
 
   return (
-    <PageContainer className="text-slate-100 select-none text-left print:bg-white print:text-black">
+    <PageContainer className="text-foreground select-none text-left print:bg-white print:text-black">
       <div className="mb-4 print:hidden">
         <Link href="/bi">
           <Button
             variant="ghost"
             size="sm"
-            className="text-slate-400 hover:text-slate-200 gap-1.5 h-8"
+            className="text-muted-foreground hover:text-foreground gap-1.5 h-8"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>BI Dashboard</span>
@@ -32,7 +32,7 @@ export default function BusinessTrendsPage() {
       />
 
       {/* Recurrence tab choice */}
-      <div className="flex border border-slate-900 bg-slate-950/40 p-0.5 rounded-lg text-xs font-bold font-sans tracking-wide my-6 print:hidden max-w-sm">
+      <div className="flex border border-border bg-muted/40 p-0.5 rounded-lg text-xs font-bold font-sans tracking-wide my-6 print:hidden max-w-sm">
         {(
           [
             { id: 'wow', label: 'Week over Week (WoW)' },
@@ -46,7 +46,7 @@ export default function BusinessTrendsPage() {
             className={`flex-1 py-1.5 rounded transition-all text-center ${
               comparePeriod === tab.id
                 ? 'bg-emerald-500 text-slate-950 font-black'
-                : 'text-slate-500 hover:text-slate-350'
+                : 'text-muted-foreground hover:text-muted-foreground'
             }`}
           >
             {tab.label}

@@ -80,7 +80,7 @@ export default function RoleDetailsPage() {
   if (!role) {
     return (
       <PageContainer>
-        <div className="text-center py-20 border border-dashed border-border bg-card rounded-2xl">
+        <div className="text-center py-20 border border-dashed border-border bg-cardard rounded-2xl">
           <AlertTriangle className="w-8 h-8 text-muted-foreground mx-auto" />
           <h2 className="font-semibold text-foreground text-sm mt-3">Security Role Not Found</h2>
           <Link href="/roles" className="mt-4 inline-block">
@@ -112,7 +112,7 @@ export default function RoleDetailsPage() {
 
       <form onSubmit={handleUpdate} className="space-y-6 max-w-5xl text-left">
         {/* Core Info */}
-        <div className="rounded-2xl border border-border bg-card p-6 space-y-4">
+        <div className="rounded-2xl border border-border bg-cardard p-6 space-y-4">
           <div className="flex items-center gap-2 border-b border-border/50 pb-3">
             <Shield className="w-5 h-5 text-primary" />
             <h2 className="font-semibold text-foreground text-base">Role Metadata</h2>
@@ -136,7 +136,7 @@ export default function RoleDetailsPage() {
         </div>
 
         {/* Matrix component */}
-        <div className="rounded-2xl border border-border bg-card p-6 space-y-4">
+        <div className="rounded-2xl border border-border bg-cardard p-6 space-y-4">
           <h2 className="font-semibold text-foreground text-base border-b border-border/50 pb-3">
             Authorization Privileges Matrix
           </h2>

@@ -125,7 +125,7 @@ export function ProductForm({ initialValues, onSubmit, isPending }: ProductFormP
         {/* Left main content columns */}
         <div className="lg:col-span-2 space-y-6">
           {/* General Information Card */}
-          <div className="rounded-xl border border-border bg-card p-5 space-y-4">
+          <div className="rounded-xl border border-border bg-cardard p-5 space-y-4">
             <h3 className="font-semibold text-base text-foreground">General Information</h3>
             <div className="space-y-4">
               <Input
@@ -180,7 +180,7 @@ export function ProductForm({ initialValues, onSubmit, isPending }: ProductFormP
           </div>
 
           {/* Pricing & Financials */}
-          <div className="rounded-xl border border-border bg-card p-5 space-y-4">
+          <div className="rounded-xl border border-border bg-cardard p-5 space-y-4">
             <h3 className="font-semibold text-base text-foreground">Pricing & Financials</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
@@ -207,7 +207,7 @@ export function ProductForm({ initialValues, onSubmit, isPending }: ProductFormP
           </div>
 
           {/* Image Upload Manager */}
-          <div className="rounded-xl border border-border bg-card p-5 space-y-4">
+          <div className="rounded-xl border border-border bg-cardard p-5 space-y-4">
             <h3 className="font-semibold text-base text-foreground">Images & Gallery</h3>
             <Controller
               name="images"
@@ -220,7 +220,7 @@ export function ProductForm({ initialValues, onSubmit, isPending }: ProductFormP
         {/* Right Sidebar columns */}
         <div className="space-y-6">
           {/* Classification & Status */}
-          <div className="rounded-xl border border-border bg-card p-5 space-y-4">
+          <div className="rounded-xl border border-border bg-cardard p-5 space-y-4">
             <h3 className="font-semibold text-base text-foreground">Catalog & Organization</h3>
 
             <div className="space-y-4">
@@ -342,7 +342,7 @@ export function ProductForm({ initialValues, onSubmit, isPending }: ProductFormP
           )}
 
           {/* Submit Actions */}
-          <div className="rounded-xl border border-border bg-card p-5 flex flex-col gap-2">
+          <div className="rounded-xl border border-border bg-cardard p-5 flex flex-col gap-2">
             <Button
               type="submit"
               className="w-full"

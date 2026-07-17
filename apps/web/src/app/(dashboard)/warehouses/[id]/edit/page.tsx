@@ -126,7 +126,7 @@ export default function EditWarehousePage() {
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 max-w-4xl text-left">
         {/* Basic Depot Credentials */}
-        <div className="rounded-2xl border border-border bg-card p-6 space-y-4">
+        <div className="rounded-2xl border border-border bg-cardard p-6 space-y-4">
           <div className="flex items-center gap-2 border-b border-border/50 pb-3">
             <Warehouse className="w-5 h-5 text-primary" />
             <h2 className="font-semibold text-foreground text-base">Facility Details</h2>
@@ -195,7 +195,7 @@ export default function EditWarehousePage() {
         </div>
 
         {/* Manager Details */}
-        <div className="rounded-2xl border border-border bg-card p-6 space-y-4">
+        <div className="rounded-2xl border border-border bg-cardard p-6 space-y-4">
           <div className="flex items-center gap-2 border-b border-border/50 pb-3">
             <User className="w-5 h-5 text-primary" />
             <h2 className="font-semibold text-foreground text-base">
@@ -227,7 +227,7 @@ export default function EditWarehousePage() {
         </div>
 
         {/* Address and Geography */}
-        <div className="rounded-2xl border border-border bg-card p-6 space-y-4">
+        <div className="rounded-2xl border border-border bg-cardard p-6 space-y-4">
           <div className="flex items-center gap-2 border-b border-border/50 pb-3">
             <MapPin className="w-5 h-5 text-primary" />
             <h2 className="font-semibold text-foreground text-base">Geographic Address</h2>

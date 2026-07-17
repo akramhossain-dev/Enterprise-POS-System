@@ -50,14 +50,14 @@ export default function POSSettingsPage() {
   };
 
   return (
-    <PageContainer className="max-w-4xl mx-auto py-6 text-slate-100 select-none">
+    <PageContainer className="max-w-4xl mx-auto py-6 text-foreground select-none">
       {/* Back to workspace header */}
       <div className="mb-4">
         <Link href="/pos">
           <Button
             variant="ghost"
             size="sm"
-            className="text-slate-400 hover:text-slate-200 gap-1.5 h-8"
+            className="text-muted-foreground hover:text-foreground gap-1.5 h-8"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Back to POS Terminal</span>
@@ -72,30 +72,30 @@ export default function POSSettingsPage() {
 
       <div className="grid gap-6 mt-6">
         {/* Receipt Printer configuration card */}
-        <Card className="bg-[#0c1220] border-slate-800 text-slate-100">
+        <Card className="bg-cardard border-border text-foreground">
           <CardHeader>
-            <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-200">
+            <CardTitle className="text-sm font-bold flex items-center gap-2 text-foreground">
               <Printer className="h-4.5 w-4.5 text-emerald-400" />
               <span>Receipt Printer Settings</span>
             </CardTitle>
-            <CardDescription className="text-slate-400 text-xs">
+            <CardDescription className="text-muted-foreground text-xs">
               Select receipt format sizes and default printer options.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between text-xs sm:text-sm">
               <div>
-                <p className="font-semibold text-slate-200">Paper Roll Print Width</p>
-                <p className="text-[11px] text-slate-500">Choose standard thermal receipt width.</p>
+                <p className="font-semibold text-foreground">Paper Roll Print Width</p>
+                <p className="text-[11px] text-muted-foreground">Choose standard thermal receipt width.</p>
               </div>
-              <div className="flex bg-slate-950 p-1 border border-slate-900 rounded-lg animate-fade-in">
+              <div className="flex bg-muted p-1 border border-border rounded-lg animate-fade-in">
                 <Button
                   size="sm"
                   onClick={() => handlePrinterWidth(58)}
                   className={`h-7 px-3 text-xs rounded-md ${
                     settings.receiptPrinterWidth === 58
                       ? 'bg-emerald-500 text-slate-950 font-bold'
-                      : 'bg-transparent text-slate-400 hover:text-slate-200'
+                      : 'bg-transparent text-muted-foreground hover:text-foreground'
                   }`}
                 >
                   58 mm
@@ -106,7 +106,7 @@ export default function POSSettingsPage() {
                   className={`h-7 px-3 text-xs rounded-md ${
                     settings.receiptPrinterWidth === 80
                       ? 'bg-emerald-500 text-slate-950 font-bold'
-                      : 'bg-transparent text-slate-400 hover:text-slate-200'
+                      : 'bg-transparent text-muted-foreground hover:text-foreground'
                   }`}
                 >
                   80 mm
@@ -117,21 +117,21 @@ export default function POSSettingsPage() {
         </Card>
 
         {/* Barcode scanner configurations */}
-        <Card className="bg-[#0c1220] border-slate-800 text-slate-100">
+        <Card className="bg-cardard border-border text-foreground">
           <CardHeader>
-            <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-200">
+            <CardTitle className="text-sm font-bold flex items-center gap-2 text-foreground">
               <Barcode className="h-4.5 w-4.5 text-emerald-400" />
               <span>Barcode Scanner Options</span>
             </CardTitle>
-            <CardDescription className="text-slate-400 text-xs">
+            <CardDescription className="text-muted-foreground text-xs">
               Set preferences for hand-held laser/optical barcode scanners.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4 text-xs sm:text-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-semibold text-slate-200">Auto Add matched products</p>
-                <p className="text-[11px] text-slate-500">
+                <p className="font-semibold text-foreground">Auto Add matched products</p>
+                <p className="text-[11px] text-muted-foreground">
                   Automatically adds product to cart when scan match is 100%.
                 </p>
               </div>
@@ -151,26 +151,26 @@ export default function POSSettingsPage() {
         </Card>
 
         {/* Defaults & Facilities configurations */}
-        <Card className="bg-[#0c1220] border-slate-800 text-slate-100">
+        <Card className="bg-cardard border-border text-foreground">
           <CardHeader>
-            <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-200">
+            <CardTitle className="text-sm font-bold flex items-center gap-2 text-foreground">
               <Warehouse className="h-4.5 w-4.5 text-emerald-400" />
               <span>Register & Defaults Configurations</span>
             </CardTitle>
-            <CardDescription className="text-slate-400 text-xs">
+            <CardDescription className="text-muted-foreground text-xs">
               Configure defaults for checkout locations.
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4 text-xs sm:text-sm">
             {/* Default warehouse */}
             <div className="grid gap-2 text-left">
-              <label className="text-slate-400 text-xs font-semibold">
+              <label className="text-muted-foreground text-xs font-semibold">
                 Default Warehouse Location
               </label>
               <select
                 value={settings.defaultWarehouseId}
                 onChange={handleWarehouseChange}
-                className="w-full bg-slate-950 border border-slate-850 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none focus:border-emerald-500"
+                className="w-full bg-muted border border-border rounded-lg p-2.5 text-xs text-foreground focus:outline-none focus:border-emerald-500"
               >
                 <option value="">Select default warehouse...</option>
                 {warehouses.map((w) => (
@@ -183,13 +183,13 @@ export default function POSSettingsPage() {
 
             {/* Default Customer */}
             <div className="grid gap-2 text-left">
-              <label className="text-slate-400 text-xs font-semibold">
+              <label className="text-muted-foreground text-xs font-semibold">
                 Default Customer account
               </label>
               <select
                 value={settings.defaultCustomerId}
                 onChange={handleCustomerChange}
-                className="w-full bg-slate-950 border border-slate-850 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none focus:border-emerald-500"
+                className="w-full bg-muted border border-border rounded-lg p-2.5 text-xs text-foreground focus:outline-none focus:border-emerald-500"
               >
                 <option value="walk-in">Walk-in Customer (Default)</option>
                 {customers.map((c) => (
@@ -202,7 +202,7 @@ export default function POSSettingsPage() {
 
             {/* Cash Drawer trigger code */}
             <div className="grid gap-2 text-left">
-              <label className="text-slate-400 text-xs font-semibold">
+              <label className="text-muted-foreground text-xs font-semibold">
                 Cash Drawer Kick Trigger Code
               </label>
               <div className="flex gap-2">
@@ -211,10 +211,10 @@ export default function POSSettingsPage() {
                   placeholder="27,112,0,25,250"
                   defaultValue={settings.cashDrawerTriggerCode}
                   onBlur={handleDrawerCode}
-                  className="bg-slate-950 border-slate-850 text-slate-100 text-xs focus-visible:ring-emerald-500"
+                  className="bg-muted border-border text-foreground text-xs focus-visible:ring-emerald-500"
                 />
               </div>
-              <p className="text-[10px] text-slate-500">
+              <p className="text-[10px] text-muted-foreground">
                 ASCII escape commands sent to POS printer to trigger cash drawers.
               </p>
             </div>

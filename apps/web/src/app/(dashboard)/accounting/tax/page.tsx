@@ -26,14 +26,14 @@ export default function TaxDashboardPage() {
   ];
 
   return (
-    <PageContainer className="text-slate-100 select-none text-left">
+    <PageContainer className="text-foreground select-none text-left">
       {/* Back button and quick actions */}
       <div className="mb-4 flex justify-between items-center">
         <Link href="/accounting">
           <Button
             variant="ghost"
             size="sm"
-            className="text-slate-400 hover:text-slate-200 gap-1.5 h-8"
+            className="text-muted-foreground hover:text-foreground gap-1.5 h-8"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Accounting Dashboard</span>
@@ -45,9 +45,9 @@ export default function TaxDashboardPage() {
             <Button
               variant="outline"
               size="sm"
-              className="h-8 border-slate-800 bg-[#0c1220] hover:bg-slate-900 text-xs gap-1"
+              className="h-8 border-border bg-cardard hover:bg-accent text-xs gap-1"
             >
-              <Settings className="h-4 w-4 text-slate-500" />
+              <Settings className="h-4 w-4 text-muted-foreground" />
               <span>Tax Configuration</span>
             </Button>
           </Link>
@@ -78,9 +78,9 @@ export default function TaxDashboardPage() {
           />
 
           {/* Tax Rates Configuration list */}
-          <Card className="bg-[#0c1220] border-slate-800 text-slate-100 font-mono">
-            <CardHeader className="py-4 border-b border-slate-900 flex flex-row items-center justify-between">
-              <CardTitle className="text-xs font-bold text-slate-350 uppercase tracking-widest font-sans">
+          <Card className="bg-cardard border-border text-foreground font-mono">
+            <CardHeader className="py-4 border-b border-border flex flex-row items-center justify-between">
+              <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-widest font-sans">
                 Active Tax System Matrices
               </CardTitle>
             </CardHeader>
@@ -89,10 +89,10 @@ export default function TaxDashboardPage() {
                 rates.map((rate) => (
                   <div
                     key={rate.id}
-                    className="flex justify-between items-center text-xs p-2.5 bg-slate-950/20 border border-slate-900 rounded-xl"
+                    className="flex justify-between items-center text-xs p-2.5 bg-muted/20 border border-border rounded-xl"
                   >
                     <div className="text-left font-sans space-y-0.5">
-                      <p className="font-bold text-slate-200">{rate.name}</p>
+                      <p className="font-bold text-foreground">{rate.name}</p>
                       <span className="text-[9px] bg-indigo-500/10 text-indigo-400 font-bold px-1.5 py-0.5 rounded tracking-wide">
                         {rate.type}
                       </span>
@@ -104,7 +104,7 @@ export default function TaxDashboardPage() {
                   </div>
                 ))
               ) : (
-                <div className="text-center py-6 text-slate-500 text-xs">
+                <div className="text-center py-6 text-muted-foreground text-xs">
                   No active tax rates defined.
                 </div>
               )}
@@ -114,16 +114,16 @@ export default function TaxDashboardPage() {
 
         {/* Right column: Recharts Tax Chart */}
         <div className="md:col-span-1">
-          <Card className="bg-[#0c1220] border-slate-800 text-slate-100 h-full flex flex-col justify-between">
-            <CardHeader className="pb-3 border-b border-slate-900">
-              <CardTitle className="text-xs font-bold text-slate-300 uppercase tracking-widest font-sans flex items-center gap-1.5">
+          <Card className="bg-cardard border-border text-foreground h-full flex flex-col justify-between">
+            <CardHeader className="pb-3 border-b border-border">
+              <CardTitle className="text-xs font-bold text-foreground uppercase tracking-widest font-sans flex items-center gap-1.5">
                 <BadgePercent className="h-4 w-4 text-emerald-400 animate-pulse" />
                 <span>Tax Allocation Ratio</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="py-6 flex-1 flex flex-col justify-center items-center">
               {salesTax === 0 && purchaseTax === 0 ? (
-                <p className="text-xs text-slate-500">No active tax records mapped.</p>
+                <p className="text-xs text-muted-foreground">No active tax records mapped.</p>
               ) : (
                 <div className="w-full h-48 flex items-center justify-center">
                   <AppPieChart

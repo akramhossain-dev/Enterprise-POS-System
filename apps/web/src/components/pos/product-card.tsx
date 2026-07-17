@@ -36,13 +36,13 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
         className={cn(
           'flex items-center justify-between p-3 rounded-xl border transition-all duration-200 cursor-pointer select-none',
           isOutOfStock
-            ? 'bg-slate-950/20 border-slate-900 opacity-60 hover:opacity-85'
-            : 'bg-[#0c1220] border-slate-800 hover:border-slate-700 hover:bg-slate-900/60',
+            ? 'bg-muted/20 border-border opacity-60 hover:opacity-85'
+            : 'bg-cardard border-border hover:border-slate-700 hover:bg-accent/60',
         )}
       >
         <div className="flex items-center space-x-3 min-w-0">
           {/* Thumb */}
-          <div className="relative h-12 w-12 rounded-lg bg-slate-900 overflow-hidden flex-shrink-0 border border-slate-800">
+          <div className="relative h-12 w-12 rounded-lg bg-accent overflow-hidden flex-shrink-0 border border-border">
             {product.image ? (
               <img
                 src={product.image}
@@ -51,7 +51,7 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
                 loading="lazy"
               />
             ) : (
-              <div className="h-full w-full bg-slate-950 flex items-center justify-center text-[10px] text-slate-500 font-bold uppercase">
+              <div className="h-full w-full bg-muted flex items-center justify-center text-[10px] text-muted-foreground font-bold uppercase">
                 {product.name.slice(0, 2)}
               </div>
             )}
@@ -66,8 +66,8 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
 
           {/* Details */}
           <div className="text-left min-w-0">
-            <h4 className="text-xs font-bold text-slate-200 truncate">{product.name}</h4>
-            <div className="flex items-center space-x-2 text-[10px] text-slate-500">
+            <h4 className="text-xs font-bold text-foreground truncate">{product.name}</h4>
+            <div className="flex items-center space-x-2 text-[10px] text-muted-foreground">
               <span>SKU: {product.sku || 'N/A'}</span>
               <span>•</span>
               <span className="truncate">Bar: {product.barcode || 'N/A'}</span>
@@ -80,7 +80,7 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
                   isOutOfStock ? 'bg-rose-500' : isLowStock ? 'bg-amber-500' : 'bg-emerald-500',
                 )}
               />
-              <span className="text-[10px] text-slate-400">
+              <span className="text-[10px] text-muted-foreground">
                 {isOutOfStock
                   ? 'Out of stock'
                   : isLowStock
@@ -96,7 +96,7 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
           <div className="text-right">
             <p className="text-xs font-bold text-emerald-400 font-mono">{formattedPrice}</p>
             {product.tax && (
-              <p className="text-[9px] text-slate-500 font-mono">Tax: {product.tax.percentage}%</p>
+              <p className="text-[9px] text-muted-foreground font-mono">Tax: {product.tax.percentage}%</p>
             )}
           </div>
           <Button
@@ -119,12 +119,12 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
       className={cn(
         'group relative flex flex-col justify-between overflow-hidden rounded-xl border transition-all duration-300 cursor-pointer select-none',
         isOutOfStock
-          ? 'bg-slate-950/20 border-slate-900 opacity-60 hover:opacity-85'
-          : 'bg-[#0c1220] border-slate-800 hover:border-slate-700 hover:bg-slate-900/40 hover:shadow-xl hover:shadow-emerald-950/5',
+          ? 'bg-muted/20 border-border opacity-60 hover:opacity-85'
+          : 'bg-cardard border-border hover:border-slate-700 hover:bg-accent/40 hover:shadow-xl hover:shadow-emerald-950/5',
       )}
     >
       {/* Product Image cover */}
-      <div className="relative aspect-video w-full bg-slate-950 overflow-hidden border-b border-slate-900">
+      <div className="relative aspect-video w-full bg-muted overflow-hidden border-b border-border">
         {product.image ? (
           <img
             src={product.image}
@@ -133,7 +133,7 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
             loading="lazy"
           />
         ) : (
-          <div className="h-full w-full bg-slate-900/60 flex items-center justify-center text-xs text-slate-600 font-black tracking-widest uppercase">
+          <div className="h-full w-full bg-accent/60 flex items-center justify-center text-xs text-slate-600 font-black tracking-widest uppercase">
             {product.name.slice(0, 3)}
           </div>
         )}
@@ -156,7 +156,7 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
 
         {/* Category badge */}
         {product.category && (
-          <span className="absolute bottom-2 left-2 text-[9px] font-semibold bg-slate-900/80 backdrop-blur border border-slate-800 text-slate-300 px-1.5 py-0.5 rounded">
+          <span className="absolute bottom-2 left-2 text-[9px] font-semibold bg-accent/80 backdrop-blur border border-border text-foreground px-1.5 py-0.5 rounded">
             {product.category.name}
           </span>
         )}
@@ -165,10 +165,10 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
       {/* Details Box */}
       <div className="p-3 text-left flex-1 flex flex-col justify-between">
         <div>
-          <h4 className="text-xs font-bold text-slate-200 line-clamp-2 min-h-8 mb-1 leading-snug group-hover:text-emerald-400 transition-colors duration-200">
+          <h4 className="text-xs font-bold text-foreground line-clamp-2 min-h-8 mb-1 leading-snug group-hover:text-emerald-400 transition-colors duration-200">
             {product.name}
           </h4>
-          <p className="text-[10px] text-slate-500 font-mono tracking-tight truncate">
+          <p className="text-[10px] text-muted-foreground font-mono tracking-tight truncate">
             SKU: {product.sku || 'N/A'}
           </p>
         </div>
@@ -181,14 +181,14 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
             {isOutOfStock ? (
               <p className="text-[9px] text-rose-500 font-medium">Reorder needed</p>
             ) : (
-              <p className="text-[9px] text-slate-400 font-mono">Stock: {availableStock}</p>
+              <p className="text-[9px] text-muted-foreground font-mono">Stock: {availableStock}</p>
             )}
           </div>
 
           <Button
             size="sm"
             onClick={handleAdd}
-            className="h-7 px-2.5 rounded-lg text-[10px] bg-slate-900 border border-slate-800 hover:bg-emerald-500 hover:text-white text-emerald-400 font-bold transition-all duration-200"
+            className="h-7 px-2.5 rounded-lg text-[10px] bg-accent border border-border hover:bg-emerald-500 hover:text-white text-emerald-400 font-bold transition-all duration-200"
           >
             Add to cart
           </Button>

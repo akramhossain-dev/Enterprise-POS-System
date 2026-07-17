@@ -62,14 +62,14 @@ export default function GeneralLedgerPage() {
   };
 
   return (
-    <PageContainer className="text-slate-100 select-none text-left">
+    <PageContainer className="text-foreground select-none text-left">
       {/* Back to Accounting Dashboard */}
       <div className="mb-4">
         <Link href="/accounting">
           <Button
             variant="ghost"
             size="sm"
-            className="text-slate-400 hover:text-slate-200 gap-1.5 h-8"
+            className="text-muted-foreground hover:text-foreground gap-1.5 h-8"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Accounting Dashboard</span>
@@ -87,31 +87,31 @@ export default function GeneralLedgerPage() {
         <div className="flex flex-wrap gap-2 w-full md:w-auto">
           {/* Search Input */}
           <div className="relative flex-1 sm:w-64 min-w-[200px]">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-500" />
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="text"
               placeholder="Search code, name, or ref..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="pl-8 bg-slate-950 border-slate-800 text-slate-100 text-xs focus-visible:ring-emerald-500 h-9"
+              className="pl-8 bg-muted border-border text-foreground text-xs focus-visible:ring-emerald-500 h-9"
             />
           </div>
 
           {/* Date Range selectors */}
-          <div className="flex items-center gap-1.5 bg-[#0c1220] px-3 border border-slate-850 rounded-lg text-xs h-9">
-            <span className="text-slate-500">From</span>
+          <div className="flex items-center gap-1.5 bg-cardard px-3 border border-border rounded-lg text-xs h-9">
+            <span className="text-muted-foreground">From</span>
             <input
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="bg-transparent text-slate-200 focus:outline-none cursor-pointer h-full"
+              className="bg-transparent text-foreground focus:outline-none cursor-pointer h-full"
             />
-            <span className="text-slate-500">To</span>
+            <span className="text-muted-foreground">To</span>
             <input
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="bg-transparent text-slate-200 focus:outline-none cursor-pointer h-full"
+              className="bg-transparent text-foreground focus:outline-none cursor-pointer h-full"
             />
           </div>
         </div>
@@ -121,7 +121,7 @@ export default function GeneralLedgerPage() {
             size="sm"
             variant="outline"
             onClick={handleExportCSV}
-            className="h-8 border-slate-800 bg-[#0c1220] hover:bg-slate-900 text-xs gap-1.5 w-full md:w-auto"
+            className="h-8 border-border bg-cardard hover:bg-accent text-xs gap-1.5 w-full md:w-auto"
           >
             <FileDown className="h-4 w-4 text-slate-450" />
             <span>Export CSV</span>

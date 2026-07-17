@@ -29,16 +29,16 @@ export function ClosingChecklist({
   const allChecked = items.length > 0 && items.every((i) => i.checked);
 
   return (
-    <Card className="bg-[#0c1220] border-slate-800 text-slate-100 select-none text-left">
+    <Card className="bg-cardard border-border text-foreground select-none text-left">
       <CardContent className="p-6 space-y-6">
         {/* Header */}
-        <div className="flex justify-between items-center border-b border-slate-900 pb-3">
+        <div className="flex justify-between items-center border-b border-border pb-3">
           <div className="space-y-0.5">
-            <h3 className="text-sm font-black uppercase text-slate-200 tracking-wider flex items-center gap-1.5 font-sans">
+            <h3 className="text-sm font-black uppercase text-foreground tracking-wider flex items-center gap-1.5 font-sans">
               <FileCheck className="h-5 w-5 text-indigo-400" />
               <span>Closing Operations Checklist</span>
             </h3>
-            <p className="text-xs text-slate-500 font-mono">Period: {periodName}</p>
+            <p className="text-xs text-muted-foreground font-mono">Period: {periodName}</p>
           </div>
 
           <div
@@ -64,7 +64,7 @@ export function ClosingChecklist({
                 'p-3 border rounded-xl flex items-start gap-3 transition-colors',
                 item.checked
                   ? 'border-emerald-500/25 bg-emerald-500/[0.02]'
-                  : 'border-slate-850 bg-slate-950/20 hover:border-slate-800',
+                  : 'border-border bg-muted/20 hover:border-border',
               )}
             >
               <input
@@ -80,7 +80,7 @@ export function ClosingChecklist({
                   htmlFor={item.id}
                   className={cn(
                     'text-xs font-bold font-sans block cursor-pointer transition-colors',
-                    item.checked ? 'text-emerald-400' : 'text-slate-200',
+                    item.checked ? 'text-emerald-400' : 'text-foreground',
                   )}
                 >
                   {item.task}
@@ -101,12 +101,12 @@ export function ClosingChecklist({
 
         {/* Action Panel */}
         {isClosed ? (
-          <div className="p-4 bg-slate-950 border border-slate-850 rounded-xl text-center space-y-2 max-w-md mx-auto">
+          <div className="p-4 bg-muted border border-border rounded-xl text-center space-y-2 max-w-md mx-auto">
             <ShieldAlert className="h-8 w-8 text-rose-455 mx-auto animate-pulse" />
-            <h4 className="text-xs font-bold text-slate-200 uppercase font-sans tracking-wide">
+            <h4 className="text-xs font-bold text-foreground uppercase font-sans tracking-wide">
               Period Settle Complete
             </h4>
-            <p className="text-[10px] text-slate-500">
+            <p className="text-[10px] text-muted-foreground">
               This accounting period is locked. All adjusting journals are posted, ledgers are
               frozen, and new transactions cannot be recorded.
             </p>
@@ -126,7 +126,7 @@ export function ClosingChecklist({
                 'w-full h-10 font-bold uppercase text-xs tracking-wider gap-1.5',
                 allChecked
                   ? 'bg-emerald-500 hover:bg-emerald-600 text-slate-950'
-                  : 'bg-slate-900 border border-slate-800 text-slate-500 cursor-not-allowed',
+                  : 'bg-accent border border-border text-muted-foreground cursor-not-allowed',
               )}
             >
               <span>{isClosingPending ? 'EXECUTING LOCK...' : 'EXECUTE PERIOD CLOSING'}</span>

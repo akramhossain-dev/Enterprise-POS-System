@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function AccountLockedPage() {
   return (
     <div className="space-y-6 text-center">
-      <div className="mx-auto w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center">
+      <div className="mx-auto w-16 h-16 rounded-full bg-backgroundestructive/10 flex items-center justify-center">
         <Lock className="w-8 h-8 text-destructive" />
       </div>
 

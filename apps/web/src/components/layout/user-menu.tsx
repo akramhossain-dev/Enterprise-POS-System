@@ -112,7 +112,7 @@ export function UserMenu() {
 
           <DropdownMenu.Item
             onSelect={() => void handleLogout()}
-            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-destructive hover:bg-destructive/10 cursor-pointer outline-none transition-colors"
+            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-destructive hover:bg-backgroundestructive/10 cursor-pointer outline-none transition-colors"
           >
             <LogOut className="w-4 h-4" aria-hidden="true" />
             Sign Out

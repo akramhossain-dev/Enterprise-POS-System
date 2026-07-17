@@ -11,7 +11,7 @@ export function CustomerProfileSkeleton({ className }: CustomerProfileSkeletonPr
   return (
     <div className={cn('space-y-6', className)}>
       {/* Profile header */}
-      <div className="flex flex-col sm:flex-row gap-4 p-5 rounded-xl border border-border bg-card">
+      <div className="flex flex-col sm:flex-row gap-4 p-5 rounded-xl border border-border bg-cardard">
         <Skeleton className="h-20 w-20 rounded-full flex-shrink-0" />
         <div className="flex-1 space-y-3">
           <Skeleton variant="text" className="h-6 w-48" />
@@ -30,7 +30,7 @@ export function CustomerProfileSkeleton({ className }: CustomerProfileSkeletonPr
       {/* Metrics row */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="rounded-xl border border-border bg-card p-4 space-y-2">
+          <div key={i} className="rounded-xl border border-border bg-cardard p-4 space-y-2">
             <Skeleton variant="text" className="h-3 w-20" />
             <Skeleton variant="text" className="h-7 w-28" />
           </div>
@@ -45,7 +45,7 @@ export function CustomerProfileSkeleton({ className }: CustomerProfileSkeletonPr
           ))}
         </div>
         {/* Tab content */}
-        <div className="rounded-xl border border-border bg-card p-5 space-y-3">
+        <div className="rounded-xl border border-border bg-cardard p-5 space-y-3">
           {Array.from({ length: 5 }).map((_, i) => (
             <div key={i} className="flex gap-3">
               <Skeleton className="h-8 w-8 rounded-full flex-shrink-0" />

@@ -165,7 +165,7 @@ export default function PurchaseDashboard() {
       {/* Charts & Supplier Spends */}
       <div className="grid gap-6 md:grid-cols-3 mb-6 text-sm">
         {/* Chart */}
-        <Card className="md:col-span-2 shadow-sm border-border bg-card">
+        <Card className="md:col-span-2 shadow-sm border-border bg-cardard">
           <CardHeader className="border-b">
             <CardTitle className="text-sm font-semibold flex items-center gap-1.5">
               <TrendingUp className="w-4 h-4 text-primary" /> Procurement Value Trend (Monthly)
@@ -197,7 +197,7 @@ export default function PurchaseDashboard() {
         </Card>
 
         {/* Suppliers Spend Summary */}
-        <Card className="shadow-sm border-border bg-card">
+        <Card className="shadow-sm border-border bg-cardard">
           <CardHeader className="border-b">
             <CardTitle className="text-sm font-semibold flex items-center gap-1.5">
               <Building2 className="w-4 h-4 text-indigo-500" /> Top Supplier Spends
@@ -227,7 +227,7 @@ export default function PurchaseDashboard() {
       </div>
 
       {/* Recent Purchases List */}
-      <Card className="shadow-sm border-border bg-card text-sm">
+      <Card className="shadow-sm border-border bg-cardard text-sm">
         <CardHeader className="border-b flex flex-row justify-between items-center">
           <div>
             <CardTitle className="text-sm font-semibold">Recent Purchase Orders</CardTitle>
@@ -266,7 +266,7 @@ export default function PurchaseDashboard() {
                 orders.slice(0, 5).map((o) => (
                   <tr
                     key={o.id}
-                    className="border-b last:border-b-0 border-border bg-card hover:bg-muted/10"
+                    className="border-b last:border-b-0 border-border bg-cardard hover:bg-muted/10"
                   >
                     <td className="p-3 pl-6">
                       <Link

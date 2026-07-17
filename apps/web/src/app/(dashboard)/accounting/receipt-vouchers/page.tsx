@@ -92,7 +92,7 @@ export default function ReceiptVouchersPage() {
   };
 
   return (
-    <PageContainer className="text-slate-100 select-none text-left print:p-0 print:bg-white print:text-black">
+    <PageContainer className="text-foreground select-none text-left print:p-0 print:bg-white print:text-black">
       {/* Printable Receipt Slip (Shown when printing) */}
       {activePrintReceipt && (
         <div className="hidden print:block p-8 bg-white border-2 border-black rounded-lg max-w-md mx-auto font-mono text-black text-xs space-y-5">
@@ -155,7 +155,7 @@ export default function ReceiptVouchersPage() {
             <Button
               variant="ghost"
               size="sm"
-              className="text-slate-400 hover:text-slate-200 gap-1.5 h-8"
+              className="text-muted-foreground hover:text-foreground gap-1.5 h-8"
             >
               <ArrowLeft className="h-4 w-4" />
               <span>Accounting Dashboard</span>
@@ -183,13 +183,13 @@ export default function ReceiptVouchersPage() {
         {/* Filters */}
         <div className="flex flex-col sm:flex-row gap-3 items-center justify-between mt-4 mb-6">
           <div className="relative flex-1 sm:w-64 min-w-[200px]">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-500" />
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="text"
               placeholder="Search source or reference..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="pl-8 bg-slate-950 border-slate-800 text-slate-100 text-xs focus-visible:ring-emerald-500 h-9"
+              className="pl-8 bg-muted border-border text-foreground text-xs focus-visible:ring-emerald-500 h-9"
             />
           </div>
         </div>
@@ -200,7 +200,7 @@ export default function ReceiptVouchersPage() {
             {Array.from({ length: 6 }).map((_, i) => (
               <div
                 key={i}
-                className="h-48 bg-[#0c1220] border border-slate-800 rounded-2xl animate-pulse"
+                className="h-48 bg-cardard border border-border rounded-2xl animate-pulse"
               />
             ))}
           </div>
@@ -211,7 +211,7 @@ export default function ReceiptVouchersPage() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-12 text-slate-500 border border-dashed border-slate-850 rounded-xl">
+          <div className="text-center py-12 text-muted-foreground border border-dashed border-border rounded-xl">
             <p className="text-xs">No receipt vouchers logged in this ledger period.</p>
           </div>
         )}
@@ -219,13 +219,13 @@ export default function ReceiptVouchersPage() {
 
       {/* Create Receipt Dialog Modal */}
       <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-        <DialogContent className="bg-[#0c1220] border border-slate-800 text-slate-100 max-w-md p-6">
+        <DialogContent className="bg-cardard border border-border text-foreground max-w-md p-6">
           <DialogHeader className="mb-4">
-            <DialogTitle className="text-sm font-black uppercase text-slate-200 tracking-wider flex items-center gap-1.5">
+            <DialogTitle className="text-sm font-black uppercase text-foreground tracking-wider flex items-center gap-1.5">
               <BadgeDollarSign className="h-5 w-5 text-emerald-450" />
               <span>Record Inward Receipt</span>
             </DialogTitle>
-            <DialogDescription className="text-slate-500 text-xs">
+            <DialogDescription className="text-muted-foreground text-xs">
               Log incoming funds from customers or partners.
             </DialogDescription>
           </DialogHeader>
@@ -233,12 +233,12 @@ export default function ReceiptVouchersPage() {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 text-xs sm:text-sm">
             {/* Depositor name */}
             <div className="grid gap-1.5 text-left">
-              <label className="text-slate-400 font-semibold">Received From (Depositor) *</label>
+              <label className="text-muted-foreground font-semibold">Received From (Depositor) *</label>
               <Input
                 type="text"
                 placeholder="E.g., apex global customer"
                 {...register('receivedFrom')}
-                className="bg-slate-950 border-slate-855 text-xs text-slate-100 focus-visible:ring-emerald-500"
+                className="bg-muted border-slate-855 text-xs text-foreground focus-visible:ring-emerald-500"
               />
               {errors.receivedFrom && (
                 <p className="text-[10px] text-rose-455">{errors.receivedFrom.message}</p>
@@ -248,14 +248,14 @@ export default function ReceiptVouchersPage() {
             <div className="grid grid-cols-2 gap-4">
               {/* Amount */}
               <div className="grid gap-1.5">
-                <label className="text-slate-400 font-semibold font-mono">Amount ($) *</label>
+                <label className="text-muted-foreground font-semibold font-mono">Amount ($) *</label>
                 <Input
                   type="number"
                   step="any"
                   min="0.01"
                   placeholder="0.00"
                   {...register('amount')}
-                  className="bg-slate-950 border-slate-855 text-xs text-slate-100 font-mono focus-visible:ring-emerald-500 h-9"
+                  className="bg-muted border-slate-855 text-xs text-foreground font-mono focus-visible:ring-emerald-500 h-9"
                 />
                 {errors.amount && (
                   <p className="text-[10px] text-rose-455 font-mono">{errors.amount.message}</p>
@@ -264,10 +264,10 @@ export default function ReceiptVouchersPage() {
 
               {/* Method */}
               <div className="grid gap-1.5 text-left">
-                <label className="text-slate-400 font-semibold">Payment Method *</label>
+                <label className="text-muted-foreground font-semibold">Payment Method *</label>
                 <select
                   {...register('paymentMethod')}
-                  className="bg-slate-950 border border-slate-855 rounded p-2 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 cursor-pointer h-9"
+                  className="bg-muted border border-slate-855 rounded p-2 text-xs text-foreground focus:outline-none focus:border-emerald-500 cursor-pointer h-9"
                 >
                   <option value="CASH">Cash</option>
                   <option value="BANK">Bank Transfer</option>
@@ -280,12 +280,12 @@ export default function ReceiptVouchersPage() {
             <div className="grid grid-cols-2 gap-4">
               {/* Reference */}
               <div className="grid gap-1.5">
-                <label className="text-slate-400 font-semibold">Reference *</label>
+                <label className="text-muted-foreground font-semibold">Reference *</label>
                 <Input
                   type="text"
                   placeholder="Source identifier ID"
                   {...register('reference')}
-                  className="bg-slate-950 border-slate-855 text-xs text-slate-100 focus-visible:ring-emerald-500 h-9"
+                  className="bg-muted border-slate-855 text-xs text-foreground focus-visible:ring-emerald-500 h-9"
                 />
                 {errors.reference && (
                   <p className="text-[10px] text-rose-455">{errors.reference.message}</p>
@@ -294,23 +294,23 @@ export default function ReceiptVouchersPage() {
 
               {/* Date */}
               <div className="grid gap-1.5 text-left">
-                <label className="text-slate-400 font-semibold">Date *</label>
+                <label className="text-muted-foreground font-semibold">Date *</label>
                 <Input
                   type="date"
                   required
                   {...register('date')}
-                  className="bg-slate-950 border-slate-855 text-xs text-slate-100 focus-visible:ring-emerald-500 h-9"
+                  className="bg-muted border-slate-855 text-xs text-foreground focus-visible:ring-emerald-500 h-9"
                 />
               </div>
             </div>
 
             {/* Notes */}
             <div className="grid gap-1.5 text-left">
-              <label className="text-slate-400 font-semibold">Memo Notes</label>
+              <label className="text-muted-foreground font-semibold">Memo Notes</label>
               <textarea
                 placeholder="Audit notes or transaction description..."
                 {...register('notes')}
-                className="w-full bg-slate-950 border border-slate-855 rounded p-2 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 h-16 resize-none"
+                className="w-full bg-muted border border-slate-855 rounded p-2 text-xs text-foreground focus:outline-none focus:border-emerald-500 h-16 resize-none"
               />
             </div>
 
@@ -320,7 +320,7 @@ export default function ReceiptVouchersPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  className="h-9 border-slate-800 text-slate-400 hover:text-slate-200 bg-[#0c1220]"
+                  className="h-9 border-border text-muted-foreground hover:text-foreground bg-cardard"
                 >
                   Cancel
                 </Button>

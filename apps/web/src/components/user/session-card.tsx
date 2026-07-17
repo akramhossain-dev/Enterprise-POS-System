@@ -24,7 +24,7 @@ export function SessionCard({ session, onTerminate, isTerminating = false }: Ses
   return (
     <div
       className={cn(
-        'flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl border bg-card transition-all duration-300',
+        'flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl border bg-cardard transition-all duration-300',
         session.isCurrent
           ? 'border-primary/20 bg-primary/5 hover:border-primary/30 shadow-sm'
           : 'border-border/80 hover:border-border',

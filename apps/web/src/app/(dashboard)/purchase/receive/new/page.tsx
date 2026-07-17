@@ -242,7 +242,7 @@ export default function ReceivePurchaseOrderPage() {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 text-sm">
         <div className="grid gap-6 md:grid-cols-3">
           {/* Main items panel */}
-          <Card className="md:col-span-2 shadow-sm border-border bg-card">
+          <Card className="md:col-span-2 shadow-sm border-border bg-cardard">
             <CardHeader className="border-b">
               <CardTitle className="text-sm font-semibold flex items-center gap-2">
                 <Package className="w-4 h-4 text-primary" /> Delivery Items & Inspections
@@ -256,7 +256,7 @@ export default function ReceivePurchaseOrderPage() {
                 </label>
                 <select
                   {...register('purchaseOrderId')}
-                  className="w-full text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none"
+                  className="w-full text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none"
                 >
                   <option value="">Choose active Purchase Order shipment...</option>
                   {activePOs.map((o) => (
@@ -298,7 +298,7 @@ export default function ReceivePurchaseOrderPage() {
                       items.map((item, index) => (
                         <React.Fragment key={item.productId}>
                           {/* Row 1: Core fields */}
-                          <tr className="border-b border-border/40 bg-card hover:bg-muted/5">
+                          <tr className="border-b border-border/40 bg-cardard hover:bg-muted/5">
                             <td className="p-3 pl-6">
                               <div className="flex flex-col font-medium">
                                 <span className="font-semibold text-foreground text-sm">
@@ -382,7 +382,7 @@ export default function ReceivePurchaseOrderPage() {
                                       setValue('items', updated);
                                     }
                                   }}
-                                  className="rounded border-border bg-card"
+                                  className="rounded border-border bg-cardard"
                                 />
                                 <label
                                   htmlFor={`serial-req-${index}`}
@@ -414,7 +414,7 @@ export default function ReceivePurchaseOrderPage() {
 
           {/* Right sidebar config panel */}
           <div className="space-y-6">
-            <Card className="shadow-sm border-border bg-card">
+            <Card className="shadow-sm border-border bg-cardard">
               <CardHeader className="border-b">
                 <CardTitle className="text-sm font-semibold flex items-center gap-1.5">
                   <Layers className="w-4 h-4 text-primary" /> Delivery Metadata
@@ -473,7 +473,7 @@ export default function ReceivePurchaseOrderPage() {
               </CardContent>
             </Card>
 
-            <Card className="shadow-sm border-border bg-card">
+            <Card className="shadow-sm border-border bg-cardard">
               <CardHeader className="border-b">
                 <CardTitle className="text-sm font-semibold">Summary & Commit</CardTitle>
               </CardHeader>

@@ -161,7 +161,7 @@ export default function WarehousesPage() {
       {/* KPI Dashboard Panel */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-left">
         {/* KPI: Total warehouses */}
-        <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+        <div className="rounded-2xl border border-border bg-cardard p-5 shadow-sm">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               Total Facilities
@@ -179,7 +179,7 @@ export default function WarehousesPage() {
         </div>
 
         {/* KPI: Active warehouses */}
-        <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+        <div className="rounded-2xl border border-border bg-cardard p-5 shadow-sm">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               Active Depots
@@ -197,7 +197,7 @@ export default function WarehousesPage() {
         </div>
 
         {/* KPI: Total Capacity */}
-        <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+        <div className="rounded-2xl border border-border bg-cardard p-5 shadow-sm">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               Global Capacity
@@ -215,7 +215,7 @@ export default function WarehousesPage() {
         </div>
 
         {/* KPI: Fill level utilization */}
-        <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+        <div className="rounded-2xl border border-border bg-cardard p-5 shadow-sm">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               Avg Utilization
@@ -241,7 +241,7 @@ export default function WarehousesPage() {
       </div>
 
       {/* Toolbar filters */}
-      <div className="flex flex-col gap-4 bg-card rounded-2xl border border-border p-4">
+      <div className="flex flex-col gap-4 bg-cardard rounded-2xl border border-border p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           {/* Search bar */}
           <div className="relative w-full max-w-sm">
@@ -389,7 +389,7 @@ export default function WarehousesPage() {
       )}
 
       {/* Table grid */}
-      <div className="border border-border bg-card rounded-2xl overflow-hidden">
+      <div className="border border-border bg-cardard rounded-2xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>

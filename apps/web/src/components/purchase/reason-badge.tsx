@@ -43,7 +43,7 @@ export function ReasonBadge({ reason, className }: ReasonBadgeProps) {
     },
     MANUAL_CORRECTION: {
       label: 'Manual Correction',
-      className: 'bg-slate-500/10 text-slate-500 border-slate-500/20 hover:bg-slate-500/15',
+      className: 'bg-slate-500/10 text-muted-foreground border-slate-500/20 hover:bg-slate-500/15',
     },
     OTHER: {
       label: 'Other Reasons',

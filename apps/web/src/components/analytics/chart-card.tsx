@@ -9,28 +9,28 @@ const AppAreaChart = dynamic(
   () => import('@/components/dashboard/charts/area-chart').then((mod) => mod.AppAreaChart),
   {
     ssr: false,
-    loading: () => <div className="h-[250px] animate-pulse bg-slate-900/40 rounded-xl" />,
+    loading: () => <div className="h-[250px] animate-pulse bg-accent/40 rounded-xl" />,
   },
 );
 const AppBarChart = dynamic(
   () => import('@/components/dashboard/charts/bar-chart').then((mod) => mod.AppBarChart),
   {
     ssr: false,
-    loading: () => <div className="h-[250px] animate-pulse bg-slate-900/40 rounded-xl" />,
+    loading: () => <div className="h-[250px] animate-pulse bg-accent/40 rounded-xl" />,
   },
 );
 const AppLineChart = dynamic(
   () => import('@/components/dashboard/charts/line-chart').then((mod) => mod.AppLineChart),
   {
     ssr: false,
-    loading: () => <div className="h-[250px] animate-pulse bg-slate-900/40 rounded-xl" />,
+    loading: () => <div className="h-[250px] animate-pulse bg-accent/40 rounded-xl" />,
   },
 );
 const AppPieChart = dynamic(
   () => import('@/components/dashboard/charts/pie-chart').then((mod) => mod.AppPieChart),
   {
     ssr: false,
-    loading: () => <div className="h-[250px] animate-pulse bg-slate-900/40 rounded-xl" />,
+    loading: () => <div className="h-[250px] animate-pulse bg-accent/40 rounded-xl" />,
   },
 );
 import { FileDown, Printer, HelpCircle } from 'lucide-react';
@@ -93,7 +93,7 @@ export function ChartCard({
   const renderChart = () => {
     if (!data || data.length === 0) {
       return (
-        <div className="flex h-48 items-center justify-center text-xs text-slate-500 font-sans">
+        <div className="flex h-48 items-center justify-center text-xs text-muted-foreground font-sans">
           No data available for display.
         </div>
       );
@@ -158,15 +158,15 @@ export function ChartCard({
   };
 
   return (
-    <Card className="bg-[#0c1220] border-slate-800 text-slate-100 flex flex-col justify-between select-none text-left print:bg-white print:text-black print:border-none print:shadow-none">
-      <CardHeader className="py-4 border-b border-slate-900 flex flex-col sm:flex-row sm:items-center justify-between gap-3 print:border-black">
+    <Card className="bg-cardard border-border text-foreground flex flex-col justify-between select-none text-left print:bg-white print:text-black print:border-none print:shadow-none">
+      <CardHeader className="py-4 border-b border-border flex flex-col sm:flex-row sm:items-center justify-between gap-3 print:border-black">
         <div className="space-y-0.5 text-left">
-          <CardTitle className="text-xs font-bold text-slate-200 uppercase tracking-widest font-sans flex items-center gap-1.5 print:text-black">
+          <CardTitle className="text-xs font-bold text-foreground uppercase tracking-widest font-sans flex items-center gap-1.5 print:text-black">
             <HelpCircle className="h-4 w-4 text-emerald-450 print:hidden" />
             <span>{title}</span>
           </CardTitle>
           {description && (
-            <CardDescription className="text-[10px] text-slate-500 font-mono mt-0.5 print:text-gray-600">
+            <CardDescription className="text-[10px] text-muted-foreground font-mono mt-0.5 print:text-gray-600">
               {description}
             </CardDescription>
           )}
@@ -175,7 +175,7 @@ export function ChartCard({
         <div className="flex items-center gap-2 print:hidden self-end sm:self-auto">
           {/* Timeframe options */}
           {showTimeframeSelector && (
-            <div className="flex border border-slate-855 rounded-lg bg-slate-950 p-0.5 text-[9px] font-bold">
+            <div className="flex border border-slate-855 rounded-lg bg-muted p-0.5 text-[9px] font-bold">
               {(['daily', 'weekly', 'monthly', 'yearly'] as const).map((t) => (
                 <button
                   key={t}
@@ -184,7 +184,7 @@ export function ChartCard({
                   className={`px-2 py-1 rounded capitalize transition-colors ${
                     activeTimeframe === t
                       ? 'bg-emerald-500 text-slate-950 font-black'
-                      : 'text-slate-500 hover:text-slate-350'
+                      : 'text-muted-foreground hover:text-muted-foreground'
                   }`}
                 >
                   {t}
@@ -199,7 +199,7 @@ export function ChartCard({
               size="icon"
               variant="ghost"
               onClick={handleExportCSV}
-              className="h-7 w-7 text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-slate-900"
+              className="h-7 w-7 text-muted-foreground hover:text-foreground hover:bg-accent border border-border"
               title="Download CSV"
             >
               <FileDown className="h-3.5 w-3.5" />
@@ -208,7 +208,7 @@ export function ChartCard({
               size="icon"
               variant="ghost"
               onClick={() => window.print()}
-              className="h-7 w-7 text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-slate-900"
+              className="h-7 w-7 text-muted-foreground hover:text-foreground hover:bg-accent border border-border"
               title="Print Chart"
             >
               <Printer className="h-3.5 w-3.5" />

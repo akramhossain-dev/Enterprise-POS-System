@@ -10,14 +10,14 @@ import { ArrowLeft } from 'lucide-react';
 
 export default function POSCashDrawerPage() {
   return (
-    <PageContainer className="max-w-6xl mx-auto py-6 text-slate-100 select-none text-left">
+    <PageContainer className="max-w-6xl mx-auto py-6 text-foreground select-none text-left">
       {/* Back button */}
       <div className="mb-4">
         <Link href="/pos">
           <Button
             variant="ghost"
             size="sm"
-            className="text-slate-400 hover:text-slate-200 gap-1.5 h-8"
+            className="text-muted-foreground hover:text-foreground gap-1.5 h-8"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Back to POS Terminal</span>

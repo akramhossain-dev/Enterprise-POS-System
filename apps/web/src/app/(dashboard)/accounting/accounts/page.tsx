@@ -64,14 +64,14 @@ export default function POSChartAccountsPage() {
   };
 
   return (
-    <PageContainer className="text-slate-100 select-none text-left">
+    <PageContainer className="text-foreground select-none text-left">
       {/* Top action header bar */}
       <div className="mb-4 flex justify-between items-center">
         <Link href="/accounting">
           <Button
             variant="ghost"
             size="sm"
-            className="text-slate-400 hover:text-slate-200 gap-1.5 h-8"
+            className="text-muted-foreground hover:text-foreground gap-1.5 h-8"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Accounting Dashboard</span>
@@ -83,9 +83,9 @@ export default function POSChartAccountsPage() {
             <Button
               size="sm"
               variant="outline"
-              className="h-8 border-slate-800 bg-[#0c1220] hover:bg-slate-900 text-xs gap-1"
+              className="h-8 border-border bg-cardard hover:bg-accent text-xs gap-1"
             >
-              <FolderLock className="h-4 w-4 text-slate-400" />
+              <FolderLock className="h-4 w-4 text-muted-foreground" />
               <span>Archived Accounts</span>
             </Button>
           </Link>
@@ -110,7 +110,7 @@ export default function POSChartAccountsPage() {
       <div className="flex flex-col sm:flex-row gap-3 items-center justify-between mt-4 mb-6">
         <div className="flex gap-2 w-full sm:w-auto">
           <div className="relative flex-1 sm:w-64">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-500" />
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="text"
               placeholder="Search account code or name..."
@@ -119,7 +119,7 @@ export default function POSChartAccountsPage() {
                 setQuery(e.target.value);
                 setCurrentPage(1);
               }}
-              className="pl-8 bg-slate-950 border-slate-800 text-slate-100 text-xs focus-visible:ring-emerald-500 h-9"
+              className="pl-8 bg-muted border-border text-foreground text-xs focus-visible:ring-emerald-500 h-9"
             />
           </div>
 
@@ -129,7 +129,7 @@ export default function POSChartAccountsPage() {
               setTypeFilter(e.target.value);
               setCurrentPage(1);
             }}
-            className="bg-[#0c1220] border border-slate-850 text-slate-300 rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[120px]"
+            className="bg-cardard border border-border text-foreground rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[120px]"
           >
             <option value="ALL">All Types</option>
             <option value="ASSETS">Assets</option>
@@ -141,14 +141,14 @@ export default function POSChartAccountsPage() {
         </div>
 
         {/* View Mode Swapper */}
-        <div className="flex bg-slate-950 p-1 border border-slate-900 rounded-lg shrink-0">
+        <div className="flex bg-muted p-1 border border-border rounded-lg shrink-0">
           <Button
             size="sm"
             onClick={() => setViewMode('TREE')}
             className={`h-7 px-3 text-xs rounded-md ${
               viewMode === 'TREE'
                 ? 'bg-emerald-500 text-slate-950 font-bold'
-                : 'bg-transparent text-slate-400 hover:text-slate-200'
+                : 'bg-transparent text-muted-foreground hover:text-foreground'
             }`}
           >
             <ListCollapse className="h-3.5 w-3.5 mr-1" />
@@ -160,7 +160,7 @@ export default function POSChartAccountsPage() {
             className={`h-7 px-3 text-xs rounded-md ${
               viewMode === 'TABLE'
                 ? 'bg-emerald-500 text-slate-950 font-bold'
-                : 'bg-transparent text-slate-400 hover:text-slate-200'
+                : 'bg-transparent text-muted-foreground hover:text-foreground'
             }`}
           >
             <LayoutGrid className="h-3.5 w-3.5 mr-1" />
@@ -172,16 +172,16 @@ export default function POSChartAccountsPage() {
       {/* Main accounts content */}
       <div className="space-y-4">
         {isLoading ? (
-          <div className="text-center py-12 text-slate-500">Querying ledger archive...</div>
+          <div className="text-center py-12 text-muted-foreground">Querying ledger archive...</div>
         ) : accounts.length > 0 ? (
           viewMode === 'TREE' ? (
             <AccountTree accounts={accounts} onArchive={handleArchive} />
           ) : (
             /* Table View */
-            <div className="bg-[#0c1220] border border-slate-800 rounded-2xl overflow-hidden">
+            <div className="bg-cardard border border-border rounded-2xl overflow-hidden">
               <table className="w-full text-xs sm:text-sm text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-slate-855 text-slate-500 font-bold uppercase tracking-wider text-[10px] bg-slate-955/35">
+                  <tr className="border-b border-slate-855 text-muted-foreground font-bold uppercase tracking-wider text-[10px] bg-slate-955/35">
                     <th className="py-3 px-4">Code</th>
                     <th className="py-3 px-4">Account Name</th>
                     <th className="py-3 px-3">Type</th>
@@ -190,18 +190,18 @@ export default function POSChartAccountsPage() {
                     <th className="py-3 px-4 text-center">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-900 font-medium text-slate-300 font-mono">
+                <tbody className="divide-y divide-border font-medium text-foreground font-mono">
                   {accounts.map((acc) => (
-                    <tr key={acc.id} className="hover:bg-slate-900/40">
-                      <td className="py-3 px-4 font-bold text-slate-200">{acc.code}</td>
-                      <td className="py-3 px-4 font-sans font-bold text-slate-100">{acc.name}</td>
-                      <td className="py-3 px-3 font-sans text-xs text-slate-400">{acc.type}</td>
-                      <td className="py-3 px-3 font-sans text-xs text-slate-500">
+                    <tr key={acc.id} className="hover:bg-accent/40">
+                      <td className="py-3 px-4 font-bold text-foreground">{acc.code}</td>
+                      <td className="py-3 px-4 font-sans font-bold text-foreground">{acc.name}</td>
+                      <td className="py-3 px-3 font-sans text-xs text-muted-foreground">{acc.type}</td>
+                      <td className="py-3 px-3 font-sans text-xs text-muted-foreground">
                         {acc.parentAccountCode
                           ? `${acc.parentAccountCode} (${acc.parentAccountName})`
                           : '-'}
                       </td>
-                      <td className="py-3 px-3 text-right font-bold text-slate-200">
+                      <td className="py-3 px-3 text-right font-bold text-foreground">
                         ${acc.balance.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                       </td>
                       <td className="py-3 px-4 text-center">
@@ -210,7 +210,7 @@ export default function POSChartAccountsPage() {
                             <Button
                               size="icon"
                               variant="ghost"
-                              className="h-7 w-7 text-slate-500 hover:text-emerald-400"
+                              className="h-7 w-7 text-muted-foreground hover:text-emerald-400"
                             >
                               <Eye className="h-3.5 w-3.5" />
                             </Button>
@@ -219,7 +219,7 @@ export default function POSChartAccountsPage() {
                             <Button
                               size="icon"
                               variant="ghost"
-                              className="h-7 w-7 text-slate-500 hover:text-amber-400"
+                              className="h-7 w-7 text-muted-foreground hover:text-amber-400"
                             >
                               <Edit3 className="h-3.5 w-3.5" />
                             </Button>
@@ -228,7 +228,7 @@ export default function POSChartAccountsPage() {
                             size="icon"
                             variant="ghost"
                             onClick={() => handleArchive(acc.id)}
-                            className="h-7 w-7 text-slate-500 hover:text-rose-455"
+                            className="h-7 w-7 text-muted-foreground hover:text-rose-455"
                           >
                             <Trash2 className="h-3.5 w-3.5" />
                           </Button>
@@ -241,7 +241,7 @@ export default function POSChartAccountsPage() {
             </div>
           )
         ) : (
-          <div className="text-center py-12 text-slate-500 border border-dashed border-slate-850 rounded-xl">
+          <div className="text-center py-12 text-muted-foreground border border-dashed border-border rounded-xl">
             <p className="text-xs">No ledger accounts registered.</p>
           </div>
         )}
@@ -249,7 +249,7 @@ export default function POSChartAccountsPage() {
 
       {/* Pager */}
       {viewMode === 'TABLE' && meta && meta.totalPages > 1 && (
-        <div className="flex items-center justify-between mt-6 pt-4 border-t border-slate-900 text-xs text-slate-500 font-mono">
+        <div className="flex items-center justify-between mt-6 pt-4 border-t border-border text-xs text-muted-foreground font-mono">
           <p>
             Showing {accounts.length} of {meta.total} accounts
           </p>
@@ -260,7 +260,7 @@ export default function POSChartAccountsPage() {
               variant="outline"
               disabled={currentPage <= 1}
               onClick={handlePrevPage}
-              className="h-7 w-7 bg-[#0c1220] border-slate-800 text-slate-400 hover:text-slate-200"
+              className="h-7 w-7 bg-cardard border-border text-muted-foreground hover:text-foreground"
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
@@ -269,7 +269,7 @@ export default function POSChartAccountsPage() {
               variant="outline"
               disabled={currentPage >= meta.totalPages}
               onClick={handleNextPage}
-              className="h-7 w-7 bg-[#0c1220] border-slate-800 text-slate-400 hover:text-slate-200"
+              className="h-7 w-7 bg-cardard border-border text-muted-foreground hover:text-foreground"
             >
               <ChevronRight className="h-4 w-4" />
             </Button>

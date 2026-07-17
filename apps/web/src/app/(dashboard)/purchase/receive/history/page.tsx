@@ -180,7 +180,7 @@ export default function ReceivingHistoryPage() {
       />
 
       {/* Toolbar filters */}
-      <div className="bg-card border rounded-xl p-4 mb-6 shadow-sm space-y-4 text-sm">
+      <div className="bg-cardard border rounded-xl p-4 mb-6 shadow-sm space-y-4 text-sm">
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
           <div className="relative w-full md:max-w-xs flex-1">
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -247,7 +247,7 @@ export default function ReceivingHistoryPage() {
                   setWarehouseFilter(e.target.value);
                   setPage(1);
                 }}
-                className="w-full text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none"
+                className="w-full text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none"
               >
                 <option value="">All Warehouses</option>
                 {warehouses.map((w) => (
@@ -269,7 +269,7 @@ export default function ReceivingHistoryPage() {
                   setSupplierFilter(e.target.value);
                   setPage(1);
                 }}
-                className="w-full text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none"
+                className="w-full text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none"
               >
                 <option value="">All Suppliers</option>
                 {suppliers.map((s) => (
@@ -291,7 +291,7 @@ export default function ReceivingHistoryPage() {
                   setStatusFilter(e.target.value as any);
                   setPage(1);
                 }}
-                className="w-full text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none"
+                className="w-full text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none"
               >
                 <option value="ALL">All History Statuses</option>
                 <option value="COMPLETED">COMPLETED</option>
@@ -306,7 +306,7 @@ export default function ReceivingHistoryPage() {
       {isLoading ? (
         <TableSkeleton columns={9} rows={pageSize} />
       ) : (
-        <div className="bg-card border rounded-xl shadow-sm p-4">
+        <div className="bg-cardard border rounded-xl shadow-sm p-4">
           <DataTable
             columns={columns}
             data={historyGRNs}

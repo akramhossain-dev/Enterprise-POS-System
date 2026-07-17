@@ -26,8 +26,8 @@ export function ApprovalTimeline({ status, refundStatus }: ApprovalTimelineProps
   const currentIdx = getStepIndex(status);
 
   return (
-    <div className="bg-[#0c1220] border border-slate-800 rounded-2xl p-5 select-none text-left">
-      <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6">
+    <div className="bg-cardard border border-border rounded-2xl p-5 select-none text-left">
+      <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-6">
         Return Approval Pipeline
       </h3>
       <div className="relative flex flex-col md:flex-row items-start md:items-center justify-between gap-6 md:gap-4">
@@ -54,7 +54,7 @@ export function ApprovalTimeline({ status, refundStatus }: ApprovalTimelineProps
                       ? 'bg-emerald-950 border-emerald-500 text-emerald-400'
                       : isActive
                         ? 'bg-amber-950 border-amber-500 text-amber-400 animate-pulse'
-                        : 'bg-slate-900 border-slate-800 text-slate-500',
+                        : 'bg-accent border-border text-muted-foreground',
                 )}
               >
                 {isRejectedStep ? (
@@ -79,12 +79,12 @@ export function ApprovalTimeline({ status, refundStatus }: ApprovalTimelineProps
                         ? 'text-emerald-400'
                         : isActive
                           ? 'text-amber-400'
-                          : 'text-slate-500',
+                          : 'text-muted-foreground',
                   )}
                 >
                   {isRejectedStep ? 'Claim Rejected' : step.label}
                 </p>
-                <p className="text-[10px] text-slate-500 mt-0.5">
+                <p className="text-[10px] text-muted-foreground mt-0.5">
                   {step.key === 'COMPLETED' && refundStatus
                     ? `Settle: ${refundStatus}`
                     : step.key === 'APPROVED' && status === 'APPROVED'

@@ -12,7 +12,7 @@ const DrilldownCard = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="h-64 animate-pulse bg-slate-950/40 rounded-xl border border-slate-900" />
+      <div className="h-64 animate-pulse bg-muted/40 rounded-xl border border-border" />
     ),
   },
 );
@@ -21,7 +21,7 @@ const HeatmapCard = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="h-64 animate-pulse bg-slate-950/40 rounded-xl border border-slate-900" />
+      <div className="h-64 animate-pulse bg-muted/40 rounded-xl border border-border" />
     ),
   },
 );
@@ -41,13 +41,13 @@ export default function AdvancedAnalyticsPage() {
   }
 
   return (
-    <PageContainer className="text-slate-100 select-none text-left print:bg-white print:text-black">
+    <PageContainer className="text-foreground select-none text-left print:bg-white print:text-black">
       <div className="mb-4 print:hidden">
         <Link href="/bi">
           <Button
             variant="ghost"
             size="sm"
-            className="text-slate-400 hover:text-slate-200 gap-1.5 h-8"
+            className="text-muted-foreground hover:text-foreground gap-1.5 h-8"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>BI Dashboard</span>

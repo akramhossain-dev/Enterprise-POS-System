@@ -247,7 +247,7 @@ export default function EditPurchaseOrderPage() {
   if (error || !po) {
     return (
       <PageContainer>
-        <div className="text-center py-16 bg-card border rounded-2xl">
+        <div className="text-center py-16 bg-cardard border rounded-2xl">
           <AlertTriangle className="w-12 h-12 text-rose-500 mx-auto mb-4" />
           <h3 className="text-lg font-bold text-foreground">Purchase Order Not Found</h3>
           <p className="text-sm text-muted-foreground mt-1">
@@ -266,7 +266,7 @@ export default function EditPurchaseOrderPage() {
   if (po.status !== 'DRAFT') {
     return (
       <PageContainer>
-        <div className="text-center py-16 bg-card border rounded-2xl">
+        <div className="text-center py-16 bg-cardard border rounded-2xl">
           <AlertTriangle className="w-12 h-12 text-amber-500 mx-auto mb-4" />
           <h3 className="text-lg font-bold text-foreground">Edits Forbidden</h3>
           <p className="text-sm text-muted-foreground mt-1">
@@ -299,7 +299,7 @@ export default function EditPurchaseOrderPage() {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 text-sm">
         <div className="grid gap-6 md:grid-cols-3">
           {/* Main items grid */}
-          <Card className="md:col-span-2 shadow-sm border-border bg-card">
+          <Card className="md:col-span-2 shadow-sm border-border bg-cardard">
             <CardHeader className="border-b">
               <CardTitle className="text-sm font-semibold flex items-center gap-2">
                 <Package className="w-4 h-4 text-primary" /> Purchase Order Line Items
@@ -342,7 +342,7 @@ export default function EditPurchaseOrderPage() {
                       items.map((item, index) => (
                         <tr
                           key={item.productId}
-                          className="border-b last:border-b-0 border-border bg-card hover:bg-muted/10"
+                          className="border-b last:border-b-0 border-border bg-cardard hover:bg-muted/10"
                         >
                           <td className="p-3 pl-6">
                             <div className="flex flex-col font-medium">
@@ -419,7 +419,7 @@ export default function EditPurchaseOrderPage() {
 
           {/* Right sidebar config */}
           <div className="space-y-6">
-            <Card className="shadow-sm border-border bg-card">
+            <Card className="shadow-sm border-border bg-cardard">
               <CardHeader className="border-b">
                 <CardTitle className="text-sm font-semibold flex items-center gap-1.5">
                   <Layers className="w-4 h-4 text-primary" /> Order Metadata
@@ -482,7 +482,7 @@ export default function EditPurchaseOrderPage() {
                   </label>
                   <select
                     {...register('branchId')}
-                    className="w-full text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none"
+                    className="w-full text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none"
                   >
                     <option value="">No branch restriction</option>
                     {branches.map((b) => (
@@ -495,7 +495,7 @@ export default function EditPurchaseOrderPage() {
               </CardContent>
             </Card>
 
-            <Card className="shadow-sm border-border bg-card">
+            <Card className="shadow-sm border-border bg-cardard">
               <CardHeader className="border-b">
                 <CardTitle className="text-sm font-semibold">Logistics & Charges</CardTitle>
               </CardHeader>

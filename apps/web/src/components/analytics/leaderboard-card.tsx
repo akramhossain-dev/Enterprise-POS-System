@@ -32,12 +32,12 @@ export function LeaderboardCard({
   return (
     <Card
       className={cn(
-        'bg-[#0c1220] border-slate-800 text-slate-100 select-none text-left',
+        'bg-cardard border-border text-foreground select-none text-left',
         className,
       )}
     >
-      <CardHeader className="py-4 border-b border-slate-900 flex flex-row items-center justify-between">
-        <CardTitle className="text-xs font-bold text-slate-200 uppercase tracking-widest font-sans flex items-center gap-1.5">
+      <CardHeader className="py-4 border-b border-border flex flex-row items-center justify-between">
+        <CardTitle className="text-xs font-bold text-foreground uppercase tracking-widest font-sans flex items-center gap-1.5">
           <Trophy className="h-4 w-4 text-amber-500 animate-bounce" />
           <span>{title}</span>
         </CardTitle>
@@ -51,13 +51,13 @@ export function LeaderboardCard({
               <div key={item.id} className="space-y-1.5">
                 <div className="flex justify-between items-center text-xs font-mono">
                   <div className="flex items-center gap-2">
-                    <span className="flex items-center justify-center w-5 h-5 rounded-full bg-slate-950 border border-slate-850 text-[10px] text-slate-400 font-bold">
+                    <span className="flex items-center justify-center w-5 h-5 rounded-full bg-muted border border-border text-[10px] text-muted-foreground font-bold">
                       {idx + 1}
                     </span>
                     <div className="text-left font-sans">
-                      <p className="font-bold text-slate-200">{item.name}</p>
+                      <p className="font-bold text-foreground">{item.name}</p>
                       {item.secondaryInfo && (
-                        <span className="text-[9px] text-slate-500 block leading-none">
+                        <span className="text-[9px] text-muted-foreground block leading-none">
                           {item.secondaryInfo}
                         </span>
                       )}
@@ -65,13 +65,13 @@ export function LeaderboardCard({
                   </div>
 
                   <div className="text-right">
-                    <p className="font-bold text-slate-200">
+                    <p className="font-bold text-foreground">
                       {metricPrefix}
                       {formatCurrency(item.amount)}
                       {metricSuffix}
                     </p>
                     {item.quantity !== undefined && (
-                      <span className="text-[9px] text-slate-500 block leading-none">
+                      <span className="text-[9px] text-muted-foreground block leading-none">
                         Qty: {item.quantity}
                       </span>
                     )}
@@ -79,7 +79,7 @@ export function LeaderboardCard({
                 </div>
 
                 {/* Progress bar trend */}
-                <div className="h-1.5 w-full bg-slate-950 border border-slate-900 rounded-full overflow-hidden">
+                <div className="h-1.5 w-full bg-muted border border-border rounded-full overflow-hidden">
                   <div
                     className={cn(
                       'h-full rounded-full transition-all duration-500',
@@ -96,7 +96,7 @@ export function LeaderboardCard({
             );
           })
         ) : (
-          <div className="text-center py-8 text-slate-500 text-xs">
+          <div className="text-center py-8 text-muted-foreground text-xs">
             No rankings logged for this segment.
           </div>
         )}

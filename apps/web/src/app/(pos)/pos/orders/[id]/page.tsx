@@ -54,14 +54,14 @@ export default function OrderDetailsPage({ params }: { params: Promise<Params> }
   };
 
   return (
-    <PageContainer className="max-w-4xl mx-auto py-6 text-slate-100 select-none text-left">
+    <PageContainer className="max-w-4xl mx-auto py-6 text-foreground select-none text-left">
       {/* Back navigation */}
       <div className="mb-4">
         <Link href="/pos/orders">
           <Button
             variant="ghost"
             size="sm"
-            className="text-slate-400 hover:text-slate-200 gap-1.5 h-8"
+            className="text-muted-foreground hover:text-foreground gap-1.5 h-8"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Back to Orders List</span>
@@ -75,12 +75,12 @@ export default function OrderDetailsPage({ params }: { params: Promise<Params> }
       />
 
       {isLoading ? (
-        <div className="flex flex-col items-center justify-center py-20 text-slate-400 gap-2">
+        <div className="flex flex-col items-center justify-center py-20 text-muted-foreground gap-2">
           <Loader2 className="h-8 w-8 animate-spin text-emerald-400" />
           <p className="text-xs">Fetching order logs...</p>
         </div>
       ) : isError || !order ? (
-        <div className="text-center py-20 border border-dashed border-slate-850 rounded-2xl text-rose-400 text-xs">
+        <div className="text-center py-20 border border-dashed border-border rounded-2xl text-rose-400 text-xs">
           Failed to load order record.
         </div>
       ) : (
@@ -93,31 +93,31 @@ export default function OrderDetailsPage({ params }: { params: Promise<Params> }
             {/* Left panels */}
             <div className="md:col-span-2 space-y-6">
               {/* Products list grid */}
-              <Card className="bg-[#0c1220] border-slate-800 text-slate-100">
-                <CardHeader className="pb-3 border-b border-slate-900">
-                  <CardTitle className="text-sm font-bold text-slate-350">
+              <Card className="bg-cardard border-border text-foreground">
+                <CardHeader className="pb-3 border-b border-border">
+                  <CardTitle className="text-sm font-bold text-muted-foreground">
                     Sold Line Items
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-0">
                   <table className="w-full text-xs text-left border-collapse">
                     <thead>
-                      <tr className="border-b border-slate-900 text-slate-500 font-bold uppercase tracking-wider text-[10px] bg-slate-950/20">
+                      <tr className="border-b border-border text-muted-foreground font-bold uppercase tracking-wider text-[10px] bg-muted/20">
                         <th className="py-2.5 px-4">Item Name</th>
                         <th className="py-2.5 px-3 text-right">Price</th>
                         <th className="py-2.5 px-3 text-center">Qty</th>
                         <th className="py-2.5 px-4 text-right">Subtotal</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-900 font-mono text-slate-300">
+                    <tbody className="divide-y divide-border font-mono text-foreground">
                       {order.items.map((it, idx) => (
-                        <tr key={idx} className="hover:bg-slate-950/10">
-                          <td className="py-3 px-4 font-sans font-bold text-slate-200">
+                        <tr key={idx} className="hover:bg-muted/10">
+                          <td className="py-3 px-4 font-sans font-bold text-foreground">
                             {it.productName}
                           </td>
                           <td className="py-3 px-3 text-right">${it.unitPrice.toFixed(2)}</td>
                           <td className="py-3 px-3 text-center">{it.quantity}</td>
-                          <td className="py-3 px-4 text-right font-bold text-slate-200">
+                          <td className="py-3 px-4 text-right font-bold text-foreground">
                             ${(it.quantity * it.unitPrice).toFixed(2)}
                           </td>
                         </tr>
@@ -130,29 +130,29 @@ export default function OrderDetailsPage({ params }: { params: Promise<Params> }
 
             {/* Right meta values card */}
             <div className="md:col-span-1 space-y-6">
-              <Card className="bg-[#0c1220] border-slate-800 text-slate-100">
-                <CardHeader className="pb-3 border-b border-slate-900">
-                  <CardTitle className="text-sm font-bold text-slate-350">Order Summary</CardTitle>
+              <Card className="bg-cardard border-border text-foreground">
+                <CardHeader className="pb-3 border-b border-border">
+                  <CardTitle className="text-sm font-bold text-muted-foreground">Order Summary</CardTitle>
                 </CardHeader>
                 <CardContent className="p-4 space-y-4 text-xs font-mono">
-                  <div className="space-y-1.5 border-b border-slate-900 pb-3 text-slate-400">
+                  <div className="space-y-1.5 border-b border-border pb-3 text-muted-foreground">
                     <div className="flex justify-between">
                       <span>Customer:</span>
-                      <span className="font-sans font-bold text-slate-200">
+                      <span className="font-sans font-bold text-foreground">
                         {order.customerName}
                       </span>
                     </div>
                     <div className="flex justify-between">
                       <span>Cashier:</span>
-                      <span className="font-sans text-slate-300">{order.cashierName}</span>
+                      <span className="font-sans text-foreground">{order.cashierName}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Invoice ref:</span>
-                      <span className="font-bold text-slate-200">{order.invoiceNumber}</span>
+                      <span className="font-bold text-foreground">{order.invoiceNumber}</span>
                     </div>
                   </div>
 
-                  <div className="space-y-1.5 text-slate-400">
+                  <div className="space-y-1.5 text-muted-foreground">
                     <div className="flex justify-between">
                       <span>Subtotal:</span>
                       <span>${order.totalAmount.toFixed(2)}</span>
@@ -167,16 +167,16 @@ export default function OrderDetailsPage({ params }: { params: Promise<Params> }
                       <span>Tax (EST):</span>
                       <span>${order.tax.toFixed(2)}</span>
                     </div>
-                    <div className="flex justify-between text-sm font-black text-emerald-400 pt-2 border-t border-slate-900">
+                    <div className="flex justify-between text-sm font-black text-emerald-400 pt-2 border-t border-border">
                       <span>Grand Total:</span>
                       <span>${order.grandTotal.toFixed(2)}</span>
                     </div>
                   </div>
 
                   {/* Actions buttons */}
-                  <div className="pt-2 border-t border-slate-900 grid gap-2">
+                  <div className="pt-2 border-t border-border grid gap-2">
                     <Link href={`/pos/invoices/${order.id}`}>
-                      <Button className="w-full h-8 bg-slate-900 border border-slate-800 hover:bg-slate-800 text-[10px] font-bold uppercase tracking-wider gap-1">
+                      <Button className="w-full h-8 bg-accent border border-border hover:bg-slate-800 text-[10px] font-bold uppercase tracking-wider gap-1">
                         <Printer className="h-3 w-3" /> Print Invoice
                       </Button>
                     </Link>
@@ -199,9 +199,9 @@ export default function OrderDetailsPage({ params }: { params: Promise<Params> }
 
       {/* Supervisor void verification dialog */}
       <Dialog open={openVoidDialog} onOpenChange={setOpenVoidDialog}>
-        <DialogContent className="sm:max-w-[420px] bg-[#0c1220] border-slate-800 text-slate-100 p-5">
+        <DialogContent className="sm:max-w-[420px] bg-cardard border-border text-foreground p-5">
           <DialogHeader>
-            <DialogTitle className="text-slate-100 text-sm font-bold flex items-center gap-2 pb-2 border-b border-slate-850">
+            <DialogTitle className="text-foreground text-sm font-bold flex items-center gap-2 pb-2 border-b border-border">
               <ShieldAlert className="h-5 w-5 text-rose-500" />
               <span>Supervisor Void Authorization</span>
             </DialogTitle>
@@ -209,18 +209,18 @@ export default function OrderDetailsPage({ params }: { params: Promise<Params> }
 
           <div className="space-y-4 text-xs mt-3 text-left">
             <div className="grid gap-1.5">
-              <label className="text-slate-400 font-semibold">Voiding Reason / Rationale</label>
+              <label className="text-muted-foreground font-semibold">Voiding Reason / Rationale</label>
               <Input
                 type="text"
                 placeholder="E.g., Customer double charge, scanning error"
                 value={voidReason}
                 onChange={(e) => setVoidReason(e.target.value)}
-                className="bg-slate-950 border-slate-800 text-xs text-slate-100 focus-visible:ring-rose-500 h-8.5"
+                className="bg-muted border-border text-xs text-foreground focus-visible:ring-rose-500 h-8.5"
               />
             </div>
 
             <div className="grid gap-1.5">
-              <label className="text-slate-400 font-semibold font-mono">
+              <label className="text-muted-foreground font-semibold font-mono">
                 Supervisor Authorization PIN
               </label>
               <Input
@@ -229,11 +229,11 @@ export default function OrderDetailsPage({ params }: { params: Promise<Params> }
                 maxLength={4}
                 value={supervisorPin}
                 onChange={(e) => setSupervisorPin(e.target.value)}
-                className="bg-slate-950 border-slate-800 text-xs text-slate-100 tracking-widest font-mono text-center focus-visible:ring-rose-500 h-8.5"
+                className="bg-muted border-border text-xs text-foreground tracking-widest font-mono text-center focus-visible:ring-rose-500 h-8.5"
               />
-              <p className="text-[10px] text-slate-500">
+              <p className="text-[10px] text-muted-foreground">
                 Security clearance check required. Default mock credentials:{' '}
-                <span className="font-bold font-mono text-slate-400">1234</span>
+                <span className="font-bold font-mono text-muted-foreground">1234</span>
               </p>
             </div>
 

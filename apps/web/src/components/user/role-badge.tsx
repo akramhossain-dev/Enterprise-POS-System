@@ -23,7 +23,7 @@ export function RoleBadge({ roleName, className }: RoleBadgeProps) {
   } else if (normName.includes('CASHIER')) {
     colorClasses = 'bg-amber-500/10 text-amber-500 border-amber-500/20';
   } else if (normName.includes('ACCOUNTANT') || normName.includes('FINANCE')) {
-    colorClasses = 'bg-cyan-500/10 text-cyan-500 border-cyan-500/20';
+    colorClasses = 'bg-cardyan-500/10 text-cyan-500 border-cyan-500/20';
   }
 
   return (

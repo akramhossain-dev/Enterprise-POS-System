@@ -110,7 +110,7 @@ function AddAddressForm({ customerId, onDone }: { customerId: string; onDone: ()
     'w-full h-8 rounded-lg px-3 bg-background border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-all';
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 rounded-xl border border-border bg-card space-y-3">
+    <form onSubmit={handleSubmit} className="p-4 rounded-xl border border-border bg-cardard space-y-3">
       <p className="text-sm font-semibold text-foreground">Add New Address</p>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div className="space-y-1">
@@ -234,7 +234,7 @@ export default function CustomerProfilePage() {
       </div>
 
       {/* Profile header card */}
-      <div className="flex flex-col sm:flex-row gap-4 p-5 rounded-xl border border-border bg-card">
+      <div className="flex flex-col sm:flex-row gap-4 p-5 rounded-xl border border-border bg-cardard">
         <CustomerAvatar customer={customer} size="xl" className="flex-shrink-0" />
 
         <div className="flex-1 min-w-0">
@@ -305,7 +305,7 @@ export default function CustomerProfilePage() {
           <Button
             size="sm"
             variant="outline"
-            className="text-destructive border-destructive/20 hover:bg-destructive/10"
+            className="text-destructive border-destructive/20 hover:bg-backgroundestructive/10"
             leftIcon={<Trash2 className="w-3.5 h-3.5" />}
             onClick={() => {
               if (confirm(`Delete "${customer.fullName}"? This cannot be undone.`)) {
@@ -353,7 +353,7 @@ export default function CustomerProfilePage() {
           className="grid grid-cols-1 lg:grid-cols-2 gap-5"
         >
           {/* Basic Information */}
-          <div className="rounded-xl border border-border bg-card p-5 space-y-4">
+          <div className="rounded-xl border border-border bg-cardard p-5 space-y-4">
             <h2 className="text-sm font-semibold text-foreground">Basic Information</h2>
             <div className="space-y-3">
               <InfoRow
@@ -391,7 +391,7 @@ export default function CustomerProfilePage() {
           </div>
 
           {/* Contact Information */}
-          <div className="rounded-xl border border-border bg-card p-5 space-y-4">
+          <div className="rounded-xl border border-border bg-cardard p-5 space-y-4">
             <h2 className="text-sm font-semibold text-foreground">Contact Information</h2>
             <div className="space-y-3">
               <InfoRow icon={<Phone className="w-4 h-4" />} label="Phone" value={customer.phone} />
@@ -419,7 +419,7 @@ export default function CustomerProfilePage() {
 
           {/* Notes */}
           {customer.notes && (
-            <div className="rounded-xl border border-border bg-card p-5 lg:col-span-2">
+            <div className="rounded-xl border border-border bg-cardard p-5 lg:col-span-2">
               <h2 className="text-sm font-semibold text-foreground mb-3">Notes</h2>
               <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">
                 {customer.notes}
@@ -428,7 +428,7 @@ export default function CustomerProfilePage() {
           )}
 
           {/* Account info */}
-          <div className="rounded-xl border border-border bg-card p-5 lg:col-span-2">
+          <div className="rounded-xl border border-border bg-cardard p-5 lg:col-span-2">
             <h2 className="text-sm font-semibold text-foreground mb-3">Account Details</h2>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               <div>
@@ -487,7 +487,7 @@ export default function CustomerProfilePage() {
             </select>
           </div>
 
-          <div className="rounded-xl border border-border bg-card p-5">
+          <div className="rounded-xl border border-border bg-cardard p-5">
             {isLedgerLoading ? (
               <div className="space-y-4">
                 {Array.from({ length: 5 }).map((_, i) => (
@@ -539,7 +539,7 @@ export default function CustomerProfilePage() {
           )}
 
           {addresses.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12 text-center rounded-xl border border-border bg-card">
+            <div className="flex flex-col items-center justify-center py-12 text-center rounded-xl border border-border bg-cardard">
               <MapPin className="w-10 h-10 text-muted-foreground/40 mb-3" />
               <p className="text-sm font-medium text-muted-foreground">No addresses yet</p>
             </div>
@@ -549,7 +549,7 @@ export default function CustomerProfilePage() {
                 <div
                   key={addr.id}
                   className={cn(
-                    'rounded-xl border bg-card p-4 space-y-1.5',
+                    'rounded-xl border bg-cardard p-4 space-y-1.5',
                     addr.isDefault ? 'border-primary/30 bg-primary/5' : 'border-border',
                   )}
                 >
@@ -577,7 +577,7 @@ export default function CustomerProfilePage() {
       {/* Tab: Notes */}
       {activeTab === 'notes' && (
         <div id="tab-panel-notes" role="tabpanel">
-          <div className="rounded-xl border border-border bg-card p-5">
+          <div className="rounded-xl border border-border bg-cardard p-5">
             {customer.notes ? (
               <div className="space-y-3">
                 <div className="flex items-center justify-between">

@@ -24,13 +24,13 @@ export function FinancialKpiCard({
   isPositiveChange = true,
   info,
   sparklineData = [10, 20, 15, 30, 25, 40],
-  color = 'text-slate-100',
+  color = 'text-foreground',
   className,
 }: FinancialKpiCardProps) {
   const isUp = isPositiveChange;
 
   return (
-    <Card className={cn('bg-[#0c1220] border-slate-800 text-slate-100', className)}>
+    <Card className={cn('bg-cardard border-border text-foreground', className)}>
       <CardContent className="p-4 space-y-3">
         <div className="flex justify-between items-start">
           <div className="space-y-0.5 text-left">
@@ -44,12 +44,12 @@ export function FinancialKpiCard({
                     <TooltipTrigger asChild>
                       <button
                         type="button"
-                        className="text-slate-500 hover:text-slate-400 focus:outline-none"
+                        className="text-muted-foreground hover:text-muted-foreground focus:outline-none"
                       >
                         <Info className="h-3 w-3" />
                       </button>
                     </TooltipTrigger>
-                    <TooltipContent className="bg-slate-900 border-slate-800 text-[10px] text-slate-200 p-2 max-w-[200px]">
+                    <TooltipContent className="bg-accent border-border text-[10px] text-foreground p-2 max-w-[200px]">
                       {info}
                     </TooltipContent>
                   </Tooltip>

@@ -33,7 +33,7 @@ export function LedgerTable({
           <Button
             size="xs"
             onClick={onExportCSV}
-            className="h-8 border border-slate-800 bg-[#0c1220] hover:bg-slate-900 text-[10px] font-bold uppercase tracking-wider gap-1.5"
+            className="h-8 border border-border bg-cardard hover:bg-accent text-[10px] font-bold uppercase tracking-wider gap-1.5"
           >
             <Download className="h-3.5 w-3.5" />
             <span>Export CSV</span>
@@ -42,11 +42,11 @@ export function LedgerTable({
       )}
 
       {/* Main Table */}
-      <div className="bg-[#0c1220] border border-slate-800 rounded-2xl overflow-hidden">
+      <div className="bg-cardard border border-border rounded-2xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs sm:text-sm">
             <thead>
-              <tr className="border-b border-slate-855 text-slate-500 font-bold uppercase tracking-wider text-[10px] bg-slate-955/35">
+              <tr className="border-b border-slate-855 text-muted-foreground font-bold uppercase tracking-wider text-[10px] bg-slate-955/35">
                 <th className="py-3 px-4 font-mono">Date</th>
                 <th className="py-3 px-3 font-mono">Ref / ID</th>
                 {showAccountColumn && <th className="py-3 px-4">Account</th>}
@@ -57,26 +57,26 @@ export function LedgerTable({
                 <th className="py-3 px-3 text-center">Type</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-900 font-medium text-slate-350 font-mono">
+            <tbody className="divide-y divide-border font-medium text-muted-foreground font-mono">
               {isLoading ? (
                 <tr>
                   <td
                     colSpan={showAccountColumn ? 8 : 7}
-                    className="py-10 text-center text-slate-500 font-sans"
+                    className="py-10 text-center text-muted-foreground font-sans"
                   >
                     Processing ledger queries...
                   </td>
                 </tr>
               ) : transactions.length > 0 ? (
                 transactions.map((tx) => (
-                  <tr key={tx.id} className="hover:bg-slate-900/40">
-                    <td className="py-3 px-4 text-slate-400">
+                  <tr key={tx.id} className="hover:bg-accent/40">
+                    <td className="py-3 px-4 text-muted-foreground">
                       {new Date(tx.date).toLocaleDateString()}
                     </td>
-                    <td className="py-3 px-3 font-bold text-slate-300">{tx.referenceNumber}</td>
+                    <td className="py-3 px-3 font-bold text-foreground">{tx.referenceNumber}</td>
                     {showAccountColumn && (
-                      <td className="py-3 px-4 font-sans text-left text-slate-200">
-                        <span className="font-bold font-mono text-xs block text-slate-400">
+                      <td className="py-3 px-4 font-sans text-left text-foreground">
+                        <span className="font-bold font-mono text-xs block text-muted-foreground">
                           {tx.accountCode}
                         </span>
                         <span className="text-xs truncate block max-w-[150px]">
@@ -84,7 +84,7 @@ export function LedgerTable({
                         </span>
                       </td>
                     )}
-                    <td className="py-3 px-4 text-left font-sans text-slate-300 truncate max-w-[200px]">
+                    <td className="py-3 px-4 text-left font-sans text-foreground truncate max-w-[200px]">
                       {tx.description}
                     </td>
                     <td className="py-3 px-3 text-right font-bold text-emerald-400">
@@ -93,7 +93,7 @@ export function LedgerTable({
                     <td className="py-3 px-3 text-right font-bold text-rose-455">
                       {formatCurrency(tx.creditAmount)}
                     </td>
-                    <td className="py-3 px-4 text-right font-bold text-slate-200">
+                    <td className="py-3 px-4 text-right font-bold text-foreground">
                       ${tx.runningBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                     </td>
                     <td className="py-3 px-3 text-center font-sans">
@@ -119,7 +119,7 @@ export function LedgerTable({
                 <tr>
                   <td
                     colSpan={showAccountColumn ? 8 : 7}
-                    className="py-12 text-center text-slate-500 border-none font-sans"
+                    className="py-12 text-center text-muted-foreground border-none font-sans"
                   >
                     No transaction entries recorded in this ledger period.
                   </td>

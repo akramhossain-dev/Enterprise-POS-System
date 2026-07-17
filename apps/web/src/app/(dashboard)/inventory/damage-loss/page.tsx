@@ -248,7 +248,7 @@ export default function DamageLossPage() {
       />
 
       {isFormOpen && (
-        <Card className="mb-6 shadow-sm border-border bg-card animate-in fade-in slide-in-from-top-2 duration-200">
+        <Card className="mb-6 shadow-sm border-border bg-cardard animate-in fade-in slide-in-from-top-2 duration-200">
           <CardHeader className="border-b">
             <CardTitle className="text-sm font-semibold flex items-center gap-1.5 text-primary">
               <AlertTriangle className="w-4 h-4 text-primary" /> Log New Damage or Loss Event
@@ -311,7 +311,7 @@ export default function DamageLossPage() {
                   </label>
                   <select
                     {...register('type')}
-                    className="w-full text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none"
+                    className="w-full text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none"
                   >
                     <option value="DAMAGE">DAMAGE Write-off</option>
                     <option value="LOST">LOST Stock Write-off</option>
@@ -393,7 +393,7 @@ export default function DamageLossPage() {
       )}
 
       {/* Toolbar filters */}
-      <div className="bg-card border rounded-xl p-4 mb-6 shadow-sm space-y-4">
+      <div className="bg-cardard border rounded-xl p-4 mb-6 shadow-sm space-y-4">
         <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
           <div className="relative w-full sm:max-w-xs flex-1">
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -459,7 +459,7 @@ export default function DamageLossPage() {
                   setWarehouseFilter(e.target.value);
                   setPage(1);
                 }}
-                className="w-full text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none"
+                className="w-full text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none"
               >
                 <option value="">All Warehouses</option>
                 {warehouses.map((w) => (
@@ -481,7 +481,7 @@ export default function DamageLossPage() {
                   setTypeFilter(e.target.value as any);
                   setPage(1);
                 }}
-                className="w-full text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none"
+                className="w-full text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none"
               >
                 <option value="ALL">All Write-offs</option>
                 <option value="DAMAGE">DAMAGE</option>
@@ -497,7 +497,7 @@ export default function DamageLossPage() {
       {isLoading ? (
         <TableSkeleton columns={7} rows={pageSize} />
       ) : (
-        <div className="bg-card border rounded-xl shadow-sm p-4">
+        <div className="bg-cardard border rounded-xl shadow-sm p-4">
           <DataTable
             columns={columns}
             data={filteredAdjustments}

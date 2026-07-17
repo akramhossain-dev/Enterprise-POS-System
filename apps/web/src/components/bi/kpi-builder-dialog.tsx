@@ -44,13 +44,13 @@ export function KpiBuilderDialog({ isOpen, onOpenChange, onSaveKpi }: KpiBuilder
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-[#0c1220] border border-slate-800 text-slate-100 max-w-sm p-6 select-none text-left">
+      <DialogContent className="bg-cardard border border-border text-foreground max-w-sm p-6 select-none text-left">
         <DialogHeader className="mb-4">
-          <DialogTitle className="text-sm font-black uppercase text-slate-200 tracking-wider flex items-center gap-1.5 font-sans">
+          <DialogTitle className="text-sm font-black uppercase text-foreground tracking-wider flex items-center gap-1.5 font-sans">
             <Sliders className="h-5 w-5 text-indigo-400" />
             <span>Create Custom KPI Formula</span>
           </DialogTitle>
-          <DialogDescription className="text-slate-500 text-xs mt-1">
+          <DialogDescription className="text-muted-foreground text-xs mt-1">
             Build custom ratios by combining ledger metrics and arithmetic operations.
           </DialogDescription>
         </DialogHeader>
@@ -58,27 +58,27 @@ export function KpiBuilderDialog({ isOpen, onOpenChange, onSaveKpi }: KpiBuilder
         <div className="space-y-4 text-xs font-sans">
           {/* Formula Name */}
           <div className="flex flex-col gap-1">
-            <label className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">
+            <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-wide">
               KPI Name
             </label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full h-8 px-2 bg-slate-950 border border-slate-855 rounded text-xs text-slate-200 focus:outline-none"
+              className="w-full h-8 px-2 bg-muted border border-slate-855 rounded text-xs text-foreground focus:outline-none"
             />
           </div>
 
           {/* Metric A */}
           <div className="grid grid-cols-3 gap-2 items-center">
             <div className="flex flex-col gap-1">
-              <label className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">
+              <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-wide">
                 Metric A
               </label>
               <select
                 value={metricA}
                 onChange={(e) => setMetricA(e.target.value)}
-                className="bg-slate-950 border border-slate-855 rounded p-1 text-[10px] h-8 text-slate-300"
+                className="bg-muted border border-slate-855 rounded p-1 text-[10px] h-8 text-foreground"
               >
                 <option value="revenue">Revenue</option>
                 <option value="netProfit">Net Profit</option>
@@ -89,13 +89,13 @@ export function KpiBuilderDialog({ isOpen, onOpenChange, onSaveKpi }: KpiBuilder
 
             {/* Operator */}
             <div className="flex flex-col gap-1">
-              <label className="text-[9px] font-bold text-slate-500 uppercase tracking-wide text-center">
+              <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-wide text-center">
                 Operator
               </label>
               <select
                 value={operator}
                 onChange={(e) => setOperator(e.target.value)}
-                className="bg-slate-950 border border-slate-855 rounded p-1 text-[10px] h-8 text-center text-slate-300"
+                className="bg-muted border border-slate-855 rounded p-1 text-[10px] h-8 text-center text-foreground"
               >
                 <option value="+">+</option>
                 <option value="-">-</option>
@@ -106,13 +106,13 @@ export function KpiBuilderDialog({ isOpen, onOpenChange, onSaveKpi }: KpiBuilder
 
             {/* Metric B */}
             <div className="flex flex-col gap-1">
-              <label className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">
+              <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-wide">
                 Metric B
               </label>
               <select
                 value={metricB}
                 onChange={(e) => setMetricB(e.target.value)}
-                className="bg-slate-950 border border-slate-855 rounded p-1 text-[10px] h-8 text-slate-300"
+                className="bg-muted border border-slate-855 rounded p-1 text-[10px] h-8 text-foreground"
               >
                 <option value="revenue">Revenue</option>
                 <option value="expenses">Expenses</option>
@@ -124,7 +124,7 @@ export function KpiBuilderDialog({ isOpen, onOpenChange, onSaveKpi }: KpiBuilder
 
           {/* Theme selection */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">
+            <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-wide">
               KPI Value Color
             </label>
             <div className="flex gap-2">
@@ -141,7 +141,7 @@ export function KpiBuilderDialog({ isOpen, onOpenChange, onSaveKpi }: KpiBuilder
                   className={`px-2 py-1 rounded text-[10px] font-bold border transition-colors ${
                     color === c.class
                       ? 'border-indigo-500 bg-indigo-500/10 ' + c.class
-                      : 'border-slate-900 bg-slate-950/20 text-slate-500'
+                      : 'border-border bg-muted/20 text-muted-foreground'
                   }`}
                 >
                   {c.name}
@@ -151,9 +151,9 @@ export function KpiBuilderDialog({ isOpen, onOpenChange, onSaveKpi }: KpiBuilder
           </div>
 
           {/* Formula Display Preview */}
-          <div className="p-2 bg-slate-950 rounded border border-slate-900 text-center text-[10px] font-mono text-slate-500">
+          <div className="p-2 bg-muted rounded border border-border text-center text-[10px] font-mono text-muted-foreground">
             Preview:{' '}
-            <span className="text-slate-300 font-bold">
+            <span className="text-foreground font-bold">
               {name} = {metricA} {operator} {metricB}
             </span>
           </div>
@@ -163,7 +163,7 @@ export function KpiBuilderDialog({ isOpen, onOpenChange, onSaveKpi }: KpiBuilder
               <Button
                 type="button"
                 variant="ghost"
-                className="h-9 text-slate-500 hover:text-slate-200 hover:bg-slate-900"
+                className="h-9 text-muted-foreground hover:text-foreground hover:bg-accent"
               >
                 Cancel
               </Button>

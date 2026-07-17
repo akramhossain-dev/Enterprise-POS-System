@@ -73,7 +73,7 @@ export function CategoryTree({ categories, onDelete, onArchive }: CategoryTreePr
         <div
           className={cn(
             'flex items-center justify-between group border border-border/40 hover:border-primary/20 rounded-lg p-2.5 transition-all duration-150',
-            isInactive ? 'bg-muted/10 opacity-70' : 'bg-card',
+            isInactive ? 'bg-muted/10 opacity-70' : 'bg-cardard',
             'hover:shadow-xs',
           )}
           style={{ marginLeft: `${level * 20}px` }}

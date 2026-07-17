@@ -2,7 +2,7 @@ export function SupplierProfileSkeleton() {
   return (
     <div className="animate-pulse space-y-6">
       {/* Header */}
-      <div className="flex items-start gap-5 p-6 rounded-2xl border border-border bg-card">
+      <div className="flex items-start gap-5 p-6 rounded-2xl border border-border bg-cardard">
         <div className="w-20 h-20 rounded-xl bg-muted flex-shrink-0" />
         <div className="flex-1 min-w-0 space-y-3 pt-1">
           <div className="h-5 w-48 bg-muted rounded" />
@@ -21,7 +21,7 @@ export function SupplierProfileSkeleton() {
       {/* Summary cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="p-4 rounded-xl border border-border bg-card space-y-2">
+          <div key={i} className="p-4 rounded-xl border border-border bg-cardard space-y-2">
             <div className="h-2.5 w-20 bg-muted rounded" />
             <div className="h-5 w-24 bg-muted rounded" />
           </div>

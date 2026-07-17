@@ -249,7 +249,7 @@ export default function SupplierProfilePage() {
       </Button>
 
       {/* ── Header Card ──────────────────────────────── */}
-      <div className="flex flex-col sm:flex-row items-start gap-5 p-6 rounded-2xl border border-border bg-card mb-5">
+      <div className="flex flex-col sm:flex-row items-start gap-5 p-6 rounded-2xl border border-border bg-cardard mb-5">
         <SupplierAvatar supplier={supplier} size="xl" className="flex-shrink-0" />
 
         <div className="flex-1 min-w-0">
@@ -376,7 +376,7 @@ export default function SupplierProfilePage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
           {/* Business Info */}
           <div className="lg:col-span-2 space-y-5">
-            <section className="rounded-xl border border-border bg-card p-5">
+            <section className="rounded-xl border border-border bg-cardard p-5">
               <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">
                 Business Information
               </h2>
@@ -414,7 +414,7 @@ export default function SupplierProfilePage() {
             </section>
 
             {/* Account Details */}
-            <section className="rounded-xl border border-border bg-card p-5">
+            <section className="rounded-xl border border-border bg-cardard p-5">
               <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">
                 Account Details
               </h2>
@@ -451,7 +451,7 @@ export default function SupplierProfilePage() {
           {/* Sidebar */}
           <div className="space-y-5">
             {/* Contact */}
-            <section className="rounded-xl border border-border bg-card p-5">
+            <section className="rounded-xl border border-border bg-cardard p-5">
               <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">
                 Contact
               </h2>
@@ -476,7 +476,7 @@ export default function SupplierProfilePage() {
             </section>
 
             {/* Addresses */}
-            <section className="rounded-xl border border-border bg-card p-5">
+            <section className="rounded-xl border border-border bg-cardard p-5">
               <div className="flex items-center justify-between mb-3">
                 <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
                   Addresses
@@ -509,7 +509,7 @@ export default function SupplierProfilePage() {
 
       {/* LEDGER */}
       {activeTab === 'ledger' && (
-        <div className="rounded-xl border border-border bg-card overflow-hidden">
+        <div className="rounded-xl border border-border bg-cardard overflow-hidden">
           {/* Ledger header */}
           <div className="flex flex-wrap items-center gap-3 px-5 py-4 border-b border-border">
             <h2 className="text-sm font-semibold text-foreground mr-auto">Ledger Entries</h2>
@@ -563,7 +563,7 @@ export default function SupplierProfilePage() {
 
       {/* PAYMENTS */}
       {activeTab === 'payments' && (
-        <div className="rounded-xl border border-border bg-card overflow-hidden">
+        <div className="rounded-xl border border-border bg-cardard overflow-hidden">
           <div className="flex items-center justify-between px-5 py-4 border-b border-border">
             <h2 className="text-sm font-semibold text-foreground">Payment History</h2>
           </div>
@@ -598,7 +598,7 @@ export default function SupplierProfilePage() {
 
       {/* NOTES */}
       {activeTab === 'notes' && (
-        <div className="rounded-xl border border-border bg-card p-6">
+        <div className="rounded-xl border border-border bg-cardard p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold text-foreground">Internal Notes</h2>
             <Button variant="outline" size="sm" asChild>

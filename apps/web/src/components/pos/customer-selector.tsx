@@ -66,27 +66,27 @@ export function CustomerSelector() {
           'flex items-center justify-between px-3 py-2 border rounded-lg cursor-pointer transition-colors duration-200',
           isOpen
             ? 'border-emerald-500 bg-emerald-950/20'
-            : 'border-slate-800 bg-[#0c1220] hover:border-slate-700',
+            : 'border-border bg-cardard hover:border-slate-700',
         )}
       >
         <div className="flex items-center space-x-2.5 min-w-0">
           <User
             className={cn(
               'h-4 w-4 shrink-0',
-              currentCustomer ? 'text-emerald-400' : 'text-slate-500',
+              currentCustomer ? 'text-emerald-400' : 'text-muted-foreground',
             )}
           />
           <div className="text-left min-w-0">
             <p
               className={cn(
                 'text-xs font-semibold truncate',
-                currentCustomer ? 'text-slate-100' : 'text-slate-400',
+                currentCustomer ? 'text-foreground' : 'text-muted-foreground',
               )}
             >
               {currentCustomer ? currentCustomer.fullName : 'Walk-in Customer'}
             </p>
             {currentCustomer && (
-              <p className="text-[10px] text-slate-400 truncate">
+              <p className="text-[10px] text-muted-foreground truncate">
                 Points: {currentCustomer.loyaltyPoints ?? 0} | Bal: $
                 {Number(currentCustomer.currentBalance || 0).toFixed(2)}
               </p>
@@ -98,13 +98,13 @@ export function CustomerSelector() {
           {currentCustomer && (
             <button
               onClick={handleClearCustomer}
-              className="p-1 text-slate-500 hover:text-rose-400 transition-colors"
+              className="p-1 text-muted-foreground hover:text-rose-400 transition-colors"
               title="Clear Customer"
             >
               <X className="h-3.5 w-3.5" />
             </button>
           )}
-          <span className="text-[10px] text-slate-500 uppercase tracking-widest px-1 py-0.5 rounded bg-slate-900 border border-slate-800">
+          <span className="text-[10px] text-muted-foreground uppercase tracking-widest px-1 py-0.5 rounded bg-accent border border-border">
             F2
           </span>
         </div>
@@ -112,22 +112,22 @@ export function CustomerSelector() {
 
       {/* Customer Options list dropdown */}
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-1.5 border border-slate-800 bg-[#0c1220] rounded-lg shadow-2xl p-2 z-50">
+        <div className="absolute top-full left-0 right-0 mt-1.5 border border-border bg-cardard rounded-lg shadow-2xl p-2 z-50">
           <div className="relative mb-2">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-500" />
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="text"
               placeholder="Search customers (Name, Code, Phone)..."
               value={searchVal}
               onChange={(e) => setSearchVal(e.target.value)}
-              className="pl-8 bg-slate-950 border-slate-800 text-slate-100 text-xs focus-visible:ring-emerald-500 h-9"
+              className="pl-8 bg-muted border-border text-foreground text-xs focus-visible:ring-emerald-500 h-9"
               autoFocus
             />
           </div>
 
           <div className="max-h-56 overflow-y-auto space-y-1 pr-1 custom-scrollbar">
             {isLoading ? (
-              <div className="text-center py-4 text-xs text-slate-500">Searching accounts...</div>
+              <div className="text-center py-4 text-xs text-muted-foreground">Searching accounts...</div>
             ) : customersList.length > 0 ? (
               customersList.map((cust) => (
                 <div
@@ -137,17 +137,17 @@ export function CustomerSelector() {
                     'flex items-center justify-between p-2 rounded-md cursor-pointer transition-colors text-xs text-left',
                     currentCustomer?.id === cust.id
                       ? 'bg-emerald-950/40 text-emerald-300 border border-emerald-900/60'
-                      : 'hover:bg-slate-900 text-slate-300',
+                      : 'hover:bg-accent text-foreground',
                   )}
                 >
                   <div>
-                    <p className="font-semibold text-slate-200">{cust.fullName}</p>
-                    <p className="text-[10px] text-slate-500">
+                    <p className="font-semibold text-foreground">{cust.fullName}</p>
+                    <p className="text-[10px] text-muted-foreground">
                       {cust.phone || 'No phone'} | {cust.customerCode}
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-[10px] text-slate-400 font-mono">
+                    <p className="text-[10px] text-muted-foreground font-mono">
                       Bal: ${Number(cust.currentBalance || 0).toFixed(2)}
                     </p>
                     <p className="text-[9px] text-emerald-400 font-mono">
@@ -157,7 +157,7 @@ export function CustomerSelector() {
                 </div>
               ))
             ) : (
-              <div className="text-center py-4 text-xs text-slate-500">No customers found.</div>
+              <div className="text-center py-4 text-xs text-muted-foreground">No customers found.</div>
             )}
           </div>
         </div>

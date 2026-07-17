@@ -51,14 +51,14 @@ export default function POSReturnsDashboardPage() {
   ];
 
   return (
-    <PageContainer className="max-w-6xl mx-auto py-6 text-slate-100 select-none text-left">
+    <PageContainer className="max-w-6xl mx-auto py-6 text-foreground select-none text-left">
       {/* Back button */}
       <div className="mb-4">
         <Link href="/pos/returns">
           <Button
             variant="ghost"
             size="sm"
-            className="text-slate-400 hover:text-slate-200 gap-1.5 h-8"
+            className="text-muted-foreground hover:text-foreground gap-1.5 h-8"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Back to Returns Claims</span>
@@ -76,16 +76,16 @@ export default function POSReturnsDashboardPage() {
         {metrics.map((m, idx) => {
           const Icon = m.icon;
           return (
-            <Card key={idx} className="bg-[#0c1220] border-slate-800 text-slate-100">
+            <Card key={idx} className="bg-cardard border-border text-foreground">
               <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                <CardTitle className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
                   {m.label}
                 </CardTitle>
                 <Icon className="h-4 w-4 text-emerald-400" />
               </CardHeader>
               <CardContent className="text-left">
-                <div className="text-xl font-black font-mono text-slate-200">{m.value}</div>
-                <p className="text-[10px] text-slate-500 mt-1">{m.change}</p>
+                <div className="text-xl font-black font-mono text-foreground">{m.value}</div>
+                <p className="text-[10px] text-muted-foreground mt-1">{m.change}</p>
               </CardContent>
             </Card>
           );
@@ -94,9 +94,9 @@ export default function POSReturnsDashboardPage() {
 
       {/* defect splits details */}
       <div className="grid gap-6 md:grid-cols-2 mt-6">
-        <Card className="bg-[#0c1220] border-slate-800 text-slate-100">
+        <Card className="bg-cardard border-border text-foreground">
           <CardHeader>
-            <CardTitle className="text-sm font-bold text-slate-350">
+            <CardTitle className="text-sm font-bold text-muted-foreground">
               Defect Rationale Breakdown
             </CardTitle>
           </CardHeader>
@@ -105,12 +105,12 @@ export default function POSReturnsDashboardPage() {
               <div key={idx} className="space-y-1.5 text-xs text-left">
                 <div className="flex justify-between font-medium">
                   <span>{d.reason}</span>
-                  <span className="font-mono text-slate-400">
+                  <span className="font-mono text-muted-foreground">
                     {d.count} items ({d.pct}%)
                   </span>
                 </div>
                 {/* Visual Bar */}
-                <div className="h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-900">
+                <div className="h-2 bg-muted rounded-full overflow-hidden border border-border">
                   <div
                     className="h-full bg-emerald-500 rounded-full transition-all duration-500"
                     style={{ width: `${d.pct}%` }}
@@ -122,14 +122,14 @@ export default function POSReturnsDashboardPage() {
         </Card>
 
         {/* Dynamic tips card */}
-        <Card className="bg-[#0c1220] border-slate-800 text-slate-100 flex flex-col justify-between">
+        <Card className="bg-cardard border-border text-foreground flex flex-col justify-between">
           <CardHeader>
             <CardTitle className="text-sm font-bold text-slate-355 flex items-center gap-1.5">
               <Sparkles className="h-4.5 w-4.5 text-amber-400" />
               <span>Supervisor Recommendations</span>
             </CardTitle>
           </CardHeader>
-          <CardContent className="text-xs text-slate-400 space-y-3 text-left">
+          <CardContent className="text-xs text-muted-foreground space-y-3 text-left">
             <p>
               1. **Damaged Goods Alert**: Damaged products have risen by 5% this week. Review
               shipping logistics or warehouse shelving.

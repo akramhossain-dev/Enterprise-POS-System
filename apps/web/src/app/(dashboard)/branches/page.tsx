@@ -57,7 +57,7 @@ export default function BranchesPage() {
       />
 
       {/* Toolbar filters */}
-      <div className="flex flex-col md:flex-row gap-3 bg-card border border-border rounded-2xl p-4">
+      <div className="flex flex-col md:flex-row gap-3 bg-cardard border border-border rounded-2xl p-4">
         {/* Search */}
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -96,7 +96,7 @@ export default function BranchesPage() {
       </div>
 
       {/* List Table */}
-      <div className="border border-border bg-card rounded-2xl overflow-hidden">
+      <div className="border border-border bg-cardard rounded-2xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>

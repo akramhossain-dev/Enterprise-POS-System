@@ -91,10 +91,10 @@ export function ReportViewer({
       {/* Action Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 print:hidden">
         <div>
-          <h2 className="text-lg font-black uppercase text-slate-200 tracking-wider font-sans">
+          <h2 className="text-lg font-black uppercase text-foreground tracking-wider font-sans">
             {reportName}
           </h2>
-          <p className="text-xs text-slate-500 font-mono mt-0.5">
+          <p className="text-xs text-muted-foreground font-mono mt-0.5">
             Operational ledger reporting for {category} operations.
           </p>
         </div>
@@ -104,7 +104,7 @@ export function ReportViewer({
             size="sm"
             variant="outline"
             onClick={handleRefresh}
-            className="h-8 border-slate-800 bg-[#0c1220] hover:bg-slate-900 text-slate-400 hover:text-slate-200"
+            className="h-8 border-border bg-cardard hover:bg-accent text-muted-foreground hover:text-foreground"
           >
             <RefreshCw className="h-4 w-4" />
           </Button>
@@ -112,7 +112,7 @@ export function ReportViewer({
           <Button
             size="sm"
             onClick={() => setIsExportOpen(true)}
-            className="h-8 bg-[#0c1220] border border-slate-850 hover:bg-slate-900 text-xs gap-1.5 text-slate-350"
+            className="h-8 bg-cardard border border-border hover:bg-accent text-xs gap-1.5 text-muted-foreground"
           >
             <FileDown className="h-4 w-4" />
             <span>Export File</span>

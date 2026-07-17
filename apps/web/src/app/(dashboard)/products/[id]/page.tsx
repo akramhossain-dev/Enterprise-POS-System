@@ -80,7 +80,7 @@ export default function ProductDetailsPage({ params }: ProductDetailsPageProps) 
   if (isError || !product) {
     return (
       <PageContainer>
-        <div className="border border-destructive/20 rounded-xl bg-destructive/5 p-5 text-center">
+        <div className="border border-destructive/20 rounded-xl bg-backgroundestructive/5 p-5 text-center">
           <p className="text-sm text-destructive font-semibold">Error loading product</p>
           <p className="text-xs text-muted-foreground mt-1">
             {error?.message || 'The requested product could not be found.'}
@@ -149,7 +149,7 @@ export default function ProductDetailsPage({ params }: ProductDetailsPageProps) 
         {/* Left Column: Image Gallery + General Details */}
         <div className="lg:col-span-2 space-y-6">
           {/* Visual Gallery */}
-          <div className="rounded-xl border border-border bg-card p-5 space-y-4">
+          <div className="rounded-xl border border-border bg-cardard p-5 space-y-4">
             <h3 className="font-semibold text-base text-foreground">Product Gallery</h3>
             <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
               {/* Main Image Display */}
@@ -197,7 +197,7 @@ export default function ProductDetailsPage({ params }: ProductDetailsPageProps) 
           </div>
 
           {/* Pricing Analysis */}
-          <div className="rounded-xl border border-border bg-card p-5 space-y-4">
+          <div className="rounded-xl border border-border bg-cardard p-5 space-y-4">
             <h3 className="font-semibold text-base text-foreground">Financial & Margin Analysis</h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="rounded-lg bg-muted/40 p-4 border border-border">
@@ -230,7 +230,7 @@ export default function ProductDetailsPage({ params }: ProductDetailsPageProps) 
           {/* History Stubs */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Purchase History */}
-            <div className="rounded-xl border border-border bg-card p-5 space-y-3">
+            <div className="rounded-xl border border-border bg-cardard p-5 space-y-3">
               <h4 className="font-semibold text-sm text-foreground flex items-center gap-1.5">
                 <Truck className="w-4 h-4 text-violet-500" />
                 Recent Purchases
@@ -241,7 +241,7 @@ export default function ProductDetailsPage({ params }: ProductDetailsPageProps) 
             </div>
 
             {/* Sales History */}
-            <div className="rounded-xl border border-border bg-card p-5 space-y-3">
+            <div className="rounded-xl border border-border bg-cardard p-5 space-y-3">
               <h4 className="font-semibold text-sm text-foreground flex items-center gap-1.5">
                 <ShoppingBag className="w-4 h-4 text-emerald-500" />
                 Recent Sales
@@ -256,7 +256,7 @@ export default function ProductDetailsPage({ params }: ProductDetailsPageProps) 
         {/* Right Sidebar: Classification, Barcode, Audit Info */}
         <div className="space-y-6">
           {/* Status & Catalog */}
-          <div className="rounded-xl border border-border bg-card p-5 space-y-4">
+          <div className="rounded-xl border border-border bg-cardard p-5 space-y-4">
             <h3 className="font-semibold text-base text-foreground">Catalog Context</h3>
             <div className="space-y-3">
               <div className="flex justify-between items-center py-1.5 border-b border-border">
@@ -302,7 +302,7 @@ export default function ProductDetailsPage({ params }: ProductDetailsPageProps) 
           )}
 
           {/* System Audit Information */}
-          <div className="rounded-xl border border-border bg-card p-5 space-y-4">
+          <div className="rounded-xl border border-border bg-cardard p-5 space-y-4">
             <h3 className="font-semibold text-base text-foreground flex items-center gap-1.5">
               <ShieldCheck className="w-4 h-4 text-primary" />
               Audit Trail

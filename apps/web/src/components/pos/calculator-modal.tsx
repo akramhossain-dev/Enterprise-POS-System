@@ -75,16 +75,16 @@ export function CalculatorModal({ open, onOpenChange }: CalculatorModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[340px] bg-[#0c1220] border-slate-800 text-slate-100 p-4">
+      <DialogContent className="sm:max-w-[340px] bg-cardard border-border text-foreground p-4">
         <DialogHeader>
-          <DialogTitle className="text-slate-200 text-sm font-bold flex items-center gap-2">
+          <DialogTitle className="text-foreground text-sm font-bold flex items-center gap-2">
             <span>Cashier Calculator Widget</span>
           </DialogTitle>
         </DialogHeader>
 
         {/* Display Screen */}
-        <div className="bg-slate-950 border border-slate-900 rounded-xl p-4 text-right mb-4 min-h-[90px] flex flex-col justify-between">
-          <p className="text-slate-500 font-mono text-xs break-all tracking-wide min-h-6">
+        <div className="bg-muted border border-border rounded-xl p-4 text-right mb-4 min-h-[90px] flex flex-col justify-between">
+          <p className="text-muted-foreground font-mono text-xs break-all tracking-wide min-h-6">
             {expr || '0'}
           </p>
           <p className="text-2xl font-black font-mono text-emerald-400 select-all truncate">
@@ -99,10 +99,10 @@ export function CalculatorModal({ open, onOpenChange }: CalculatorModalProps) {
               if (key === '') return null;
 
               let btnClass =
-                'bg-slate-900 border-slate-800 text-slate-200 hover:bg-slate-800 font-mono text-base h-12';
+                'bg-accent border-border text-foreground hover:bg-slate-800 font-mono text-base h-12';
               if (['/', '*', '-', '+'].includes(key)) {
                 btnClass =
-                  'bg-slate-950 border-slate-900 text-emerald-400 hover:bg-slate-900 font-mono text-lg font-bold h-12';
+                  'bg-muted border-border text-emerald-400 hover:bg-accent font-mono text-lg font-bold h-12';
               } else if (key === 'C') {
                 btnClass =
                   'bg-rose-950/20 border-rose-900/30 text-rose-400 hover:bg-rose-900/20 font-bold h-12';

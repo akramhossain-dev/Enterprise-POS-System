@@ -115,7 +115,7 @@ export default function DepartmentsPage() {
       />
 
       {/* Toolbar */}
-      <div className="flex justify-between items-center bg-card border border-border rounded-2xl p-4">
+      <div className="flex justify-between items-center bg-cardard border border-border rounded-2xl p-4">
         <span className="text-xs text-muted-foreground font-semibold">
           {departments?.length ?? 0} departments configured
         </span>
@@ -136,7 +136,7 @@ export default function DepartmentsPage() {
           Loading departments registry...
         </div>
       ) : !departments || departments.length === 0 ? (
-        <div className="text-center py-20 border border-dashed border-border bg-card rounded-2xl text-xs text-muted-foreground">
+        <div className="text-center py-20 border border-dashed border-border bg-cardard rounded-2xl text-xs text-muted-foreground">
           No departments configured yet.
         </div>
       ) : (

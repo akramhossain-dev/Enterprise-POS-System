@@ -35,27 +35,27 @@ export function BalanceSummary({
   return (
     <div className={cn('grid gap-4 sm:grid-cols-2 lg:grid-cols-4', className)}>
       {/* Opening Balance Card */}
-      <Card className="bg-[#0c1220] border-slate-800 text-slate-100 text-left">
+      <Card className="bg-cardard border-border text-foreground text-left">
         <CardContent className="p-4 flex items-center justify-between">
           <div className="space-y-1">
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
               Opening Balance
             </p>
-            <p className="text-lg font-black font-mono text-slate-200">
+            <p className="text-lg font-black font-mono text-foreground">
               {formatCurrency(openingBalance)}
             </p>
           </div>
-          <div className="h-8 w-8 rounded-lg bg-slate-900/60 border border-slate-800 flex items-center justify-center shrink-0">
+          <div className="h-8 w-8 rounded-lg bg-accent/60 border border-border flex items-center justify-center shrink-0">
             <Wallet className="h-4 w-4 text-slate-450" />
           </div>
         </CardContent>
       </Card>
 
       {/* Inflow Card */}
-      <Card className="bg-[#0c1220] border-slate-800 text-slate-100 text-left">
+      <Card className="bg-cardard border-border text-foreground text-left">
         <CardContent className="p-4 flex items-center justify-between">
           <div className="space-y-1">
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
               {inflowLabel}
             </p>
             <p className="text-lg font-black font-mono text-emerald-400">
@@ -69,10 +69,10 @@ export function BalanceSummary({
       </Card>
 
       {/* Outflow Card */}
-      <Card className="bg-[#0c1220] border-slate-800 text-slate-100 text-left">
+      <Card className="bg-cardard border-border text-foreground text-left">
         <CardContent className="p-4 flex items-center justify-between">
           <div className="space-y-1">
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
               {outflowLabel}
             </p>
             <p className="text-lg font-black font-mono text-rose-455">{formatCurrency(outflow)}</p>
@@ -84,10 +84,10 @@ export function BalanceSummary({
       </Card>
 
       {/* Current Balance Card */}
-      <Card className="bg-[#0c1220] border-slate-800 text-slate-100 text-left">
+      <Card className="bg-cardard border-border text-foreground text-left">
         <CardContent className="p-4 flex items-center justify-between">
           <div className="space-y-1">
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
               {balanceLabel}
             </p>
             <p className="text-lg font-black font-mono text-indigo-400">

@@ -216,7 +216,7 @@ export default function ArchivedCustomersPage() {
       />
 
       {/* Toolbar */}
-      <div className="flex flex-col gap-3 bg-card border border-border p-4 rounded-xl">
+      <div className="flex flex-col gap-3 bg-cardard border border-border p-4 rounded-xl">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex flex-1 items-center gap-2 w-full sm:max-w-md relative">
             <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -274,7 +274,7 @@ export default function ArchivedCustomersPage() {
 
       {/* Error */}
       {isError && (
-        <div className="border border-destructive/20 rounded-xl bg-destructive/5 p-4 text-sm text-destructive flex items-center justify-between">
+        <div className="border border-destructive/20 rounded-xl bg-backgroundestructive/5 p-4 text-sm text-destructive flex items-center justify-between">
           <span>
             Error loading archived customers: {(error as any)?.message || 'Unknown error.'}
           </span>

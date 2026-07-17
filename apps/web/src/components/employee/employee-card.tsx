@@ -22,7 +22,7 @@ export function EmployeeCard({ employee, departmentName, designationName }: Empl
   };
 
   return (
-    <div className="group relative rounded-2xl border border-border bg-card p-5 transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5">
+    <div className="group relative rounded-2xl border border-border bg-cardard p-5 transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5">
       {/* Top Header Card */}
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3.5">

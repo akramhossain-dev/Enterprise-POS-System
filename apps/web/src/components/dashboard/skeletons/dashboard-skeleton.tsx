@@ -7,7 +7,7 @@ export function DashboardSkeleton() {
   return (
     <div className="space-y-6 animate-pulse">
       {/* Welcome card */}
-      <div className="rounded-xl border border-border bg-card p-6">
+      <div className="rounded-xl border border-border bg-cardard p-6">
         <div className="flex flex-col sm:flex-row gap-4 justify-between">
           <div className="space-y-2">
             <Skeleton variant="text" className="w-16 h-3" />
@@ -34,11 +34,11 @@ export function DashboardSkeleton() {
 
       {/* Chart + Recent Sales */}
       <div className="grid gap-6 lg:grid-cols-5">
-        <div className="lg:col-span-3 rounded-xl border border-border bg-card p-5 space-y-4">
+        <div className="lg:col-span-3 rounded-xl border border-border bg-cardard p-5 space-y-4">
           <Skeleton variant="text" className="w-32 h-4" />
           <ChartSkeleton height={220} />
         </div>
-        <div className="lg:col-span-2 rounded-xl border border-border bg-card p-5 space-y-4">
+        <div className="lg:col-span-2 rounded-xl border border-border bg-cardard p-5 space-y-4">
           <Skeleton variant="text" className="w-28 h-4" />
           <WidgetSkeleton rows={5} />
         </div>
@@ -47,7 +47,7 @@ export function DashboardSkeleton() {
       {/* Bottom grid */}
       <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="rounded-xl border border-border bg-card p-5 space-y-4">
+          <div key={i} className="rounded-xl border border-border bg-cardard p-5 space-y-4">
             <Skeleton variant="text" className="w-28 h-4" />
             <WidgetSkeleton rows={4} />
           </div>

@@ -20,9 +20,9 @@ export function BalanceBadge({ type, className }: BalanceBadgeProps) {
         return 'bg-emerald-950/30 border-emerald-900/40 text-emerald-450';
       case 'ARCHIVED':
       case 'INACTIVE':
-        return 'bg-slate-900 border-slate-800 text-slate-500';
+        return 'bg-accent border-border text-muted-foreground';
       default:
-        return 'bg-slate-900 text-slate-400';
+        return 'bg-accent text-muted-foreground';
     }
   };
 

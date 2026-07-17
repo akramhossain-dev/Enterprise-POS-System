@@ -54,7 +54,7 @@ export function AccountTree({ accounts, onArchive }: AccountTreeProps) {
       <div key={account.id} className="select-none text-left">
         {/* Node row */}
         <div
-          className="flex items-center justify-between p-2.5 border-b border-slate-900 hover:bg-slate-900/40 text-xs sm:text-sm text-slate-200 transition-colors"
+          className="flex items-center justify-between p-2.5 border-b border-border hover:bg-accent/40 text-xs sm:text-sm text-foreground transition-colors"
           style={{ paddingLeft: `${depth * 20 + 10}px` }}
         >
           <div className="flex items-center space-x-2 min-w-0">
@@ -62,7 +62,7 @@ export function AccountTree({ accounts, onArchive }: AccountTreeProps) {
             {hasChildren ? (
               <button
                 onClick={() => toggleExpand(account.code)}
-                className="h-5 w-5 text-slate-500 hover:text-slate-300 flex items-center justify-center rounded transition-colors"
+                className="h-5 w-5 text-muted-foreground hover:text-foreground flex items-center justify-center rounded transition-colors"
               >
                 {isExpanded ? (
                   <ChevronDown className="h-4 w-4 shrink-0" />
@@ -78,12 +78,12 @@ export function AccountTree({ accounts, onArchive }: AccountTreeProps) {
             {hasChildren ? (
               <FolderOpen className="h-4 w-4 text-amber-500 shrink-0" />
             ) : (
-              <FileText className="h-4 w-4 text-slate-500 shrink-0" />
+              <FileText className="h-4 w-4 text-muted-foreground shrink-0" />
             )}
 
             {/* Details */}
-            <span className="font-mono text-slate-400 font-bold shrink-0">{account.code}</span>
-            <span className="font-semibold truncate text-slate-200">{account.name}</span>
+            <span className="font-mono text-muted-foreground font-bold shrink-0">{account.code}</span>
+            <span className="font-semibold truncate text-foreground">{account.name}</span>
           </div>
 
           <div className="flex items-center space-x-4 shrink-0">
@@ -91,7 +91,7 @@ export function AccountTree({ accounts, onArchive }: AccountTreeProps) {
             <BalanceBadge type={account.balanceType} />
 
             {/* Balance */}
-            <span className="font-mono font-bold text-slate-300 min-w-[90px] text-right">
+            <span className="font-mono font-bold text-foreground min-w-[90px] text-right">
               $
               {account.balance.toLocaleString(undefined, {
                 minimumFractionDigits: 2,
@@ -105,7 +105,7 @@ export function AccountTree({ accounts, onArchive }: AccountTreeProps) {
                 <Button
                   size="icon"
                   variant="ghost"
-                  className="h-7 w-7 text-slate-500 hover:text-emerald-400 hover:bg-slate-950"
+                  className="h-7 w-7 text-muted-foreground hover:text-emerald-400 hover:bg-muted"
                   title="View Account"
                 >
                   <Eye className="h-3.5 w-3.5" />
@@ -115,7 +115,7 @@ export function AccountTree({ accounts, onArchive }: AccountTreeProps) {
                 <Button
                   size="icon"
                   variant="ghost"
-                  className="h-7 w-7 text-slate-500 hover:text-amber-400 hover:bg-slate-950"
+                  className="h-7 w-7 text-muted-foreground hover:text-amber-400 hover:bg-muted"
                   title="Edit Account"
                 >
                   <Edit3 className="h-3.5 w-3.5" />
@@ -125,7 +125,7 @@ export function AccountTree({ accounts, onArchive }: AccountTreeProps) {
                 size="icon"
                 variant="ghost"
                 onClick={() => onArchive(account.id)}
-                className="h-7 w-7 text-slate-500 hover:text-rose-455 hover:bg-slate-950"
+                className="h-7 w-7 text-muted-foreground hover:text-rose-455 hover:bg-muted"
                 title="Archive Account"
               >
                 <Trash2 className="h-3.5 w-3.5" />
@@ -145,9 +145,9 @@ export function AccountTree({ accounts, onArchive }: AccountTreeProps) {
   };
 
   return (
-    <div className="bg-[#0c1220] border border-slate-800 rounded-2xl overflow-hidden divide-y divide-slate-900">
+    <div className="bg-cardard border border-border rounded-2xl overflow-hidden divide-y divide-border">
       {/* Header bar */}
-      <div className="flex items-center justify-between p-3 bg-slate-950/40 text-[10px] text-slate-500 uppercase font-black tracking-widest text-left">
+      <div className="flex items-center justify-between p-3 bg-muted/40 text-[10px] text-muted-foreground uppercase font-black tracking-widest text-left">
         <div className="pl-6">Account Code & Name</div>
         <div className="flex items-center space-x-12 pr-6">
           <span>Balance Type</span>
@@ -160,7 +160,7 @@ export function AccountTree({ accounts, onArchive }: AccountTreeProps) {
         {rootAccounts.length > 0 ? (
           rootAccounts.map((root) => renderNode(root, 0))
         ) : (
-          <div className="text-center py-10 text-slate-500 text-xs">
+          <div className="text-center py-10 text-muted-foreground text-xs">
             No chart accounts registered.
           </div>
         )}

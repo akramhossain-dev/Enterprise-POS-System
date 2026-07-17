@@ -28,7 +28,7 @@ export function BatchSelector({
           onChange={(e) => onChangeBatch(e.target.value)}
           disabled={disabled}
           placeholder="BATCH-1234"
-          className="h-8 w-28 bg-card border-border font-semibold text-xs"
+          className="h-8 w-28 bg-cardard border-border font-semibold text-xs"
         />
       </div>
       <div className="flex flex-col gap-0.5">
@@ -39,7 +39,7 @@ export function BatchSelector({
             value={expiryDate}
             onChange={(e) => onChangeExpiry(e.target.value)}
             disabled={disabled}
-            className="h-8 w-32 bg-card border-border font-semibold text-xs pl-2"
+            className="h-8 w-32 bg-cardard border-border font-semibold text-xs pl-2"
           />
         </div>
       </div>

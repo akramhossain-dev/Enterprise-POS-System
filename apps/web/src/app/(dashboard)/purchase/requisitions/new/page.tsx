@@ -164,7 +164,7 @@ export default function CreateRequisitionPage() {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 text-sm">
         <div className="grid gap-6 md:grid-cols-3">
           {/* Main items grid */}
-          <Card className="md:col-span-2 shadow-sm border-border bg-card">
+          <Card className="md:col-span-2 shadow-sm border-border bg-cardard">
             <CardHeader className="border-b">
               <CardTitle className="text-sm font-semibold flex items-center gap-2">
                 <Package className="w-4 h-4 text-primary" /> Requisition Items
@@ -205,7 +205,7 @@ export default function CreateRequisitionPage() {
                       items.map((item, index) => (
                         <tr
                           key={item.productId}
-                          className="border-b last:border-b-0 border-border bg-card hover:bg-muted/10"
+                          className="border-b last:border-b-0 border-border bg-cardard hover:bg-muted/10"
                         >
                           <td className="p-3 pl-6">
                             <div className="flex flex-col font-medium">
@@ -264,7 +264,7 @@ export default function CreateRequisitionPage() {
 
           {/* Right sidebar config */}
           <div className="space-y-6">
-            <Card className="shadow-sm border-border bg-card">
+            <Card className="shadow-sm border-border bg-cardard">
               <CardHeader className="border-b">
                 <CardTitle className="text-sm font-semibold flex items-center gap-1.5">
                   <Layers className="w-4 h-4 text-primary" /> Request Metadata
@@ -327,7 +327,7 @@ export default function CreateRequisitionPage() {
                   </label>
                   <select
                     {...register('priority')}
-                    className="w-full text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none"
+                    className="w-full text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none"
                   >
                     <option value="LOW">LOW Priority</option>
                     <option value="MEDIUM">MEDIUM Priority</option>
@@ -338,7 +338,7 @@ export default function CreateRequisitionPage() {
               </CardContent>
             </Card>
 
-            <Card className="shadow-sm border-border bg-card">
+            <Card className="shadow-sm border-border bg-cardard">
               <CardHeader className="border-b">
                 <CardTitle className="text-sm font-semibold">Vendor & Warehouse Route</CardTitle>
               </CardHeader>

@@ -75,49 +75,49 @@ export function CashDrawerCard() {
 
   if (isLoading) {
     return (
-      <div className="text-center py-8 text-xs text-slate-500">Retrieving shift status...</div>
+      <div className="text-center py-8 text-xs text-muted-foreground">Retrieving shift status...</div>
     );
   }
 
   // 1. SHIFT NOT OPENED YET: Render check-in setup form
   if (!activeShift) {
     return (
-      <Card className="bg-[#0c1220] border-slate-800 text-slate-100 max-w-md mx-auto text-left">
+      <Card className="bg-cardard border-border text-foreground max-w-md mx-auto text-left">
         <CardHeader>
-          <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-200">
+          <CardTitle className="text-sm font-bold flex items-center gap-2 text-foreground">
             <Lock className="h-4.5 w-4.5 text-rose-500 animate-pulse" />
             <span>Open Cash Drawer Register</span>
           </CardTitle>
-          <CardDescription className="text-slate-400 text-xs">
+          <CardDescription className="text-muted-foreground text-xs">
             Start a new terminal cashier session by initializing the register float.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4 text-xs sm:text-sm">
           <div className="grid gap-2">
-            <label className="text-slate-400 font-semibold text-xs">Cashier Name</label>
+            <label className="text-muted-foreground font-semibold text-xs">Cashier Name</label>
             <Input
               type="text"
               value={cashierName}
               onChange={(e) => setCashierName(e.target.value)}
-              className="bg-slate-950 border-slate-800 text-xs text-slate-100 focus-visible:ring-emerald-500"
+              className="bg-muted border-border text-xs text-foreground focus-visible:ring-emerald-500"
             />
           </div>
 
           <div className="grid gap-2">
-            <label className="text-slate-400 font-semibold text-xs font-mono">
+            <label className="text-muted-foreground font-semibold text-xs font-mono">
               Starting Cash Float ($)
             </label>
             <div className="relative">
-              <span className="absolute left-3 top-2.5 text-slate-500 font-mono text-sm">$</span>
+              <span className="absolute left-3 top-2.5 text-muted-foreground font-mono text-sm">$</span>
               <Input
                 type="number"
                 placeholder="100.00"
                 value={openingFloat}
                 onChange={(e) => setOpeningFloat(e.target.value)}
-                className="pl-7 bg-slate-950 border-slate-855 text-xs text-slate-100 font-mono focus-visible:ring-emerald-500"
+                className="pl-7 bg-muted border-slate-855 text-xs text-foreground font-mono focus-visible:ring-emerald-500"
               />
             </div>
-            <p className="text-[10px] text-slate-500 leading-normal">
+            <p className="text-[10px] text-muted-foreground leading-normal">
               Enter starting cash change float value currently inside physical drawer box.
             </p>
           </div>
@@ -137,12 +137,12 @@ export function CashDrawerCard() {
 
   // 2. ACTIVE OPEN SHIFT: Render register logs, totals, and Cash-In/Out panel
   return (
-    <div className="grid gap-6 md:grid-cols-3 text-left text-slate-100 select-none">
+    <div className="grid gap-6 md:grid-cols-3 text-left text-foreground select-none">
       {/* Drawer stats overview */}
       <div className="md:col-span-1 space-y-4">
-        <Card className="bg-[#0c1220] border-slate-800">
+        <Card className="bg-cardard border-border">
           <CardHeader className="pb-2">
-            <CardTitle className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
+            <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-1.5">
               <Unlock className="h-4 w-4 text-emerald-400" />
               <span>Shift Drawer Balance</span>
             </CardTitle>
@@ -152,17 +152,17 @@ export function CashDrawerCard() {
               <p className="text-2xl font-black font-mono text-emerald-400">
                 ${activeShift.currentBalance.toFixed(2)}
               </p>
-              <p className="text-[10px] text-slate-500 mt-1">Cashier: {activeShift.cashierName}</p>
+              <p className="text-[10px] text-muted-foreground mt-1">Cashier: {activeShift.cashierName}</p>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 border-t border-slate-900 pt-3 text-[11px] font-mono text-slate-400">
+            <div className="grid grid-cols-2 gap-2 border-t border-border pt-3 text-[11px] font-mono text-muted-foreground">
               <div>
                 <span>Starting Float:</span>
-                <p className="text-slate-200 font-bold">${activeShift.openingBalance.toFixed(2)}</p>
+                <p className="text-foreground font-bold">${activeShift.openingBalance.toFixed(2)}</p>
               </div>
               <div>
                 <span>POS Checkouts:</span>
-                <p className="text-slate-200 font-bold">${activeShift.shiftBalance.toFixed(2)}</p>
+                <p className="text-foreground font-bold">${activeShift.shiftBalance.toFixed(2)}</p>
               </div>
             </div>
 
@@ -170,7 +170,7 @@ export function CashDrawerCard() {
               variant="outline"
               onClick={handleCloseShift}
               disabled={closeShiftMutation.isPending}
-              className="w-full h-8 border-rose-900/40 bg-[#0c1220] text-rose-400 text-xs hover:bg-rose-950/20 uppercase tracking-wider font-bold mt-2"
+              className="w-full h-8 border-rose-900/40 bg-cardard text-rose-400 text-xs hover:bg-rose-950/20 uppercase tracking-wider font-bold mt-2"
             >
               <span>Close Shift & Lock</span>
             </Button>
@@ -180,22 +180,22 @@ export function CashDrawerCard() {
 
       {/* Record Cash In/Out logs form */}
       <div className="md:col-span-1">
-        <Card className="bg-[#0c1220] border-slate-800 h-full">
+        <Card className="bg-cardard border-border h-full">
           <CardHeader className="pb-3">
-            <CardTitle className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+            <CardTitle className="text-xs font-bold text-foreground uppercase tracking-wider">
               Log Cash Adjustment
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3.5 text-xs">
             {/* Type selector */}
-            <div className="flex bg-slate-950 p-1 border border-slate-900 rounded-lg">
+            <div className="flex bg-muted p-1 border border-border rounded-lg">
               <Button
                 size="sm"
                 onClick={() => setEntryType('IN')}
                 className={`flex-1 h-7 text-xs rounded-md ${
                   entryType === 'IN'
                     ? 'bg-emerald-500 text-slate-950 font-bold'
-                    : 'bg-transparent text-slate-400 hover:text-slate-200'
+                    : 'bg-transparent text-muted-foreground hover:text-foreground'
                 }`}
               >
                 <ArrowUpRight className="h-3.5 w-3.5 mr-1" />
@@ -207,7 +207,7 @@ export function CashDrawerCard() {
                 className={`flex-1 h-7 text-xs rounded-md ${
                   entryType === 'OUT'
                     ? 'bg-rose-500 text-slate-950 font-bold'
-                    : 'bg-transparent text-slate-400 hover:text-slate-200'
+                    : 'bg-transparent text-muted-foreground hover:text-foreground'
                 }`}
               >
                 <ArrowDownRight className="h-3.5 w-3.5 mr-1" />
@@ -217,25 +217,25 @@ export function CashDrawerCard() {
 
             {/* Amount */}
             <div className="grid gap-1">
-              <label className="text-slate-400 font-semibold font-mono">Amount ($)</label>
+              <label className="text-muted-foreground font-semibold font-mono">Amount ($)</label>
               <Input
                 type="number"
                 placeholder="0.00"
                 value={entryAmount}
                 onChange={(e) => setEntryAmount(e.target.value)}
-                className="bg-slate-950 border-slate-855 h-8 text-xs focus-visible:ring-emerald-500 font-mono"
+                className="bg-muted border-slate-855 h-8 text-xs focus-visible:ring-emerald-500 font-mono"
               />
             </div>
 
             {/* Notes description */}
             <div className="grid gap-1">
-              <label className="text-slate-400 font-semibold">Notes / Reason</label>
+              <label className="text-muted-foreground font-semibold">Notes / Reason</label>
               <Input
                 type="text"
                 placeholder="E.g., Cash float addition, expense payout"
                 value={entryNotes}
                 onChange={(e) => setEntryNotes(e.target.value)}
-                className="bg-slate-950 border-slate-855 h-8 text-xs focus-visible:ring-emerald-500"
+                className="bg-muted border-slate-855 h-8 text-xs focus-visible:ring-emerald-500"
               />
             </div>
 
@@ -256,10 +256,10 @@ export function CashDrawerCard() {
 
       {/* Cash register transaction logs log history */}
       <div className="md:col-span-1">
-        <Card className="bg-[#0c1220] border-slate-800 h-full flex flex-col overflow-hidden">
-          <CardHeader className="pb-3 border-b border-slate-900 shrink-0">
-            <CardTitle className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-              <ClipboardList className="h-4.5 w-4.5 text-slate-400" />
+        <Card className="bg-cardard border-border h-full flex flex-col overflow-hidden">
+          <CardHeader className="pb-3 border-b border-border shrink-0">
+            <CardTitle className="text-xs font-bold text-foreground uppercase tracking-wider flex items-center gap-1.5">
+              <ClipboardList className="h-4.5 w-4.5 text-muted-foreground" />
               <span>Shift Transaction Logs</span>
             </CardTitle>
           </CardHeader>
@@ -268,11 +268,11 @@ export function CashDrawerCard() {
               activeShift.logs.map((log) => (
                 <div
                   key={log.id}
-                  className="flex items-center justify-between p-2 bg-slate-950/20 border border-slate-900 rounded-md"
+                  className="flex items-center justify-between p-2 bg-muted/20 border border-border rounded-md"
                 >
                   <div className="min-w-0 text-left">
-                    <p className="font-bold text-slate-300">{log.notes}</p>
-                    <p className="text-[9px] text-slate-500">
+                    <p className="font-bold text-foreground">{log.notes}</p>
+                    <p className="text-[9px] text-muted-foreground">
                       {new Date(log.timestamp).toLocaleTimeString([], {
                         hour: '2-digit',
                         minute: '2-digit',
@@ -292,7 +292,7 @@ export function CashDrawerCard() {
                 </div>
               ))
             ) : (
-              <div className="text-center py-8 text-slate-500">
+              <div className="text-center py-8 text-muted-foreground">
                 No shift adjustment events registered.
               </div>
             )}

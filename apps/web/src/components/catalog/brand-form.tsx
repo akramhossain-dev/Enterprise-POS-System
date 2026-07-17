@@ -73,7 +73,7 @@ export function BrandForm({ initialValues, onSubmit, isPending }: BrandFormProps
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left column (Main details) */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="rounded-xl border border-border bg-card p-5 space-y-4 shadow-sm">
+          <div className="rounded-xl border border-border bg-cardard p-5 space-y-4 shadow-sm">
             <h3 className="font-semibold text-base text-foreground">Brand Profile</h3>
 
             <div className="space-y-4">
@@ -135,7 +135,7 @@ export function BrandForm({ initialValues, onSubmit, isPending }: BrandFormProps
 
         {/* Right column (Settings & Actions) */}
         <div className="space-y-6">
-          <div className="rounded-xl border border-border bg-card p-5 space-y-4 shadow-sm">
+          <div className="rounded-xl border border-border bg-cardard p-5 space-y-4 shadow-sm">
             <h3 className="font-semibold text-base text-foreground">Brand Settings</h3>
 
             <div className="space-y-4">

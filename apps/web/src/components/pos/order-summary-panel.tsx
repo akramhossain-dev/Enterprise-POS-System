@@ -60,12 +60,12 @@ export function OrderSummaryPanel() {
   };
 
   return (
-    <div className="flex flex-col bg-slate-950 p-4 border-t border-slate-900 shrink-0 select-none">
+    <div className="flex flex-col bg-muted p-4 border-t border-border shrink-0 select-none">
       {/* Subtotal, discount and tax items detail rows */}
-      <div className="grid grid-cols-2 gap-x-6 gap-y-1.5 text-xs text-slate-400 mb-4 border-b border-slate-900 pb-3">
+      <div className="grid grid-cols-2 gap-x-6 gap-y-1.5 text-xs text-muted-foreground mb-4 border-b border-border pb-3">
         <div className="flex justify-between">
           <span>Subtotal:</span>
-          <span className="font-mono font-semibold text-slate-200">${subtotal.toFixed(2)}</span>
+          <span className="font-mono font-semibold text-foreground">${subtotal.toFixed(2)}</span>
         </div>
 
         {/* Global Discount input inline */}
@@ -85,7 +85,7 @@ export function OrderSummaryPanel() {
                   setIsEditingDiscount(false);
                 }
               }}
-              className="w-16 h-6 bg-slate-900 border border-slate-800 rounded px-1.5 text-xs text-right text-slate-100 focus:outline-none focus:border-emerald-500 font-mono"
+              className="w-16 h-6 bg-accent border border-border rounded px-1.5 text-xs text-right text-foreground focus:outline-none focus:border-emerald-500 font-mono"
               autoFocus
             />
           ) : (
@@ -115,7 +115,7 @@ export function OrderSummaryPanel() {
                   setIsEditingTax(false);
                 }
               }}
-              className="w-16 h-6 bg-slate-900 border border-slate-800 rounded px-1.5 text-xs text-right text-slate-100 focus:outline-none focus:border-emerald-500 font-mono"
+              className="w-16 h-6 bg-accent border border-border rounded px-1.5 text-xs text-right text-foreground focus:outline-none focus:border-emerald-500 font-mono"
               autoFocus
             />
           ) : (
@@ -130,13 +130,13 @@ export function OrderSummaryPanel() {
 
         <div className="flex justify-between">
           <span>Tax Value:</span>
-          <span className="font-mono font-semibold text-slate-200">${tax.toFixed(2)}</span>
+          <span className="font-mono font-semibold text-foreground">${tax.toFixed(2)}</span>
         </div>
       </div>
 
       {/* Main Grand Total Row */}
       <div className="flex items-center justify-between mb-4">
-        <span className="text-sm font-bold text-slate-200 uppercase tracking-wider">
+        <span className="text-sm font-bold text-foreground uppercase tracking-wider">
           Total Amount
         </span>
         <span className="text-2xl font-black font-mono text-emerald-400">
@@ -152,10 +152,10 @@ export function OrderSummaryPanel() {
             variant="outline"
             size="sm"
             onClick={() => setShowHoldNotes(!showHoldNotes)}
-            className={`h-9 w-full border-slate-800 text-slate-300 text-xs gap-1 ${
+            className={`h-9 w-full border-border text-foreground text-xs gap-1 ${
               showHoldNotes
                 ? 'bg-emerald-950/20 text-emerald-450 border-emerald-900'
-                : 'bg-[#0c1220] hover:bg-slate-900'
+                : 'bg-cardard hover:bg-accent'
             }`}
           >
             <FolderHeart className="h-4 w-4" />
@@ -163,21 +163,21 @@ export function OrderSummaryPanel() {
           </Button>
 
           {showHoldNotes && (
-            <div className="absolute bottom-full right-0 mb-2 w-64 bg-[#0c1220] border border-slate-800 rounded-lg p-3 shadow-2xl z-50 text-left">
-              <p className="font-bold mb-2 text-xs text-slate-200">Hold order details</p>
+            <div className="absolute bottom-full right-0 mb-2 w-64 bg-cardard border border-border rounded-lg p-3 shadow-2xl z-50 text-left">
+              <p className="font-bold mb-2 text-xs text-foreground">Hold order details</p>
               <Input
                 type="text"
                 placeholder="Enter notes (e.g. Table 4)"
                 value={holdNotes}
                 onChange={(e) => setHoldNotes(e.target.value)}
-                className="bg-slate-950 border-slate-800 h-8 text-xs focus-visible:ring-emerald-500 mb-2.5"
+                className="bg-muted border-border h-8 text-xs focus-visible:ring-emerald-500 mb-2.5"
                 autoFocus
               />
               <div className="flex justify-end gap-1.5">
                 <Button
                   size="sm"
                   variant="ghost"
-                  className="h-7 text-xs text-slate-400"
+                  className="h-7 text-xs text-muted-foreground"
                   onClick={() => setShowHoldNotes(false)}
                 >
                   Cancel
@@ -199,7 +199,7 @@ export function OrderSummaryPanel() {
           variant="outline"
           size="sm"
           onClick={clearCart}
-          className="h-9 border-slate-800 bg-[#0c1220] hover:bg-rose-950/20 text-rose-400 text-xs gap-1"
+          className="h-9 border-border bg-cardard hover:bg-rose-950/20 text-rose-400 text-xs gap-1"
         >
           <Trash className="h-4 w-4" />
           <span>Clear</span>
@@ -210,7 +210,7 @@ export function OrderSummaryPanel() {
           variant="outline"
           size="sm"
           onClick={() => setShowCalculator(true)}
-          className="h-9 border-slate-800 bg-[#0c1220] hover:bg-slate-900 text-slate-300 text-xs gap-1"
+          className="h-9 border-border bg-cardard hover:bg-accent text-foreground text-xs gap-1"
         >
           <Calculator className="h-4 w-4" />
           <span>Calc</span>
@@ -221,7 +221,7 @@ export function OrderSummaryPanel() {
           variant="outline"
           size="sm"
           onClick={handleOpenDrawer}
-          className="h-9 border-slate-800 bg-[#0c1220] hover:bg-slate-900 text-slate-300 text-xs gap-1"
+          className="h-9 border-border bg-cardard hover:bg-accent text-foreground text-xs gap-1"
         >
           <Key className="h-4 w-4" />
           <span>Drawer</span>

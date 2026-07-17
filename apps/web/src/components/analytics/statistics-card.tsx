@@ -30,7 +30,7 @@ export function StatisticsCard({
   progressValue,
   progressLabel,
   infoText,
-  colorClass = 'text-slate-200',
+  colorClass = 'text-foreground',
   className,
 }: StatisticsCardProps) {
   const isUp = growth !== undefined ? growth >= 0 : true;
@@ -39,7 +39,7 @@ export function StatisticsCard({
   return (
     <Card
       className={cn(
-        'bg-[#0c1220] border-slate-800 text-slate-100 select-none text-left',
+        'bg-cardard border-border text-foreground select-none text-left',
         className,
       )}
     >
@@ -47,7 +47,7 @@ export function StatisticsCard({
         <div className="flex justify-between items-start">
           <div className="space-y-0.5 text-left">
             <div className="flex items-center gap-1">
-              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest font-sans">
+              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest font-sans">
                 {title}
               </span>
               {infoText && (
@@ -56,12 +56,12 @@ export function StatisticsCard({
                     <TooltipTrigger asChild>
                       <button
                         type="button"
-                        className="text-slate-600 hover:text-slate-500 focus:outline-none"
+                        className="text-slate-600 hover:text-muted-foreground focus:outline-none"
                       >
                         <Info className="h-3 w-3" />
                       </button>
                     </TooltipTrigger>
-                    <TooltipContent className="bg-slate-900 border-slate-800 text-[10px] text-slate-200 p-2 max-w-[200px]">
+                    <TooltipContent className="bg-accent border-border text-[10px] text-foreground p-2 max-w-[200px]">
                       {infoText}
                     </TooltipContent>
                   </Tooltip>
@@ -98,7 +98,7 @@ export function StatisticsCard({
         {/* Progress level indicators */}
         {progressValue !== undefined && (
           <div className="space-y-1">
-            <div className="h-1.5 w-full bg-slate-950 rounded-full overflow-hidden border border-slate-900">
+            <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden border border-border">
               <div
                 className={cn(
                   'h-full rounded-full transition-all duration-500',
@@ -108,7 +108,7 @@ export function StatisticsCard({
               />
             </div>
             {progressLabel && (
-              <span className="text-[9px] text-slate-500 font-mono block text-right">
+              <span className="text-[9px] text-muted-foreground font-mono block text-right">
                 {progressLabel}
               </span>
             )}

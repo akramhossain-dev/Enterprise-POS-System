@@ -151,7 +151,7 @@ export default function OutOfStockPage() {
       />
 
       {/* Filter toolbar */}
-      <div className="flex flex-col sm:flex-row gap-4 justify-between items-center bg-card border rounded-xl p-4 mb-6 shadow-sm">
+      <div className="flex flex-col sm:flex-row gap-4 justify-between items-center bg-cardard border rounded-xl p-4 mb-6 shadow-sm">
         <div className="relative w-full sm:max-w-xs">
           <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
@@ -173,7 +173,7 @@ export default function OutOfStockPage() {
               setWarehouseFilter(e.target.value);
               setPage(1);
             }}
-            className="w-full sm:w-48 text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full sm:w-48 text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
           >
             <option value="">All Warehouses</option>
             {warehouses.map((w) => (
@@ -189,7 +189,7 @@ export default function OutOfStockPage() {
       {isLoading ? (
         <TableSkeleton columns={6} rows={pageSize} />
       ) : (
-        <div className="bg-card border rounded-xl shadow-sm p-4">
+        <div className="bg-cardard border rounded-xl shadow-sm p-4">
           <div className="mb-4 flex items-center gap-2 text-rose-500 bg-rose-500/10 p-3 rounded-lg border border-rose-500/20 text-xs font-medium animate-pulse">
             <AlertOctagon className="w-4 h-4 flex-shrink-0" />
             <span>

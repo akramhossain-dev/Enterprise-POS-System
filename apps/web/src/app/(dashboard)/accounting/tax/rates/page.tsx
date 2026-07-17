@@ -67,14 +67,14 @@ export default function TaxRatesPage() {
   };
 
   return (
-    <PageContainer className="text-slate-100 select-none text-left">
+    <PageContainer className="text-foreground select-none text-left">
       {/* Back link */}
       <div className="mb-4 flex justify-between items-center">
         <Link href="/accounting/tax">
           <Button
             variant="ghost"
             size="sm"
-            className="text-slate-400 hover:text-slate-200 gap-1.5 h-8"
+            className="text-muted-foreground hover:text-foreground gap-1.5 h-8"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Tax Dashboard</span>
@@ -102,7 +102,7 @@ export default function TaxRatesPage() {
       <div className="grid gap-6 md:grid-cols-3 mt-6">
         {/* Left Column: Tax Rates listing */}
         <div className="md:col-span-2 space-y-4">
-          <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest text-left font-sans flex items-center gap-1.5">
+          <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest text-left font-sans flex items-center gap-1.5">
             <Settings className="h-4 w-4 text-emerald-450" />
             <span>Defined Tax Rates</span>
           </h3>
@@ -112,17 +112,17 @@ export default function TaxRatesPage() {
               rates.map((rate) => (
                 <Card
                   key={rate.id}
-                  className="bg-[#0c1220] border-slate-800 hover:border-slate-700 transition-colors"
+                  className="bg-cardard border-border hover:border-slate-700 transition-colors"
                 >
                   <CardContent className="p-4 flex items-center justify-between">
                     <div className="space-y-1 text-left">
                       <div className="flex items-center gap-2">
                         <p className="text-xs font-bold text-slate-150">{rate.name}</p>
-                        <span className="text-[8px] bg-slate-900 border border-slate-800 text-slate-450 px-1.5 py-0.5 rounded font-black">
+                        <span className="text-[8px] bg-accent border border-border text-slate-450 px-1.5 py-0.5 rounded font-black">
                           {rate.type}
                         </span>
                       </div>
-                      {rate.notes && <p className="text-[10px] text-slate-500">{rate.notes}</p>}
+                      {rate.notes && <p className="text-[10px] text-muted-foreground">{rate.notes}</p>}
                     </div>
 
                     <div className="text-right">
@@ -134,7 +134,7 @@ export default function TaxRatesPage() {
                 </Card>
               ))
             ) : (
-              <div className="text-center py-10 border border-dashed border-slate-850 text-slate-500 text-xs">
+              <div className="text-center py-10 border border-dashed border-border text-muted-foreground text-xs">
                 No custom tax rates set up.
               </div>
             )}
@@ -143,7 +143,7 @@ export default function TaxRatesPage() {
 
         {/* Right Column: Tax Groups */}
         <div className="md:col-span-1 space-y-4">
-          <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest text-left font-sans flex items-center gap-1.5">
+          <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest text-left font-sans flex items-center gap-1.5">
             <Tag className="h-4 w-4 text-indigo-400" />
             <span>Bundled Tax Groups</span>
           </h3>
@@ -153,17 +153,17 @@ export default function TaxRatesPage() {
               groups.map((group) => (
                 <Card
                   key={group.id}
-                  className="bg-[#0c1220] border-slate-800 p-4 space-y-3 text-left"
+                  className="bg-cardard border-border p-4 space-y-3 text-left"
                 >
-                  <div className="flex justify-between items-start border-b border-slate-900 pb-2">
-                    <p className="text-xs font-bold text-slate-200">{group.name}</p>
+                  <div className="flex justify-between items-start border-b border-border pb-2">
+                    <p className="text-xs font-bold text-foreground">{group.name}</p>
                     <span className="text-[9px] bg-emerald-500/10 text-emerald-400 px-1.5 rounded font-bold">
                       {group.status}
                     </span>
                   </div>
 
                   <div className="space-y-1.5">
-                    <span className="text-[9px] text-slate-500 font-bold uppercase tracking-wide">
+                    <span className="text-[9px] text-muted-foreground font-bold uppercase tracking-wide">
                       Included Rates:
                     </span>
                     <div className="flex flex-wrap gap-1">
@@ -172,7 +172,7 @@ export default function TaxRatesPage() {
                         return (
                           <span
                             key={rateId}
-                            className="text-[8px] font-mono bg-slate-950/80 border border-slate-900 px-1.5 py-0.5 rounded text-slate-350"
+                            className="text-[8px] font-mono bg-muted/80 border border-border px-1.5 py-0.5 rounded text-muted-foreground"
                           >
                             {matchingRate ? `${matchingRate.name} (${matchingRate.rate}%)` : rateId}
                           </span>
@@ -183,7 +183,7 @@ export default function TaxRatesPage() {
                 </Card>
               ))
             ) : (
-              <div className="text-center py-10 border border-dashed border-slate-850 text-slate-500 text-xs">
+              <div className="text-center py-10 border border-dashed border-border text-muted-foreground text-xs">
                 No composite tax groups defined.
               </div>
             )}
@@ -193,13 +193,13 @@ export default function TaxRatesPage() {
 
       {/* Define Tax Rate Modal */}
       <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-        <DialogContent className="bg-[#0c1220] border border-slate-800 text-slate-100 max-w-md p-6">
+        <DialogContent className="bg-cardard border border-border text-foreground max-w-md p-6">
           <DialogHeader className="mb-4">
-            <DialogTitle className="text-sm font-black uppercase text-slate-200 tracking-wider flex items-center gap-1.5">
+            <DialogTitle className="text-sm font-black uppercase text-foreground tracking-wider flex items-center gap-1.5">
               <ShieldCheck className="h-5 w-5 text-emerald-450" />
               <span>Define Corporate Tax Rate</span>
             </DialogTitle>
-            <DialogDescription className="text-slate-500 text-xs">
+            <DialogDescription className="text-muted-foreground text-xs">
               Establish a new percentage rate inside the central tax matrix.
             </DialogDescription>
           </DialogHeader>
@@ -207,12 +207,12 @@ export default function TaxRatesPage() {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 text-xs sm:text-sm">
             {/* Name */}
             <div className="grid gap-1.5 text-left">
-              <label className="text-slate-400 font-semibold">Tax Name / Label *</label>
+              <label className="text-muted-foreground font-semibold">Tax Name / Label *</label>
               <Input
                 type="text"
                 placeholder="E.g., Standard VAT (15%)"
                 {...register('name')}
-                className="bg-slate-950 border-slate-855 text-xs text-slate-100 focus-visible:ring-emerald-500"
+                className="bg-muted border-slate-855 text-xs text-foreground focus-visible:ring-emerald-500"
               />
               {errors.name && <p className="text-[10px] text-rose-455">{errors.name.message}</p>}
             </div>
@@ -220,7 +220,7 @@ export default function TaxRatesPage() {
             <div className="grid grid-cols-2 gap-4">
               {/* Rate */}
               <div className="grid gap-1.5">
-                <label className="text-slate-400 font-semibold font-mono">
+                <label className="text-muted-foreground font-semibold font-mono">
                   Tax Percentage (%) *
                 </label>
                 <Input
@@ -228,7 +228,7 @@ export default function TaxRatesPage() {
                   step="any"
                   placeholder="0.00"
                   {...register('rate')}
-                  className="bg-slate-950 border-slate-855 text-xs text-slate-100 font-mono focus-visible:ring-emerald-500 h-9"
+                  className="bg-muted border-slate-855 text-xs text-foreground font-mono focus-visible:ring-emerald-500 h-9"
                 />
                 {errors.rate && (
                   <p className="text-[10px] text-rose-455 font-mono">{errors.rate.message}</p>
@@ -237,10 +237,10 @@ export default function TaxRatesPage() {
 
               {/* Type */}
               <div className="grid gap-1.5 text-left">
-                <label className="text-slate-400 font-semibold">Tax Class *</label>
+                <label className="text-muted-foreground font-semibold">Tax Class *</label>
                 <select
                   {...register('type')}
-                  className="bg-slate-950 border border-slate-855 rounded p-2 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 cursor-pointer h-9"
+                  className="bg-muted border border-slate-855 rounded p-2 text-xs text-foreground focus:outline-none focus:border-emerald-500 cursor-pointer h-9"
                 >
                   <option value="VAT">Value Added Tax (VAT)</option>
                   <option value="GST">Goods & Services Tax (GST)</option>
@@ -252,11 +252,11 @@ export default function TaxRatesPage() {
 
             {/* Notes */}
             <div className="grid gap-1.5 text-left">
-              <label className="text-slate-400 font-semibold">Audit Notes</label>
+              <label className="text-muted-foreground font-semibold">Audit Notes</label>
               <textarea
                 placeholder="Notes or legislative reference code..."
                 {...register('notes')}
-                className="w-full bg-slate-950 border border-slate-855 rounded p-2 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 h-16 resize-none"
+                className="w-full bg-muted border border-slate-855 rounded p-2 text-xs text-foreground focus:outline-none focus:border-emerald-500 h-16 resize-none"
               />
             </div>
 
@@ -266,7 +266,7 @@ export default function TaxRatesPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  className="h-9 border-slate-800 text-slate-400 hover:text-slate-200 bg-[#0c1220]"
+                  className="h-9 border-border text-muted-foreground hover:text-foreground bg-cardard"
                 >
                   Cancel
                 </Button>

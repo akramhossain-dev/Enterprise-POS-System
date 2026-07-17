@@ -14,14 +14,14 @@ interface CreditNoteCardProps {
 
 export function CreditNoteCard({ creditNote, onPrint }: CreditNoteCardProps) {
   const statusStyles = {
-    DRAFT: 'bg-slate-500/10 text-slate-500 border-slate-500/20',
+    DRAFT: 'bg-slate-500/10 text-muted-foreground border-slate-500/20',
     ISSUED: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20',
     VOID: 'bg-rose-500/10 text-rose-500 border-rose-500/20',
     APPLIED: 'bg-blue-500/10 text-blue-500 border-blue-500/20',
   };
 
   return (
-    <Card className="border border-border bg-card shadow-sm hover:shadow-md transition-shadow rounded-xl overflow-hidden text-sm">
+    <Card className="border border-border bg-cardard shadow-sm hover:shadow-md transition-shadow rounded-xl overflow-hidden text-sm">
       <CardHeader className="bg-muted/30 border-b p-4 flex flex-row items-center justify-between">
         <div className="flex items-center gap-2">
           <FileText className="w-4 h-4 text-emerald-500" />

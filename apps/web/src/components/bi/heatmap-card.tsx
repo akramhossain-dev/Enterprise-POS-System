@@ -17,7 +17,7 @@ export function HeatmapCard({ title, description, data, className }: HeatmapCard
   const hours = ['09:00', '12:00', '15:00', '18:00', '21:00'];
 
   const getHeatColor = (val: number) => {
-    if (val < 25) return 'bg-[#0f1d3a] text-slate-500';
+    if (val < 25) return 'bg-[#0f1d3a] text-muted-foreground';
     if (val < 50) return 'bg-indigo-950/40 text-indigo-400 border border-indigo-900/30';
     if (val < 75) return 'bg-indigo-800/40 text-indigo-200 border border-indigo-700/30';
     return 'bg-emerald-500/20 text-emerald-450 border border-emerald-500/40 font-bold';
@@ -30,16 +30,16 @@ export function HeatmapCard({ title, description, data, className }: HeatmapCard
   return (
     <Card
       className={cn(
-        'bg-[#0c1220] border-slate-800 text-slate-100 select-none text-left print:bg-white print:text-black',
+        'bg-cardard border-border text-foreground select-none text-left print:bg-white print:text-black',
         className,
       )}
     >
-      <CardHeader className="py-4 border-b border-slate-900">
-        <CardTitle className="text-xs font-bold text-slate-200 uppercase tracking-widest font-sans">
+      <CardHeader className="py-4 border-b border-border">
+        <CardTitle className="text-xs font-bold text-foreground uppercase tracking-widest font-sans">
           {title}
         </CardTitle>
         {description && (
-          <CardDescription className="text-[10px] text-slate-500 font-mono mt-0.5">
+          <CardDescription className="text-[10px] text-muted-foreground font-mono mt-0.5">
             {description}
           </CardDescription>
         )}
@@ -50,7 +50,7 @@ export function HeatmapCard({ title, description, data, className }: HeatmapCard
           {/* Top Hours Header */}
           <div />
           {hours.map((h) => (
-            <div key={h} className="text-slate-500 font-bold py-1">
+            <div key={h} className="text-muted-foreground font-bold py-1">
               {h}
             </div>
           ))}
@@ -61,7 +61,7 @@ export function HeatmapCard({ title, description, data, className }: HeatmapCard
           {days.map((day) => (
             <React.Fragment key={day}>
               {/* Day Label */}
-              <div className="text-slate-400 font-bold py-2 flex items-center justify-start text-[10px] font-sans">
+              <div className="text-muted-foreground font-bold py-2 flex items-center justify-start text-[10px] font-sans">
                 {day}
               </div>
 

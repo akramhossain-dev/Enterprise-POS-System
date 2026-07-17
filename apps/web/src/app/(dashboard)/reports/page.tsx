@@ -73,7 +73,7 @@ export default function ReportsDashboardPage() {
   const favoriteReportsList = enrichedReports.filter((r) => r.isFavorite);
 
   return (
-    <PageContainer className="text-slate-100 select-none text-left print:bg-white print:text-black">
+    <PageContainer className="text-foreground select-none text-left print:bg-white print:text-black">
       <PageHeader
         title="Operations Report Center"
         description="Comprehensive daily ledgers, valuation indices, vat returns worksheets, and exports scheduler."
@@ -81,13 +81,13 @@ export default function ReportsDashboardPage() {
 
       {/* Top filter row */}
       <div className="relative mb-6">
-        <Search className="absolute left-2.5 top-3.5 h-4 w-4 text-slate-500" />
+        <Search className="absolute left-2.5 top-3.5 h-4 w-4 text-muted-foreground" />
         <Input
           type="text"
           placeholder="Filter available report templates by name, module, or keyword..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full h-11 pl-9 bg-slate-950 border border-slate-855 rounded-xl text-xs focus:outline-none"
+          className="w-full h-11 pl-9 bg-muted border border-slate-855 rounded-xl text-xs focus:outline-none"
         />
       </div>
 
@@ -97,7 +97,7 @@ export default function ReportsDashboardPage() {
           {/* Favorite templates */}
           {favoriteReportsList.length > 0 && searchQuery === '' && (
             <div className="space-y-3">
-              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest font-sans flex items-center gap-1.5">
+              <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest font-sans flex items-center gap-1.5">
                 <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
                 <span>Favorite Report Templates</span>
               </h3>
@@ -111,7 +111,7 @@ export default function ReportsDashboardPage() {
 
           {/* All templates */}
           <div className="space-y-3">
-            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest font-sans flex items-center gap-1.5">
+            <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest font-sans flex items-center gap-1.5">
               <FileText className="h-4 w-4 text-indigo-400" />
               <span>Available Report Registries</span>
             </h3>
@@ -122,7 +122,7 @@ export default function ReportsDashboardPage() {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-12 border border-dashed border-slate-900 rounded-2xl text-slate-500 text-xs">
+              <div className="text-center py-12 border border-dashed border-border rounded-2xl text-muted-foreground text-xs">
                 No matching report templates registered.
               </div>
             )}
@@ -134,7 +134,7 @@ export default function ReportsDashboardPage() {
           {/* Cron Schedules */}
           <div className="space-y-3">
             <div className="flex justify-between items-center">
-              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest font-sans flex items-center gap-1.5">
+              <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest font-sans flex items-center gap-1.5">
                 <Calendar className="h-4 w-4 text-indigo-400" />
                 <span>Scheduled Report Jobs</span>
               </h3>
@@ -142,34 +142,34 @@ export default function ReportsDashboardPage() {
                 <Button
                   size="icon"
                   variant="ghost"
-                  className="h-6 w-6 border border-slate-900 text-slate-400"
+                  className="h-6 w-6 border border-border text-muted-foreground"
                 >
                   <Plus className="h-3.5 w-3.5" />
                 </Button>
               </Link>
             </div>
 
-            <Card className="bg-[#0c1220] border-slate-800 p-4 font-mono text-[10px] text-slate-400 space-y-3 text-left">
+            <Card className="bg-cardard border-border p-4 font-mono text-[10px] text-muted-foreground space-y-3 text-left">
               {schedules.map((sch) => (
                 <div
                   key={sch.id}
-                  className="border-b border-slate-900 pb-2 last:border-0 last:pb-0"
+                  className="border-b border-border pb-2 last:border-0 last:pb-0"
                 >
                   <div className="flex justify-between items-start">
-                    <span className="font-bold text-slate-200 truncate max-w-[120px]">
+                    <span className="font-bold text-foreground truncate max-w-[120px]">
                       {sch.reportName}
                     </span>
                     <span
                       className={`px-1.5 py-0.5 rounded text-[8px] font-bold uppercase ${
                         sch.status === 'active'
                           ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-950/20'
-                          : 'bg-slate-500/10 text-slate-500 border border-slate-900/40'
+                          : 'bg-slate-500/10 text-muted-foreground border border-border/40'
                       }`}
                     >
                       {sch.status}
                     </span>
                   </div>
-                  <p className="text-slate-500 mt-0.5">
+                  <p className="text-muted-foreground mt-0.5">
                     Recurrence: {sch.frequency} at {sch.timeOfDay}
                   </p>
                 </div>
@@ -180,29 +180,29 @@ export default function ReportsDashboardPage() {
           {/* Export execution history log */}
           <div className="space-y-3">
             <div className="flex justify-between items-center">
-              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest font-sans flex items-center gap-1.5">
+              <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest font-sans flex items-center gap-1.5">
                 <Clock className="h-4 w-4 text-indigo-400" />
                 <span>Generated Export Logs</span>
               </h3>
               <Link href="/reports/export">
-                <Button variant="ghost" size="sm" className="h-6 text-[10px] text-slate-500 gap-1">
+                <Button variant="ghost" size="sm" className="h-6 text-[10px] text-muted-foreground gap-1">
                   <span>View All</span>
                   <ArrowRight className="h-3 w-3" />
                 </Button>
               </Link>
             </div>
 
-            <Card className="bg-[#0c1220] border-slate-800 p-4 font-mono text-[10px] text-slate-400 space-y-3 text-left">
+            <Card className="bg-cardard border-border p-4 font-mono text-[10px] text-muted-foreground space-y-3 text-left">
               {logs.slice(0, 3).map((log) => (
                 <div
                   key={log.id}
-                  className="border-b border-slate-900 pb-2 last:border-0 last:pb-0 flex items-center justify-between"
+                  className="border-b border-border pb-2 last:border-0 last:pb-0 flex items-center justify-between"
                 >
                   <div>
-                    <span className="font-bold text-slate-200 block truncate max-w-[130px]">
+                    <span className="font-bold text-foreground block truncate max-w-[130px]">
                       {log.reportName}
                     </span>
-                    <span className="text-slate-500">{log.timestamp}</span>
+                    <span className="text-muted-foreground">{log.timestamp}</span>
                   </div>
                   <span className="px-1 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-950/20 text-[8px] font-bold uppercase">
                     {log.format}

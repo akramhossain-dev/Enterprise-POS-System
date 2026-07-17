@@ -74,14 +74,14 @@ export default function AccountLedgerPage() {
   };
 
   return (
-    <PageContainer className="text-slate-100 select-none text-left">
+    <PageContainer className="text-foreground select-none text-left">
       {/* Back home */}
       <div className="mb-4">
         <Link href="/accounting">
           <Button
             variant="ghost"
             size="sm"
-            className="text-slate-400 hover:text-slate-200 gap-1.5 h-8"
+            className="text-muted-foreground hover:text-foreground gap-1.5 h-8"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Accounting Dashboard</span>
@@ -101,7 +101,7 @@ export default function AccountLedgerPage() {
           <select
             value={selectedAccountId}
             onChange={(e) => setSelectedAccountId(e.target.value)}
-            className="bg-[#0c1220] border border-slate-850 text-slate-200 rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[220px] font-bold font-mono"
+            className="bg-cardard border border-border text-foreground rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[220px] font-bold font-mono"
           >
             <option value="">-- Choose Account * --</option>
             {accounts.map((a) => (
@@ -112,20 +112,20 @@ export default function AccountLedgerPage() {
           </select>
 
           {/* Date range filters */}
-          <div className="flex items-center gap-1.5 bg-[#0c1220] px-3 border border-slate-850 rounded-lg text-xs h-9">
-            <span className="text-slate-500">From</span>
+          <div className="flex items-center gap-1.5 bg-cardard px-3 border border-border rounded-lg text-xs h-9">
+            <span className="text-muted-foreground">From</span>
             <input
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="bg-transparent text-slate-200 focus:outline-none cursor-pointer h-full"
+              className="bg-transparent text-foreground focus:outline-none cursor-pointer h-full"
             />
-            <span className="text-slate-500">To</span>
+            <span className="text-muted-foreground">To</span>
             <input
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="bg-transparent text-slate-200 focus:outline-none cursor-pointer h-full"
+              className="bg-transparent text-foreground focus:outline-none cursor-pointer h-full"
             />
           </div>
 
@@ -133,7 +133,7 @@ export default function AccountLedgerPage() {
           <select
             value={txType}
             onChange={(e) => setTxType(e.target.value)}
-            className="bg-[#0c1220] border border-slate-850 text-slate-350 rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[120px]"
+            className="bg-cardard border border-border text-muted-foreground rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[120px]"
           >
             <option value="ALL">All Types</option>
             <option value="JOURNAL">Journals</option>
@@ -148,7 +148,7 @@ export default function AccountLedgerPage() {
             size="sm"
             variant="outline"
             onClick={handleExportCSV}
-            className="h-8 border-slate-800 bg-[#0c1220] hover:bg-slate-900 text-xs gap-1.5 w-full md:w-auto"
+            className="h-8 border-border bg-cardard hover:bg-accent text-xs gap-1.5 w-full md:w-auto"
           >
             <FileDown className="h-4 w-4 text-slate-450" />
             <span>Export CSV</span>
@@ -158,7 +158,7 @@ export default function AccountLedgerPage() {
 
       {/* Main Ledger Content */}
       {!selectedAccountId ? (
-        <div className="text-center py-20 border border-dashed border-slate-850 rounded-2xl text-slate-500">
+        <div className="text-center py-20 border border-dashed border-border rounded-2xl text-muted-foreground">
           <BookOpen className="h-8 w-8 text-slate-700 mx-auto mb-2" />
           <p className="text-xs">
             Please select an account from the dropdown above to construct the ledger report.

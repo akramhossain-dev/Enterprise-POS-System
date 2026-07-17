@@ -115,7 +115,7 @@ export function BarcodeWidget({
   const svgContent = productService.generateBarcodeSvg(barcode);
 
   return (
-    <div className="border border-border rounded-xl p-5 bg-card space-y-4">
+    <div className="border border-border rounded-xl p-5 bg-cardard space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
         <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">

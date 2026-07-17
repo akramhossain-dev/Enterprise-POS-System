@@ -65,15 +65,15 @@ export function VoucherCard({
   };
 
   return (
-    <Card className="bg-[#0c1220] border-slate-800 text-slate-100 hover:border-slate-700 transition-colors text-left flex flex-col justify-between">
+    <Card className="bg-cardard border-border text-foreground hover:border-slate-700 transition-colors text-left flex flex-col justify-between">
       <CardContent className="p-4 space-y-3">
         {/* Header */}
         <div className="flex justify-between items-start gap-2">
           <div className="space-y-0.5">
-            <span className="text-[9px] font-bold font-mono tracking-widest text-slate-500 uppercase">
+            <span className="text-[9px] font-bold font-mono tracking-widest text-muted-foreground uppercase">
               {isPayment ? 'Payment Voucher' : 'Receipt Voucher'}
             </span>
-            <h4 className="text-sm font-black font-mono text-slate-200 truncate max-w-[180px]">
+            <h4 className="text-sm font-black font-mono text-foreground truncate max-w-[180px]">
               {voucherNum}
             </h4>
           </div>
@@ -86,38 +86,38 @@ export function VoucherCard({
             {formatCurrency(voucher.amount)}
           </p>
           <div className="text-xs">
-            <span className="text-slate-500">{isPayment ? 'Payee: ' : 'From: '}</span>
-            <span className="font-bold text-slate-300 truncate max-w-[200px] inline-block align-bottom">
+            <span className="text-muted-foreground">{isPayment ? 'Payee: ' : 'From: '}</span>
+            <span className="font-bold text-foreground truncate max-w-[200px] inline-block align-bottom">
               {person}
             </span>
           </div>
         </div>
 
         {/* Metadata grid */}
-        <div className="grid grid-cols-2 gap-2 text-[10px] font-mono border-t border-slate-900 pt-2.5">
+        <div className="grid grid-cols-2 gap-2 text-[10px] font-mono border-t border-border pt-2.5">
           <div>
-            <span className="text-slate-500 block">Date</span>
-            <span className="text-slate-350">{new Date(voucher.date).toLocaleDateString()}</span>
+            <span className="text-muted-foreground block">Date</span>
+            <span className="text-muted-foreground">{new Date(voucher.date).toLocaleDateString()}</span>
           </div>
           <div>
-            <span className="text-slate-500 block">Method</span>
-            <span className="text-slate-350">{voucher.paymentMethod}</span>
+            <span className="text-muted-foreground block">Method</span>
+            <span className="text-muted-foreground">{voucher.paymentMethod}</span>
           </div>
           <div className="col-span-2">
-            <span className="text-slate-500 block">Reference</span>
-            <span className="text-slate-350 truncate block">{voucher.reference}</span>
+            <span className="text-muted-foreground block">Reference</span>
+            <span className="text-muted-foreground truncate block">{voucher.reference}</span>
           </div>
         </div>
       </CardContent>
 
       {/* Action Footer */}
-      <div className="px-4 pb-4 flex gap-1.5 border-t border-slate-900/60 pt-3">
+      <div className="px-4 pb-4 flex gap-1.5 border-t border-border/60 pt-3">
         {onView && (
           <Button
             size="sm"
             variant="ghost"
             onClick={() => onView(voucher)}
-            className="h-8 flex-1 border border-slate-800 text-[10px] font-bold uppercase tracking-wider text-slate-400 hover:text-slate-200"
+            className="h-8 flex-1 border border-border text-[10px] font-bold uppercase tracking-wider text-muted-foreground hover:text-foreground"
           >
             <Eye className="h-3 w-3 mr-1" />
             <span>Details</span>
@@ -140,7 +140,7 @@ export function VoucherCard({
             size="icon"
             variant="outline"
             onClick={() => onPrint(voucher)}
-            className="h-8 w-8 shrink-0 border-slate-800 bg-slate-950 text-slate-400 hover:text-slate-200"
+            className="h-8 w-8 shrink-0 border-border bg-muted text-muted-foreground hover:text-foreground"
             title="Print Voucher UI"
           >
             <Printer className="h-3.5 w-3.5" />

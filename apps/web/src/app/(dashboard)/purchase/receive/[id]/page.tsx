@@ -86,7 +86,7 @@ export default function GoodsReceiveDetailsPage() {
   if (error || !grn) {
     return (
       <PageContainer>
-        <div className="text-center py-16 bg-card border rounded-2xl text-sm">
+        <div className="text-center py-16 bg-cardard border rounded-2xl text-sm">
           <AlertTriangle className="w-12 h-12 text-rose-500 mx-auto mb-4 animate-bounce" />
           <h3 className="text-lg font-bold text-foreground">Goods Receive Note Not Found</h3>
           <p className="text-sm text-muted-foreground mt-1">
@@ -129,7 +129,7 @@ export default function GoodsReceiveDetailsPage() {
       <div className="grid gap-6 md:grid-cols-3 text-sm">
         {/* Left items table */}
         <div className="md:col-span-2 space-y-6">
-          <Card className="shadow-sm border-border bg-card">
+          <Card className="shadow-sm border-border bg-cardard">
             <CardHeader className="border-b">
               <CardTitle className="text-sm font-semibold flex items-center gap-2">
                 <Package className="w-4 h-4 text-primary animate-pulse" /> Received Cargo Products
@@ -151,7 +151,7 @@ export default function GoodsReceiveDetailsPage() {
                   {grn.items?.map((item) => (
                     <tr
                       key={item.id}
-                      className="border-b last:border-b-0 border-border bg-card hover:bg-muted/10"
+                      className="border-b last:border-b-0 border-border bg-cardard hover:bg-muted/10"
                     >
                       <td className="p-3 pl-6 font-semibold text-foreground text-sm">
                         {item.product?.name || '—'}
@@ -192,7 +192,7 @@ export default function GoodsReceiveDetailsPage() {
           </Card>
 
           {/* Pricing Summary */}
-          <Card className="shadow-sm border-border bg-card">
+          <Card className="shadow-sm border-border bg-cardard">
             <CardHeader className="border-b">
               <CardTitle className="text-sm font-semibold flex items-center gap-1.5">
                 <DollarSign className="w-4 h-4 text-emerald-500" /> Received Cargo Valuation
@@ -227,7 +227,7 @@ export default function GoodsReceiveDetailsPage() {
         {/* Right side stats panel */}
         <div className="space-y-6">
           {/* Status and Commit triggers */}
-          <Card className="shadow-sm border-border bg-card">
+          <Card className="shadow-sm border-border bg-cardard">
             <CardHeader className="border-b">
               <CardTitle className="text-sm font-semibold flex items-center gap-1.5">
                 <Clock className="w-4 h-4 text-primary animate-pulse" /> Intake Status
@@ -314,7 +314,7 @@ export default function GoodsReceiveDetailsPage() {
           </Card>
 
           {/* Supplier Info */}
-          <Card className="shadow-sm border-border bg-card">
+          <Card className="shadow-sm border-border bg-cardard">
             <CardHeader className="border-b">
               <CardTitle className="text-sm font-semibold flex items-center gap-1.5">
                 <Building2 className="w-4 h-4 text-indigo-500" /> Supplier Vendor

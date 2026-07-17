@@ -32,18 +32,18 @@ export function ReportCard({ report, onToggleFavorite, className }: ReportCardPr
       case 'tax':
         return 'text-rose-455 bg-rose-500/10 border-rose-950/20';
       default:
-        return 'text-slate-400 bg-slate-500/10 border-slate-950/20';
+        return 'text-muted-foreground bg-slate-500/10 border-slate-950/20';
     }
   };
 
   return (
     <Card
       className={cn(
-        'bg-[#0c1220] border-slate-800 text-slate-100 hover:border-slate-700 hover:shadow-md transition-all duration-200 flex flex-col justify-between select-none text-left',
+        'bg-cardard border-border text-foreground hover:border-slate-700 hover:shadow-md transition-all duration-200 flex flex-col justify-between select-none text-left',
         className,
       )}
     >
-      <CardHeader className="py-4 border-b border-slate-900 flex flex-row items-start justify-between gap-3">
+      <CardHeader className="py-4 border-b border-border flex flex-row items-start justify-between gap-3">
         <div className="space-y-1 text-left flex-1 min-w-0">
           <span
             className={cn(
@@ -53,10 +53,10 @@ export function ReportCard({ report, onToggleFavorite, className }: ReportCardPr
           >
             {report.category}
           </span>
-          <CardTitle className="text-sm font-bold text-slate-200 truncate mt-1">
+          <CardTitle className="text-sm font-bold text-foreground truncate mt-1">
             {report.name}
           </CardTitle>
-          <CardDescription className="text-[10px] text-slate-500 line-clamp-2 mt-0.5 min-h-[30px] font-sans leading-relaxed">
+          <CardDescription className="text-[10px] text-muted-foreground line-clamp-2 mt-0.5 min-h-[30px] font-sans leading-relaxed">
             {report.description}
           </CardDescription>
         </div>
@@ -65,7 +65,7 @@ export function ReportCard({ report, onToggleFavorite, className }: ReportCardPr
           size="icon"
           variant="ghost"
           onClick={handleToggle}
-          className="h-7 w-7 text-slate-500 hover:text-amber-450 hover:bg-slate-900 border border-slate-900"
+          className="h-7 w-7 text-muted-foreground hover:text-amber-450 hover:bg-accent border border-border"
           title={report.isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
         >
           <Star
@@ -74,7 +74,7 @@ export function ReportCard({ report, onToggleFavorite, className }: ReportCardPr
         </Button>
       </CardHeader>
 
-      <CardContent className="p-3 bg-slate-950/20 flex items-center justify-between text-[10px] font-mono text-slate-500">
+      <CardContent className="p-3 bg-muted/20 flex items-center justify-between text-[10px] font-mono text-muted-foreground">
         <div className="flex items-center gap-1.5">
           <Clock className="h-3 w-3" />
           <span>Last Run: {report.lastRun || 'Never'}</span>
@@ -84,7 +84,7 @@ export function ReportCard({ report, onToggleFavorite, className }: ReportCardPr
           <Button
             size="sm"
             variant="ghost"
-            className="h-6 text-[10px] text-emerald-450 hover:text-emerald-350 hover:bg-slate-900 gap-1"
+            className="h-6 text-[10px] text-emerald-450 hover:text-emerald-350 hover:bg-accent gap-1"
           >
             <span>Open</span>
             <ArrowRight className="h-3 w-3" />

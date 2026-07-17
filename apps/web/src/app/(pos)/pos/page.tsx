@@ -102,14 +102,14 @@ export default function POSTerminalPage() {
   }, [activeCart, holdOrder, newCart]);
 
   return (
-    <div className="flex-1 flex flex-col md:flex-row h-full min-h-0 overflow-hidden bg-[#080d19]">
+    <div className="flex-1 flex flex-col md:flex-row h-full min-h-0 overflow-hidden bg-background">
       {/* Left section: Category Browser & Product Catalog grid */}
       <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
         <ProductBrowser />
       </div>
 
       {/* Right section: Multi-Cart details list & Checkout pricing summaries */}
-      <div className="w-full md:w-[380px] lg:w-[420px] flex flex-col border-l border-slate-900 bg-[#0c1220] shrink-0 h-full overflow-hidden">
+      <div className="w-full md:w-[380px] lg:w-[420px] flex flex-col border-l border-border bg-cardard shrink-0 h-full overflow-hidden">
         {/* Shopping Cart List */}
         <div className="flex-1 min-h-0 overflow-hidden">
           <ShoppingCart />

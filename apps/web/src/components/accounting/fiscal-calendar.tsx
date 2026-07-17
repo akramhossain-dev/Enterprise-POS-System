@@ -21,21 +21,21 @@ export function FiscalCalendar({ year, onToggleStatus, isPending = false }: Fisc
       case 'CLOSED':
         return 'bg-rose-500/10 text-rose-455 border-rose-500/20';
       case 'LOCKED':
-        return 'bg-slate-900 text-slate-500 border-slate-800';
+        return 'bg-accent text-muted-foreground border-border';
     }
   };
 
   return (
-    <Card className="bg-[#0c1220] border-slate-800 text-slate-100 select-none text-left">
+    <Card className="bg-cardard border-border text-foreground select-none text-left">
       <CardContent className="p-5 space-y-4">
         {/* Header */}
-        <div className="flex justify-between items-center border-b border-slate-900 pb-3">
+        <div className="flex justify-between items-center border-b border-border pb-3">
           <div className="space-y-0.5">
             <span className="text-[10px] font-bold text-slate-450 uppercase tracking-widest font-sans flex items-center gap-1.5">
               <Calendar className="h-4 w-4 text-indigo-400" />
               <span>Fiscal Year Calendar {year.year}</span>
             </span>
-            <p className="text-[9px] text-slate-500 font-mono">
+            <p className="text-[9px] text-muted-foreground font-mono">
               Start: {year.startDate} | End: {year.endDate}
             </p>
           </div>
@@ -56,11 +56,11 @@ export function FiscalCalendar({ year, onToggleStatus, isPending = false }: Fisc
           {year.periods.map((period) => (
             <div
               key={period.id}
-              className="p-3 bg-slate-950/40 border border-slate-850 rounded-xl flex items-center justify-between"
+              className="p-3 bg-muted/40 border border-border rounded-xl flex items-center justify-between"
             >
               <div className="space-y-0.5 text-left">
-                <p className="text-xs font-bold text-slate-200 font-sans">{period.name}</p>
-                <span className="font-mono text-[9px] text-slate-500 block">
+                <p className="text-xs font-bold text-foreground font-sans">{period.name}</p>
+                <span className="font-mono text-[9px] text-muted-foreground block">
                   {period.startDate} to {period.endDate}
                 </span>
                 <span
@@ -81,7 +81,7 @@ export function FiscalCalendar({ year, onToggleStatus, isPending = false }: Fisc
                     variant="ghost"
                     disabled={isPending}
                     onClick={() => onToggleStatus(period.id, 'CLOSED')}
-                    className="h-7 w-7 text-slate-500 hover:text-rose-455 hover:bg-rose-500/10"
+                    className="h-7 w-7 text-muted-foreground hover:text-rose-455 hover:bg-rose-500/10"
                     title="Close Period"
                   >
                     <Lock className="h-3.5 w-3.5" />
@@ -94,7 +94,7 @@ export function FiscalCalendar({ year, onToggleStatus, isPending = false }: Fisc
                       variant="ghost"
                       disabled={isPending}
                       onClick={() => onToggleStatus(period.id, 'OPEN')}
-                      className="h-7 w-7 text-slate-500 hover:text-emerald-400 hover:bg-emerald-500/10"
+                      className="h-7 w-7 text-muted-foreground hover:text-emerald-400 hover:bg-emerald-500/10"
                       title="Reopen Period"
                     >
                       <Unlock className="h-3.5 w-3.5" />
@@ -104,7 +104,7 @@ export function FiscalCalendar({ year, onToggleStatus, isPending = false }: Fisc
                       variant="ghost"
                       disabled={isPending}
                       onClick={() => onToggleStatus(period.id, 'LOCKED')}
-                      className="h-7 w-7 text-slate-500 hover:text-slate-200 hover:bg-slate-800"
+                      className="h-7 w-7 text-muted-foreground hover:text-foreground hover:bg-slate-800"
                       title="Lock Period (Freeze)"
                     >
                       <ShieldAlert className="h-3.5 w-3.5" />

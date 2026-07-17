@@ -35,13 +35,13 @@ export function PrintDialog({ isOpen, onOpenChange, reportName }: PrintDialogPro
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-[#0c1220] border border-slate-800 text-slate-100 max-w-sm p-6 select-none text-left">
+      <DialogContent className="bg-cardard border border-border text-foreground max-w-sm p-6 select-none text-left">
         <DialogHeader className="mb-4">
-          <DialogTitle className="text-sm font-black uppercase text-slate-200 tracking-wider flex items-center gap-1.5 font-sans">
+          <DialogTitle className="text-sm font-black uppercase text-foreground tracking-wider flex items-center gap-1.5 font-sans">
             <Printer className="h-5 w-5 text-indigo-400" />
             <span>Print Spooler Manager</span>
           </DialogTitle>
-          <DialogDescription className="text-slate-500 text-xs mt-1">
+          <DialogDescription className="text-muted-foreground text-xs mt-1">
             Configure layout preferences before triggering system printing.
           </DialogDescription>
         </DialogHeader>
@@ -49,7 +49,7 @@ export function PrintDialog({ isOpen, onOpenChange, reportName }: PrintDialogPro
         <div className="space-y-4 text-xs">
           {/* Page Size Selection */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">
+            <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-wide">
               Sheet Paper Size
             </label>
             <div className="grid grid-cols-3 gap-2">
@@ -60,8 +60,8 @@ export function PrintDialog({ isOpen, onOpenChange, reportName }: PrintDialogPro
                   onClick={() => setPageSize(sz)}
                   className={`py-2 text-center border rounded-lg text-[10px] uppercase font-bold transition-all ${
                     pageSize === sz
-                      ? 'border-indigo-500 bg-indigo-500/10 text-slate-100'
-                      : 'border-slate-900 bg-slate-950/20 text-slate-400'
+                      ? 'border-indigo-500 bg-indigo-500/10 text-foreground'
+                      : 'border-border bg-muted/20 text-muted-foreground'
                   }`}
                 >
                   {sz}
@@ -72,7 +72,7 @@ export function PrintDialog({ isOpen, onOpenChange, reportName }: PrintDialogPro
 
           {/* Orientation selection */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">
+            <label className="text-[9px] font-bold text-muted-foreground uppercase tracking-wide">
               Layout Orientation
             </label>
             <div className="grid grid-cols-2 gap-2">
@@ -88,8 +88,8 @@ export function PrintDialog({ isOpen, onOpenChange, reportName }: PrintDialogPro
                   onClick={() => setOrientation(orient.id)}
                   className={`py-2 text-center border rounded-lg text-[10px] font-bold transition-all ${
                     orientation === orient.id
-                      ? 'border-indigo-500 bg-indigo-500/10 text-slate-100'
-                      : 'border-slate-900 bg-slate-950/20 text-slate-400'
+                      ? 'border-indigo-500 bg-indigo-500/10 text-foreground'
+                      : 'border-border bg-muted/20 text-muted-foreground'
                   }`}
                 >
                   {orient.name}
@@ -98,8 +98,8 @@ export function PrintDialog({ isOpen, onOpenChange, reportName }: PrintDialogPro
             </div>
           </div>
 
-          <div className="flex items-center justify-between p-2 border border-slate-900 rounded-xl bg-slate-950/20">
-            <span className="font-bold text-slate-200">Include Audit Header Meta</span>
+          <div className="flex items-center justify-between p-2 border border-border rounded-xl bg-muted/20">
+            <span className="font-bold text-foreground">Include Audit Header Meta</span>
             <input
               type="checkbox"
               checked={includeHeaders}
@@ -113,7 +113,7 @@ export function PrintDialog({ isOpen, onOpenChange, reportName }: PrintDialogPro
               <Button
                 type="button"
                 variant="ghost"
-                className="h-9 text-slate-500 hover:text-slate-200 hover:bg-slate-900"
+                className="h-9 text-muted-foreground hover:text-foreground hover:bg-accent"
               >
                 Cancel
               </Button>

@@ -28,7 +28,7 @@ export default function AccountingDashboardPage() {
   const recentAccounts = accData?.data || [];
 
   return (
-    <PageContainer className="text-slate-100 select-none text-left">
+    <PageContainer className="text-foreground select-none text-left">
       <div className="flex justify-between items-center mb-4">
         <PageHeader
           title="Accounting & Finance Control"
@@ -48,7 +48,7 @@ export default function AccountingDashboardPage() {
             <Button
               size="sm"
               variant="outline"
-              className="h-8 border-slate-800 bg-[#0c1220] hover:bg-slate-900 text-xs"
+              className="h-8 border-border bg-cardard hover:bg-accent text-xs"
             >
               <span>Groups</span>
             </Button>
@@ -57,7 +57,7 @@ export default function AccountingDashboardPage() {
             <Button
               size="sm"
               variant="outline"
-              className="h-8 border-slate-800 bg-[#0c1220] hover:bg-slate-900 text-xs"
+              className="h-8 border-border bg-cardard hover:bg-accent text-xs"
             >
               <span>Categories</span>
             </Button>
@@ -66,7 +66,7 @@ export default function AccountingDashboardPage() {
       </div>
 
       {statsLoading ? (
-        <div className="text-center py-12 text-slate-500">Compiling financial metrics...</div>
+        <div className="text-center py-12 text-muted-foreground">Compiling financial metrics...</div>
       ) : stats ? (
         <div className="space-y-6">
           {/* Main metrics grid */}
@@ -106,8 +106,8 @@ export default function AccountingDashboardPage() {
           {/* Cash/Bank Receivables row */}
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <Link href="/accounting/cash-book" className="hover:scale-[1.01] transition-transform">
-              <Card className="bg-[#0c1220] border-slate-800 hover:border-slate-700">
-                <CardHeader className="py-3 border-b border-slate-900 flex flex-row justify-between items-center space-y-0">
+              <Card className="bg-cardard border-border hover:border-slate-700">
+                <CardHeader className="py-3 border-b border-border flex flex-row justify-between items-center space-y-0">
                   <CardTitle className="text-[10px] font-bold text-slate-450 uppercase tracking-wider">
                     Cash Book Balance
                   </CardTitle>
@@ -117,7 +117,7 @@ export default function AccountingDashboardPage() {
                   <p className="text-lg font-black font-mono text-emerald-400">
                     ${stats.cashBalance.toFixed(2)}
                   </p>
-                  <p className="text-[9px] text-slate-500 mt-0.5">
+                  <p className="text-[9px] text-muted-foreground mt-0.5">
                     Petty Cash registers (View Book)
                   </p>
                 </CardContent>
@@ -125,8 +125,8 @@ export default function AccountingDashboardPage() {
             </Link>
 
             <Link href="/accounting/bank-book" className="hover:scale-[1.01] transition-transform">
-              <Card className="bg-[#0c1220] border-slate-800 hover:border-slate-700">
-                <CardHeader className="py-3 border-b border-slate-900 flex flex-row justify-between items-center space-y-0">
+              <Card className="bg-cardard border-border hover:border-slate-700">
+                <CardHeader className="py-3 border-b border-border flex flex-row justify-between items-center space-y-0">
                   <CardTitle className="text-[10px] font-bold text-slate-455 uppercase tracking-wider">
                     Bank Book Balance
                   </CardTitle>
@@ -136,16 +136,16 @@ export default function AccountingDashboardPage() {
                   <p className="text-lg font-black font-mono text-emerald-400">
                     ${stats.bankBalance.toFixed(2)}
                   </p>
-                  <p className="text-[9px] text-slate-500 mt-0.5">
+                  <p className="text-[9px] text-muted-foreground mt-0.5">
                     Operating bank accounts (View Book)
                   </p>
                 </CardContent>
               </Card>
             </Link>
 
-            <Card className="bg-[#0c1220] border-slate-800">
-              <CardHeader className="py-3 border-b border-slate-900 flex flex-row justify-between items-center space-y-0">
-                <CardTitle className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+            <Card className="bg-cardard border-border">
+              <CardHeader className="py-3 border-b border-border flex flex-row justify-between items-center space-y-0">
+                <CardTitle className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
                   Receivables Due
                 </CardTitle>
                 <Users className="h-3.5 w-3.5 text-amber-450" />
@@ -154,13 +154,13 @@ export default function AccountingDashboardPage() {
                 <p className="text-lg font-black font-mono text-amber-400">
                   ${stats.receivableAmount.toFixed(2)}
                 </p>
-                <p className="text-[9px] text-slate-500 mt-0.5">Outstanding customer ledger</p>
+                <p className="text-[9px] text-muted-foreground mt-0.5">Outstanding customer ledger</p>
               </CardContent>
             </Card>
 
-            <Card className="bg-[#0c1220] border-slate-800">
-              <CardHeader className="py-3 border-b border-slate-900 flex flex-row justify-between items-center space-y-0">
-                <CardTitle className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+            <Card className="bg-cardard border-border">
+              <CardHeader className="py-3 border-b border-border flex flex-row justify-between items-center space-y-0">
+                <CardTitle className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
                   Payables Due
                 </CardTitle>
                 <Building className="h-3.5 w-3.5 text-rose-455" />
@@ -169,68 +169,68 @@ export default function AccountingDashboardPage() {
                 <p className="text-lg font-black font-mono text-rose-455">
                   ${stats.payableAmount.toFixed(2)}
                 </p>
-                <p className="text-[9px] text-slate-500 mt-0.5">Outstanding vendor invoices</p>
+                <p className="text-[9px] text-muted-foreground mt-0.5">Outstanding vendor invoices</p>
               </CardContent>
             </Card>
           </div>
 
           {/* Quick Books Links grid */}
           <div className="space-y-3">
-            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest text-left">
+            <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest text-left">
               Operating Ledgers & Cashbooks
             </h3>
             <div className="grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
               <Link href="/accounting/journals" className="group">
-                <Card className="bg-[#0c1220] border-slate-800 group-hover:border-slate-700 p-4 text-center cursor-pointer space-y-2 h-24 flex flex-col justify-center">
-                  <p className="text-xs font-black text-slate-200 group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
+                <Card className="bg-cardard border-border group-hover:border-slate-700 p-4 text-center cursor-pointer space-y-2 h-24 flex flex-col justify-center">
+                  <p className="text-xs font-black text-foreground group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
                     Journals
                   </p>
-                  <p className="text-[9px] text-slate-500">Record adjusting entries</p>
+                  <p className="text-[9px] text-muted-foreground">Record adjusting entries</p>
                 </Card>
               </Link>
 
               <Link href="/accounting/general-ledger" className="group">
-                <Card className="bg-[#0c1220] border-slate-800 group-hover:border-slate-700 p-4 text-center cursor-pointer space-y-2 h-24 flex flex-col justify-center">
-                  <p className="text-xs font-black text-slate-200 group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
+                <Card className="bg-cardard border-border group-hover:border-slate-700 p-4 text-center cursor-pointer space-y-2 h-24 flex flex-col justify-center">
+                  <p className="text-xs font-black text-foreground group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
                     General Ledger
                   </p>
-                  <p className="text-[9px] text-slate-500">Aggregate ledger sheets</p>
+                  <p className="text-[9px] text-muted-foreground">Aggregate ledger sheets</p>
                 </Card>
               </Link>
 
               <Link href="/accounting/account-ledger" className="group">
-                <Card className="bg-[#0c1220] border-slate-800 group-hover:border-slate-700 p-4 text-center cursor-pointer space-y-2 h-24 flex flex-col justify-center">
-                  <p className="text-xs font-black text-slate-200 group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
+                <Card className="bg-cardard border-border group-hover:border-slate-700 p-4 text-center cursor-pointer space-y-2 h-24 flex flex-col justify-center">
+                  <p className="text-xs font-black text-foreground group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
                     Account Ledger
                   </p>
-                  <p className="text-[9px] text-slate-500">Detailed account statements</p>
+                  <p className="text-[9px] text-muted-foreground">Detailed account statements</p>
                 </Card>
               </Link>
 
               <Link href="/accounting/income" className="group">
-                <Card className="bg-[#0c1220] border-slate-800 group-hover:border-slate-700 p-4 text-center cursor-pointer space-y-2 h-24 flex flex-col justify-center">
-                  <p className="text-xs font-black text-slate-200 group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
+                <Card className="bg-cardard border-border group-hover:border-slate-700 p-4 text-center cursor-pointer space-y-2 h-24 flex flex-col justify-center">
+                  <p className="text-xs font-black text-foreground group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
                     Income Book
                   </p>
-                  <p className="text-[9px] text-slate-500">Track miscellaneous revenue</p>
+                  <p className="text-[9px] text-muted-foreground">Track miscellaneous revenue</p>
                 </Card>
               </Link>
 
               <Link href="/accounting/expense" className="group">
-                <Card className="bg-[#0c1220] border-slate-800 group-hover:border-slate-700 p-4 text-center cursor-pointer space-y-2 h-24 flex flex-col justify-center">
-                  <p className="text-xs font-black text-slate-200 group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
+                <Card className="bg-cardard border-border group-hover:border-slate-700 p-4 text-center cursor-pointer space-y-2 h-24 flex flex-col justify-center">
+                  <p className="text-xs font-black text-foreground group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
                     Expense Book
                   </p>
-                  <p className="text-[9px] text-slate-500">Log company expenditures</p>
+                  <p className="text-[9px] text-muted-foreground">Log company expenditures</p>
                 </Card>
               </Link>
 
               <Link href="/accounting/payment-vouchers" className="group">
-                <Card className="bg-[#0c1220] border-slate-800 group-hover:border-slate-700 p-4 text-center cursor-pointer space-y-2 h-24 flex flex-col justify-center">
-                  <p className="text-xs font-black text-slate-200 group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
+                <Card className="bg-cardard border-border group-hover:border-slate-700 p-4 text-center cursor-pointer space-y-2 h-24 flex flex-col justify-center">
+                  <p className="text-xs font-black text-foreground group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
                     Vouchers
                   </p>
-                  <p className="text-[9px] text-slate-500">Process receipts/payments</p>
+                  <p className="text-[9px] text-muted-foreground">Process receipts/payments</p>
                 </Card>
               </Link>
             </div>
@@ -238,79 +238,79 @@ export default function AccountingDashboardPage() {
 
           {/* Financial Reporting & Period Closures Links grid */}
           <div className="space-y-3 mt-6">
-            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest text-left">
+            <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest text-left">
               Financial Reporting & Period Closures
             </h3>
             <div className="grid gap-4 grid-cols-2 md:grid-cols-4 lg:grid-cols-8">
               <Link href="/accounting/statements/profit-loss" className="group">
-                <Card className="bg-[#0c1220] border-slate-800 group-hover:border-slate-700 p-3 text-center cursor-pointer space-y-1.5 h-22 flex flex-col justify-center">
-                  <p className="text-[11px] font-black text-slate-200 group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
+                <Card className="bg-cardard border-border group-hover:border-slate-700 p-3 text-center cursor-pointer space-y-1.5 h-22 flex flex-col justify-center">
+                  <p className="text-[11px] font-black text-foreground group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
                     Profit & Loss
                   </p>
-                  <p className="text-[8px] text-slate-500">Revenue & net margin</p>
+                  <p className="text-[8px] text-muted-foreground">Revenue & net margin</p>
                 </Card>
               </Link>
 
               <Link href="/accounting/statements/balance-sheet" className="group">
-                <Card className="bg-[#0c1220] border-slate-800 group-hover:border-slate-700 p-3 text-center cursor-pointer space-y-1.5 h-22 flex flex-col justify-center">
-                  <p className="text-[11px] font-black text-slate-200 group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
+                <Card className="bg-cardard border-border group-hover:border-slate-700 p-3 text-center cursor-pointer space-y-1.5 h-22 flex flex-col justify-center">
+                  <p className="text-[11px] font-black text-foreground group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
                     Balance Sheet
                   </p>
-                  <p className="text-[8px] text-slate-500">Assets & equity position</p>
+                  <p className="text-[8px] text-muted-foreground">Assets & equity position</p>
                 </Card>
               </Link>
 
               <Link href="/accounting/statements/cash-flow" className="group">
-                <Card className="bg-[#0c1220] border-slate-800 group-hover:border-slate-700 p-3 text-center cursor-pointer space-y-1.5 h-22 flex flex-col justify-center">
-                  <p className="text-[11px] font-black text-slate-200 group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
+                <Card className="bg-cardard border-border group-hover:border-slate-700 p-3 text-center cursor-pointer space-y-1.5 h-22 flex flex-col justify-center">
+                  <p className="text-[11px] font-black text-foreground group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
                     Cash Flow
                   </p>
-                  <p className="text-[8px] text-slate-500">Trace liquid inflows</p>
+                  <p className="text-[8px] text-muted-foreground">Trace liquid inflows</p>
                 </Card>
               </Link>
 
               <Link href="/accounting/statements/trial-balance" className="group">
-                <Card className="bg-[#0c1220] border-slate-800 group-hover:border-slate-700 p-3 text-center cursor-pointer space-y-1.5 h-22 flex flex-col justify-center">
-                  <p className="text-[11px] font-black text-slate-200 group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
+                <Card className="bg-cardard border-border group-hover:border-slate-700 p-3 text-center cursor-pointer space-y-1.5 h-22 flex flex-col justify-center">
+                  <p className="text-[11px] font-black text-foreground group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
                     Trial Balance
                   </p>
-                  <p className="text-[8px] text-slate-500">Double-entry balancing</p>
+                  <p className="text-[8px] text-muted-foreground">Double-entry balancing</p>
                 </Card>
               </Link>
 
               <Link href="/accounting/tax" className="group">
-                <Card className="bg-[#0c1220] border-slate-800 group-hover:border-slate-700 p-3 text-center cursor-pointer space-y-1.5 h-22 flex flex-col justify-center">
-                  <p className="text-[11px] font-black text-slate-200 group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
+                <Card className="bg-cardard border-border group-hover:border-slate-700 p-3 text-center cursor-pointer space-y-1.5 h-22 flex flex-col justify-center">
+                  <p className="text-[11px] font-black text-foreground group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
                     Tax Desk
                   </p>
-                  <p className="text-[8px] text-slate-500">VAT/GST management</p>
+                  <p className="text-[8px] text-muted-foreground">VAT/GST management</p>
                 </Card>
               </Link>
 
               <Link href="/accounting/periods" className="group">
-                <Card className="bg-[#0c1220] border-slate-800 group-hover:border-slate-700 p-3 text-center cursor-pointer space-y-1.5 h-22 flex flex-col justify-center">
-                  <p className="text-[11px] font-black text-slate-200 group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
+                <Card className="bg-cardard border-border group-hover:border-slate-700 p-3 text-center cursor-pointer space-y-1.5 h-22 flex flex-col justify-center">
+                  <p className="text-[11px] font-black text-foreground group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
                     Periods Setup
                   </p>
-                  <p className="text-[8px] text-slate-500">Fiscal year calendars</p>
+                  <p className="text-[8px] text-muted-foreground">Fiscal year calendars</p>
                 </Card>
               </Link>
 
               <Link href="/accounting/closing" className="group">
-                <Card className="bg-[#0c1220] border-slate-800 group-hover:border-slate-700 p-3 text-center cursor-pointer space-y-1.5 h-22 flex flex-col justify-center">
-                  <p className="text-[11px] font-black text-slate-200 group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
+                <Card className="bg-cardard border-border group-hover:border-slate-700 p-3 text-center cursor-pointer space-y-1.5 h-22 flex flex-col justify-center">
+                  <p className="text-[11px] font-black text-foreground group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
                     Period Close
                   </p>
-                  <p className="text-[8px] text-slate-500">Month-end lock checklists</p>
+                  <p className="text-[8px] text-muted-foreground">Month-end lock checklists</p>
                 </Card>
               </Link>
 
               <Link href="/accounting/audit" className="group">
-                <Card className="bg-[#0c1220] border-slate-800 group-hover:border-slate-700 p-3 text-center cursor-pointer space-y-1.5 h-22 flex flex-col justify-center">
-                  <p className="text-[11px] font-black text-slate-200 group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
+                <Card className="bg-cardard border-border group-hover:border-slate-700 p-3 text-center cursor-pointer space-y-1.5 h-22 flex flex-col justify-center">
+                  <p className="text-[11px] font-black text-foreground group-hover:text-emerald-400 transition-colors uppercase font-mono tracking-wider">
                     Audit Trail
                   </p>
-                  <p className="text-[8px] text-slate-500">Compliance activity logs</p>
+                  <p className="text-[8px] text-muted-foreground">Compliance activity logs</p>
                 </Card>
               </Link>
             </div>
@@ -318,12 +318,12 @@ export default function AccountingDashboardPage() {
 
           <div className="grid gap-6 md:grid-cols-3">
             {/* Visual chart placeholder */}
-            <Card className="md:col-span-2 bg-[#0c1220] border-slate-800 text-slate-100 flex flex-col justify-between">
-              <CardHeader className="pb-3 border-b border-slate-900">
-                <CardTitle className="text-sm font-bold text-slate-300">
+            <Card className="md:col-span-2 bg-cardard border-border text-foreground flex flex-col justify-between">
+              <CardHeader className="pb-3 border-b border-border">
+                <CardTitle className="text-sm font-bold text-foreground">
                   Monthly Profitability Overview
                 </CardTitle>
-                <CardDescription className="text-slate-500 text-xs">
+                <CardDescription className="text-muted-foreground text-xs">
                   Income vs expense balance mappings. Net profitability ratio:{' '}
                   <span className="text-emerald-400 font-bold font-mono">66.6%</span>
                 </CardDescription>
@@ -334,29 +334,29 @@ export default function AccountingDashboardPage() {
                   <div className="w-12 bg-emerald-500/10 border border-emerald-500/20 rounded-t-lg h-32 relative flex items-end justify-center">
                     <div className="bg-emerald-400 w-full rounded-t h-2/3" />
                   </div>
-                  <span className="text-[10px] text-slate-500">Income</span>
+                  <span className="text-[10px] text-muted-foreground">Income</span>
                 </div>
 
                 <div className="flex flex-col items-center gap-2">
                   <div className="w-12 bg-rose-500/10 border border-rose-500/20 rounded-t-lg h-32 relative flex items-end justify-center">
                     <div className="bg-rose-455 w-full rounded-t h-1/3" />
                   </div>
-                  <span className="text-[10px] text-slate-500">Expenses</span>
+                  <span className="text-[10px] text-muted-foreground">Expenses</span>
                 </div>
 
                 <div className="flex flex-col items-center gap-2">
                   <div className="w-12 bg-emerald-500/10 border border-emerald-500/20 rounded-t-lg h-32 relative flex items-end justify-center">
                     <div className="bg-emerald-400 w-full rounded-t h-1/2" />
                   </div>
-                  <span className="text-[10px] text-slate-500">Net Profit</span>
+                  <span className="text-[10px] text-muted-foreground">Net Profit</span>
                 </div>
               </CardContent>
             </Card>
 
             {/* Recent Accounts list */}
-            <Card className="md:col-span-1 bg-[#0c1220] border-slate-800 text-slate-100">
-              <CardHeader className="pb-3 border-b border-slate-900">
-                <CardTitle className="text-sm font-bold text-slate-350">
+            <Card className="md:col-span-1 bg-cardard border-border text-foreground">
+              <CardHeader className="pb-3 border-b border-border">
+                <CardTitle className="text-sm font-bold text-muted-foreground">
                   Recent Ledger Accounts
                 </CardTitle>
               </CardHeader>
@@ -364,12 +364,12 @@ export default function AccountingDashboardPage() {
                 {recentAccounts.slice(0, 4).map((acc) => (
                   <div key={acc.id} className="flex justify-between items-center text-xs">
                     <div className="text-left min-w-0">
-                      <p className="font-bold text-slate-200 truncate">{acc.name}</p>
-                      <span className="font-mono text-[10px] text-slate-500">Code: {acc.code}</span>
+                      <p className="font-bold text-foreground truncate">{acc.name}</p>
+                      <span className="font-mono text-[10px] text-muted-foreground">Code: {acc.code}</span>
                     </div>
 
                     <div className="text-right shrink-0">
-                      <span className="font-mono font-bold text-slate-300">
+                      <span className="font-mono font-bold text-foreground">
                         ${acc.balance.toLocaleString()}
                       </span>
                     </div>
@@ -380,7 +380,7 @@ export default function AccountingDashboardPage() {
           </div>
         </div>
       ) : (
-        <div className="text-center py-20 border border-dashed border-slate-850 rounded-2xl text-slate-500 text-xs">
+        <div className="text-center py-20 border border-dashed border-border rounded-2xl text-muted-foreground text-xs">
           No stats data compiled.
         </div>
       )}

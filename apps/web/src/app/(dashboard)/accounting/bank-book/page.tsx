@@ -33,14 +33,14 @@ export default function BankBookPage() {
   };
 
   return (
-    <PageContainer className="text-slate-100 select-none text-left">
+    <PageContainer className="text-foreground select-none text-left">
       {/* Back link */}
       <div className="mb-4">
         <Link href="/accounting">
           <Button
             variant="ghost"
             size="sm"
-            className="text-slate-400 hover:text-slate-200 gap-1.5 h-8"
+            className="text-muted-foreground hover:text-foreground gap-1.5 h-8"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Accounting Dashboard</span>
@@ -55,20 +55,20 @@ export default function BankBookPage() {
 
       {/* Date Filters */}
       <div className="flex flex-col sm:flex-row gap-3 items-center justify-between mt-4 mb-6">
-        <div className="flex items-center gap-1.5 bg-[#0c1220] px-3 border border-slate-855 rounded-lg text-xs h-9 w-full sm:w-auto">
-          <span className="text-slate-500">From</span>
+        <div className="flex items-center gap-1.5 bg-cardard px-3 border border-slate-855 rounded-lg text-xs h-9 w-full sm:w-auto">
+          <span className="text-muted-foreground">From</span>
           <input
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            className="bg-transparent text-slate-200 focus:outline-none cursor-pointer h-full"
+            className="bg-transparent text-foreground focus:outline-none cursor-pointer h-full"
           />
-          <span className="text-slate-500">To</span>
+          <span className="text-muted-foreground">To</span>
           <input
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
-            className="bg-transparent text-slate-200 focus:outline-none cursor-pointer h-full"
+            className="bg-transparent text-foreground focus:outline-none cursor-pointer h-full"
           />
         </div>
       </div>
@@ -89,9 +89,9 @@ export default function BankBookPage() {
           />
 
           {/* Transactions lists table */}
-          <div className="bg-[#0c1220] border border-slate-800 rounded-2xl overflow-hidden">
-            <div className="p-4 bg-slate-950/40 border-b border-slate-900 flex justify-between items-center">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1.5 font-sans">
+          <div className="bg-cardard border border-border rounded-2xl overflow-hidden">
+            <div className="p-4 bg-muted/40 border-b border-border flex justify-between items-center">
+              <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-1.5 font-sans">
                 <Building2 className="h-4 w-4 text-indigo-400" />
                 <span>Commercial Operating Statements</span>
               </span>
@@ -99,7 +99,7 @@ export default function BankBookPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-xs sm:text-sm">
                 <thead>
-                  <tr className="border-b border-slate-855 text-slate-500 font-bold uppercase tracking-wider text-[10px] bg-slate-955/35">
+                  <tr className="border-b border-slate-855 text-muted-foreground font-bold uppercase tracking-wider text-[10px] bg-slate-955/35">
                     <th className="py-3 px-4 font-mono">Date</th>
                     <th className="py-3 px-3 font-mono">Ref / ID</th>
                     <th className="py-3 px-4">Description Memo</th>
@@ -108,15 +108,15 @@ export default function BankBookPage() {
                     <th className="py-3 px-4 text-right font-mono">Running Balance ($)</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-900 font-medium text-slate-350 font-mono">
+                <tbody className="divide-y divide-border font-medium text-muted-foreground font-mono">
                   {transactions.length > 0 ? (
                     transactions.map((tx) => (
-                      <tr key={tx.id} className="hover:bg-slate-900/40">
-                        <td className="py-3 px-4 text-slate-400">
+                      <tr key={tx.id} className="hover:bg-accent/40">
+                        <td className="py-3 px-4 text-muted-foreground">
                           {new Date(tx.date).toLocaleDateString()}
                         </td>
                         <td className="py-3 px-3 font-bold text-slate-250">{tx.reference}</td>
-                        <td className="py-3 px-4 text-left font-sans text-slate-300 truncate max-w-[250px]">
+                        <td className="py-3 px-4 text-left font-sans text-foreground truncate max-w-[250px]">
                           {tx.description}
                         </td>
                         <td className="py-3 px-3 text-right font-bold text-emerald-400">
@@ -125,7 +125,7 @@ export default function BankBookPage() {
                         <td className="py-3 px-3 text-right font-bold text-rose-455">
                           {tx.withdrawals > 0 ? `-${formatCurrency(tx.withdrawals)}` : '-'}
                         </td>
-                        <td className="py-3 px-4 text-right font-bold text-slate-200">
+                        <td className="py-3 px-4 text-right font-bold text-foreground">
                           {formatCurrency(tx.runningBalance)}
                         </td>
                       </tr>
@@ -134,7 +134,7 @@ export default function BankBookPage() {
                     <tr>
                       <td
                         colSpan={6}
-                        className="py-12 text-center text-slate-500 font-sans border-none"
+                        className="py-12 text-center text-muted-foreground font-sans border-none"
                       >
                         No bank transactions found in this book period.
                       </td>

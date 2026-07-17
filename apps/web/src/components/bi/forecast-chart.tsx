@@ -30,13 +30,13 @@ export function ForecastChart({
   className,
 }: ForecastChartProps) {
   return (
-    <Card className="bg-[#0c1220] border-slate-800 text-slate-100 flex flex-col justify-between select-none text-left print:bg-white print:text-black">
-      <CardHeader className="py-4 border-b border-slate-900">
-        <CardTitle className="text-xs font-bold text-slate-200 uppercase tracking-widest font-sans">
+    <Card className="bg-cardard border-border text-foreground flex flex-col justify-between select-none text-left print:bg-white print:text-black">
+      <CardHeader className="py-4 border-b border-border">
+        <CardTitle className="text-xs font-bold text-foreground uppercase tracking-widest font-sans">
           {title}
         </CardTitle>
         {description && (
-          <CardDescription className="text-[10px] text-slate-500 font-mono mt-0.5">
+          <CardDescription className="text-[10px] text-muted-foreground font-mono mt-0.5">
             {description}
           </CardDescription>
         )}

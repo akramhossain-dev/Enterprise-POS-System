@@ -92,7 +92,7 @@ export function SupplierSummaryCard({
               className={cn(
                 'h-full rounded-full transition-all duration-500',
                 usagePercent > 80
-                  ? 'bg-destructive'
+                  ? 'bg-backgroundestructive'
                   : usagePercent > 50
                     ? 'bg-warning'
                     : 'bg-success',

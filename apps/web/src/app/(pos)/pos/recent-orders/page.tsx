@@ -28,14 +28,14 @@ export default function POSRecentOrdersPage() {
   };
 
   return (
-    <PageContainer className="max-w-4xl mx-auto py-6 text-slate-100 select-none">
+    <PageContainer className="max-w-4xl mx-auto py-6 text-foreground select-none">
       {/* Navigation */}
       <div className="mb-4">
         <Link href="/pos">
           <Button
             variant="ghost"
             size="sm"
-            className="text-slate-400 hover:text-slate-200 gap-1.5 h-8"
+            className="text-muted-foreground hover:text-foreground gap-1.5 h-8"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Back to POS Terminal</span>
@@ -50,13 +50,13 @@ export default function POSRecentOrdersPage() {
 
       {/* Search Header */}
       <div className="relative mb-6 mt-4 max-w-md">
-        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-500" />
+        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
         <Input
           type="text"
           placeholder="Search recent sales (ID, Cart name, customer)..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="pl-8 bg-slate-950 border-slate-800 text-slate-100 text-xs focus-visible:ring-emerald-500 h-9"
+          className="pl-8 bg-muted border-border text-foreground text-xs focus-visible:ring-emerald-500 h-9"
         />
       </div>
 
@@ -70,19 +70,19 @@ export default function POSRecentOrdersPage() {
             return (
               <Card
                 key={order.id}
-                className="bg-[#0c1220] border-slate-800 hover:border-slate-750 transition-colors"
+                className="bg-cardard border-border hover:border-slate-750 transition-colors"
               >
                 <CardContent className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs sm:text-sm">
                   {/* Order info */}
                   <div className="space-y-1.5">
                     <div className="flex items-center space-x-2">
-                      <span className="font-bold text-slate-200">Order ID: #{order.id}</span>
-                      <span className="text-[10px] bg-slate-900 border border-slate-800 text-slate-400 px-1.5 py-0.5 rounded font-mono">
+                      <span className="font-bold text-foreground">Order ID: #{order.id}</span>
+                      <span className="text-[10px] bg-accent border border-border text-muted-foreground px-1.5 py-0.5 rounded font-mono">
                         {order.cart.name}
                       </span>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-500">
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
                       <span className="flex items-center gap-1">
                         <Calendar className="h-3 w-3 shrink-0" />
                         <span>{date}</span>
@@ -95,7 +95,7 @@ export default function POSRecentOrdersPage() {
                       </span>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-x-2 text-[10px] text-slate-400 font-mono">
+                    <div className="flex flex-wrap items-center gap-x-2 text-[10px] text-muted-foreground font-mono">
                       <span>Method: {order.paymentMethod}</span>
                       <span>|</span>
                       <span>Paid: ${order.paymentAmount.toFixed(2)}</span>
@@ -107,7 +107,7 @@ export default function POSRecentOrdersPage() {
                   {/* Pricing and Action */}
                   <div className="flex items-center justify-between sm:justify-end gap-4">
                     <div className="text-left sm:text-right shrink-0">
-                      <span className="text-[10px] text-slate-500 block uppercase font-bold tracking-wider">
+                      <span className="text-[10px] text-muted-foreground block uppercase font-bold tracking-wider">
                         Sale Total
                       </span>
                       <span className="font-mono font-black text-emerald-400 text-base">
@@ -119,7 +119,7 @@ export default function POSRecentOrdersPage() {
                       size="icon"
                       variant="outline"
                       onClick={() => handlePrintReceipt(order.id)}
-                      className="h-8 w-8 border-slate-850 hover:bg-slate-950 text-slate-400 hover:text-slate-200"
+                      className="h-8 w-8 border-border hover:bg-muted text-muted-foreground hover:text-foreground"
                       title="Print Customer Receipt"
                     >
                       <Printer className="h-4 w-4" />
@@ -130,7 +130,7 @@ export default function POSRecentOrdersPage() {
             );
           })
         ) : (
-          <div className="flex flex-col items-center justify-center py-12 border border-dashed border-slate-850 rounded-xl text-slate-500 m-2">
+          <div className="flex flex-col items-center justify-center py-12 border border-dashed border-border rounded-xl text-muted-foreground m-2">
             <ShoppingBag className="h-10 w-10 mb-2 text-slate-800" />
             <p className="text-xs">No recent completed sales logged in this terminal session.</p>
           </div>

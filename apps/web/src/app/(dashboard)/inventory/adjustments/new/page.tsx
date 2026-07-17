@@ -134,7 +134,7 @@ export default function CreateAdjustmentPage() {
 
       <div className="grid gap-6 md:grid-cols-3">
         {/* Left main form card */}
-        <Card className="md:col-span-2 shadow-sm border-border bg-card">
+        <Card className="md:col-span-2 shadow-sm border-border bg-cardard">
           <CardHeader className="border-b">
             <CardTitle className="text-sm font-semibold flex items-center gap-2">
               <Layers className="w-4 h-4 text-primary" /> Adjustment Details
@@ -195,7 +195,7 @@ export default function CreateAdjustmentPage() {
                   </label>
                   <select
                     {...register('type')}
-                    className="w-full text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none"
+                    className="w-full text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none"
                   >
                     <option value="INCREASE">INCREASE Stock (+)</option>
                     <option value="DECREASE">DECREASE Stock (-)</option>
@@ -229,7 +229,7 @@ export default function CreateAdjustmentPage() {
                 </label>
                 <select
                   {...register('reason')}
-                  className="w-full text-sm rounded-lg border border-border bg-card p-2 text-foreground focus:outline-none"
+                  className="w-full text-sm rounded-lg border border-border bg-cardard p-2 text-foreground focus:outline-none"
                 >
                   {REASONS.map((r) => (
                     <option key={r} value={r}>
@@ -273,7 +273,7 @@ export default function CreateAdjustmentPage() {
 
         {/* Right side summary/context panel */}
         <div className="space-y-6">
-          <Card className="shadow-sm border-border bg-card">
+          <Card className="shadow-sm border-border bg-cardard">
             <CardHeader>
               <CardTitle className="text-sm font-semibold">Active Product Context</CardTitle>
             </CardHeader>
@@ -314,7 +314,7 @@ export default function CreateAdjustmentPage() {
           </Card>
 
           {/* Attachments UI Foundation Placeholder */}
-          <Card className="shadow-sm border-border bg-card">
+          <Card className="shadow-sm border-border bg-cardard">
             <CardHeader>
               <CardTitle className="text-sm font-semibold">
                 Evidence Attachments (UI Foundation)

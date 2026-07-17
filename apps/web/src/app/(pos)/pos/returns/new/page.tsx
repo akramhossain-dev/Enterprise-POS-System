@@ -149,14 +149,14 @@ export default function POSCreateReturnPage() {
   };
 
   return (
-    <PageContainer className="max-w-5xl mx-auto py-6 text-slate-100 select-none text-left">
+    <PageContainer className="max-w-5xl mx-auto py-6 text-foreground select-none text-left">
       {/* Back link */}
       <div className="mb-4">
         <Link href="/pos/returns">
           <Button
             variant="ghost"
             size="sm"
-            className="text-slate-400 hover:text-slate-200 gap-1.5 h-8"
+            className="text-muted-foreground hover:text-foreground gap-1.5 h-8"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Back to Returns</span>
@@ -173,25 +173,25 @@ export default function POSCreateReturnPage() {
         {/* Left column form controls */}
         <div className="md:col-span-2 space-y-6">
           {/* Invoice search card */}
-          <Card className="bg-[#0c1220] border-slate-800 text-slate-100">
-            <CardHeader className="pb-3 border-b border-slate-900">
-              <CardTitle className="text-sm font-bold text-slate-350">
+          <Card className="bg-cardard border-border text-foreground">
+            <CardHeader className="pb-3 border-b border-border">
+              <CardTitle className="text-sm font-bold text-muted-foreground">
                 Retrieve Invoice Details
               </CardTitle>
-              <CardDescription className="text-slate-500 text-xs">
+              <CardDescription className="text-muted-foreground text-xs">
                 Scan barcode or enter invoice key (E.g. INV-2026-07-0001, INV-2026-07-0002)
               </CardDescription>
             </CardHeader>
             <CardContent className="p-4 space-y-4 text-xs">
               <div className="flex gap-2">
                 <div className="relative flex-1">
-                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-500" />
+                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                   <Input
                     type="text"
                     placeholder="Invoice Number (INV-2026-07-0001)"
                     value={invoiceQuery}
                     onChange={(e) => setInvoiceQuery(e.target.value)}
-                    className="pl-8 bg-slate-950 border-slate-855 text-xs focus-visible:ring-emerald-500 h-9"
+                    className="pl-8 bg-muted border-slate-855 text-xs focus-visible:ring-emerald-500 h-9"
                   />
                 </div>
                 <Button
@@ -206,28 +206,28 @@ export default function POSCreateReturnPage() {
 
           {/* Sold products to return details */}
           {fetchedOrder && (
-            <Card className="bg-[#0c1220] border-slate-800 text-slate-100">
-              <CardHeader className="pb-3 border-b border-slate-900">
-                <CardTitle className="text-sm font-bold text-slate-350">
+            <Card className="bg-cardard border-border text-foreground">
+              <CardHeader className="pb-3 border-b border-border">
+                <CardTitle className="text-sm font-bold text-muted-foreground">
                   Select Returnable Items
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-0">
                 <table className="w-full text-xs text-left border-collapse">
                   <thead>
-                    <tr className="border-b border-slate-900 text-slate-500 font-bold uppercase tracking-wider text-[10px] bg-slate-950/20">
+                    <tr className="border-b border-border text-muted-foreground font-bold uppercase tracking-wider text-[10px] bg-muted/20">
                       <th className="py-2.5 px-4">Product details</th>
                       <th className="py-2.5 px-3 text-center">Return Qty</th>
                       <th className="py-2.5 px-3">Condition</th>
                       <th className="py-2.5 px-4">Reason</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-900 font-medium text-slate-300">
+                  <tbody className="divide-y divide-border font-medium text-foreground">
                     {returnItems.map((item, idx) => (
-                      <tr key={item.productId} className="hover:bg-slate-950/10">
+                      <tr key={item.productId} className="hover:bg-muted/10">
                         <td className="py-3 px-4">
-                          <p className="font-bold text-slate-200">{item.productName}</p>
-                          <p className="text-[10px] text-slate-500 font-mono">
+                          <p className="font-bold text-foreground">{item.productName}</p>
+                          <p className="text-[10px] text-muted-foreground font-mono">
                             Bought: {item.quantitySold} x ${item.unitPrice.toFixed(2)}
                           </p>
                         </td>
@@ -239,7 +239,7 @@ export default function POSCreateReturnPage() {
                             max={item.quantitySold}
                             value={item.quantityReturned || ''}
                             onChange={(e) => handleUpdateQty(idx, parseInt(e.target.value) || 0)}
-                            className="bg-slate-950 border border-slate-800 rounded px-1.5 py-1 text-center w-14 focus:outline-none focus:border-emerald-500 font-mono"
+                            className="bg-muted border border-border rounded px-1.5 py-1 text-center w-14 focus:outline-none focus:border-emerald-500 font-mono"
                           />
                         </td>
 
@@ -247,7 +247,7 @@ export default function POSCreateReturnPage() {
                           <select
                             value={item.condition}
                             onChange={(e) => handleUpdateCondition(idx, e.target.value)}
-                            className="bg-slate-950 border border-slate-800 rounded p-1 text-xs focus:outline-none focus:border-emerald-500 cursor-pointer text-slate-200"
+                            className="bg-muted border border-border rounded p-1 text-xs focus:outline-none focus:border-emerald-500 cursor-pointer text-foreground"
                           >
                             <option value="NEW">New</option>
                             <option value="OPENED">Opened</option>
@@ -261,7 +261,7 @@ export default function POSCreateReturnPage() {
                           <select
                             value={item.reason}
                             onChange={(e) => handleUpdateReason(idx, e.target.value)}
-                            className="bg-slate-950 border border-slate-800 rounded p-1 text-xs focus:outline-none focus:border-emerald-500 cursor-pointer text-slate-200"
+                            className="bg-muted border border-border rounded p-1 text-xs focus:outline-none focus:border-emerald-500 cursor-pointer text-foreground"
                           >
                             <option value="Damaged">Damaged</option>
                             <option value="Defective">Defective</option>
@@ -280,13 +280,13 @@ export default function POSCreateReturnPage() {
 
           {/* Exchange selection details */}
           {fetchedOrder && (
-            <Card className="bg-[#0c1220] border-slate-800 text-slate-100">
-              <CardHeader className="pb-3 border-b border-slate-900 flex flex-row items-center justify-between">
+            <Card className="bg-cardard border-border text-foreground">
+              <CardHeader className="pb-3 border-b border-border flex flex-row items-center justify-between">
                 <div>
-                  <CardTitle className="text-sm font-bold text-slate-350">
+                  <CardTitle className="text-sm font-bold text-muted-foreground">
                     Product Exchange Mode
                   </CardTitle>
-                  <CardDescription className="text-slate-500 text-xs">
+                  <CardDescription className="text-muted-foreground text-xs">
                     Allow swapping returned items for catalog replacements.
                   </CardDescription>
                 </div>
@@ -297,7 +297,7 @@ export default function POSCreateReturnPage() {
                   className={`h-7 text-[10px] uppercase font-bold tracking-wider ${
                     isExchange
                       ? 'border-emerald-500 bg-emerald-950/20 text-emerald-400'
-                      : 'border-slate-800'
+                      : 'border-border'
                   }`}
                 >
                   <ArrowRightLeft className="h-3.5 w-3.5 mr-1" />
@@ -307,14 +307,14 @@ export default function POSCreateReturnPage() {
               {isExchange && (
                 <CardContent className="p-4 space-y-3 text-xs">
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-[10px] text-slate-400 uppercase font-bold">
+                    <span className="text-[10px] text-muted-foreground uppercase font-bold">
                       New Swapped In items
                     </span>
                     <Button
                       size="sm"
                       variant="outline"
                       onClick={handleAddExchangeItem}
-                      className="h-6 text-[10px] border-slate-800 bg-slate-950 text-slate-300 hover:text-slate-100"
+                      className="h-6 text-[10px] border-border bg-muted text-foreground hover:text-foreground"
                     >
                       <Plus className="h-3 w-3 mr-1" /> Add exchange item
                     </Button>
@@ -324,24 +324,24 @@ export default function POSCreateReturnPage() {
                     {exchangeItems.map((item, idx) => (
                       <div
                         key={idx}
-                        className="flex gap-2 items-center bg-slate-950/40 p-2 border border-slate-850 rounded-lg font-mono"
+                        className="flex gap-2 items-center bg-muted/40 p-2 border border-border rounded-lg font-mono"
                       >
-                        <span className="flex-1 font-sans text-left font-bold text-slate-200">
+                        <span className="flex-1 font-sans text-left font-bold text-foreground">
                           {item.productName}
                         </span>
-                        <span className="text-slate-400">${item.unitPrice.toFixed(2)}</span>
+                        <span className="text-muted-foreground">${item.unitPrice.toFixed(2)}</span>
                         <Button
                           size="icon"
                           variant="ghost"
                           onClick={() => handleRemoveExchangeItem(idx)}
-                          className="h-7 w-7 text-slate-500 hover:text-rose-455"
+                          className="h-7 w-7 text-muted-foreground hover:text-rose-455"
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
                     ))}
                     {exchangeItems.length === 0 && (
-                      <p className="text-[10px] text-slate-500 text-center py-4 border border-dashed border-slate-850 rounded">
+                      <p className="text-[10px] text-muted-foreground text-center py-4 border border-dashed border-border rounded">
                         No replacement items added to swap queue.
                       </p>
                     )}
@@ -355,14 +355,14 @@ export default function POSCreateReturnPage() {
         {/* Right column checklist summaries */}
         <div className="md:col-span-1">
           {fetchedOrder && (
-            <Card className="bg-[#0c1220] border-slate-800 text-slate-100">
-              <CardHeader className="pb-3 border-b border-slate-900">
-                <CardTitle className="text-sm font-bold text-slate-350">
+            <Card className="bg-cardard border-border text-foreground">
+              <CardHeader className="pb-3 border-b border-border">
+                <CardTitle className="text-sm font-bold text-muted-foreground">
                   Claim Settlements
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-4 space-y-4 text-xs font-mono">
-                <div className="space-y-1.5 border-b border-slate-900 pb-3 text-slate-400">
+                <div className="space-y-1.5 border-b border-border pb-3 text-muted-foreground">
                   <div className="flex justify-between">
                     <span>Returned value:</span>
                     <span className="text-rose-400 font-bold">
@@ -375,7 +375,7 @@ export default function POSCreateReturnPage() {
                       ${totalExchangeValue.toFixed(2)}
                     </span>
                   </div>
-                  <div className="flex justify-between text-slate-350 border-t border-slate-900/65 pt-2">
+                  <div className="flex justify-between text-muted-foreground border-t border-border/65 pt-2">
                     <span>Price Diff:</span>
                     <span className={priceDifference > 0 ? 'text-emerald-400' : 'text-rose-400'}>
                       {priceDifference > 0 ? '+' : '-'}${Math.abs(priceDifference).toFixed(2)}
@@ -384,14 +384,14 @@ export default function POSCreateReturnPage() {
                 </div>
 
                 {/* Refund Method options */}
-                <div className="space-y-1.5 text-left text-slate-400">
-                  <label className="text-[10px] text-slate-500 uppercase font-bold tracking-wider block">
+                <div className="space-y-1.5 text-left text-muted-foreground">
+                  <label className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider block">
                     Refund Method
                   </label>
                   <select
                     value={refundMethod}
                     onChange={(e) => setRefundMethod(e.target.value as any)}
-                    className="w-full bg-slate-950 border border-slate-855 rounded p-1.5 text-xs focus:outline-none focus:border-emerald-500 text-slate-200"
+                    className="w-full bg-muted border border-slate-855 rounded p-1.5 text-xs focus:outline-none focus:border-emerald-500 text-foreground"
                   >
                     <option value="CASH">Cash Refund</option>
                     <option value="CARD">Card Reverse</option>
@@ -401,15 +401,15 @@ export default function POSCreateReturnPage() {
                 </div>
 
                 {/* Notes */}
-                <div className="space-y-1.5 text-left text-slate-400">
-                  <label className="text-[10px] text-slate-500 uppercase font-bold tracking-wider block">
+                <div className="space-y-1.5 text-left text-muted-foreground">
+                  <label className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider block">
                     Notes
                   </label>
                   <textarea
                     placeholder="Enter return reasons notes..."
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-855 rounded p-1.5 text-xs focus:outline-none focus:border-emerald-500 text-slate-200 h-16 resize-none"
+                    className="w-full bg-muted border border-slate-855 rounded p-1.5 text-xs focus:outline-none focus:border-emerald-500 text-foreground h-16 resize-none"
                   />
                 </div>
 

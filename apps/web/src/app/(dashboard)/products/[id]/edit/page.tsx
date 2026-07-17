@@ -58,7 +58,7 @@ export default function EditProductPage({ params }: EditProductPageProps) {
   if (isError) {
     return (
       <PageContainer narrow>
-        <div className="border border-destructive/20 rounded-xl bg-destructive/5 p-5 text-center">
+        <div className="border border-destructive/20 rounded-xl bg-backgroundestructive/5 p-5 text-center">
           <p className="text-sm text-destructive font-semibold">Error loading product</p>
           <p className="text-xs text-muted-foreground mt-1">
             {error?.message || 'The requested product could not be found.'}

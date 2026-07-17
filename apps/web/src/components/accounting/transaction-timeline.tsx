@@ -52,18 +52,18 @@ export function TransactionTimeline({
   };
 
   return (
-    <Card className={cn('bg-[#0c1220] border-slate-800 text-slate-100 text-left', className)}>
+    <Card className={cn('bg-cardard border-border text-foreground text-left', className)}>
       <CardContent className="p-4 space-y-4">
-        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-900 pb-2">
+        <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-widest border-b border-border pb-2">
           Transaction Timeline
         </h4>
 
         {loading ? (
-          <p className="text-xs text-slate-500 text-center py-6 animate-pulse">
+          <p className="text-xs text-muted-foreground text-center py-6 animate-pulse">
             Fetching timeline events...
           </p>
         ) : entries.length > 0 ? (
-          <div className="relative pl-4 space-y-5 border-l border-slate-850 pt-2 pb-1 font-mono text-[11px] sm:text-xs">
+          <div className="relative pl-4 space-y-5 border-l border-border pt-2 pb-1 font-mono text-[11px] sm:text-xs">
             {entries.map((entry, idx) => {
               const hasDebit = entry.debitAmount > 0;
               const valueLabel = hasDebit
@@ -73,14 +73,14 @@ export function TransactionTimeline({
               return (
                 <div key={entry.id || idx} className="relative flex items-start gap-3 group">
                   {/* Anchor timeline dot */}
-                  <div className="absolute -left-[30px] top-1.5 bg-[#0c1220] px-0.5">
+                  <div className="absolute -left-[30px] top-1.5 bg-cardard px-0.5">
                     {getTimelineIcon(entry.transactionType)}
                   </div>
 
                   {/* Body details */}
                   <div className="flex-1 min-w-0 space-y-0.5 text-left">
                     <div className="flex justify-between items-start gap-2">
-                      <p className="font-bold text-slate-200 truncate pr-2">{entry.description}</p>
+                      <p className="font-bold text-foreground truncate pr-2">{entry.description}</p>
                       <span
                         className={cn(
                           'font-bold shrink-0 text-right font-mono text-xs',
@@ -91,7 +91,7 @@ export function TransactionTimeline({
                       </span>
                     </div>
 
-                    <div className="flex justify-between items-center text-[10px] text-slate-500">
+                    <div className="flex justify-between items-center text-[10px] text-muted-foreground">
                       <div>
                         <span>Ref: {entry.referenceNumber}</span>
                         <span className="mx-1.5">•</span>
@@ -107,9 +107,9 @@ export function TransactionTimeline({
             })}
           </div>
         ) : (
-          <div className="text-center py-8 border border-dashed border-slate-850 rounded-xl">
+          <div className="text-center py-8 border border-dashed border-border rounded-xl">
             <ShieldAlert className="h-5 w-5 text-slate-600 mx-auto mb-1.5" />
-            <p className="text-[11px] text-slate-500">No timeline entries found.</p>
+            <p className="text-[11px] text-muted-foreground">No timeline entries found.</p>
           </div>
         )}
       </CardContent>

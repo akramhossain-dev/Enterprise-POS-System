@@ -54,14 +54,14 @@ export default function TrialBalancePage() {
   const isBalanced = report.difference < 0.01;
 
   return (
-    <PageContainer className="text-slate-100 select-none text-left print:bg-white print:text-black print:p-0">
+    <PageContainer className="text-foreground select-none text-left print:bg-white print:text-black print:p-0">
       {/* Back button */}
       <div className="mb-4 print:hidden">
         <Link href="/accounting">
           <Button
             variant="ghost"
             size="sm"
-            className="text-slate-400 hover:text-slate-200 gap-1.5 h-8"
+            className="text-muted-foreground hover:text-foreground gap-1.5 h-8"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Accounting Dashboard</span>
@@ -113,7 +113,7 @@ export default function TrialBalancePage() {
               size="sm"
               variant="outline"
               onClick={handleExportCSV}
-              className="h-8 border-slate-800 bg-[#0c1220] hover:bg-slate-900 text-xs gap-1.5"
+              className="h-8 border-border bg-cardard hover:bg-accent text-xs gap-1.5"
             >
               <FileDown className="h-4 w-4 text-slate-455" />
               <span>Export CSV</span>
@@ -130,13 +130,13 @@ export default function TrialBalancePage() {
         </div>
 
         {/* Trial balance table worksheet */}
-        <Card className="bg-[#0c1220] border-slate-800 text-slate-100 print:bg-white print:text-black print:border-none print:shadow-none">
+        <Card className="bg-cardard border-border text-foreground print:bg-white print:text-black print:border-none print:shadow-none">
           <CardContent className="p-6">
             <div className="text-center border-b border-slate-855 pb-4 print:border-black mb-6">
-              <h2 className="text-base font-black uppercase text-slate-200 print:text-black font-sans tracking-wide">
+              <h2 className="text-base font-black uppercase text-foreground print:text-black font-sans tracking-wide">
                 Trial Balance Statement
               </h2>
-              <p className="text-xs text-slate-500 font-mono mt-0.5">
+              <p className="text-xs text-muted-foreground font-mono mt-0.5">
                 Current Fiscal Year Position
               </p>
             </div>
@@ -144,31 +144,31 @@ export default function TrialBalancePage() {
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-xs sm:text-sm">
                 <thead>
-                  <tr className="border-b border-slate-855 text-slate-500 font-bold uppercase tracking-wider text-[10px] bg-slate-955/35 print:border-black">
+                  <tr className="border-b border-slate-855 text-muted-foreground font-bold uppercase tracking-wider text-[10px] bg-slate-955/35 print:border-black">
                     <th className="py-3 px-4 font-mono">Code</th>
                     <th className="py-3 px-4">Account Name</th>
                     <th className="py-3 px-3 text-right font-mono">Debit Balance ($)</th>
                     <th className="py-3 px-4 text-right font-mono">Credit Balance ($)</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-900/60 font-medium text-slate-350 font-mono print:divide-gray-200">
+                <tbody className="divide-y divide-border/60 font-medium text-muted-foreground font-mono print:divide-gray-200">
                   {report.items.map((item: any) => (
-                    <tr key={item.accountId} className="hover:bg-slate-900/20">
-                      <td className="py-2.5 px-4 text-slate-500">{item.code}</td>
-                      <td className="py-2.5 px-4 font-sans text-slate-200 print:text-black font-bold">
+                    <tr key={item.accountId} className="hover:bg-accent/20">
+                      <td className="py-2.5 px-4 text-muted-foreground">{item.code}</td>
+                      <td className="py-2.5 px-4 font-sans text-foreground print:text-black font-bold">
                         {item.name}
                       </td>
-                      <td className="py-2.5 px-3 text-right text-slate-300 print:text-black">
+                      <td className="py-2.5 px-3 text-right text-foreground print:text-black">
                         {item.debit > 0 ? formatCurrency(item.debit) : '-'}
                       </td>
-                      <td className="py-2.5 px-4 text-right text-slate-300 print:text-black">
+                      <td className="py-2.5 px-4 text-right text-foreground print:text-black">
                         {item.credit > 0 ? formatCurrency(item.credit) : '-'}
                       </td>
                     </tr>
                   ))}
 
                   {/* Summary Totals Row */}
-                  <tr className="border-t-2 border-slate-700 font-black text-slate-100 print:border-black print:text-black bg-slate-955/40">
+                  <tr className="border-t-2 border-slate-700 font-black text-foreground print:border-black print:text-black bg-slate-955/40">
                     <td className="py-3 px-4"></td>
                     <td className="py-3 px-4 font-sans">Total Balanced Sum</td>
                     <td className="py-3 px-3 text-right font-black">

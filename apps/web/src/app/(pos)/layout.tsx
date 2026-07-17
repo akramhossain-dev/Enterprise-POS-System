@@ -112,9 +112,9 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <div className="flex flex-col h-screen w-screen overflow-hidden bg-[#070b13] text-slate-100 font-sans selection:bg-primary selection:text-white">
+    <div className="flex flex-col h-screen w-screen overflow-hidden bg-[#070b13] text-foreground font-sans selection:bg-primary selection:text-white">
       {/* POS Topbar Bar Header */}
-      <header className="flex items-center justify-between px-4 py-2 border-b border-slate-800 bg-[#0c1220]/90 backdrop-blur-md shadow-lg z-30 select-none">
+      <header className="flex items-center justify-between px-4 py-2 border-b border-border bg-cardard/90 backdrop-blur-md shadow-lg z-30 select-none">
         {/* Left Actions & Logo */}
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2 mr-2">
@@ -126,27 +126,27 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
             variant="ghost"
             size="sm"
             onClick={handleExitPOS}
-            className="text-slate-400 hover:text-slate-100 hover:bg-slate-800 text-xs gap-1.5 h-8 px-2.5"
+            className="text-muted-foreground hover:text-foreground hover:bg-slate-800 text-xs gap-1.5 h-8 px-2.5"
           >
             <LayoutDashboard className="h-4.5 w-4.5" />
             <span>Dashboard</span>
           </Button>
 
           {/* Quick Info bar */}
-          <div className="hidden lg:flex items-center space-x-3 text-xs border-l border-slate-800 pl-4 text-slate-400">
+          <div className="hidden lg:flex items-center space-x-3 text-xs border-l border-border pl-4 text-muted-foreground">
             <div className="flex items-center space-x-1">
-              <span className="font-semibold text-slate-300">Terminal:</span>
+              <span className="font-semibold text-foreground">Terminal:</span>
               <span>T-01 (Main)</span>
             </div>
             <div className="flex items-center space-x-1">
-              <span className="font-semibold text-slate-300">Warehouse:</span>
+              <span className="font-semibold text-foreground">Warehouse:</span>
               <span>Central distribution</span>
             </div>
           </div>
         </div>
 
         {/* Center Clock and status */}
-        <div className="flex items-center space-x-4 bg-slate-900/60 border border-slate-800 rounded-full px-4 py-1">
+        <div className="flex items-center space-x-4 bg-accent/60 border border-border rounded-full px-4 py-1">
           <div className="flex items-center space-x-1.5 text-xs">
             <Clock className="h-3.5 w-3.5 text-emerald-400" />
             <span className="font-mono text-emerald-400 tracking-wider font-semibold">{time}</span>
@@ -177,7 +177,7 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
             variant="ghost"
             size="icon"
             onClick={() => setShowShortcutHelp(true)}
-            className="text-slate-400 hover:text-slate-100 hover:bg-slate-800 h-8 w-8 rounded-full"
+            className="text-muted-foreground hover:text-foreground hover:bg-slate-800 h-8 w-8 rounded-full"
             title="Keyboard Shortcuts Guide"
           >
             <Keyboard className="h-4.5 w-4.5" />
@@ -188,7 +188,7 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
             variant="ghost"
             size="icon"
             onClick={toggleFullscreen}
-            className="text-slate-400 hover:text-slate-100 hover:bg-slate-800 h-8 w-8 rounded-full"
+            className="text-muted-foreground hover:text-foreground hover:bg-slate-800 h-8 w-8 rounded-full"
             title="Toggle Fullscreen"
           >
             {isFullscreen ? (
@@ -204,7 +204,7 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
               variant="ghost"
               size="icon"
               className={cn(
-                'relative text-slate-400 hover:text-slate-100 hover:bg-slate-800 h-8 w-8 rounded-full',
+                'relative text-muted-foreground hover:text-foreground hover:bg-slate-800 h-8 w-8 rounded-full',
                 pathname === '/pos/held-orders' && 'bg-slate-800 text-emerald-400',
               )}
               title={`Held Orders Queue (${heldOrders.length})`}
@@ -225,7 +225,7 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
               variant="ghost"
               size="icon"
               className={cn(
-                'text-slate-400 hover:text-slate-100 hover:bg-slate-800 h-8 w-8 rounded-full',
+                'text-muted-foreground hover:text-foreground hover:bg-slate-800 h-8 w-8 rounded-full',
                 pathname === '/pos/orders' && 'bg-slate-800 text-emerald-400',
               )}
               title="Order History Archive"
@@ -240,7 +240,7 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
               variant="ghost"
               size="icon"
               className={cn(
-                'text-slate-400 hover:text-slate-100 hover:bg-slate-800 h-8 w-8 rounded-full',
+                'text-muted-foreground hover:text-foreground hover:bg-slate-800 h-8 w-8 rounded-full',
                 pathname === '/pos/returns' && 'bg-slate-800 text-emerald-400',
               )}
               title="Sales Return Claims"
@@ -255,7 +255,7 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
               variant="ghost"
               size="icon"
               className={cn(
-                'text-slate-400 hover:text-slate-100 hover:bg-slate-800 h-8 w-8 rounded-full',
+                'text-muted-foreground hover:text-foreground hover:bg-slate-800 h-8 w-8 rounded-full',
                 pathname === '/pos/refunds' && 'bg-slate-800 text-emerald-400',
               )}
               title="Refund Settlements Log"
@@ -270,7 +270,7 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
               variant="ghost"
               size="icon"
               className={cn(
-                'text-slate-400 hover:text-slate-100 hover:bg-slate-800 h-8 w-8 rounded-full',
+                'text-muted-foreground hover:text-foreground hover:bg-slate-800 h-8 w-8 rounded-full',
                 pathname === '/pos/payments' && 'bg-slate-800 text-emerald-400',
               )}
               title="Payments Ledger Log"
@@ -285,7 +285,7 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
               variant="ghost"
               size="icon"
               className={cn(
-                'text-slate-400 hover:text-slate-100 hover:bg-slate-800 h-8 w-8 rounded-full',
+                'text-muted-foreground hover:text-foreground hover:bg-slate-800 h-8 w-8 rounded-full',
                 pathname === '/pos/receipts' && 'bg-slate-800 text-emerald-400',
               )}
               title="Receipt Reprint Registry"
@@ -300,7 +300,7 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
               variant="ghost"
               size="icon"
               className={cn(
-                'text-slate-400 hover:text-slate-100 hover:bg-slate-800 h-8 w-8 rounded-full',
+                'text-muted-foreground hover:text-foreground hover:bg-slate-800 h-8 w-8 rounded-full',
                 pathname === '/pos/cash-drawer' && 'bg-slate-800 text-emerald-400',
               )}
               title="Cash Drawer Shifts"
@@ -315,7 +315,7 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
               variant="ghost"
               size="icon"
               className={cn(
-                'text-slate-400 hover:text-slate-100 hover:bg-slate-800 h-8 w-8 rounded-full',
+                'text-muted-foreground hover:text-foreground hover:bg-slate-800 h-8 w-8 rounded-full',
                 pathname === '/pos/settings' && 'bg-slate-800 text-emerald-400',
               )}
               title="POS Configurations"
@@ -327,13 +327,13 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
           <div className="h-4 w-[1px] bg-slate-800 mx-1" />
 
           {/* Cashier Info block */}
-          <div className="flex items-center space-x-2 bg-slate-900 border border-slate-800 rounded-md px-2.5 py-1 text-xs select-none">
+          <div className="flex items-center space-x-2 bg-accent border border-border rounded-md px-2.5 py-1 text-xs select-none">
             <User className="h-3.5 w-3.5 text-emerald-400" />
             <div className="flex flex-col text-left">
-              <span className="font-semibold text-slate-200">
+              <span className="font-semibold text-foreground">
                 {user?.fullName || 'Cashier Admin'}
               </span>
-              <span className="text-[10px] text-slate-500 uppercase tracking-wider">Operator</span>
+              <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Operator</span>
             </div>
           </div>
 
@@ -350,73 +350,73 @@ export default function POSLayout({ children }: { children: React.ReactNode }) {
       </header>
 
       {/* Main content frame */}
-      <main className="flex-1 flex overflow-hidden min-h-0 bg-[#080d19]">{children}</main>
+      <main className="flex-1 flex overflow-hidden min-h-0 bg-background">{children}</main>
 
       {/* Keyboard Shortcuts Cheat Sheet Dialog */}
       <Dialog open={showShortcutHelp} onOpenChange={setShowShortcutHelp}>
-        <DialogContent className="sm:max-w-[425px] bg-[#0c1220] border-slate-800 text-slate-100">
+        <DialogContent className="sm:max-w-[425px] bg-cardard border-border text-foreground">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-slate-100">
+            <DialogTitle className="flex items-center gap-2 text-foreground">
               <Keyboard className="h-5 w-5 text-emerald-400" />
               <span>Cashier Hotkeys / Shortcuts</span>
             </DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-4 text-xs sm:text-sm">
-            <p className="text-slate-400 text-xs">
+            <p className="text-muted-foreground text-xs">
               Use these global hotkeys to accelerate order management and checkouts without relying
               on mouse input.
             </p>
-            <div className="grid grid-cols-2 gap-y-2.5 border-t border-slate-800 pt-3">
+            <div className="grid grid-cols-2 gap-y-2.5 border-t border-border pt-3">
               <div className="flex items-center gap-2">
                 <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 font-mono text-emerald-400">
                   F1
                 </kbd>
-                <span className="text-slate-300">Focus Search</span>
+                <span className="text-foreground">Focus Search</span>
               </div>
               <div className="flex items-center gap-2">
                 <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 font-mono text-emerald-400">
                   F2
                 </kbd>
-                <span className="text-slate-300">Customer Link</span>
+                <span className="text-foreground">Customer Link</span>
               </div>
               <div className="flex items-center gap-2">
                 <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 font-mono text-emerald-400">
                   F3
                 </kbd>
-                <span className="text-slate-300">Hold Active Cart</span>
+                <span className="text-foreground">Hold Active Cart</span>
               </div>
               <div className="flex items-center gap-2">
                 <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 font-mono text-emerald-400">
                   F4
                 </kbd>
-                <span className="text-slate-300">Create New Cart</span>
+                <span className="text-foreground">Create New Cart</span>
               </div>
               <div className="flex items-center gap-2">
                 <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 font-mono text-emerald-400">
                   F5
                 </kbd>
-                <span className="text-slate-300">Open Discount Drawer</span>
+                <span className="text-foreground">Open Discount Drawer</span>
               </div>
               <div className="flex items-center gap-2">
                 <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 font-mono text-emerald-400">
                   F6
                 </kbd>
-                <span className="text-slate-300">Initiate Checkout</span>
+                <span className="text-foreground">Initiate Checkout</span>
               </div>
               <div className="flex items-center gap-2">
                 <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 font-mono text-emerald-400">
                   Esc
                 </kbd>
-                <span className="text-slate-300">Close Overlay / Cancel</span>
+                <span className="text-foreground">Close Overlay / Cancel</span>
               </div>
               <div className="flex items-center gap-2">
                 <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 font-mono text-emerald-400">
                   Ctrl + Enter
                 </kbd>
-                <span className="text-slate-300">Complete Checkout</span>
+                <span className="text-foreground">Complete Checkout</span>
               </div>
             </div>
-            <div className="text-[10px] text-slate-500 text-center border-t border-slate-800 pt-3">
+            <div className="text-[10px] text-muted-foreground text-center border-t border-border pt-3">
               Press <kbd className="px-1 py-0.5 bg-slate-800 rounded">Esc</kbd> at any time to
               return to workspace.
             </div>

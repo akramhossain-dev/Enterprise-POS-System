@@ -86,9 +86,9 @@ export function ShoppingCart() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#0c1220] border-l border-slate-900 overflow-hidden select-none">
+    <div className="flex flex-col h-full bg-cardard border-l border-border overflow-hidden select-none">
       {/* Multi-Cart Tabs Navigation */}
-      <div className="px-3 pt-3 pb-2 border-b border-slate-900 bg-slate-950/20 shrink-0 flex items-center justify-between">
+      <div className="px-3 pt-3 pb-2 border-b border-border bg-muted/20 shrink-0 flex items-center justify-between">
         <div className="flex items-center space-x-1.5 overflow-x-auto custom-scrollbar max-w-[80%] whitespace-nowrap">
           {carts.map((cart) => {
             const isActive = cart.id === activeCartId;
@@ -101,7 +101,7 @@ export function ShoppingCart() {
                     onChange={(e) => setTempCartName(e.target.value)}
                     onBlur={() => handleSaveRename(cart.id)}
                     onKeyDown={(e) => e.key === 'Enter' && handleSaveRename(cart.id)}
-                    className="h-7 w-24 bg-slate-900 border-emerald-500 text-slate-100 text-xs px-2"
+                    className="h-7 w-24 bg-accent border-emerald-500 text-foreground text-xs px-2"
                     autoFocus
                   />
                 ) : (
@@ -112,7 +112,7 @@ export function ShoppingCart() {
                       'px-3 py-1 rounded-md text-xs font-semibold flex items-center space-x-1.5 border transition-all',
                       isActive
                         ? 'bg-emerald-500 text-slate-950 border-emerald-500 font-bold shadow-md shadow-emerald-500/10'
-                        : 'bg-[#080d19] text-slate-400 border-slate-800 hover:border-slate-700 hover:text-slate-200',
+                        : 'bg-background text-muted-foreground border-border hover:border-slate-700 hover:text-foreground',
                     )}
                   >
                     <ShoppingBag className="h-3.5 w-3.5 shrink-0" />
@@ -131,7 +131,7 @@ export function ShoppingCart() {
             size="icon"
             variant="ghost"
             onClick={() => newCart()}
-            className="h-7 w-7 rounded-md bg-[#080d19] border border-slate-800 text-slate-400 hover:text-emerald-400 hover:bg-slate-900"
+            className="h-7 w-7 rounded-md bg-background border border-border text-muted-foreground hover:text-emerald-400 hover:bg-accent"
             title="Create New Cart [F4]"
           >
             <Plus className="h-3.5 w-3.5" />
@@ -143,18 +143,18 @@ export function ShoppingCart() {
                 size="icon"
                 variant="ghost"
                 onClick={() => setShowCartActions(!showCartActions)}
-                className="h-7 w-7 rounded-md bg-[#080d19] border border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+                className="h-7 w-7 rounded-md bg-background border border-border text-muted-foreground hover:text-foreground hover:bg-accent"
               >
                 <ChevronDown className="h-3.5 w-3.5" />
               </Button>
 
               {showCartActions && (
-                <div className="absolute right-0 top-full mt-1 w-36 bg-[#0c1220] border border-slate-850 rounded-lg shadow-xl py-1 z-30 text-xs">
+                <div className="absolute right-0 top-full mt-1 w-36 bg-cardard border border-border rounded-lg shadow-xl py-1 z-30 text-xs">
                   <button
                     onClick={() => handleStartRename(activeCart.id, activeCart.name)}
-                    className="w-full text-left px-3 py-2 text-slate-300 hover:bg-slate-900 flex items-center"
+                    className="w-full text-left px-3 py-2 text-foreground hover:bg-accent flex items-center"
                   >
-                    <PencilLine className="h-3.5 w-3.5 mr-2 text-slate-400" />
+                    <PencilLine className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
                     Rename Cart
                   </button>
                   <button
@@ -162,9 +162,9 @@ export function ShoppingCart() {
                       duplicateCart(activeCart.id);
                       setShowCartActions(false);
                     }}
-                    className="w-full text-left px-3 py-2 text-slate-300 hover:bg-slate-900 flex items-center"
+                    className="w-full text-left px-3 py-2 text-foreground hover:bg-accent flex items-center"
                   >
-                    <Copy className="h-3.5 w-3.5 mr-2 text-slate-400" />
+                    <Copy className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
                     Duplicate Cart
                   </button>
                   <button
@@ -185,7 +185,7 @@ export function ShoppingCart() {
       </div>
 
       {/* Customer Selector Block */}
-      <div className="p-3 bg-slate-950/10 border-b border-slate-900 shrink-0">
+      <div className="p-3 bg-muted/10 border-b border-border shrink-0">
         <CustomerSelector />
       </div>
 
@@ -202,21 +202,21 @@ export function ShoppingCart() {
             return (
               <div
                 key={item.productId}
-                className="flex flex-col border border-slate-850 bg-[#0c1220] rounded-xl p-2.5 shadow-sm transition-all"
+                className="flex flex-col border border-border bg-cardard rounded-xl p-2.5 shadow-sm transition-all"
               >
                 {/* Product primary row */}
                 <div className="flex items-start justify-between gap-2.5 text-left">
                   <div className="flex-1 min-w-0">
-                    <h5 className="text-xs font-bold text-slate-200 leading-tight line-clamp-1">
+                    <h5 className="text-xs font-bold text-foreground leading-tight line-clamp-1">
                       {item.productName}
                     </h5>
-                    <p className="text-[10px] text-slate-500 font-mono">
+                    <p className="text-[10px] text-muted-foreground font-mono">
                       ${item.unitPrice.toFixed(2)} each | SKU: {item.sku}
                     </p>
                   </div>
                   <button
                     onClick={() => removeFromCart(item.productId)}
-                    className="text-slate-500 hover:text-rose-400 transition-colors duration-150 shrink-0"
+                    className="text-muted-foreground hover:text-rose-400 transition-colors duration-150 shrink-0"
                     title="Remove item"
                   >
                     <Trash2 className="h-4 w-4" />
@@ -232,7 +232,7 @@ export function ShoppingCart() {
                       </span>
                     )}
                     {item.notes && (
-                      <span className="text-[9px] bg-slate-900 text-slate-400 border border-slate-850 px-1.5 py-0.5 rounded flex items-center gap-1 max-w-[200px] truncate">
+                      <span className="text-[9px] bg-accent text-muted-foreground border border-border px-1.5 py-0.5 rounded flex items-center gap-1 max-w-[200px] truncate">
                         <span className="truncate">{item.notes}</span>
                       </span>
                     )}
@@ -256,7 +256,7 @@ export function ShoppingCart() {
                           setActiveRowEdit({ productId: '', field: null });
                         }
                       }}
-                      className="flex-1 h-7 bg-slate-950 border border-slate-850 rounded px-2 text-[11px] text-slate-100 focus:outline-none focus:border-emerald-500"
+                      className="flex-1 h-7 bg-muted border border-border rounded px-2 text-[11px] text-foreground focus:outline-none focus:border-emerald-500"
                       autoFocus
                     />
                   </div>
@@ -264,7 +264,7 @@ export function ShoppingCart() {
 
                 {isEditingThisDiscount && (
                   <div className="mt-2 flex gap-1.5 items-center text-left">
-                    <label className="text-[10px] text-slate-500 font-bold shrink-0">
+                    <label className="text-[10px] text-muted-foreground font-bold shrink-0">
                       Discount ($):
                     </label>
                     <input
@@ -284,19 +284,19 @@ export function ShoppingCart() {
                           setActiveRowEdit({ productId: '', field: null });
                         }
                       }}
-                      className="w-24 h-7 bg-slate-950 border border-slate-850 rounded px-2 text-[11px] text-slate-100 focus:outline-none focus:border-emerald-500 font-mono"
+                      className="w-24 h-7 bg-muted border border-border rounded px-2 text-[11px] text-foreground focus:outline-none focus:border-emerald-500 font-mono"
                       autoFocus
                     />
                   </div>
                 )}
 
                 {/* Quantity and configuration buttons panel */}
-                <div className="mt-3 flex items-center justify-between border-t border-slate-900 pt-2.5">
+                <div className="mt-3 flex items-center justify-between border-t border-border pt-2.5">
                   {/* Quantity controls */}
-                  <div className="flex items-center space-x-1 border border-slate-800 bg-slate-950 rounded-md p-0.5">
+                  <div className="flex items-center space-x-1 border border-border bg-muted rounded-md p-0.5">
                     <button
                       onClick={() => updateQuantity(item.productId, item.quantity - 1)}
-                      className="h-6 w-6 rounded bg-slate-900 hover:bg-slate-800 flex items-center justify-center text-slate-400"
+                      className="h-6 w-6 rounded bg-accent hover:bg-slate-800 flex items-center justify-center text-muted-foreground"
                     >
                       <Minus className="h-3 w-3" />
                     </button>
@@ -306,11 +306,11 @@ export function ShoppingCart() {
                       onChange={(e) =>
                         updateQuantity(item.productId, parseInt(e.target.value) || 0)
                       }
-                      className="w-10 bg-transparent border-none text-center text-xs font-bold text-slate-200 focus:outline-none focus:ring-0 font-mono [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      className="w-10 bg-transparent border-none text-center text-xs font-bold text-foreground focus:outline-none focus:ring-0 font-mono [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     />
                     <button
                       onClick={() => updateQuantity(item.productId, item.quantity + 1)}
-                      className="h-6 w-6 rounded bg-slate-900 hover:bg-slate-800 flex items-center justify-center text-slate-400"
+                      className="h-6 w-6 rounded bg-accent hover:bg-slate-800 flex items-center justify-center text-muted-foreground"
                     >
                       <Plus className="h-3 w-3" />
                     </button>
@@ -324,7 +324,7 @@ export function ShoppingCart() {
                       variant="ghost"
                       onClick={() => toggleRowEdit(item.productId, 'notes')}
                       className={cn(
-                        'h-7 w-7 rounded-md border border-slate-850 text-slate-400 hover:text-slate-200',
+                        'h-7 w-7 rounded-md border border-border text-muted-foreground hover:text-foreground',
                         item.notes && 'border-emerald-500/30 text-emerald-400 bg-emerald-950/10',
                       )}
                       title="Line item notes"
@@ -338,7 +338,7 @@ export function ShoppingCart() {
                       variant="ghost"
                       onClick={() => toggleRowEdit(item.productId, 'discount')}
                       className={cn(
-                        'h-7 w-7 rounded-md border border-slate-850 text-slate-400 hover:text-slate-200',
+                        'h-7 w-7 rounded-md border border-border text-muted-foreground hover:text-foreground',
                         item.discount > 0 &&
                           'border-emerald-500/30 text-emerald-400 bg-emerald-950/10',
                       )}
@@ -357,7 +357,7 @@ export function ShoppingCart() {
             );
           })
         ) : (
-          <div className="flex flex-col items-center justify-center h-48 border border-dashed border-slate-850 rounded-xl text-slate-500">
+          <div className="flex flex-col items-center justify-center h-48 border border-dashed border-border rounded-xl text-muted-foreground">
             <ShoppingBag className="h-8 w-8 mb-2 text-slate-850" />
             <p className="text-xs font-medium">Active terminal workspace is empty.</p>
           </div>

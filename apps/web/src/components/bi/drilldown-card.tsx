@@ -58,25 +58,25 @@ export function DrilldownCard({ title, description, className }: DrilldownCardPr
   return (
     <Card
       className={cn(
-        'bg-[#0c1220] border-slate-800 text-slate-100 select-none text-left print:bg-white print:text-black',
+        'bg-cardard border-border text-foreground select-none text-left print:bg-white print:text-black',
         className,
       )}
     >
-      <CardHeader className="py-4 border-b border-slate-900 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <CardHeader className="py-4 border-b border-border flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <CardTitle className="text-xs font-bold text-slate-200 uppercase tracking-widest font-sans flex items-center gap-1.5">
+          <CardTitle className="text-xs font-bold text-foreground uppercase tracking-widest font-sans flex items-center gap-1.5">
             <FolderOpen className="h-4 w-4 text-emerald-450" />
             <span>{title}</span>
           </CardTitle>
           {description && (
-            <CardDescription className="text-[10px] text-slate-500 font-mono mt-0.5">
+            <CardDescription className="text-[10px] text-muted-foreground font-mono mt-0.5">
               {description}
             </CardDescription>
           )}
         </div>
 
         {/* Drilldown breadcrumbs */}
-        <div className="flex flex-wrap items-center gap-1 text-[9px] font-bold font-mono text-slate-400 bg-slate-950 px-2 py-1 rounded-lg border border-slate-900">
+        <div className="flex flex-wrap items-center gap-1 text-[9px] font-bold font-mono text-muted-foreground bg-muted px-2 py-1 rounded-lg border border-border">
           <button
             type="button"
             onClick={() => handleBreadcrumbClick(-1)}
@@ -103,16 +103,16 @@ export function DrilldownCard({ title, description, className }: DrilldownCardPr
         <div className="overflow-x-auto font-mono text-xs">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-slate-900 bg-slate-950/20 text-slate-500 font-bold uppercase tracking-wider text-[10px] pb-2">
+              <tr className="border-b border-border bg-muted/20 text-muted-foreground font-bold uppercase tracking-wider text-[10px] pb-2">
                 <th className="py-2.5 px-4">Entity</th>
                 <th className="py-2.5 px-4 text-right">Transactions</th>
                 <th className="py-2.5 px-4 text-right">Sales Amount ($)</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-900/40 text-slate-350">
+            <tbody className="divide-y divide-border/40 text-muted-foreground">
               {isLoading ? (
                 <tr>
-                  <td colSpan={3} className="text-center py-8 text-slate-500">
+                  <td colSpan={3} className="text-center py-8 text-muted-foreground">
                     Loading drill-down hierarchy...
                   </td>
                 </tr>
@@ -122,11 +122,11 @@ export function DrilldownCard({ title, description, className }: DrilldownCardPr
                     key={node.id}
                     onClick={() => handleRowClick(node.id, node.name)}
                     className={cn(
-                      'hover:bg-slate-950/20 transition-colors',
+                      'hover:bg-muted/20 transition-colors',
                       level < 2 ? 'cursor-pointer' : 'cursor-default',
                     )}
                   >
-                    <td className="py-3 px-4 font-sans font-bold text-slate-200 flex items-center gap-1.5">
+                    <td className="py-3 px-4 font-sans font-bold text-foreground flex items-center gap-1.5">
                       {level > 0 && <CornerDownRight className="h-3 w-3 text-slate-600" />}
                       <span>{node.name}</span>
                     </td>
@@ -138,7 +138,7 @@ export function DrilldownCard({ title, description, className }: DrilldownCardPr
                 ))
               ) : (
                 <tr>
-                  <td colSpan={3} className="text-center py-8 text-slate-500">
+                  <td colSpan={3} className="text-center py-8 text-muted-foreground">
                     Drill-down level limit reached.
                   </td>
                 </tr>

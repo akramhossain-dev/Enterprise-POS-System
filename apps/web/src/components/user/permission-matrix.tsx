@@ -115,7 +115,7 @@ export function PermissionMatrix({
           return (
             <div
               key={group.module}
-              className="border border-border/80 rounded-2xl bg-card overflow-hidden"
+              className="border border-border/80 rounded-2xl bg-cardard overflow-hidden"
             >
               {/* Group Accordion Header */}
               <div className="flex items-center justify-between p-3 bg-muted/40 border-b border-border/50">

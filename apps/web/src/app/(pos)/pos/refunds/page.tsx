@@ -37,14 +37,14 @@ export default function POSRefundsHistoryPage() {
   };
 
   return (
-    <PageContainer className="max-w-6xl mx-auto py-6 text-slate-100 select-none text-left">
+    <PageContainer className="max-w-6xl mx-auto py-6 text-foreground select-none text-left">
       {/* Back button */}
       <div className="mb-4">
         <Link href="/pos">
           <Button
             variant="ghost"
             size="sm"
-            className="text-slate-400 hover:text-slate-200 gap-1.5 h-8"
+            className="text-muted-foreground hover:text-foreground gap-1.5 h-8"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Back to POS Terminal</span>
@@ -59,7 +59,7 @@ export default function POSRefundsHistoryPage() {
 
       {/* Filter panel */}
       <div className="relative mb-6 mt-4 max-w-md">
-        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-500" />
+        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
         <Input
           type="text"
           placeholder="Search refunds by invoice or customer name..."
@@ -68,27 +68,27 @@ export default function POSRefundsHistoryPage() {
             setQuery(e.target.value);
             setCurrentPage(1);
           }}
-          className="pl-8 bg-slate-950 border-slate-800 text-slate-100 text-xs focus-visible:ring-emerald-500 h-9"
+          className="pl-8 bg-muted border-border text-foreground text-xs focus-visible:ring-emerald-500 h-9"
         />
       </div>
 
       {/* List */}
       <div className="space-y-3">
         {isLoading ? (
-          <div className="text-center py-12 text-slate-500 font-medium">
+          <div className="text-center py-12 text-muted-foreground font-medium">
             Retrieving refunds history...
           </div>
         ) : refunds.length > 0 ? (
           refunds.map((refund) => (
             <Card
               key={refund.id}
-              className="bg-[#0c1220] border-slate-800 hover:border-slate-750 transition-colors"
+              className="bg-cardard border-border hover:border-slate-750 transition-colors"
             >
               <CardContent className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs sm:text-sm">
                 <div className="space-y-1.5 text-left flex-1 min-w-0">
                   <div className="flex items-center space-x-2 flex-wrap gap-y-1">
-                    <span className="font-bold text-slate-200"># {refund.returnNumber}</span>
-                    <span className="text-[10px] text-slate-500">
+                    <span className="font-bold text-foreground"># {refund.returnNumber}</span>
+                    <span className="text-[10px] text-muted-foreground">
                       Invoice: {refund.invoiceNumber}
                     </span>
                     <Badge className="bg-emerald-950/40 text-emerald-400 border-emerald-900/60 font-bold uppercase tracking-wider text-[9px] px-1.5 py-0.5 rounded">
@@ -96,7 +96,7 @@ export default function POSRefundsHistoryPage() {
                     </Badge>
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-500">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
                     <span className="flex items-center gap-1">
                       <Calendar className="h-3.5 w-3.5 shrink-0" />
                       <span>{new Date(refund.processedAt).toLocaleString()}</span>
@@ -106,7 +106,7 @@ export default function POSRefundsHistoryPage() {
                       <span>Cashier: {refund.cashierName}</span>
                     </span>
                     <span>•</span>
-                    <span className="text-slate-400 font-medium">
+                    <span className="text-muted-foreground font-medium">
                       Customer: {refund.customerName}
                     </span>
                   </div>
@@ -114,7 +114,7 @@ export default function POSRefundsHistoryPage() {
 
                 <div className="flex items-center justify-between sm:justify-end gap-5">
                   <div className="text-left sm:text-right shrink-0">
-                    <span className="text-[10px] text-slate-500 block uppercase font-bold tracking-wider font-mono">
+                    <span className="text-[10px] text-muted-foreground block uppercase font-bold tracking-wider font-mono">
                       Refund Amount
                     </span>
                     <span className="font-mono font-black text-rose-455 text-sm sm:text-base">
@@ -122,7 +122,7 @@ export default function POSRefundsHistoryPage() {
                     </span>
                   </div>
 
-                  <div className="text-[10px] bg-slate-900 border border-slate-850 text-slate-400 px-2 py-1 rounded font-mono shrink-0">
+                  <div className="text-[10px] bg-accent border border-border text-muted-foreground px-2 py-1 rounded font-mono shrink-0">
                     {refund.refundMethod}
                   </div>
                 </div>
@@ -130,7 +130,7 @@ export default function POSRefundsHistoryPage() {
             </Card>
           ))
         ) : (
-          <div className="text-center py-12 text-slate-500 border border-dashed border-slate-855 rounded-xl">
+          <div className="text-center py-12 text-muted-foreground border border-dashed border-slate-855 rounded-xl">
             <Coins className="h-10 w-10 mb-2 text-slate-800 mx-auto" />
             <p className="text-xs">No refund settlements registered.</p>
           </div>
@@ -139,7 +139,7 @@ export default function POSRefundsHistoryPage() {
 
       {/* Pager */}
       {meta && meta.totalPages > 1 && (
-        <div className="flex items-center justify-between mt-6 pt-4 border-t border-slate-900 text-xs text-slate-500 font-mono">
+        <div className="flex items-center justify-between mt-6 pt-4 border-t border-border text-xs text-muted-foreground font-mono">
           <p>
             Page {meta.page} of {meta.totalPages}
           </p>
@@ -150,7 +150,7 @@ export default function POSRefundsHistoryPage() {
               variant="outline"
               disabled={currentPage <= 1}
               onClick={handlePrevPage}
-              className="h-7 w-7 bg-[#0c1220] border-slate-800 text-slate-400 hover:text-slate-200"
+              className="h-7 w-7 bg-cardard border-border text-muted-foreground hover:text-foreground"
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
@@ -159,7 +159,7 @@ export default function POSRefundsHistoryPage() {
               variant="outline"
               disabled={currentPage >= meta.totalPages}
               onClick={handleNextPage}
-              className="h-7 w-7 bg-[#0c1220] border-slate-800 text-slate-400 hover:text-slate-200"
+              className="h-7 w-7 bg-cardard border-border text-muted-foreground hover:text-foreground"
             >
               <ChevronRight className="h-4 w-4" />
             </Button>

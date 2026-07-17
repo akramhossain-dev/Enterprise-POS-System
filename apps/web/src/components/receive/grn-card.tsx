@@ -23,7 +23,7 @@ export function GrnCard({
   variant = 'default',
 }: GrnCardProps) {
   const variantStyles = {
-    default: 'border-border bg-card text-card-foreground',
+    default: 'border-border bg-cardard text-card-foreground',
     primary: 'border-primary/20 bg-primary/5 text-primary',
     success: 'border-emerald-500/20 bg-emerald-500/5 text-emerald-500',
     warning: 'border-amber-500/20 bg-amber-500/5 text-amber-500',

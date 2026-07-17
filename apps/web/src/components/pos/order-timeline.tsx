@@ -56,8 +56,8 @@ export function OrderTimeline({ status, completedAt }: OrderTimelineProps) {
   const finalDetails = getStatusDetails();
 
   return (
-    <div className="bg-[#0c1220] border border-slate-800 rounded-2xl p-5 select-none text-left">
-      <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6">
+    <div className="bg-cardard border border-border rounded-2xl p-5 select-none text-left">
+      <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-6">
         Order Lifecycle Audit Trail
       </h3>
       <div className="relative flex flex-col md:flex-row items-start md:items-center justify-between gap-6 md:gap-4">
@@ -73,7 +73,7 @@ export function OrderTimeline({ status, completedAt }: OrderTimelineProps) {
             <p className="text-xs font-bold text-emerald-400 font-mono tracking-wider">
               Order Initialized
             </p>
-            <p className="text-[10px] text-slate-500 mt-0.5">
+            <p className="text-[10px] text-muted-foreground mt-0.5">
               {new Date(completedAt).toLocaleDateString()}
             </p>
           </div>
@@ -88,7 +88,7 @@ export function OrderTimeline({ status, completedAt }: OrderTimelineProps) {
             <p className="text-xs font-bold text-emerald-400 font-mono tracking-wider">
               Settled Paid
             </p>
-            <p className="text-[10px] text-slate-500 mt-0.5">Change Tendered</p>
+            <p className="text-[10px] text-muted-foreground mt-0.5">Change Tendered</p>
           </div>
         </div>
 
@@ -99,7 +99,7 @@ export function OrderTimeline({ status, completedAt }: OrderTimelineProps) {
               'h-8 w-8 rounded-full flex items-center justify-center border-2 shrink-0',
               status.includes('RETURNED')
                 ? 'border-amber-500 bg-amber-950/20 text-amber-400'
-                : 'border-slate-800 bg-slate-900 text-slate-500',
+                : 'border-border bg-accent text-muted-foreground',
             )}
           >
             <ArrowRightLeft className="h-4 w-4" />
@@ -108,12 +108,12 @@ export function OrderTimeline({ status, completedAt }: OrderTimelineProps) {
             <p
               className={cn(
                 'text-xs font-bold font-mono tracking-wider',
-                status.includes('RETURNED') ? 'text-amber-400' : 'text-slate-500',
+                status.includes('RETURNED') ? 'text-amber-400' : 'text-muted-foreground',
               )}
             >
               Returns Registry
             </p>
-            <p className="text-[10px] text-slate-500 mt-0.5">
+            <p className="text-[10px] text-muted-foreground mt-0.5">
               {status.includes('RETURNED') ? 'Goods Retake' : 'No Claims'}
             </p>
           </div>
@@ -138,7 +138,7 @@ export function OrderTimeline({ status, completedAt }: OrderTimelineProps) {
             >
               {finalDetails.label}
             </p>
-            <p className="text-[10px] text-slate-500 mt-0.5">Audit complete</p>
+            <p className="text-[10px] text-muted-foreground mt-0.5">Audit complete</p>
           </div>
         </div>
       </div>

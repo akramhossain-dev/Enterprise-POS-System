@@ -232,7 +232,7 @@ export default function ExecutiveDashboardPage() {
   };
 
   return (
-    <PageContainer className="text-slate-100 select-none text-left print:bg-white print:text-black print:p-0">
+    <PageContainer className="text-foreground select-none text-left print:bg-white print:text-black print:p-0">
       {/* Action Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 print:hidden">
         <PageHeader
@@ -241,14 +241,14 @@ export default function ExecutiveDashboardPage() {
         />
 
         <div className="flex flex-wrap gap-2 items-center self-end sm:self-auto text-xs">
-          <div className="flex items-center gap-2 bg-[#0c1220] border border-slate-850 rounded-lg p-1">
-            <span className="text-[10px] text-slate-500 font-bold px-1.5 uppercase font-mono">
+          <div className="flex items-center gap-2 bg-cardard border border-border rounded-lg p-1">
+            <span className="text-[10px] text-muted-foreground font-bold px-1.5 uppercase font-mono">
               Auto Sync:
             </span>
             <select
               value={autoRefreshRate}
               onChange={(e) => setAutoRefreshRate(Number(e.target.value))}
-              className="bg-transparent text-slate-200 outline-none cursor-pointer h-full text-[11px]"
+              className="bg-transparent text-foreground outline-none cursor-pointer h-full text-[11px]"
             >
               <option value={0}>Disabled</option>
               <option value={10}>10s</option>
@@ -259,7 +259,7 @@ export default function ExecutiveDashboardPage() {
               variant="ghost"
               size="icon"
               onClick={handleRefreshAll}
-              className="h-7 w-7 text-slate-400 hover:text-slate-200 hover:bg-slate-900"
+              className="h-7 w-7 text-muted-foreground hover:text-foreground hover:bg-accent"
             >
               <RefreshCw className="h-3.5 w-3.5" />
             </Button>
@@ -268,7 +268,7 @@ export default function ExecutiveDashboardPage() {
           <Button
             size="sm"
             onClick={() => setIsCustomizeOpen(true)}
-            className="h-8 border-slate-800 bg-[#0c1220] hover:bg-slate-900 text-xs gap-1.5 text-slate-350"
+            className="h-8 border-border bg-cardard hover:bg-accent text-xs gap-1.5 text-muted-foreground"
           >
             <SlidersHorizontal className="h-4 w-4" />
             <span>Customize Grid</span>
@@ -287,36 +287,36 @@ export default function ExecutiveDashboardPage() {
 
       {/* Query filters */}
       <div className="grid gap-4 sm:grid-cols-3 mb-6 print:hidden">
-        <div className="flex items-center gap-1.5 bg-[#0c1220] px-3 border border-slate-850 rounded-xl text-xs h-9 w-full">
-          <span className="text-slate-500">From</span>
+        <div className="flex items-center gap-1.5 bg-cardard px-3 border border-border rounded-xl text-xs h-9 w-full">
+          <span className="text-muted-foreground">From</span>
           <input
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            className="bg-transparent text-slate-200 focus:outline-none cursor-pointer h-full"
+            className="bg-transparent text-foreground focus:outline-none cursor-pointer h-full"
           />
-          <span className="text-slate-500">To</span>
+          <span className="text-muted-foreground">To</span>
           <input
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
-            className="bg-transparent text-slate-200 focus:outline-none cursor-pointer h-full"
+            className="bg-transparent text-foreground focus:outline-none cursor-pointer h-full"
           />
         </div>
 
         <div className="relative flex-1 sm:col-span-2">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-500" />
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <input
             type="text"
             placeholder="Search products, top customers, or suppliers..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-9 pl-8 bg-slate-950 border border-slate-855 rounded-xl text-xs text-slate-100 focus:outline-none focus:border-emerald-500"
+            className="w-full h-9 pl-8 bg-muted border border-slate-855 rounded-xl text-xs text-foreground focus:outline-none focus:border-emerald-500"
           />
         </div>
       </div>
 
-      <div className="flex justify-between items-center text-[10px] text-slate-500 font-mono mb-4 print:hidden">
+      <div className="flex justify-between items-center text-[10px] text-muted-foreground font-mono mb-4 print:hidden">
         <span>Sync Time: {lastUpdated.toLocaleTimeString()}</span>
         <span>Corporate Region: Global HQ</span>
       </div>
@@ -331,7 +331,7 @@ export default function ExecutiveDashboardPage() {
           icon={DollarSign}
           prefix="$"
           description="vs. last month"
-          className="bg-[#0c1220] border-slate-800"
+          className="bg-cardard border-border"
         />
         <KpiCard
           title="Net Operating Profit"
@@ -341,7 +341,7 @@ export default function ExecutiveDashboardPage() {
           icon={DollarSign}
           prefix="$"
           description="vs. last month"
-          className="bg-[#0c1220] border-slate-800 text-emerald-450"
+          className="bg-cardard border-border text-emerald-450"
         />
         <KpiCard
           title="Avg Order Value (AOV)"
@@ -350,7 +350,7 @@ export default function ExecutiveDashboardPage() {
           trend={kpis.avgOrderValueChange >= 0 ? 'up' : 'down'}
           icon={ShoppingCart}
           prefix="$"
-          className="bg-[#0c1220] border-slate-800"
+          className="bg-cardard border-border"
         />
         <KpiCard
           title="Active Customer Growth"
@@ -358,7 +358,7 @@ export default function ExecutiveDashboardPage() {
           growth={kpis.customerGrowth}
           trend={kpis.customerGrowth >= 0 ? 'up' : 'down'}
           icon={Users}
-          className="bg-[#0c1220] border-slate-800"
+          className="bg-cardard border-border"
         />
       </div>
 
@@ -454,13 +454,13 @@ export default function ExecutiveDashboardPage() {
 
       {/* Grid customization modal dialog */}
       <Dialog open={isCustomizeOpen} onOpenChange={setIsCustomizeOpen}>
-        <DialogContent className="bg-[#0c1220] border border-slate-800 text-slate-100 max-w-lg p-6">
+        <DialogContent className="bg-cardard border border-border text-foreground max-w-lg p-6">
           <DialogHeader className="mb-4">
-            <DialogTitle className="text-sm font-black uppercase text-slate-200 tracking-wider flex items-center gap-1.5 font-sans">
+            <DialogTitle className="text-sm font-black uppercase text-foreground tracking-wider flex items-center gap-1.5 font-sans">
               <SlidersHorizontal className="h-5 w-5 text-indigo-400" />
               <span>Customize Executive Grid</span>
             </DialogTitle>
-            <DialogDescription className="text-slate-500 text-xs">
+            <DialogDescription className="text-muted-foreground text-xs">
               Configure layouts visibility widths, reorder layers, or save preferences.
             </DialogDescription>
           </DialogHeader>
@@ -468,7 +468,7 @@ export default function ExecutiveDashboardPage() {
           <div className="space-y-4 text-xs">
             {/* Widget layout managers */}
             <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
-              <span className="text-[10px] text-slate-500 uppercase tracking-widest font-bold font-sans">
+              <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold font-sans">
                 Active Widgets:
               </span>
               {layout
@@ -476,11 +476,11 @@ export default function ExecutiveDashboardPage() {
                 .map((item, index) => (
                   <div
                     key={item.id}
-                    className="flex items-center justify-between p-2.5 border border-slate-900 rounded-xl bg-slate-950/20 font-sans gap-2"
+                    className="flex items-center justify-between p-2.5 border border-border rounded-xl bg-muted/20 font-sans gap-2"
                   >
                     <div className="flex items-center gap-2">
                       <Move className="h-3.5 w-3.5 text-slate-600" />
-                      <span className="capitalize text-xs font-bold text-slate-200 truncate max-w-[120px]">
+                      <span className="capitalize text-xs font-bold text-foreground truncate max-w-[120px]">
                         {item.id.replace(/_/g, ' ')}
                       </span>
                     </div>
@@ -490,7 +490,7 @@ export default function ExecutiveDashboardPage() {
                       <select
                         value={item.width}
                         onChange={(e) => changeWidgetWidth(item.id, e.target.value as any)}
-                        className="bg-[#0c1220] border border-slate-850 text-slate-350 rounded p-1 text-[10px] focus:outline-none"
+                        className="bg-cardard border border-border text-muted-foreground rounded p-1 text-[10px] focus:outline-none"
                       >
                         <option value="third">1/3 Column</option>
                         <option value="half">1/2 Column</option>
@@ -503,7 +503,7 @@ export default function ExecutiveDashboardPage() {
                         variant="ghost"
                         disabled={index === 0}
                         onClick={() => moveWidget(index, 'up')}
-                        className="h-6 w-6 text-slate-500 hover:text-slate-200"
+                        className="h-6 w-6 text-muted-foreground hover:text-foreground"
                         title="Move Up"
                       >
                         <ArrowUp className="h-3 w-3" />
@@ -513,7 +513,7 @@ export default function ExecutiveDashboardPage() {
                         variant="ghost"
                         disabled={index === layout.length - 1}
                         onClick={() => moveWidget(index, 'down')}
-                        className="h-6 w-6 text-slate-500 hover:text-slate-200"
+                        className="h-6 w-6 text-muted-foreground hover:text-foreground"
                         title="Move Down"
                       >
                         <ArrowDown className="h-3 w-3" />
@@ -524,7 +524,7 @@ export default function ExecutiveDashboardPage() {
                         size="icon"
                         variant="ghost"
                         onClick={() => toggleWidgetVisibility(item.id)}
-                        className="h-6 w-6 text-slate-500 hover:text-slate-200"
+                        className="h-6 w-6 text-muted-foreground hover:text-foreground"
                       >
                         {item.visible ? (
                           <Eye className="h-3.5 w-3.5 text-emerald-450" />
@@ -544,7 +544,7 @@ export default function ExecutiveDashboardPage() {
                   type="button"
                   onClick={handleResetLayout}
                   variant="outline"
-                  className="h-9 border-slate-800 text-slate-400 hover:text-slate-200 bg-[#0c1220] gap-1"
+                  className="h-9 border-border text-muted-foreground hover:text-foreground bg-cardard gap-1"
                 >
                   <RotateCcw className="h-3.5 w-3.5" />
                   <span>Reset Layout</span>
@@ -556,7 +556,7 @@ export default function ExecutiveDashboardPage() {
                   <Button
                     type="button"
                     variant="ghost"
-                    className="h-9 text-slate-400 hover:text-slate-200"
+                    className="h-9 text-muted-foreground hover:text-foreground"
                   >
                     Cancel
                   </Button>

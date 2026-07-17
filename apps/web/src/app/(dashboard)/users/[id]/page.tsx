@@ -68,7 +68,7 @@ export default function UserDetailsPage() {
   if (!user) {
     return (
       <PageContainer>
-        <div className="text-center py-20 bg-card rounded-2xl border border-border">
+        <div className="text-center py-20 bg-cardard rounded-2xl border border-border">
           <AlertCircle className="w-8 h-8 mx-auto text-muted-foreground" />
           <h2 className="font-semibold text-foreground text-sm mt-3">User Account Not Found</h2>
           <Link href="/users" className="mt-4 inline-block">
@@ -141,7 +141,7 @@ export default function UserDetailsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 text-left">
         {/* Left Side Profile Card */}
         <div className="lg:col-span-1 space-y-6">
-          <div className="rounded-2xl border border-border bg-card p-6 flex flex-col items-center text-center">
+          <div className="rounded-2xl border border-border bg-cardard p-6 flex flex-col items-center text-center">
             {/* User Icon */}
             <div className="relative flex h-20 w-20 items-center justify-center rounded-2xl bg-primary/10 font-semibold text-primary text-2xl border border-primary/5">
               {initials}
@@ -199,7 +199,7 @@ export default function UserDetailsPage() {
 
         {/* Right Side Security Tabs */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="flex border-b border-border bg-card rounded-2xl p-1.5 gap-1 shadow-sm">
+          <div className="flex border-b border-border bg-cardard rounded-2xl p-1.5 gap-1 shadow-sm">
             <button
               onClick={() => setActiveTab('sessions')}
               className={cn(
@@ -238,7 +238,7 @@ export default function UserDetailsPage() {
             </button>
           </div>
 
-          <div className="rounded-2xl border border-border bg-card p-6 min-h-[350px]">
+          <div className="rounded-2xl border border-border bg-cardard p-6 min-h-[350px]">
             {/* Active Sessions Panel */}
             {activeTab === 'sessions' && (
               <div className="space-y-6">

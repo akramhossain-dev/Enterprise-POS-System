@@ -71,14 +71,14 @@ export default function POSEditAccountPage({ params }: { params: Promise<Params>
   };
 
   return (
-    <PageContainer className="max-w-3xl mx-auto py-6 text-slate-100 select-none text-left">
+    <PageContainer className="max-w-3xl mx-auto py-6 text-foreground select-none text-left">
       {/* Back link */}
       <div className="mb-4">
         <Link href={`/accounting/accounts/${id}`}>
           <Button
             variant="ghost"
             size="sm"
-            className="text-slate-400 hover:text-slate-200 gap-1.5 h-8"
+            className="text-muted-foreground hover:text-foreground gap-1.5 h-8"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Back to Account Details</span>
@@ -92,22 +92,22 @@ export default function POSEditAccountPage({ params }: { params: Promise<Params>
       />
 
       {detailsLoading ? (
-        <div className="flex flex-col items-center justify-center py-20 text-slate-400 gap-2">
+        <div className="flex flex-col items-center justify-center py-20 text-muted-foreground gap-2">
           <Loader2 className="h-8 w-8 animate-spin text-emerald-400" />
           <p className="text-xs">Loading ledger record...</p>
         </div>
       ) : (
-        <Card className="bg-[#0c1220] border-slate-800 text-slate-100 mt-6">
+        <Card className="bg-cardard border-border text-foreground mt-6">
           <CardContent className="p-6">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 text-xs sm:text-sm">
               <div className="grid gap-4 sm:grid-cols-2">
                 {/* Account Code */}
                 <div className="grid gap-1.5">
-                  <label className="text-slate-400 font-semibold font-mono">Account Code</label>
+                  <label className="text-muted-foreground font-semibold font-mono">Account Code</label>
                   <Input
                     type="text"
                     {...register('code')}
-                    className="bg-slate-950 border-slate-855 text-xs text-slate-100 font-mono focus-visible:ring-emerald-500"
+                    className="bg-muted border-slate-855 text-xs text-foreground font-mono focus-visible:ring-emerald-500"
                   />
                   {errors.code && (
                     <p className="text-[10px] text-rose-455 font-mono">{errors.code.message}</p>
@@ -116,11 +116,11 @@ export default function POSEditAccountPage({ params }: { params: Promise<Params>
 
                 {/* Account Name */}
                 <div className="grid gap-1.5">
-                  <label className="text-slate-400 font-semibold">Account Name</label>
+                  <label className="text-muted-foreground font-semibold">Account Name</label>
                   <Input
                     type="text"
                     {...register('name')}
-                    className="bg-slate-950 border-slate-855 text-xs text-slate-100 focus-visible:ring-emerald-500"
+                    className="bg-muted border-slate-855 text-xs text-foreground focus-visible:ring-emerald-500"
                   />
                   {errors.name && (
                     <p className="text-[10px] text-rose-455">{errors.name.message}</p>
@@ -131,10 +131,10 @@ export default function POSEditAccountPage({ params }: { params: Promise<Params>
               <div className="grid gap-4 sm:grid-cols-2">
                 {/* Account Type */}
                 <div className="grid gap-1.5 text-left">
-                  <label className="text-slate-400 font-semibold">Account Category Type</label>
+                  <label className="text-muted-foreground font-semibold">Account Category Type</label>
                   <select
                     {...register('type')}
-                    className="bg-slate-950 border border-slate-855 rounded p-1.5 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 cursor-pointer"
+                    className="bg-muted border border-slate-855 rounded p-1.5 text-xs text-foreground focus:outline-none focus:border-emerald-500 cursor-pointer"
                   >
                     <option value="ASSETS">Assets</option>
                     <option value="LIABILITIES">Liabilities</option>
@@ -149,10 +149,10 @@ export default function POSEditAccountPage({ params }: { params: Promise<Params>
 
                 {/* Parent Account */}
                 <div className="grid gap-1.5 text-left">
-                  <label className="text-slate-400 font-semibold">Parent Association Account</label>
+                  <label className="text-muted-foreground font-semibold">Parent Association Account</label>
                   <select
                     {...register('parentAccountCode')}
-                    className="bg-slate-950 border border-slate-855 rounded p-1.5 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 cursor-pointer"
+                    className="bg-muted border border-slate-855 rounded p-1.5 text-xs text-foreground focus:outline-none focus:border-emerald-500 cursor-pointer"
                   >
                     <option value="">None (Top-Level Account)</option>
                     {parentOptions
@@ -172,13 +172,13 @@ export default function POSEditAccountPage({ params }: { params: Promise<Params>
               <div className="grid gap-4 sm:grid-cols-2">
                 {/* Opening Balance */}
                 <div className="grid gap-1.5">
-                  <label className="text-slate-400 font-semibold font-mono">
+                  <label className="text-muted-foreground font-semibold font-mono">
                     Opening Balance ($)
                   </label>
                   <Input
                     type="number"
                     {...register('openingBalance')}
-                    className="bg-slate-950 border-slate-855 text-xs text-slate-100 font-mono focus-visible:ring-emerald-500"
+                    className="bg-muted border-slate-855 text-xs text-foreground font-mono focus-visible:ring-emerald-500"
                   />
                   {errors.openingBalance && (
                     <p className="text-[10px] text-rose-455 font-mono">
@@ -189,10 +189,10 @@ export default function POSEditAccountPage({ params }: { params: Promise<Params>
 
                 {/* Balance Type */}
                 <div className="grid gap-1.5 text-left">
-                  <label className="text-slate-400 font-semibold">Balance Classification</label>
+                  <label className="text-muted-foreground font-semibold">Balance Classification</label>
                   <select
                     {...register('balanceType')}
-                    className="bg-slate-950 border border-slate-855 rounded p-1.5 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 cursor-pointer"
+                    className="bg-muted border border-slate-855 rounded p-1.5 text-xs text-foreground focus:outline-none focus:border-emerald-500 cursor-pointer"
                   >
                     <option value="DEBIT">Debit (Asset/Expense increases)</option>
                     <option value="CREDIT">Credit (Liability/Revenue/Equity increases)</option>
@@ -205,10 +205,10 @@ export default function POSEditAccountPage({ params }: { params: Promise<Params>
 
               {/* Description */}
               <div className="grid gap-1.5 text-left">
-                <label className="text-slate-400 font-semibold">Account Description / Notes</label>
+                <label className="text-muted-foreground font-semibold">Account Description / Notes</label>
                 <textarea
                   {...register('description')}
-                  className="w-full bg-slate-950 border border-slate-855 rounded p-2 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 h-16 resize-none"
+                  className="w-full bg-muted border border-slate-855 rounded p-2 text-xs text-foreground focus:outline-none focus:border-emerald-500 h-16 resize-none"
                 />
               </div>
 

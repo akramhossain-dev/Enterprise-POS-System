@@ -69,14 +69,14 @@ export default function TaxReportsPage() {
   };
 
   return (
-    <PageContainer className="text-slate-100 select-none text-left print:bg-white print:text-black print:p-0">
+    <PageContainer className="text-foreground select-none text-left print:bg-white print:text-black print:p-0">
       {/* Back link */}
       <div className="mb-4 flex justify-between items-center print:hidden">
         <Link href="/accounting/tax">
           <Button
             variant="ghost"
             size="sm"
-            className="text-slate-400 hover:text-slate-200 gap-1.5 h-8"
+            className="text-muted-foreground hover:text-foreground gap-1.5 h-8"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Tax Dashboard</span>
@@ -89,7 +89,7 @@ export default function TaxReportsPage() {
               size="sm"
               variant="outline"
               onClick={handleExportCSV}
-              className="h-8 border-slate-800 bg-[#0c1220] hover:bg-slate-900 text-xs gap-1.5"
+              className="h-8 border-border bg-cardard hover:bg-accent text-xs gap-1.5"
             >
               <FileDown className="h-4 w-4 text-slate-455" />
               <span>Export CSV</span>
@@ -116,27 +116,27 @@ export default function TaxReportsPage() {
       {/* Date filters and class selection */}
       <div className="flex flex-col sm:flex-row gap-3 items-center justify-between mt-4 mb-6 print:hidden">
         <div className="flex flex-wrap gap-2 w-full sm:w-auto">
-          <div className="flex items-center gap-1.5 bg-[#0c1220] px-3 border border-slate-850 rounded-lg text-xs h-9">
-            <span className="text-slate-500">From</span>
+          <div className="flex items-center gap-1.5 bg-cardard px-3 border border-border rounded-lg text-xs h-9">
+            <span className="text-muted-foreground">From</span>
             <input
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="bg-transparent text-slate-200 focus:outline-none cursor-pointer h-full"
+              className="bg-transparent text-foreground focus:outline-none cursor-pointer h-full"
             />
-            <span className="text-slate-500">To</span>
+            <span className="text-muted-foreground">To</span>
             <input
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="bg-transparent text-slate-200 focus:outline-none cursor-pointer h-full"
+              className="bg-transparent text-foreground focus:outline-none cursor-pointer h-full"
             />
           </div>
 
           <select
             value={taxType}
             onChange={(e) => setTaxType(e.target.value)}
-            className="bg-[#0c1220] border border-slate-850 text-slate-350 rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[140px]"
+            className="bg-cardard border border-border text-muted-foreground rounded-lg text-xs py-1.5 px-3 focus:outline-none focus:border-emerald-500 cursor-pointer min-w-[140px]"
           >
             <option value="ALL">All Tax Classes</option>
             <option value="SALES">Output Tax (Sales)</option>
@@ -161,13 +161,13 @@ export default function TaxReportsPage() {
           />
 
           {/* Transactions details */}
-          <Card className="bg-[#0c1220] border-slate-800 text-slate-100 print:bg-white print:text-black print:border-none print:shadow-none">
+          <Card className="bg-cardard border-border text-foreground print:bg-white print:text-black print:border-none print:shadow-none">
             <CardContent className="p-6">
               <div className="text-center border-b border-slate-855 pb-4 print:border-black mb-6">
-                <h2 className="text-base font-black uppercase text-slate-200 print:text-black font-sans tracking-wide">
+                <h2 className="text-base font-black uppercase text-foreground print:text-black font-sans tracking-wide">
                   Corporate Tax Transactions Audit Ledger
                 </h2>
-                <p className="text-xs text-slate-500 font-mono mt-0.5">
+                <p className="text-xs text-muted-foreground font-mono mt-0.5">
                   Tax liabilities matching standard POS invoices & vendor vouchers
                 </p>
               </div>
@@ -175,7 +175,7 @@ export default function TaxReportsPage() {
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse text-xs sm:text-sm">
                   <thead>
-                    <tr className="border-b border-slate-855 text-slate-500 font-bold uppercase tracking-wider text-[10px] bg-slate-955/35 print:border-black">
+                    <tr className="border-b border-slate-855 text-muted-foreground font-bold uppercase tracking-wider text-[10px] bg-slate-955/35 print:border-black">
                       <th className="py-3 px-4 font-mono">Date</th>
                       <th className="py-3 px-4 font-mono">Reference</th>
                       <th className="py-3 px-3 text-center">Type</th>
@@ -184,14 +184,14 @@ export default function TaxReportsPage() {
                       <th className="py-3 px-4 text-right font-mono">Tax Amount ($)</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-900/60 font-medium text-slate-350 font-mono print:divide-gray-200">
+                  <tbody className="divide-y divide-border/60 font-medium text-muted-foreground font-mono print:divide-gray-200">
                     {filteredTx.length > 0 ? (
                       filteredTx.map((tx: any) => (
-                        <tr key={tx.id} className="hover:bg-slate-900/20">
-                          <td className="py-2.5 px-4 text-slate-500">
+                        <tr key={tx.id} className="hover:bg-accent/20">
+                          <td className="py-2.5 px-4 text-muted-foreground">
                             {new Date(tx.date).toLocaleDateString()}
                           </td>
-                          <td className="py-2.5 px-4 text-slate-200 print:text-black font-bold">
+                          <td className="py-2.5 px-4 text-foreground print:text-black font-bold">
                             {tx.reference}
                           </td>
                           <td className="py-2.5 px-3 text-center">
@@ -206,8 +206,8 @@ export default function TaxReportsPage() {
                               {tx.type}
                             </span>
                           </td>
-                          <td className="py-2.5 px-4 font-sans text-slate-400">{tx.taxRateName}</td>
-                          <td className="py-2.5 px-3 text-right text-slate-300 print:text-black">
+                          <td className="py-2.5 px-4 font-sans text-muted-foreground">{tx.taxRateName}</td>
+                          <td className="py-2.5 px-3 text-right text-foreground print:text-black">
                             {formatCurrency(tx.amount)}
                           </td>
                           <td
@@ -226,7 +226,7 @@ export default function TaxReportsPage() {
                       <tr>
                         <td
                           colSpan={6}
-                          className="py-12 text-center text-slate-500 font-sans border-none"
+                          className="py-12 text-center text-muted-foreground font-sans border-none"
                         >
                           No tax transactions logged under this selected period.
                         </td>
@@ -235,7 +235,7 @@ export default function TaxReportsPage() {
 
                     {/* Summary row */}
                     {filteredTx.length > 0 && (
-                      <tr className="border-t-2 border-slate-700 font-black text-slate-100 print:border-black print:text-black bg-slate-955/40">
+                      <tr className="border-t-2 border-slate-700 font-black text-foreground print:border-black print:text-black bg-slate-955/40">
                         <td className="py-3 px-4"></td>
                         <td className="py-3 px-4 font-sans" colSpan={3}>
                           Net Report Tax Liability Accumulation

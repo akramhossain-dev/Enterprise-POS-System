@@ -39,7 +39,7 @@ export default function UnitDetailsPage({ params }: UnitDetailsPageProps) {
   if (isError || !unit) {
     return (
       <PageContainer narrow>
-        <div className="text-center py-12 rounded-xl border border-border bg-card shadow-xs">
+        <div className="text-center py-12 rounded-xl border border-border bg-cardard shadow-xs">
           <AlertCircle className="w-12 h-12 text-destructive mx-auto" />
           <h3 className="font-semibold text-lg text-foreground mt-4">Unit Not Found</h3>
           <p className="text-sm text-muted-foreground mt-2">
@@ -82,7 +82,7 @@ export default function UnitDetailsPage({ params }: UnitDetailsPageProps) {
       <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Side: General Profile Card */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="rounded-xl border border-border bg-card p-6 space-y-6 shadow-sm">
+          <div className="rounded-xl border border-border bg-cardard p-6 space-y-6 shadow-sm">
             <div className="flex items-start justify-between">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
@@ -180,7 +180,7 @@ export default function UnitDetailsPage({ params }: UnitDetailsPageProps) {
         <div className="space-y-6">
           {/* Formula Equation Card */}
           {baseUnit && unit.conversionRatio && (
-            <div className="rounded-xl border border-border bg-card p-5 space-y-4 shadow-sm">
+            <div className="rounded-xl border border-border bg-cardard p-5 space-y-4 shadow-sm">
               <h3 className="font-semibold text-sm text-foreground">Unit Equation</h3>
               <div className="bg-primary/5 border border-primary/10 p-4 rounded-xl text-center space-y-1">
                 <p className="text-xs text-muted-foreground">Conversion Relation</p>
@@ -193,7 +193,7 @@ export default function UnitDetailsPage({ params }: UnitDetailsPageProps) {
           )}
 
           {/* Connected Inventory Stats */}
-          <div className="rounded-xl border border-border bg-card p-5 space-y-4 shadow-sm">
+          <div className="rounded-xl border border-border bg-cardard p-5 space-y-4 shadow-sm">
             <h3 className="font-semibold text-sm text-foreground">Catalog Context</h3>
 
             <div className="flex justify-between items-center bg-muted/30 p-4 rounded-lg">

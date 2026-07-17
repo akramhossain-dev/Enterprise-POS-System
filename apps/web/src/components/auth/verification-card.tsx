@@ -34,7 +34,7 @@ const STATUS_CONFIG = {
   },
   error: {
     icon: AlertCircle,
-    iconBg: 'bg-destructive/10',
+    iconBg: 'bg-backgroundestructive/10',
     iconColor: 'text-destructive',
     defaultTitle: 'Verification failed',
     defaultDescription: 'The verification link is invalid or has expired.',

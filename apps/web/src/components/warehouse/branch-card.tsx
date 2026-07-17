@@ -18,7 +18,7 @@ export function BranchCard({ branch, employeeCount = 0, warehouseCount = 0 }: Br
   const opening = branch.metadata?.openingDate;
 
   return (
-    <div className="group rounded-2xl border border-border bg-card p-5 flex flex-col justify-between transition-all hover:border-primary/20 hover:shadow-md text-left">
+    <div className="group rounded-2xl border border-border bg-cardard p-5 flex flex-col justify-between transition-all hover:border-primary/20 hover:shadow-md text-left">
       <div>
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
