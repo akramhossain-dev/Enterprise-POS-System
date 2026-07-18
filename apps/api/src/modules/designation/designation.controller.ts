@@ -20,7 +20,7 @@ export async function handleListDesignations(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const query = validateQuery(designationQuerySchema, request.query) as DesignationQuery;
+  const query = validateQuery(designationQuerySchema, request.query);
   const result = await listDesignations(query);
   reply.status(200).send(
     sendSuccess({
@@ -44,7 +44,7 @@ export async function handleCreateDesignation(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const body = validateBody(createDesignationSchema, request.body) as CreateDesignationBody;
+  const body = validateBody(createDesignationSchema, request.body);
   const desig = await createDesignation(body);
   reply.status(201).send(sendSuccess({ message: 'Designation created successfully', data: desig }));
 }

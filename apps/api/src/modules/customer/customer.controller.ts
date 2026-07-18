@@ -28,7 +28,7 @@ export async function handleListCustomers(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const query = validateQuery(customerQuerySchema, request.query) as CustomerQuery;
+  const query = validateQuery(customerQuerySchema, request.query);
   const { customers, meta } = await listCustomers(query);
   reply
     .status(200)
@@ -48,7 +48,7 @@ export async function handleCreateCustomer(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const body = validateBody(createCustomerSchema, request.body) as CreateCustomerBody;
+  const body = validateBody(createCustomerSchema, request.body);
   const actor = request.user as { id: string };
   const customer = await createCustomer(body, actor.id);
   reply.status(201).send(sendSuccess({ message: 'Customer created successfully', data: customer }));
@@ -80,7 +80,7 @@ export async function handleAddCustomerAddress(
   reply: FastifyReply,
 ): Promise<void> {
   const { id } = request.params as { id: string };
-  const body = validateBody(createAddressSchema, request.body) as CreateAddressBody;
+  const body = validateBody(createAddressSchema, request.body);
   const address = await addAddress(id, body);
   reply.status(201).send(sendSuccess({ message: 'Address added successfully', data: address }));
 }

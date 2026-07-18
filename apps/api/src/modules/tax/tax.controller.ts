@@ -5,7 +5,7 @@ import { taxQuerySchema, createTaxSchema, updateTaxSchema, TaxQuery } from './ta
 import { listTaxes, findTaxById, createTax, updateTax, softDeleteTax } from './tax.service';
 
 export async function handleListTaxes(request: FastifyRequest, reply: FastifyReply): Promise<void> {
-  const query = validateQuery(taxQuerySchema, request.query) as TaxQuery;
+  const query = validateQuery(taxQuerySchema, request.query);
   const result = await listTaxes(query);
   reply
     .status(200)

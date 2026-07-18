@@ -30,7 +30,7 @@ export async function handleListSuppliers(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const query = validateQuery(supplierQuerySchema, request.query) as SupplierQuery;
+  const query = validateQuery(supplierQuerySchema, request.query);
   const { suppliers, meta } = await listSuppliers(query);
   reply
     .status(200)
@@ -50,7 +50,7 @@ export async function handleCreateSupplier(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const body = validateBody(createSupplierSchema, request.body) as CreateSupplierBody;
+  const body = validateBody(createSupplierSchema, request.body);
   const actor = request.user as { id: string };
   const supplier = await createSupplier(body, actor.id);
   reply.status(201).send(sendSuccess({ message: 'Supplier created successfully', data: supplier }));
@@ -82,7 +82,7 @@ export async function handleAddSupplierAddress(
   reply: FastifyReply,
 ): Promise<void> {
   const { id } = request.params as { id: string };
-  const body = validateBody(createAddressSchema, request.body) as CreateAddressBody;
+  const body = validateBody(createAddressSchema, request.body);
   const address = await addAddress(id, body);
   reply.status(201).send(sendSuccess({ message: 'Address added successfully', data: address }));
 }

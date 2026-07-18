@@ -14,7 +14,7 @@ export async function handleListBrands(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const query = validateQuery(brandQuerySchema, request.query) as BrandQuery;
+  const query = validateQuery(brandQuerySchema, request.query);
   const result = await listBrands(query);
   reply.status(200).send(
     sendSuccess({

@@ -20,7 +20,7 @@ export async function handleListDepartments(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const query = validateQuery(departmentQuerySchema, request.query) as DepartmentQuery;
+  const query = validateQuery(departmentQuerySchema, request.query);
   const result = await listDepartments(query);
   reply.status(200).send(
     sendSuccess({
@@ -44,7 +44,7 @@ export async function handleCreateDepartment(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const body = validateBody(createDepartmentSchema, request.body) as CreateDepartmentBody;
+  const body = validateBody(createDepartmentSchema, request.body);
   const dept = await createDepartment(body);
   reply.status(201).send(sendSuccess({ message: 'Department created successfully', data: dept }));
 }

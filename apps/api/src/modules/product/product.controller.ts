@@ -22,7 +22,7 @@ export async function handleListProducts(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const query = validateQuery(productQuerySchema, request.query) as ProductQuery;
+  const query = validateQuery(productQuerySchema, request.query);
   const result = await listProducts(query);
   reply.status(200).send(
     sendSuccess({
@@ -37,7 +37,7 @@ export async function handleSearchProducts(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const query = validateQuery(productSearchSchema, request.query) as ProductSearchQuery;
+  const query = validateQuery(productSearchSchema, request.query);
   const result = await searchProducts(query);
   reply
     .status(200)

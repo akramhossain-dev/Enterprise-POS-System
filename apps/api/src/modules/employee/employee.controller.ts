@@ -22,7 +22,7 @@ export async function handleListEmployees(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const query = validateQuery(employeeQuerySchema, request.query) as EmployeeQuery;
+  const query = validateQuery(employeeQuerySchema, request.query);
   const result = await listEmployees(query);
   reply.status(200).send(
     sendSuccess({

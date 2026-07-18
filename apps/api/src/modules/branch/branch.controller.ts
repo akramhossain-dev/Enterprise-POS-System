@@ -22,7 +22,7 @@ export async function handleListBranches(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const query = validateQuery(branchQuerySchema, request.query) as BranchQuery;
+  const query = validateQuery(branchQuerySchema, request.query);
   const result = await listBranches(query);
   reply.status(200).send(
     sendSuccess({

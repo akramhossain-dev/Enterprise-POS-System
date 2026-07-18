@@ -5,7 +5,7 @@ import { unitQuerySchema, createUnitSchema, updateUnitSchema, UnitQuery } from '
 import { listUnits, findUnitById, createUnit, updateUnit, softDeleteUnit } from './unit.service';
 
 export async function handleListUnits(request: FastifyRequest, reply: FastifyReply): Promise<void> {
-  const query = validateQuery(unitQuerySchema, request.query) as UnitQuery;
+  const query = validateQuery(unitQuerySchema, request.query);
   const result = await listUnits(query);
   reply
     .status(200)

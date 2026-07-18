@@ -333,3 +333,4 @@ jobs:
           name: ${{ matrix.artifact-name }}
           path: ${{ matrix.artifact-path }}
           retention-days: 7
+          include-hidden-files: true

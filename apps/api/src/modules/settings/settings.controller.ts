@@ -32,7 +32,7 @@ export async function handleGetSettings(
     settingParamsSchema.pick({ companyId: true }),
     request.params,
   ) as Pick<SettingParams, 'companyId'>;
-  const query = validateQuery(settingsQuerySchema, request.query) as SettingsQuery;
+  const query = validateQuery(settingsQuerySchema, request.query);
   const result = await getSettings(companyId, query);
   reply.status(200).send(
     sendSuccess({

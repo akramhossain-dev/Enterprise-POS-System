@@ -24,7 +24,7 @@ export async function handleListWarehouses(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const query = validateQuery(warehouseQuerySchema, request.query) as WarehouseQuery;
+  const query = validateQuery(warehouseQuerySchema, request.query);
   const { warehouses, meta } = await listWarehouses(query);
   reply
     .status(200)
@@ -46,7 +46,7 @@ export async function handleCreateWarehouse(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const body = validateBody(createWarehouseSchema, request.body) as CreateWarehouseBody;
+  const body = validateBody(createWarehouseSchema, request.body);
   const actor = request.user as { id: string };
   const warehouse = await createWarehouse(body, actor.id);
   reply

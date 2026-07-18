@@ -12,7 +12,7 @@ import { createGRN, listGRNs, getGRNById, completeGRN, cancelGRN } from './goods
 export async function handleCreateGRN(req: FastifyRequest, reply: FastifyReply): Promise<void> {
   const body = validateBody(createGoodsReceiveSchema, req.body);
   const actor = req.user as { id: string };
-  const data = await createGRN(body as unknown as CreateGoodsReceiveBody, actor.id);
+  const data = await createGRN(body, actor.id);
   reply.status(201).send(sendSuccess({ message: 'Goods Receive Note created', data }));
 }
 

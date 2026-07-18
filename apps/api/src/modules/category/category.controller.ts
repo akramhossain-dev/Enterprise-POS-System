@@ -21,7 +21,7 @@ export async function handleListCategories(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const query = validateQuery(categoryQuerySchema, request.query) as CategoryQuery;
+  const query = validateQuery(categoryQuerySchema, request.query);
   await verifyTenantScope(request, query.companyId);
   const result = await listCategories(query);
   reply.status(200).send(
@@ -47,7 +47,7 @@ export async function handleCreateCategory(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const body = validateBody(createCategorySchema, request.body) as CreateCategoryBody;
+  const body = validateBody(createCategorySchema, request.body);
   await verifyTenantScope(request, body.companyId);
   const category = await createCategory(body);
   reply.status(201).send(sendSuccess({ message: 'Category created successfully', data: category }));

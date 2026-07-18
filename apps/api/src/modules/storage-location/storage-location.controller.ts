@@ -20,7 +20,7 @@ export async function handleListStorageLocations(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const query = validateQuery(storageLocationQuerySchema, request.query) as StorageLocationQuery;
+  const query = validateQuery(storageLocationQuerySchema, request.query);
   const result = await listStorageLocations(query);
   reply.status(200).send(
     sendSuccess({
@@ -46,7 +46,7 @@ export async function handleCreateStorageLocation(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const body = validateBody(createStorageLocationSchema, request.body) as CreateStorageLocationBody;
+  const body = validateBody(createStorageLocationSchema, request.body);
   const loc = await createStorageLocation(body);
   reply
     .status(201)

@@ -23,7 +23,7 @@ export async function handleListCompanies(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const query = validateQuery(companyQuerySchema, request.query) as CompanyQuery;
+  const query = validateQuery(companyQuerySchema, request.query);
   const result = await listCompanies(query);
   reply.status(200).send(
     sendSuccess({
@@ -53,7 +53,7 @@ export async function handleCreateCompany(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const body = validateBody(createCompanySchema, request.body) as CreateCompanyBody;
+  const body = validateBody(createCompanySchema, request.body);
   const company = await createCompany(body);
   reply.status(201).send(sendSuccess({ message: 'Company created successfully', data: company }));
 }

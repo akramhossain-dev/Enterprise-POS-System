@@ -20,10 +20,7 @@ export async function handleListPurchaseRequisitions(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const query = validateQuery(
-    purchaseRequisitionQuerySchema,
-    request.query,
-  ) as PurchaseRequisitionQuery;
+  const query = validateQuery(purchaseRequisitionQuerySchema, request.query);
   const result = await listPurchaseRequisitions(query);
   reply.status(200).send(
     sendSuccess({
@@ -49,10 +46,7 @@ export async function handleCreatePurchaseRequisition(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const body = validateBody(
-    createPurchaseRequisitionSchema,
-    request.body,
-  ) as CreatePurchaseRequisitionBody;
+  const body = validateBody(createPurchaseRequisitionSchema, request.body);
   const pr = await createPurchaseRequisition(body);
   reply
     .status(201)

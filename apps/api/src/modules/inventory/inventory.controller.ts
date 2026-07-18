@@ -75,7 +75,7 @@ export async function handleOpeningStock(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const body = validateBody(openingStockSchema, request.body) as OpeningStockBody;
+  const body = validateBody(openingStockSchema, request.body);
   const actor = request.user as { id: string };
   const inv = await addOpeningStock(body, actor.id);
   reply.status(201).send(sendSuccess({ message: 'Opening stock added successfully', data: inv }));
