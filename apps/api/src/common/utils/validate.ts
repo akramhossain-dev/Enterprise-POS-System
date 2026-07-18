@@ -8,6 +8,7 @@ import { ValidationError } from '../errors/AppError';
 /**
  * Validates data against a Zod schema and throws a ValidationError on failure.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function validate<T>(schema: z.ZodType<T, any, any>, data: unknown): T {
   const result = schema.safeParse(data);
   if (!result.success) {
@@ -34,6 +35,7 @@ export function formatZodErrors(error: ZodError): string[] {
  * @example
  * const body = validateBody(CreateProductSchema, request.body);
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function validateBody<T>(schema: z.ZodType<T, any, any>, data: unknown): T {
   return validate(schema, data);
 }
@@ -45,6 +47,7 @@ export function validateBody<T>(schema: z.ZodType<T, any, any>, data: unknown): 
  * @example
  * const query = validateQuery(PaginationSchema, request.query);
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function validateQuery<T>(schema: z.ZodType<T, any, any>, data: unknown): T {
   return validate(schema, data);
 }

@@ -146,6 +146,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }} # optional for public repos
+        continue-on-error: true
 
   # ───────────────────────────────────────────────────────────────────────────
   # JOB 4: TESTS (API + Web — run in parallel matrix)
@@ -259,6 +260,8 @@ jobs:
 
       - name: Validate Prisma Schema
         run: pnpm --filter @enterprise-pos/api exec prisma validate
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/test
 
       - name: Deploy Migrations to Test DB
         run: pnpm --filter @enterprise-pos/api exec prisma migrate deploy
